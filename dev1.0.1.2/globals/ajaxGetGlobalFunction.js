@@ -1,5 +1,13 @@
 //
 async function fetchGlobal(script, param_name, param_data) {
+    if (!requestToServerEnabled && script !== SUBMIT_SCRIPT && script !== CHECKER_SCRIPT) {
+        console.log('Request to server forbidden');
+        return {message: "Игра приостановлена", http_status: BAD_REQUEST, status: "error"};
+    }
+
+    requestToServerEnabled = false;
+    requestToServerEnabledTimeout = setTimeout(function() {requestToServerEnabled = true;}, 500)
+
     if (pageActive != 'hidden') {
         requestSended = true;
         requestTimestamp = (new Date()).getTime();
@@ -35,6 +43,10 @@ async function fetchGlobalNominal(script, param_name, param_data) {
 
     requestSended = false;
 
+    if (response.status === BAD_REQUEST || response.status === PAGE_NOT_FOUND) {
+        return {message: response.statusText, status: "error", http_status: response.status};
+    }
+
     if (!response.ok) {
         console.log(`An error has occured: ${response.status}`);
         return {message: "Ошибка связи с сервером. Попробуйте еще раз...", status: "error"};
@@ -68,6 +80,10 @@ async function fetchGlobalYowser(script, param_name, param_data) {
     );
 
     requestSended = false;
+
+    if (response.status === BAD_REQUEST || response.status === PAGE_NOT_FOUND) {
+        return {message: response.statusText, status: "error", http_status: response.status};
+    }
 
     if (!response.ok) {
         console.log(`An error has occured: ${response.status}`);

@@ -4,8 +4,7 @@ $minutesToGo = 2;
 set_time_limit ( $minutesToGo*60 + 5 );
 $start_script_time = date('U');
 $script_work_time = $minutesToGo*60 - 5;
-//error_reporting(E_ALL & ~E_NOTICE);
-ini_set('display_errors', 0);
+//error_reporting(E_ALL & ~E_NOTICE); ini_set('display_errors', 0);
 include_once(__DIR__.'/../../../vendor/deprecated/xcache_functions.php');
 include_once(__DIR__.'/../CacheLangProvider.php');
 include(__DIR__.'/findWordSlevaFunction.php');
@@ -147,8 +146,7 @@ function sendResponse(&$data) {
         $_POST['cells'] = $data['desk'];
     else
         $_POST['cells'] = \Lang\Ru::init_desk();
-    error_reporting(E_ALL & ~E_NOTICE);
-    ini_set('display_errors', 0);
+    //error_reporting(E_ALL & ~E_NOTICE);  ini_set('display_errors', 0);
     if (make_turn($_POST['cells'], $data['fishki'])) {
         $_POST['cells'] = json_encode($_POST['cells']);
         ob_start();
@@ -176,8 +174,7 @@ function sendResponse(&$data) {
 
 
 function make_turn(&$desk, &$fishki) {
-    error_reporting(E_ALL & ~E_NOTICE);
-    ini_set('display_errors', 0);
+    //error_reporting(E_ALL & ~E_NOTICE); ini_set('display_errors', 0);
     ob_end_clean();
     $fishki1 = $fishki;
     $word = '';

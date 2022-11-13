@@ -1,4 +1,5 @@
 <?php
+
 include_once(__DIR__ . '/../CacheLangProvider.php');
 include_once(__DIR__ . '/../hash_str_2_int.php');
 include_once(__DIR__ . '/../DBLangProvider.php');
@@ -17,8 +18,9 @@ while ((date('U') - $start_script_time) < $script_work_time) {
         continue;
     }
     $Game = unserialize($Game);
-    if (!is_array($Game))
+    if (!is_array($Game)) {
         continue;
+    }
 
     $results = getRanks($Game);
 
@@ -77,7 +79,16 @@ function saveGameStats(&$Game, &$results)
 
     if (!DB::insertID()) {
         global $red;
-        $red->redis->rpush('erudit.games_statistics_failed', $INSERTSTATS);
+        $red->redis->rpush(
+            'erudit.games_statistics_failed',
+            serialize(
+                [
+                    'query' => $INSERTSTATS,
+                    'game' => $Game,
+                    'results' => $results
+                ]
+            )
+        );
     }
 }
 
@@ -86,10 +97,15 @@ function addDeltaRatingsToCache($player)
     global $red;
     global $Game;
 
-    $deltaArr = serialize(['delta' => $player['deltaRating']
-        , 'time' => $Game['turnBeginTime']
-        , 'game_number' => $Game['gameNumber']
-    ]);
+    $deltaArr = serialize(
+        [
+            'delta' => $player['deltaRating']
+            ,
+            'time' => $Game['turnBeginTime']
+            ,
+            'game_number' => $Game['gameNumber']
+        ]
+    );
     $cacheTime = 7 * 24 * 60 * 60;
 
     $red->redis->setex('erudit.delta_rating_' . $player['cookie'], $cacheTime, $deltaArr);
@@ -184,8 +200,9 @@ function changeRatings(&$players)
 
 function addCookie(&$player)
 {
-    if (!is_array($player))
+    if (!is_array($player)) {
         return false;
+    }
     $INSERTCOOKIE = "INSERT INTO players
                     SET
                     cookie='{$player['cookie']}',
@@ -211,7 +228,7 @@ function addCookie(&$player)
 function getRatings(&$players, &$gameStatus)
 {
     /**todo REFACTOR IT */
-    $SELECTRATING = "SELECT rating, id, cookie, games_played FROM erudit.players WHERE cookie='";
+    $SELECTRATING = "SELECT rating, id as player_id, cookie, games_played FROM erudit.players WHERE cookie='";
     $SELECTRATING_REGISTERED1 = "SELECT 
                                     max(rating) as rating, 
                                     min(id) as player_id,
@@ -235,7 +252,7 @@ function getRatings(&$players, &$gameStatus)
             $sel = DB::queryArray($QUERY)[0];
             if (!empty($sel['rating'])) {
                 $players[$num]['rating'] = $sel['rating'];
-                $players[$num]['player_id'] = $sel['id'];
+                $players[$num]['player_id'] = $sel['player_id'];
                 $players[$num]['user_id'] = $sel['user_id'];
                 $players[$num]['found_cookie'] = $sel['cookie'];
                 $players[$num]['games_played'] = $sel['games_played'];
@@ -252,8 +269,9 @@ function getRatings(&$players, &$gameStatus)
                     $players[$num]['user_id'] = $player['userID'];
                 }
 
-                if ($players[$num]['found_cookie'] !== $player['cookie'])
+                if ($players[$num]['found_cookie'] !== $player['cookie']) {
                     addCookie($players[$num]);
+                }
             } else {
                 $INSERT = "INSERT INTO erudit.players SET
                             cookie='{$player['cookie']}',
@@ -279,10 +297,9 @@ function getRatings(&$players, &$gameStatus)
             $sel = DB::queryArray($QUERY)[0];
             if (!empty($sel['rating'])) {
                 $players[$num]['rating'] = $sel['rating'];
-                $players[$num]['player_id'] = $sel['id'];
+                $players[$num]['player_id'] = $sel['player_id'];
                 $players[$num]['found_cookie'] = $sel['cookie'];
                 $players[$num]['games_played'] = $sel['games_played'];
-
             } else {
                 $INSERT = "INSERT INTO erudit.players SET
                             cookie='{$player['cookie']}',
@@ -317,7 +334,7 @@ function getRanks(&$Game)
     $winner = [];
     $winner['cookie'] = $Game['results']['winner'];
     $winner['score'] = $Game['users'][$Game[$winner['cookie']]]['score'];
-    $winner['isActive'] = TRUE;
+    $winner['isActive'] = true;
     $winner['userID'] = isset($Game['users'][$Game[$winner['cookie']]]['userID'])
         ? hash_str_2_int($Game['users'][$Game[$winner['cookie']]]['userID'])
         : false;
@@ -348,13 +365,11 @@ function arComp($a, $b)
             return 0;
         }
         return ($a['score'] > $b['score']) ? -1 : 1;
-    } elseif ($a['isActive'] && !$b['isActive'])
+    } elseif ($a['isActive'] && !$b['isActive']) {
         return -1;
-
-    elseif (!$a['isActive'] && $b['isActive'])
+    } elseif (!$a['isActive'] && $b['isActive']) {
         return 1;
-
-    elseif (!$a['isActive'] && !$b['isActive']) {
+    } elseif (!$a['isActive'] && !$b['isActive']) {
         if ($a['score'] == $b['score']) {
             return 0;
         }

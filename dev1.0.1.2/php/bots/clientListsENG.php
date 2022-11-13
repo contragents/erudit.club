@@ -137,8 +137,8 @@ function sendResponse(&$data)
         $_POST['cells'] = \Lang\Eng::init_desk();
         $slovaPlayed = [];
     }
-    error_reporting(E_ALL & ~E_NOTICE);
-    ini_set('display_errors', 0);
+
+    //error_reporting(E_ALL & ~E_NOTICE); ini_set('display_errors', 0);
     if (make_turn($_POST['cells'], $data['fishki'], $slovaPlayed)) {
         $_POST['cells'] = json_encode($_POST['cells']);
         ob_start();

@@ -35,8 +35,17 @@ var gameStates = {
     },
     desync: {
         1: 'waiting', 2: 'done',
-        refresh: 10,
-        message: 'Синхронизация с сервером...'
+        refresh: 5,
+        noDialog: true,
+        action: function (data) {
+            gameState = gameOldState;
+            gameSubState = gameOldSubState;
+            enableButtons();
+            if ('queryNumber' in data) {
+                queryNumber = data['queryNumber'];
+            }
+        },
+        //message: 'Синхронизация с сервером...'
     },
     noGame: {
         1: 'waiting', 2: 'done',
@@ -138,9 +147,13 @@ var gameStates = {
                                         else
                                             var responseArr = JSON.parse(dataCabinet['message']);
                                         console.log(responseArr);
-                                        var message = '<form>';
+                                        var message = '<form id="superForm" >';
                                         for (k in responseArr['form']) {
-                                            message += '<div class="form-group"><div class="col-sm-6">' +
+                                            message += '<div class="form-group"'
+                                                + (('type' in responseArr['form'][k] && responseArr['form'][k]['type'] === 'hidden')
+                                                    ? ' style="display:none" '
+                                                    : '')
+                                                + '><div class="col-sm-6">' +
                                                 '<label for="' + responseArr['form'][k]['inputId'] + '">'
                                                 + responseArr['form'][k]['prompt']
                                                 + '</label>'
@@ -158,20 +171,33 @@ var gameStates = {
                                                 message += 'placeholder="' + responseArr['form'][k]['placeholder'] + '"';
                                             }
 
-                                            message += 'type="text" class="form-control" name="'
+                                            message += (('type' in responseArr['form'][k])
+                                                ? 'type="' + responseArr['form'][k]['type'] + '"'
+                                                : 'type="text"')
+                                                + ' class="form-control" name="'
                                                 + responseArr['form'][k]['inputName']
                                                 + '" id="'
                                                 + responseArr['form'][k]['inputId']
-                                                + '"></div>';
-                                            message += '<div class="col-sm-4 col-form-label">'
-                                                + '<button type="submit" class="form-control btn btn-outline-secondary" onclick="'
-                                                + responseArr['form'][k]['onclick']
-                                                + '($(\'#' + responseArr['form'][k]['inputId']
-                                                + '\').val(),'
-                                                + responseArr['common_id']
-                                                + ');return false;">'
-                                                + responseArr['form'][k]['buttonCaption']
-                                                + '</button></div></div>';
+                                                + '" '
+                                                + ('required' in responseArr['form'][k]
+                                                    ? ' required '
+                                                    : '')
+                                                + '></div>';
+                                            message += !('type' in responseArr['form'][k] && responseArr['form'][k]['type'] === 'hidden')
+                                                ? (
+                                                    '<div class="col-sm-4 col-form-label">'
+                                                    + '<button type="submit" class="form-control btn btn-outline-secondary" onclick="'
+                                                    + responseArr['form'][k]['onclick']
+                                                    + '($(\'#' + responseArr['form'][k]['inputId']
+                                                    + '\').val(),'
+                                                    + responseArr['common_id']
+                                                    + ');return false;">'
+                                                    + responseArr['form'][k]['buttonCaption']
+                                                    + '</button></div>'
+                                                )
+                                                : ('')
+                                                +
+                                                '</div>';
                                             message += '</div>';
                                         }
                                         message += '</form>';
@@ -290,6 +316,10 @@ var gameStates = {
             if ('fishki' in data)
                 placeFishki(data['fishki']);
         },
+        from_desync: function (data) {
+            if ('fishki' in data)
+                placeFishki(data['fishki']);
+        },
         from_gameResults: function () {
             gameStates['startGame']['from_initGame']();
         },
@@ -311,6 +341,10 @@ var gameStates = {
 
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
+        },
+        from_desync: function (data) {
+            if ('fishki' in data)
+                placeFishki(data['fishki']);
         },
         from_initRatingGame: function (data) {
             gameStates['startGame']['from_initGame']();
@@ -344,6 +378,10 @@ var gameStates = {
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
         },
+        from_desync: function (data) {
+            if ('fishki' in data)
+                placeFishki(data['fishki']);
+        },
         from_initRatingGame: function (data) {
             gameStates['startGame']['from_initGame']();
         },
@@ -374,6 +412,7 @@ var gameStates = {
             if ('inviteStatus' in data && data['inviteStatus'] == 'waiting') {
                 var okButtonCaption = 'OK';
             }
+
             dialog = bootbox.dialog({
                 //title: 'Игра завершена',
                 message: data['comments'],
@@ -406,6 +445,14 @@ var gameStates = {
                                                 gameStates['gameResults']['results'](dataInvite);
                                             }
                                         });
+
+                                        setTimeout(
+                                            function () {
+                                                dialogResponse.find(".bootbox-close-button").trigger("click");
+                                            }
+                                            , 2000
+                                        );
+
                                         return false;
                                     });
                             }, 100);
@@ -417,13 +464,25 @@ var gameStates = {
                         callback: function () {
                             return true;
                         }
+                    },
+                    new: {
+                        label: 'Новая игра',
+                        className: 'btn-danger',
+                        callback: function () {
+                            newGameButtonFunction(true);
+                        }
                     }
                 }
             });
         },
         decision: function (data) {
-            if (dialog && canCloseDialog)
+            if (dialog && canCloseDialog) {
                 dialog.modal('hide');
+            }
+            if (dialogResponse) {
+                dialogResponse.modal('hide');
+            }
+
             dialog = bootbox.dialog({
                 //title: 'Игра завершена',
                 message: data['comments'],
@@ -454,9 +513,17 @@ var gameStates = {
                                             callback: function () {
                                                 dialogResponse.modal('hide');
                                                 dataInvite['comments'] = data['comments'];
-                                                gameStates['gameResults']['decision'](dataInvite);
+                                                //gameStates['gameResults']['decision'](dataInvite);
                                             }
                                         });
+
+                                        setTimeout(
+                                            function () {
+                                                dialogResponse.find(".bootbox-close-button").trigger("click");
+                                            }
+                                            , 2000
+                                        );
+
                                         return false;
                                     });
                             }, 100);
@@ -467,6 +534,13 @@ var gameStates = {
                         className: 'btn-info',
                         callback: function () {
                             return true;
+                        }
+                    },
+                    new: {
+                        label: 'Новая игра',
+                        className: 'btn-danger',
+                        callback: function () {
+                            newGameButtonFunction(true);
                         }
                     }
                 }
@@ -483,6 +557,11 @@ var lastQueryTime = 0;
 var gameOldState = '';
 
 function commonCallback(data) {
+    if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
+        console.log(data['message']);
+        return;
+    }
+
     gameOldState = gameState;
     gameOldSubState = gameSubState;
 
@@ -509,14 +588,18 @@ function commonCallback(data) {
 
     if ('gameSubState' in data)
         gameSubState = data['gameSubState'];
-    else
-        gameSubState = gameStates[gameState]['1'];
+    //else gameSubState = gameStates[gameState]['1'];
 
 
     console.log(gameOldState + '->' + gameState);
 
 
     if ((gameOldState != gameState) || (gameOldSubState != gameSubState)) {
+        if ('active_users' in data && data['active_users'] == 0) {
+            clearTimeout(requestToServerEnabledTimeout);
+            requestToServerEnabled = false;
+        }
+
         if (dialog && canCloseDialog)
             dialog.modal('hide');
         if (intervalId) {
@@ -525,9 +608,23 @@ function commonCallback(data) {
         }
         if (canOpenDialog) {
             if (gameState == 'initGame' || gameState == 'initRatingGame') {
-                dialog = bootbox.alert({
+                dialog = bootbox.confirm({
                     message: ('comments' in data) ? data['comments'] : gameStates[gameState]['message'],
-                    size: 'small'
+                    size: 'small',
+                    buttons: {
+                        confirm: {
+                            label: 'Ok',
+                        },
+                        cancel: {
+                            label: 'Новая игра',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if(!result) {
+                            newGameButtonFunction(true);
+                        }
+                    }
                 });
                 if ('gameWaitLimit' in data)
                     dialog.init(function () {
@@ -602,7 +699,11 @@ function commonCallback(data) {
                         }
 
                         if (turnAutocloseDialog) {
-                            cancelLabel = 'Закроется автоматически';
+                            if (timeToCloseDilog == 5) {
+                                cancelLabel = 'Закрывать сразу';
+                            } else {
+                                cancelLabel = 'Закроется автоматически';
+                            }
                         }
 
                         dialog = bootbox.confirm({
@@ -621,6 +722,14 @@ function commonCallback(data) {
                             callback: function (result) {
                                 if (!result) {
                                     turnAutocloseDialog = true;
+
+                                    if (!timeToCloseDilog) {
+                                        timeToCloseDilog = 5;
+                                    } else if (!automaticDialogClosed) {
+                                        timeToCloseDilog = 1.5;
+                                    }
+
+                                    automaticDialogClosed = false;
                                 }
                                 activateFullScreenForMobiles();
                             }
@@ -632,9 +741,10 @@ function commonCallback(data) {
                         if (turnAutocloseDialog) {
                             setTimeout(
                                 function () {
+                                    automaticDialogClosed = true;
                                     dialog.find(".bootbox-close-button").trigger("click");
                                 }
-                                , 5000
+                                , timeToCloseDilog * 1000
                             );
                         }
                     }

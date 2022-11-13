@@ -1,19 +1,28 @@
 //
 function submitButtonFunction() {
-    //if (bootBoxIsOpenedGlobal())        return;
 
     buttons['submitButton']['svgObject'].disableInteractive();
     buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
     setTimeout(function () {
-        fetchGlobal('turn_submitter.php', 'cells', cells)
+        fetchGlobal(SUBMIT_SCRIPT, 'cells', cells)
             .then((data) => {
-                gameState = 'afterSubmit';
-                parseDeskGlobal(data); // JSON data parsed by `response.json()` call
+                if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
+                    buttons['submitButton']['svgObject'].setInteractive();
+                    buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Otjat'));
+                    dialog = bootbox.alert({
+                        message: ('message' in data && data['message'] !== '')
+                            ? (data['message'] + '<br /> Попробуйте отправить заново')
+                            : '<strong>Ошибка связи с сервером!<br /> Попробуйте отправить заново</strong>',
+                        size: 'small'
+                    });
+                } else {
+                    gameState = 'afterSubmit';
+                    parseDeskGlobal(data); // JSON data parsed by `response.json()` call
+                }
             });
     }, 100);
 }
-;
 
 
 function checkButtonFunction() {
@@ -23,7 +32,7 @@ function checkButtonFunction() {
     buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + 'Inactive'));
 
     setTimeout(function () {
-        fetchGlobal('word_checker.php', 'cells', cells)
+        fetchGlobal(CHECKER_SCRIPT, 'cells', cells)
             .then((data) => {
                 if (data == '')
                     var responseText = 'Вы не составили ни одного слова!';
@@ -50,9 +59,10 @@ function shareButtonFunction() {
     }).off("shown.bs.modal");
 };
 
-function newGameButtonFunction() {
-    if (bootBoxIsOpenedGlobal())
+function newGameButtonFunction(ignoreDialog = false) {
+    if (!ignoreDialog && bootBoxIsOpenedGlobal()) {
         return;
+    }
 
     buttons['newGameButton']['svgObject'].disableInteractive();
 
@@ -62,6 +72,7 @@ function newGameButtonFunction() {
             locale: 'ru',
             callback: function (result) {
                 if (result) {
+                    requestToServerEnabled = true;
                     fetchGlobal('new_game.php', '', 'gameState=' + gameState)
                         .then((data) => {
                             document.location.reload(true);
@@ -230,11 +241,15 @@ function chatButtonFunction() {
                         else
                             var responseText = data['message'];
                         dialog = bootbox.alert({
-                            title: responseText,
-                            message: ' ',
+                            message: responseText,
                             size: 'small'
                         });
-
+                        setTimeout(
+                            function () {
+                                dialog.find(".bootbox-close-button").trigger("click");
+                            }
+                            , 1000
+                        );
                         buttons['chatButton']['svgObject'].setInteractive();
                         buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Otjat'));
                         buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', false);

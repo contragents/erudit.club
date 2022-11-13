@@ -5,21 +5,24 @@ namespace Erudit;
 use Dadata\Cache;
 use Dadata\DB;
 use Dadata\Hints;
+use Dadata\Players;
 use Dadata\Prizes;
 use Dadata\Stats;
+use http\Exception\BadConversionException;
 
 //ini_set("display_errors", 1); error_reporting(E_ALL);
 
 class Game
 {
+    public static $configStatic;
     public $serverName;
     public $config;
     public $p;
     public $User;
     public $currentGame;
-    public $currentGameUsers = FALSE;
-    private $isStateLocked = FALSE;
-    private $isGameEndedSaved = FALSE;
+    public $currentGameUsers = false;
+    private $isStateLocked = false;
+    private $isGameEndedSaved = false;
     private $gamePlayersWaiting = false;//Количество игроков, ожидающих начала игры
     public $gameWaitLimit; //Макс время ожидания начала игры
     public $ratingGameWaitLimit;//Время ожидания игрока с выбранным рейтингом
@@ -31,7 +34,14 @@ class Game
     private $winScore;
     private $chisloFishek;
     private $numUser = false;
-    private $statusComments = ['startGame' => 1, 'preMyTurn' => 1, 'myTurn' => 1, 'otherTurn' => 1, 'desync' => 1, 'initGame' => 1];
+    private $statusComments = [
+        'startGame' => 1,
+        'preMyTurn' => 1,
+        'myTurn' => 1,
+        'otherTurn' => 1,
+        'desync' => 1,
+        'initGame' => 1
+    ];
     public $gameStatus = [];/*[ 'desk' => [],
                             'users' =>[
                                 0 => [
@@ -65,15 +75,34 @@ class Game
 
     public function __construct($server_name = '')
     {
-        spl_autoload_register(function ($class_name) {
-            $Exploded_class = explode('\\', $class_name);
-            include $Exploded_class[count($Exploded_class) - 1] . 'LangProvider.php';
-        });
+        spl_autoload_register(
+            function ($class_name) {
+                $Exploded_class = explode('\\', $class_name);
+                include $Exploded_class[count($Exploded_class) - 1] . 'LangProvider.php';
+            }
+        );
+
+        set_error_handler(
+            function ($err_severity, $err_msg, $err_file, $err_line, $err_context = []) {
+                \BadRequest::sendBadRequest(
+                    [
+                        'err_severity' => $err_severity,
+                        'err_msg' => $err_msg,
+                        'err_file' => $err_file,
+                        'err_line' => $err_line,
+                        'err_context' => $err_context
+                    ]
+                );
+            },
+            E_ALL & ~E_NOTICE
+        );
+
         $this->serverName = $server_name;
-        $this->p = \Dadata\Cache::getInstance();
+        $this->p = Cache::getInstance();
 
 
         $this->config = include("{$_SERVER['DOCUMENT_ROOT']}/configs/conf.php");//('../../configs/conf.php');
+        self::$configStatic = $this->config;
         $this->turnTime = $this->config['turnTime'];
         $this->winScore = $this->config['winScore'];
         $this->gameWaitLimit = $this->config['gameWaitLimit'];
@@ -84,46 +113,84 @@ class Game
         $this->activityTimeout = $this->config['activityTimeout'];
         $this->chisloFishek = $this->config['chisloFishek'];
 
-        //$this->p->redis->setex('erudit.' . $_COOKIE['erudit_user_session_ID'], $this->cacheTimeout, serialize(array_merge($_SERVER, $_COOKIE)));
-        //Временно собираем статистику по всем куки-запросам
-
         $this->User = $this->validateCookie($_COOKIE['erudit_user_session_ID']);
 
-        //$this->p->redis->setex('erudit.' . $this->User, $this->cacheTimeout, serialize(array_merge($_SERVER, $_COOKIE)));
-        //Временно собираем статистику по всем куки-запросам
-        //print $this->User; //exit();
-        $this->currentGame = $this->p->redis->get('erudit.get_game_' . $this->User);
+        $this->currentGame = Cache::get('erudit.get_game_' . $this->User);
         if (!$this->currentGame) {
-            $this->currentGame = FALSE;
+            $this->currentGame = false;
 
             if (!empty($this->User)) {
-                $checkEndGame = $this->p->redis->get(self::CHECK_STATUS_RESULTS_KEY . $this->User);
+                $checkEndGame = Cache::get(self::CHECK_STATUS_RESULTS_KEY . $this->User);
 
                 if ($checkEndGame && ($checkEndGame < $_GET['queryNumber'])) {
                     // Проверяем если вкладка с игрой осталась открытой, но игра уже стерта из кеша
                     print $this->makeResponse(['gameState' => 'noGame']);
                     exit;
                 } else {
-                    $this->p->redis->del(self::CHECK_STATUS_RESULTS_KEY . $this->User);
+                    Cache::del(self::CHECK_STATUS_RESULTS_KEY . $this->User);
+                }
+            }
+        } else {
+            $this->currentGameUsers = Cache::get("erudit.game_{$this->currentGame}_users");
+            if (!$this->lockTry()) {
+                //Вышли с Десинком, если не смогли получить Лок
+                return $this->desync();
+                /*print json_encode(
+                    [
+                        'gameState' => 'desync',
+                        'comments' => call_user_func([$this, 'statusComments_desync'])
+                    ]
+                );
+                exit();*/
+            }
+            $this->isStateLocked = true;
+            $this->gameStatus = Cache::get('erudit.game_status_' . $this->currentGame);
+            //Забрали статус игры из кэша
+            try {
+                if (!isset($this->gameStatus[$this->User])) {
+                    $this->newGame();
+                    throw new \BadRequest(serialize(is_array($this->gameStatus) ? $this->gameStatus : []));
                 }
 
+                $this->numUser = $this->gameStatus[$this->User];
+                //Номер пользователя по порядку
+
+                if (isset($_GET['page_hidden']) && $_GET['page_hidden'] == 'true') {
+                    if (isset($_GET['queryNumber']) && $_GET['queryNumber'] < $this->gameStatus['users'][$this->numUser]['last_request_num']) {
+                        $this->unlock();
+                        throw new \BadRequest('Num packet error when returned from page_hidden state');
+                    }
+                }
+            } catch (\BadRequest $e) {
+                \BadRequest::sendBadRequest(
+                    [
+                        'err_msg' => $e->getMessage(),
+                        'err_file' => $e->getFile(),
+                        'err_line' => $e->getLine(),
+                        'err_context' => $e->getTrace(),
+                    ]
+                );
             }
 
-        } else {
-            $this->currentGameUsers = unserialize($this->p->redis->get("erudit.game_{$this->currentGame}_users"));
-            if (!$this->lockTry()) {
-                print json_encode([
-                    'gameState' => 'desync',
-                    'comments' => call_user_func([$this, 'statusComments_desync'])
-                ]);
-                exit();
-                //Вышли с Десинком, если не смогли получить Лок
+            if (isset($_GET['queryNumber']) && $_GET['queryNumber'] > 5 && $_GET['queryNumber'] < ($this->gameStatus['users'][$this->numUser]['last_request_num'] ?? 0)) {
+                // todo  при возврате десинка в игре проблемы с получением фишек. обычно при перезагрузке страницы
+                \BadRequest::sendBadRequest(
+                    [
+                        'message' => 'Потеря синхронизации с сервером',
+                        'err_msg' => $e->getMessage(),
+                        'err_file' => $e->getFile(),
+                        'err_line' => $e->getLine(),
+                        'err_context' => $e->getTrace(),
+                    ]
+                );
+                // todo протестировать десинк методом BadRequest::sendBadRequest или вернуться к прежнему
+                // return $this->desync($this->gameStatus['users'][$this->numUser]['last_request_num']);
+            } else {
+                $this->gameStatus['users'][$this->numUser]['last_request_num']
+                    =
+                    ($_GET['queryNumber'] ?? $this->gameStatus['users'][$this->numUser]['last_request_num']);
             }
-            $this->isStateLocked = TRUE;
-            $this->gameStatus = unserialize($this->p->redis->get('erudit.game_status_' . $this->currentGame));
-            //Забрали статус игры из кэша
-            $this->numUser = $this->gameStatus[$this->User];
-            //Номер пользователя по порядку
+
             if (!(isset($_GET['page_hidden']) && $_GET['page_hidden'] == 'true')) {
                 $this->gameStatus['users'][$this->numUser]['lastActiveTime'] = date('U');
                 $this->gameStatus['users'][$this->numUser]['inactiveTurn'] = 1000;
@@ -155,30 +222,30 @@ class Game
 
         //Далее логика, которая возможно пригодится в будущем для тонкой настройки
 
-        if ($this->currentGame = $this->p->redis->get('erudit.get_game_' . $incomingCookie)) {
+        if ($this->currentGame = Cache::get('erudit.get_game_' . $incomingCookie)) {
             return $incomingCookie;
         }
 
-        if ($storedCookie = $this->p->redis->get($sintCookie = (md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'])))) {
+        if ($storedCookie = Cache::get(
+            $sintCookie = (md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']))
+        )) {
             if ($storedCookie == $incomingCookie) {
-
-                $this->currentGame = FALSE;
+                $this->currentGame = false;
                 return $incomingCookie;
             } else {
-                $this->p->redis->setex('erudit.get_game_' . $sintCookie, $this->activityTimeout, $incomingCookie);
-                if (!$this->currentGame = $this->p->redis->get('erudit.get_game_' . $sintCookie)) {
-                    $this->currentGame = FALSE;
+                Cache::setex('erudit.get_game_' . $sintCookie, $this->activityTimeout, $incomingCookie);
+                if (!$this->currentGame = Cache::get('erudit.get_game_' . $sintCookie)) {
+                    $this->currentGame = false;
                 }
 
                 return $sintCookie;
             }
         } else {
-            $this->p->redis->setex('erudit.get_game_' . $sintCookie, $this->activityTimeout, $incomingCookie);
-            $this->currentGame = FALSE;
+            Cache::setex('erudit.get_game_' . $sintCookie, $this->activityTimeout, $incomingCookie);
+            $this->currentGame = false;
 
             return $incomingCookie;
         }
-
     }
 
     public function setInactive()
@@ -187,7 +254,9 @@ class Game
         $this->gameStatus['users'][$this->numUser]['inactiveTurn'] = $this->gameStatus['turnNumber'];
         $this->addToLog("Закрыл вкладку с игрой", $this->numUser);
 
-        return $this->makeResponse(['gameState' => 'addToChat', 'message' => 'Вы закрыли вкладку с игрой и стали Неактивным!' . $this->numUser]);
+        return $this->makeResponse(
+            ['gameState' => 'addToChat', 'message' => 'Вы закрыли вкладку с игрой и стали Неактивным!' . $this->numUser]
+        );
     }
 
     public function saveUserNameWithID($name, $commonID)
@@ -205,11 +274,19 @@ class Game
                     id = $commonID";
 
         if (DB::queryInsert($setUserNameQuery)) {
-            return json_encode(['result' => 'saved',
-                'message' => 'Ник пользователя сохранен']);
+            return json_encode(
+                [
+                    'result' => 'saved',
+                    'message' => 'Ник пользователя сохранен'
+                ]
+            );
         } else {
-            return json_encode(['result' => 'error ' . $setUserNameQuery,
-                'message' => 'Ошибка сохранения Ника!']);
+            return json_encode(
+                [
+                    'result' => 'error ' . $setUserNameQuery,
+                    'message' => 'Ошибка сохранения Ника!'
+                ]
+            );
         }
     }
 
@@ -221,10 +298,12 @@ class Game
 
         $commonId = $this->getCommonID($user['ID']);
         if (
-        $commonIDName = DB::queryValue("SELECT name 
+        $commonIDName = DB::queryValue(
+            "SELECT name 
                     FROM users 
                     WHERE id=$commonId 
-                    LIMIT 1")) {
+                    LIMIT 1"
+        )) {
             return $commonIDName;
         }
 
@@ -235,10 +314,12 @@ class Game
         }
 
         if (
-        $res = DB::queryValue("SELECT name FROM player_names 
+        $res = DB::queryValue(
+            "SELECT name FROM player_names 
             WHERE
-            some_id=" . $this->hash_str_2_int($idSource)
-            . " LIMIT 1")
+            some_id=" . self::hash_str_2_int($idSource)
+            . " LIMIT 1"
+        )
         ) {
             return $res;
         } else {
@@ -256,7 +337,7 @@ class Game
                     $letterNumber = number_format(round(34 + $letterNumber * (59 - 34 + 1) / 30, 0), 0);
                 }
 
-                if (!$this->gameStatus['lngClass']::$bukvy[$letterNumber][3]) { // todo пофиксить ошибку
+                if ($this->gameStatus['lngClass']::$bukvy[$letterNumber][3] == false) { // нет ошибки - класс неизвестен
                     $letterNumber = 31;//меняем плохую букву на букву Я
                 }
 
@@ -294,8 +375,12 @@ class Game
     public function addUserAvatarUrl($url, $commonID)
     {
         if (!preg_match('/^https?:\/\//', $url)) {
-            return json_encode(['result' => 'error',
-                'message' => 'Неверный формат URL! <br />Должно начинаться с <strong>http(s)://</strong>']);
+            return json_encode(
+                [
+                    'result' => 'error',
+                    'message' => 'Неверный формат URL! <br />Должно начинаться с <strong>http(s)://</strong>'
+                ]
+            );
         }
 
         $avatarUpdateQuery = "UPDATE users
@@ -305,10 +390,9 @@ class Game
                     id = $commonID";
 
         if (DB::queryInsert($avatarUpdateQuery)) {
-
-            return json_encode(['result' => 'saved']);
+            return json_encode(['result' => 'saved', 'message' => 'Файл сохранен']);
         } else {
-            return json_encode(['result' => 'saved', 'message' => 'Ссылка ранее уже была сохранена на сервере']);
+            return json_encode(['result' => 'saved', 'message' => 'Файл перезаписан']);
         }
     }
 
@@ -330,7 +414,6 @@ p1.cookie='$cookie'
 
         $userIDArr = DB::queryArray($findIDQuery);
         if ($userIDArr) {
-
             if ($userIDArr[0]['cid2']) {
                 return $userIDArr[0]['cid2'];
             }
@@ -355,7 +438,6 @@ p1.cookie='$cookie'
                 }
             }
         } elseif ($createIfNotExist) {
-
             $cookieInsertQuery = "INSERT 
                 INTO 
                     players
@@ -364,10 +446,8 @@ p1.cookie='$cookie'
                     user_id = conv(substring(md5('$cookie'),1,16),16,10)";
 
             if (DB::queryInsert($cookieInsertQuery)) {
-
                 return $this->getPlayerID($cookie, 'createCommonID');
             }
-
         }
 
         return false;
@@ -410,12 +490,54 @@ p1.cookie='$cookie'
         $message['name'] = $userData[0]['name'];
         $message['common_id'] = $playerID;
         $message['text'] = '';//"<span style=\"float:right;\">Параметры для редактирования ($playerID)</span>";
-        $message['form'][] = ['prompt' => "Никнейм (id: $playerID)", 'inputName' => 'name', 'inputId' => 'player_name', 'onclick' => 'savePlayerName', 'buttonCaption' => 'Задать', 'placeholder' => 'новый Ник'];
-        $message['form'][] = ['prompt' => 'URL аватара', 'inputName' => 'url', 'inputId' => 'player_avatar_url', 'onclick' => 'savePlayerAvatar', 'buttonCaption' => 'Применить', 'placeholder' => 'https://'];
+        $message['form'][] = [
+            'prompt' => "Никнейм (id: $playerID)",
+            'inputName' => 'name',
+            'inputId' => 'player_name',
+            'onclick' => 'savePlayerName',
+            'buttonCaption' => 'Задать',
+            'placeholder' => 'новый Ник'
+        ];
+        $message['form'][] = [
+            'prompt' => '',
+            'type' => 'hidden',
+            'inputName' => 'cookie',
+            'value' => $this->User,
+        ];
+        $message['form'][] = [
+            'prompt' => '',
+            'type' => 'hidden',
+            'inputName' => 'MAX_FILE_SIZE',
+            'value' => Players::MAX_UPLOAD_SIZE,
+        ];
+        $message['form'][] = [
+            'prompt' => 'Загрузка Аватара',
+            'type' => 'file',
+            'inputName' => 'url',
+            'inputId' => 'player_avatar_file',
+            'onclick' => 'savePlayerAvatar',
+            'buttonCaption' => 'Отправить',
+            'required' => true,
+        ];
 
-        $message['form'][] = ['prompt' => 'Ключ учетной записи', 'inputName' => 'keyForID', 'inputId' => 'key_for_id', 'onclick' => 'copyKeyForID', 'buttonCaption' => 'В буфер', 'value' => $this->genKeyForCommonID($playerID), 'readonly' => 'true'];
+        $message['form'][] = [
+            'prompt' => 'Ключ учетной записи',
+            'inputName' => 'keyForID',
+            'inputId' => 'key_for_id',
+            'onclick' => 'copyKeyForID',
+            'buttonCaption' => 'В буфер',
+            'value' => $this->genKeyForCommonID($playerID),
+            'readonly' => 'true'
+        ];
 
-        $message['form'][] = ['prompt' => 'Ключ основного аккаунта', 'inputName' => 'url', 'inputId' => 'old_account_key', 'onclick' => 'mergeTheIDs', 'buttonCaption' => 'Связать', 'placeholder' => 'сохраненный ключ от старого аккаунта'];
+        $message['form'][] = [
+            'prompt' => 'Ключ основного аккаунта',
+            'inputName' => 'key',
+            'inputId' => 'old_account_key',
+            'onclick' => 'mergeTheIDs',
+            'buttonCaption' => 'Связать',
+            'placeholder' => 'сохраненный ключ от старого аккаунта'
+        ];
 
         return $this->makeResponse(['message' => json_encode($message)]);
     }
@@ -429,8 +551,7 @@ p1.cookie='$cookie'
 
     private function genKeyForCommonID($ID)
     {
-        ini_set("display_errors", 1);
-        error_reporting(E_ALL);
+        //ini_set("display_errors", 1); error_reporting(E_ALL);
         $messageToEncrypt = $ID;
         $secretKey = 'eruditforever';//$this->config['secret_key'];
         $method = 'AES-128-CBC';//$this->config['encrypt_method'];
@@ -452,8 +573,12 @@ p1.cookie='$cookie'
         $decrypted_message = openssl_decrypt($encryptedMessage, $method, $secretKey, 0, $iv);
 
         if (!is_numeric($decrypted_message)) {
-            return json_encode(['result' => 'error_decryption' . ' ' . $decrypted_message,
-                'message' => 'Ошибка расшифровки ключа']);
+            return json_encode(
+                [
+                    'result' => 'error_decryption' . ' ' . $decrypted_message,
+                    'message' => 'Ошибка расшифровки ключа'
+                ]
+            );
         }
 
         $commonIDSearchQuery = "SELECT id
@@ -465,8 +590,12 @@ p1.cookie='$cookie'
         $oldCommonID = DB::queryValue($commonIDSearchQuery);
 
         if ($oldCommonID === false) {
-            return json_encode(['result' => 'error_query_oldID',
-                'message' => 'ID игрока по ключу НЕ найден']);
+            return json_encode(
+                [
+                    'result' => 'error_query_oldID',
+                    'message' => 'ID игрока по ключу НЕ найден'
+                ]
+            );
         }
 
         $mergeIDsQuery = "UPDATE
@@ -477,11 +606,19 @@ p1.cookie='$cookie'
         common_id = $commonID;";
 
         if (DB::queryInsert($mergeIDsQuery)) {
-            return json_encode(['result' => 'save',
-                'message' => 'Учетные записи связаны']);
+            return json_encode(
+                [
+                    'result' => 'save',
+                    'message' => 'Учетные записи связаны'
+                ]
+            );
         } else {
-            return json_encode(['result' => 'error_update ' . $oldCommonID . '->' . $commonID,
-                'message' => 'Ошибка привязки - аккаунты уже связаны']);
+            return json_encode(
+                [
+                    'result' => 'error_update ' . $oldCommonID . '->' . $commonID,
+                    'message' => 'Ошибка привязки - аккаунты уже связаны'
+                ]
+            );
         }
     }
 
@@ -493,9 +630,8 @@ p1.cookie='$cookie'
             return $this->makeResponse(['message' => "Игра не начата"]);
         }
         foreach ($this->gameStatus['users'] as $num => $user) {
-
             if (isset($user['userID'])) {
-                if (!($deltaRating = $this->getDeltaRating($this->hash_str_2_int($user['userID'])))) {
+                if (!($deltaRating = $this->getDeltaRating(self::hash_str_2_int($user['userID'])))) {
                     $deltaRating = $this->getDeltaRating($user['ID']);
                 }
             } else {
@@ -505,7 +641,6 @@ p1.cookie='$cookie'
             $ratingFound = false;
             foreach ($ratings as $rating) {
                 if ($user['ID'] == $rating['cookie']) {
-
                     $ratingFound = true;
                     break;
                 }
@@ -520,7 +655,7 @@ p1.cookie='$cookie'
             }
             $rating['playerName'] = $this->getPlayerName($user);
             $rating['playerAvatarUrl'] = $this->getAvatarUrl($user);
-            $rating['isActive'] = (!isset($user['lastActiveTime']) || !$user['isActive']) ? FALSE : TRUE;
+            $rating['isActive'] = (!isset($user['lastActiveTime']) || !$user['isActive']) ? false : true;
 
             $message .= include('tpl/ratingsTableRow.php');
 
@@ -552,8 +687,6 @@ p1.cookie='$cookie'
             if ($recordsShown) {
                 $message .= include('tpl/ratingsTablePrizesRow.php');
             }
-
-
         }
         $message .= include('tpl/ratingsTableFooter.php');
 
@@ -586,22 +719,24 @@ p1.cookie='$cookie'
     private function destruct()
     {
         if ($this->currentGame) {
-
             if (isset($this->gameStatus['results']['winner']) && !isset($this->gameStatus['isGameEndedSaved'])) {
-                $this->p->redis->rpush('erudit.games_ended', serialize($this->gameStatus));
+                Cache::rpush('erudit.games_ended', $this->gameStatus);
                 //Сохраняем результаты игры в список завершенных
-                $this->gameStatus['isGameEndedSaved'] = TRUE;
+                $this->gameStatus['isGameEndedSaved'] = true;
             }
 
             $this->gameStatus['users'][$this->numUser]['last_request_num'] = $_GET['queryNumber'] ?? 1000;
 
-            $this->p->redis->setex('erudit.game_status_' . $this->currentGame, $this->cacheTimeout, serialize($this->gameStatus));
+            Cache::setex(
+                'erudit.game_status_' . $this->currentGame,
+                $this->cacheTimeout,
+                $this->gameStatus
+            );
         }
 
-        $this->p->redis->setex('erudit.user_' . $this->User . '_last_activity', $this->cacheTimeout, date('U'));
+        Cache::setex('erudit.user_' . $this->User . '_last_activity', $this->cacheTimeout, date('U'));
         $this->unlock();
         //Разлочили сохранение состояния
-
     }
 
     public function addToChat($message, $toNumUser = 'all', $needConfirm = true)
@@ -612,7 +747,10 @@ p1.cookie='$cookie'
                 if ($num == $this->numUser) {
                     $this->gameStatus['users'][$num]['chatStack'][] = ['Вы', 'всем: ' . $message];
                 } else {
-                    $this->gameStatus['users'][$num]['chatStack'][] = ["От Игрока" . ($this->numUser + 1) . " (всем):", $message];
+                    $this->gameStatus['users'][$num]['chatStack'][] = [
+                        "От Игрока" . ($this->numUser + 1) . " (всем):",
+                        $message
+                    ];
                 }
             }
         } elseif ($toNumUser == 'adv') {
@@ -622,8 +760,14 @@ p1.cookie='$cookie'
                 }
             }
         } else {
-            $this->gameStatus['users'][$toNumUser]['chatStack'][] = ["От Игрока" . ($this->numUser + 1) . ":", $message];
-            $this->gameStatus['users'][$this->numUser]['chatStack'][] = ['Вы', 'Игроку' . ($toNumUser + 1) . ': ' . $message];
+            $this->gameStatus['users'][$toNumUser]['chatStack'][] = [
+                "От Игрока" . ($this->numUser + 1) . ":",
+                $message
+            ];
+            $this->gameStatus['users'][$this->numUser]['chatStack'][] = [
+                'Вы',
+                'Игроку' . ($toNumUser + 1) . ': ' . $message
+            ];
         }
 
         if ($needConfirm) {
@@ -643,17 +787,16 @@ p1.cookie='$cookie'
 
     public function getDeltaRating($key)
     {
-        if ($delta = $this->p->redis->get('erudit.delta_rating_' . $key)) {
-            return unserialize($delta);
+        if ($delta = Cache::get('erudit.delta_rating_' . $key)) {
+            return $delta;
         } else {
             return false;
         }
-
     }
 
     public function getTopTable()
     {
-        if (($topTableratings = unserialize($this->p->redis->get('erudit.rating_top_table_' . $this->gameStatus['lngClass'])))) {
+        if (($topTableratings = Cache::get('erudit.rating_top_table_' . $this->gameStatus['lngClass']))) {
             return $topTableratings;
         }
 
@@ -693,7 +836,11 @@ ORDER BY top
 LIMIT 40";
 
         $topTableratings = DB::queryArray(getTopTableQuery);
-        $this->p->redis->setex('erudit.rating_top_table_' . $this->gameStatus['lngClass'], round($this->cacheTimeout / 15), serialize($topTableratings));
+        Cache::setex(
+            'erudit.rating_top_table_' . $this->gameStatus['lngClass'],
+            round($this->cacheTimeout / 15),
+            $topTableratings
+        );
 
         return $topTableratings;
     }
@@ -795,13 +942,17 @@ LIMIT 40";
         }
 
         foreach ($cacheValues as $value) {
-            $this->p->redis->setex('erudit.rating_cache_' . $value, round($this->cacheTimeout / 15), serialize($ratingInfo));
+            Cache::setex(
+                'erudit.rating_cache_' . $value,
+                round($this->cacheTimeout / 15),
+                $ratingInfo
+            );
         }
 
         return $ratingInfo;
     }
 
-    public function hash_str_2_int($str, $len = 16)
+    public static function hash_str_2_int($str, $len = 16)
     {
         $hash_int = base_convert("0x" . substr(md5($str), 0, $len), 16, 10);
         return $hash_int;
@@ -812,19 +963,16 @@ LIMIT 40";
         if (!$userCookie) {
             if (isset($this->gameStatus['users'])) {
                 foreach ($this->gameStatus['users'] as $user) {
-                    //if (!($ratings[$user['ID']] = unserialize($this->p->redis->get('erudit.rating_cache_' . $user['ID']))))
-                    {
-                        $ratings[$user['ID']] = $this->getRatingWithCommonID(
-                            $this->getCommonID(
-                                $user['ID'],
-                                isset($user['userID']) ? $this->hash_str_2_int($user['userID']) : false
-                            ),
+                    $ratings[$user['ID']] = $this->getRatingWithCommonID(
+                        $this->getCommonID(
                             $user['ID'],
-                            isset($user['userID'])
-                                ? $this->hash_str_2_int($user['userID'])
-                                : false
-                        );
-                    }
+                            isset($user['userID']) ? self::hash_str_2_int($user['userID']) : false
+                        ),
+                        $user['ID'],
+                        isset($user['userID'])
+                            ? self::hash_str_2_int($user['userID'])
+                            : false
+                    );
                 }
 
                 return $this->normalizeRatings($ratings);
@@ -832,7 +980,7 @@ LIMIT 40";
         }
 
         if (!$userCookie) {
-            if (!($ratings[$this->User] = unserialize($this->p->redis->get('erudit.rating_cache_' . $this->User)))) {
+            if (!($ratings[$this->User] = Cache::get('erudit.rating_cache_' . $this->User))) {
                 $ratings[$this->User] = $this->getRatingWithCommonID(
                     $this->getCommonID(
                         $this->User,
@@ -848,12 +996,12 @@ LIMIT 40";
 
         if (!is_array($userCookie)) {
             $ratings = [];
-            $ratings[$userCookie] = false;//unserialize($this->p->redis->get('erudit.rating_cache_' . $userCookie));
+            $ratings[$userCookie] = false;
             if (!$ratings[$userCookie]) {
                 $userID = isset($this->gameStatus) &&
                 isset($this->gameStatus[$userCookie]) &&
                 isset($this->gameStatus['users'][$this->gameStatus[$userCookie]]['userID'])
-                    ? $this->hash_str_2_int($this->gameStatus['users'][$this->gameStatus[$userCookie]]['userID'])
+                    ? self::hash_str_2_int($this->gameStatus['users'][$this->gameStatus[$userCookie]]['userID'])
                     : false;
 
                 $ratings[$userCookie] = $this->getRatingWithCommonID(
@@ -873,16 +1021,16 @@ LIMIT 40";
             $ratings = $this->getRatingWithCommonID(
                 $this->getCommonID(
                     $userCookie['cookie'],
-                    $this->hash_str_2_int($userCookie['userID'])
+                    self::hash_str_2_int($userCookie['userID'])
                 ),
                 $userCookie['cookie'],
-                $this->hash_str_2_int($userCookie['userID'])
+                self::hash_str_2_int($userCookie['userID'])
             );
 
             return count($ratings) ? $ratings[0] : false;
         }
 
-        if (!($ratings[$userCookie] = unserialize($this->p->redis->get('erudit.rating_cache_' . $userCookie)))) {
+        if (!($ratings[$userCookie] = Cache::get('erudit.rating_cache_' . $userCookie))) {
             $ratings[$userCookie] = $this->getRatingWithCommonID(
                 $this->getCommonID(
                     $userCookie
@@ -893,7 +1041,16 @@ LIMIT 40";
         }
 
         if ($userCookie && !$ratings[$userCookie]) {
-            $ratings[$userCookie] = [0 => ['cookie' => $userCookie, 'rating' => 1700, 'games_played' => 0, 'win_percent' => 0, 'inactive_percent' => 'N/A', 'top' => 'Не в ТОПе']];
+            $ratings[$userCookie] = [
+                0 => [
+                    'cookie' => $userCookie,
+                    'rating' => 1700,
+                    'games_played' => 0,
+                    'win_percent' => 0,
+                    'inactive_percent' => 'N/A',
+                    'top' => 'Не в ТОПе'
+                ]
+            ];
         }
 
         return $this->normalizeRatings($ratings);
@@ -913,13 +1070,21 @@ LIMIT 40";
     private function statusComments_otherTurn()
     {
         return $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит'
-            . Hints::getHint($this->User, $this->gameStatus, $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] ?? false);
+            . Hints::getHint(
+                $this->User,
+                $this->gameStatus,
+                $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] ?? false
+            );
     }
 
     private function statusComments_desync()
     {
         return 'Синхронизируемся с сервером..'
-            . Hints::getHint($this->User, $this->gameStatus, $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] ?? false);
+            . Hints::getHint(
+                $this->User,
+                $this->gameStatus,
+                $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] ?? false
+            );
     }
 
     private function statusComments_myTurn()
@@ -936,7 +1101,11 @@ LIMIT 40";
             return 'Ваш ход! <br />Игра до <strong>' . $this->gameStatus['winScore'] . '</strong> очков' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
         } else {
             return $this->gameStatus['users'][$this->numUser]['username'] . ', Ваш ход!'
-                . Hints::getHint($this->User, $this->gameStatus, $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] ?? false);
+                . Hints::getHint(
+                    $this->User,
+                    $this->gameStatus,
+                    $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] ?? false
+                );
         }
     }
 
@@ -957,7 +1126,11 @@ LIMIT 40";
             return 'Игра до <strong>' . $this->gameStatus['winScore'] . '</strong> очков<br />Ваш ход следующий - приготовьтесь!' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
         } else {
             return $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит. <br />Ваш ход следующий - приготовьтесь!'
-                . Hints::getHint($this->User, $this->gameStatus, $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] ?? false);
+                . Hints::getHint(
+                    $this->User,
+                    $this->gameStatus,
+                    $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] ?? false
+                );
         }
     }
 
@@ -990,10 +1163,13 @@ LIMIT 40";
 
             shuffle($this->gameStatus['bankFishki']);
 
-            $addFishki = $this->giveFishki($this->chisloFishek - count($this->gameStatus['users'][$this->numUser]['fishki']));
-            $this->gameStatus['users'][$this->numUser]['fishki'] = array_merge($this->gameStatus['users'][$this->numUser]['fishki'], $addFishki);
-
-
+            $addFishki = $this->giveFishki(
+                $this->chisloFishek - count($this->gameStatus['users'][$this->numUser]['fishki'])
+            );
+            $this->gameStatus['users'][$this->numUser]['fishki'] = array_merge(
+                $this->gameStatus['users'][$this->numUser]['fishki'],
+                $addFishki
+            );
         }
         $this->gameStatus['users'][$this->numUser]['lostTurns']++;
         //Увеличили число пропущенных подряд ходов
@@ -1031,20 +1207,24 @@ LIMIT 40";
                 && !empty($this->gameStatus['users'][$num]['last_request_num'])
                 && $this->gameStatus['users'][$num]['last_request_num'] > 10
             ) {
-                $this->p->redis->setex(self::CHECK_STATUS_RESULTS_KEY . $user['ID'], self::CHECK_STATUS_RESULTS_KEY_TTL, $this->gameStatus['users'][$num]['last_request_num']);
+                Cache::setex(
+                    self::CHECK_STATUS_RESULTS_KEY . $user['ID'],
+                    self::CHECK_STATUS_RESULTS_KEY_TTL,
+                    $this->gameStatus['users'][$num]['last_request_num']
+                );
             }
         }
     }
 
-    private function getUserStatus($user = FALSE)
+    private function getUserStatus($user = false)
     {
         return $this->gameStatus['users'][$this->gameStatus[($user ? $user : $this->User)]]['status'];
         //новая версия
     }
 
-    public function updateUserStatus($newStatus, $user = FALSE)
+    public function updateUserStatus($newStatus, $user = false)
     {
-        if ($user == FALSE) {
+        if ($user == false) {
             $user = $this->User;
         }
         //print_r($user);
@@ -1071,7 +1251,7 @@ LIMIT 40";
         }
         $check_statuses = ['Слово не найдено', 'Корректно', 'Слово из одной буквы', 'Повтор'];
         $result = '';
-        $desk = unserialize($this->p->redis->get('erudit.current_game_' . $this->currentGame));
+        $desk = Cache::get('erudit.current_game_' . $this->currentGame);
         //Текущая доска
         $cells = json_decode($_POST['cells'], true);
         //Присланная доска
@@ -1108,15 +1288,16 @@ LIMIT 40";
             return true;
         }
 
-        $lockTime = $this->p->redis->hget('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock_time');
+        $lockTime = Cache::hget(
+            'erudit.games_' . date('Y_m_d') . '_locks',
+            $this->currentGame . '_lock_time'
+        );
         $cycleBeginTime = date('U');
         //Будем ждать освобождения семафора, не более $this->turnDeltaTime
         while ((date('U') - $cycleBeginTime) <= $this->turnDeltaTime) {
-
             if (
                 (
-                    $this->p
-                        ->redis
+                    $this->p->redis
                         ->hincrby('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1)
                     ==
                     1
@@ -1126,9 +1307,13 @@ LIMIT 40";
                     (date('U') - $lockTime) > $this->turnDeltaTime
                 )
             ) {
-                $this->p->redis->hset('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 0);
-                $this->p->redis->hset('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock_time', date('U'));
-                $this->isStateLocked = TRUE;
+                Cache::hset('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 0);
+                Cache::hset(
+                    'erudit.games_' . date('Y_m_d') . '_locks',
+                    $this->currentGame . '_lock_time',
+                    date('U')
+                );
+                $this->isStateLocked = true;
 
                 return true;
                 //Семафор освободился
@@ -1142,44 +1327,68 @@ LIMIT 40";
 
     private function unlock()
     {
-        $this->p->redis->hset('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 0);
-        $this->isStateLocked = FALSE;
+        Cache::hset('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 0);
+        $this->isStateLocked = false;
     }
 
-    private function desync()
+    private function desync($queryNumber = false)
     {
         $this->updateUserStatus('desync');
+        $arr = ['gameState' => 'desync', 'noDialog' => true];
 
-        return $this->makeResponse($arr = ['gameState' => 'desync']);
+        if ($queryNumber) {
+            $arr['queryNumber'] = $queryNumber;
+        }
+
+        return $this->makeResponse($arr);
     }
 
     public function submitTurn()
     {
         if ($this->getUserStatus() != 'myTurn') {
-            $this->addToLog('пытается сделать ход не в свою очередь (ход #' . $this->gameStatus['turnNumber'] . ')', $this->numUser);
+            $this->addToLog(
+                'пытается сделать ход не в свою очередь (ход #' . $this->gameStatus['turnNumber'] . ')',
+                $this->numUser
+            );
 
             return $this->checkGameStatus();
         }
+        try {
+            $desk = Cache::get('erudit.current_game_' . $this->currentGame);
+            // Текущая доска
 
-        $desk = unserialize($this->p->redis->get('erudit.current_game_' . $this->currentGame));
-        //Текущая доска
-        $cells = json_decode($_POST['cells'], true);
-        //Присланная доска
+            $saveDesk = $desk;
+            // Сохранили доску
 
-        $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus);
-        if ($new_fishki === FALSE) {
-            //$this->p->redis->rpush('erudit.bad_submits', $_POST['cells']);
-            $this->addToLog('не составил ни одного слова (ход #' . $this->gameStatus['turnNumber'] . ')', $this->numUser);
+            $cells = json_decode($_POST['cells'], true);
+            // Присланная доска
+
+            $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus);
+        } catch (\Throwable $e) {
+            \BadRequest::sendBadRequest(
+                [
+                    'message' => 'Ошибка обработки данных!',
+                    'err_msg' => $e->getMessage(),
+                    'err_file' => $e->getFile(),
+                    'err_line' => $e->getLine(),
+                    'err_context' => $e->getTrace(),
+                ]
+            );
+        }
+        if ($new_fishki === false) {
+            $this->addToLog(
+                'не составил ни одного слова (ход #' . $this->gameStatus['turnNumber'] . ')',
+                $this->numUser
+            );
             $this->nextTurn();
             $this->destruct();
             //Сохранили статус игры
 
-            //return json_encode(array_merge($cells, [$this->gameStatus['users'][$this->numUser]['fishki']]));
-            return json_encode(array_merge($desk, [$this->gameStatus['users'][$this->numUser]['fishki']]));
+            return json_encode(array_merge($saveDesk, [$this->gameStatus['users'][$this->numUser]['fishki']]));
             //Сделать через отправку статуса
         }
 
-        try{
+        try {
             $ochkiZaHod = 0;
             //Очки за ход пока=0
 
@@ -1211,8 +1420,13 @@ LIMIT 40";
                     $vseFishki = true;
                 }
 
-                $addFishki = $this->giveFishki($this->chisloFishek - count($this->gameStatus['users'][$this->numUser]['fishki']));//count($new_fishki['new']));
-                $this->gameStatus['users'][$this->numUser]['fishki'] = array_merge($this->gameStatus['users'][$this->numUser]['fishki'], $addFishki);
+                $addFishki = $this->giveFishki(
+                    $this->chisloFishek - count($this->gameStatus['users'][$this->numUser]['fishki'])
+                );//count($new_fishki['new']));
+                $this->gameStatus['users'][$this->numUser]['fishki'] = array_merge(
+                    $this->gameStatus['users'][$this->numUser]['fishki'],
+                    $addFishki
+                );
 
                 foreach ($new_fishki['words'] as $word => $price) {
                     $ochkiZaHod += $price;
@@ -1222,12 +1436,18 @@ LIMIT 40";
 
                     $arr = Prizes::checkDayWordLenRecord($word);
                     foreach ($arr as $period => $value) {
-                        $this->addToLog("устанавливает рекорд по длине слова за $period - <strong>$word</strong>", $this->numUser);
+                        $this->addToLog(
+                            "устанавливает рекорд по длине слова за $period - <strong>$word</strong>",
+                            $this->numUser
+                        );
                     }
 
                     $arr = Prizes::checkDayWordPriceRecord($word, $price);
                     foreach ($arr as $period => $value) {
-                        $this->addToLog("устанавливает рекорд по стоимости слова за $period - <strong>$word - $price</strong>", $this->numUser);
+                        $this->addToLog(
+                            "устанавливает рекорд по стоимости слова за $period - <strong>$word - $price</strong>",
+                            $this->numUser
+                        );
                     }
                 }
             }
@@ -1238,17 +1458,31 @@ LIMIT 40";
             } else {
                 $arr = Prizes::checkDayTurnPriceRecord($ochkiZaHod);
                 foreach ($arr as $period => $value) {
-                    $this->addToLog("устанавливает рекорд по стоимости хода за $period - <strong>$ochkiZaHod</strong>", $this->numUser);
+                    $this->addToLog(
+                        "устанавливает рекорд по стоимости хода за $period - <strong>$ochkiZaHod</strong>",
+                        $this->numUser
+                    );
                 }
             }
-            $this->addToLog('зарабатывает ' . $ochkiZaHod . ' за ход #' . $this->gameStatus['turnNumber'] . $this->logSlov($new_fishki['words']) . ($vseFishki ? ' <span title="За все фишки" style="color: green;">(<strong>+15</strong>)</span>' : ''), $this->numUser);
+            $this->addToLog(
+                'зарабатывает ' . $ochkiZaHod . ' за ход #' . $this->gameStatus['turnNumber'] . $this->logSlov(
+                    $new_fishki['words']
+                ) . ($vseFishki ? ' <span title="За все фишки" style="color: green;">(<strong>+15</strong>)</span>' : ''),
+                $this->numUser
+            );
 
             if ($this->gameStatus['users'][$this->numUser]['score'] >= $this->gameStatus['winScore']) {
-                $this->addToLog('Побеждает со счетом ' . $this->gameStatus['users'][$this->numUser]['score'], $this->numUser);
+                $this->addToLog(
+                    'Побеждает со счетом ' . $this->gameStatus['users'][$this->numUser]['score'],
+                    $this->numUser
+                );
 
                 $arr = Prizes::checkDayGamePriceRecord($this->gameStatus['users'][$this->numUser]['score']);
                 foreach ($arr as $period => $value) {
-                    $this->addToLog("устанавливает рекорд набранных очков в игре за $period - <strong>{$this->gameStatus['users'][$this->numUser]['score']}</strong>", $this->numUser);
+                    $this->addToLog(
+                        "устанавливает рекорд набранных очков в игре за $period - <strong>{$this->gameStatus['users'][$this->numUser]['score']}</strong>",
+                        $this->numUser
+                    );
                 }
 
                 $this->storeGameResults($this->User);
@@ -1278,19 +1512,27 @@ LIMIT 40";
                 );
 
                 foreach ($arr as $period => $record) {
-                    $this->addToLog("устанавливает рекорд по числу сыгранных партий за $period - <strong>" . reset($record) . "</strong>", $this->gameStatus[key($record)]);
+                    $this->addToLog(
+                        "устанавливает рекорд по числу сыгранных партий за $period - <strong>" . reset(
+                            $record
+                        ) . "</strong>",
+                        $this->gameStatus[key($record)]
+                    );
                 }
             }
-        } catch (Exception $e){
-            $this->p->redis->rpush('erudit.exceptions', serialize([
-                'date' => date('U'),
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            ]));
+        } catch (\Throwable $e) {
+            \BadRequest::sendBadRequest(
+                [
+                    'message' => 'Ошибка обработки данных!',
+                    'err_msg' => $e->getMessage(),
+                    'err_file' => $e->getFile(),
+                    'err_line' => $e->getLine(),
+                    'err_context' => $e->getTrace(),
+                ]
+            );
         }
 
-        $this->p->redis->setex('erudit.current_game_' . $this->currentGame, $this->cacheTimeout, serialize($cells));
+        Cache::setex('erudit.current_game_' . $this->currentGame, $this->cacheTimeout, $cells);
         //Измененная Присланная доска -> текущая
 
         $this->destruct();
@@ -1307,9 +1549,13 @@ LIMIT 40";
         foreach ($words as $word => $price) {
             if (true)//( isset($_SERVER['HTTP_ORIGIN']) && ($_SERVER['HTTP_ORIGIN'] != 'https://xn--d1aiwkc2d.club') )
             {
-                $res .= " <a href=\"#\" onclick=\"event.preventDefault(); openWindowGlobal('" . urlencode($word) . "').then((data1) => { var openWindow = window.open('about:blank', 'Слово','location=no');setTimeout(function () {openWindow.document.body.innerHTML = data1;} , 1000) });\">$word</a>-$price&nbsp;";
+                $res .= " <a href=\"#\" onclick=\"event.preventDefault(); openWindowGlobal('" . urlencode(
+                        $word
+                    ) . "').then((data1) => { var openWindow = window.open('about:blank', 'Слово','location=no');setTimeout(function () {openWindow.document.body.innerHTML = data1;} , 1000) });\">$word</a>-$price&nbsp;";
             } else {
-                $res .= " <a href=\"https://gufo.me/search?term=" . urlencode($word) . "\" target=\"_blank\">$word</a>-$price&nbsp;";
+                $res .= " <a href=\"https://gufo.me/search?term=" . urlencode(
+                        $word
+                    ) . "\" target=\"_blank\">$word</a>-$price&nbsp;";
             }
         }
         //gufo.me нахуй
@@ -1342,15 +1588,18 @@ LIMIT 40";
 
     private function onlinePlayers()
     {
-        if (!($rangedOnlinePlayers = unserialize($this->p->redis->get('erudit.num_rating_players')))) {
-            $lastGame = $this->p->redis->get('erudit.num_games');
+        if (!($rangedOnlinePlayers = Cache::get('erudit.num_rating_players'))) {
+            $lastGame = Cache::get('erudit.num_games');
             $players = [];
             for ($i = $lastGame; $i > ($lastGame - 50); $i--) {
-                if ($game = unserialize($this->p->redis->get("erudit.game_status_" . $i))) {
+                if ($game = Cache::get("erudit.game_status_" . $i)) {
                     if (!isset($game['results'])) {
                         foreach ($game['users'] as $num => $user) {
                             if (strstr($user['ID'], 'botV3#') === false) {
-                                $players[$user['ID']] = ['cookie' => $user['ID'], 'userID' => (isset($user['userID']) ? $user['userID'] : false)];
+                                $players[$user['ID']] = [
+                                    'cookie' => $user['ID'],
+                                    'userID' => (isset($user['userID']) ? $user['userID'] : false)
+                                ];
                             }
                         }
                     }
@@ -1379,15 +1628,27 @@ LIMIT 40";
                     if ($rating['rating'] > 2400) {
                         $rangedOnlinePlayers[2400]++;
                     }
-
+                    if ($rating['rating'] > 2500) {
+                        $rangedOnlinePlayers[2500]++;
+                    }
+                    if ($rating['rating'] > 2600) {
+                        $rangedOnlinePlayers[2600]++;
+                    }
+                    if ($rating['rating'] > 2700) {
+                        $rangedOnlinePlayers[2700]++;
+                    }
                 }
             }
 
-            $this->p->redis->setex('erudit.num_rating_players', $this->ratingsCacheTimeout, serialize($rangedOnlinePlayers));
+            Cache::setex(
+                'erudit.num_rating_players',
+                $this->ratingsCacheTimeout,
+                $rangedOnlinePlayers
+            );
         }
 
         if ($rangedOnlinePlayers[1900]) {
-            $cnt = $this->p->redis->hlen('erudit.rating_waiters');
+            $cnt = Cache::hlen('erudit.rating_waiters');
             if ($cnt < ($rangedOnlinePlayers[1900] / 2)) {
                 $thisUserRating = $this->getRatings(['cookie' => $this->User, 'userID' => false]);
                 if (($thisUserRating !== false) && ($thisUserRating['rating'] > 1750)) {
@@ -1403,11 +1664,11 @@ LIMIT 40";
 
     private function isUserInInviteQueue()
     {
-        if ($this->p->redis->hget("erudit.inviteplayers_waiters", $this->User)) {
+        if (Cache::hget("erudit.inviteplayers_waiters", $this->User)) {
             return true;
         }
 
-        if ($this->p->redis->hget("erudit.inviteENplayers_waiters", $this->User)) {
+        if (Cache::hget("erudit.inviteENplayers_waiters", $this->User)) {
             return true;
         }
 
@@ -1418,7 +1679,9 @@ LIMIT 40";
     {
         if (!$this->currentGame) {
             if (isset($_GET['queryNumber']) && ($_GET['queryNumber'] == 1) && !$this->isUserInInviteQueue()) {
-                return $this->makeResponse(['gameState' => 'chooseGame', 'gameSubState' => 'choosing', 'players' => $this->onlinePlayers()]);
+                return $this->makeResponse(
+                    ['gameState' => 'chooseGame', 'gameSubState' => 'choosing', 'players' => $this->onlinePlayers()]
+                );
             } else {
                 return $this->startGame();
             }
@@ -1437,23 +1700,38 @@ LIMIT 40";
 
 
         if ($this->getUserStatus() == 'gameResults') {
-            if (!(($desk = $this->p->redis->get(('erudit.current_game_' . $this->currentGame))) && $this->currentGame)) {
-                $desk = serialize([]);
+            if (!(($desk = Cache::get(
+                    ('erudit.current_game_' . $this->currentGame)
+                )) && $this->currentGame)) {
+                $desk = [];
             }
 
             $result = $this->gameStatus['results'];
             if (isset($result['winner'])) {
                 if ($result['winner'] == $this->User) {
-                    return $this->makeResponse(['gameState' => 'gameResults', 'comments' => "<strong style=\"color:green;\">Вы выиграли!</strong><br/>Начните новую игру", 'desk' => unserialize($desk)]);
+                    return $this->makeResponse(
+                        [
+                            'gameState' => 'gameResults',
+                            'comments' => "<strong style=\"color:green;\">Вы выиграли!</strong><br/>Начните новую игру",
+                            'desk' => $desk
+                        ]
+                    );
                 } else {
-                    return $this->makeResponse(['gameState' => 'gameResults', 'comments' => "<strong style=\"color:red;\">Вы проиграли!</strong><br/>Начните новую игру", 'desk' => unserialize($desk)]);
+                    return $this->makeResponse(
+                        [
+                            'gameState' => 'gameResults',
+                            'comments' => "<strong style=\"color:red;\">Вы проиграли!</strong><br/>Начните новую игру",
+                            'desk' => $desk
+                        ]
+                    );
                 }
             }
         }
 
 
         //Поставим коррекцию времени начала хода для учета периодичности запросов пользователей
-        if (($this->getUserStatus() == 'myTurn') && !$this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']]) {
+        if (($this->getUserStatus(
+                ) == 'myTurn') && !$this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']]) {
             if ((date('U') - $this->gameStatus['turnBeginTime']) < $this->turnDeltaTime) {
                 $this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] = date('U');
             } else {
@@ -1462,7 +1740,6 @@ LIMIT 40";
         }
 
         if ((date('U') - $this->gameStatus['turnBeginTime']) > ($this->gameStatus['turnTime'] + $this->turnDeltaTime)) {
-
             $this->addToLog('Время хода истекло', $this->gameStatus['activeUser']);
 
             $this->gameStatus['users'][$this->gameStatus['activeUser']]['lostTurns']++;
@@ -1473,26 +1750,39 @@ LIMIT 40";
             if ($this->gameStatus['users'][$this->gameStatus['activeUser']]['lostTurns'] >= 3) {
                 $this->storeGameResults($this->lost3TurnsWinner($this->gameStatus['activeUser']));
                 //Начало фрагмента для объединения
-                if (!(($desk = $this->p->redis->get(('erudit.current_game_' . $this->currentGame))) && $this->currentGame)) {
-                    $desk = serialize([]);
+                if (!(($desk = Cache::get(
+                        ('erudit.current_game_' . $this->currentGame)
+                    )) && $this->currentGame)) {
+                    $desk = [];
                 }
                 $result = $this->gameStatus['results'];
                 if (isset($result['winner'])) {
                     if ($result['winner'] == $this->User) {
-                        return $this->makeResponse(['gameState' => 'gameResults', 'comments' => "<strong style=\"color:green;\">Вы выиграли!</strong><br/>Начните новую игру", 'desk' => unserialize($desk)]);
+                        return $this->makeResponse(
+                            [
+                                'gameState' => 'gameResults',
+                                'comments' => "<strong style=\"color:green;\">Вы выиграли!</strong><br/>Начните новую игру",
+                                'desk' => $desk
+                            ]
+                        );
                     } else {
-                        return $this->makeResponse(['gameState' => 'gameResults', 'comments' => "<strong style=\"color:red;\">Вы проиграли!</strong><br/>Начните новую игру", 'desk' => unserialize($desk)]);
+                        return $this->makeResponse(
+                            [
+                                'gameState' => 'gameResults',
+                                'comments' => "<strong style=\"color:red;\">Вы проиграли!</strong><br/>Начните новую игру",
+                                'desk' => $desk
+                            ]
+                        );
                     }
                     //Конец фрагмента для объединения
                 }
             } else {
                 $this->nextTurn();
             }
-
         }
 
-        if (($desk = $this->p->redis->get(('erudit.current_game_' . $this->currentGame))) && $this->currentGame) {
-            return $this->makeResponse(['gameState' => $this->getUserStatus(), 'desk' => unserialize($desk)]);
+        if (($desk = Cache::get(('erudit.current_game_' . $this->currentGame))) && $this->currentGame) {
+            return $this->makeResponse(['gameState' => $this->getUserStatus(), 'desk' => $desk]);
         } else {
             if ($status = $this->getUserStatus()) {
                 return $this->makeResponse(['gameState' => $status]);
@@ -1517,9 +1807,15 @@ LIMIT 40";
 
         foreach ($this->gameStatus['users'] as $num => $user) {
             if ($num != $userWinner) {
-                $this->addToLog('остался без фишек! Победитель - ' . $this->gameStatus['users'][$userWinner]['username'] . ' со счетом ' . $this->gameStatus['users'][$userWinner]['score'], $num);
+                $this->addToLog(
+                    'остался без фишек! Победитель - ' . $this->gameStatus['users'][$userWinner]['username'] . ' со счетом ' . $this->gameStatus['users'][$userWinner]['score'],
+                    $num
+                );
             } else {
-                $this->addToLog('остался без фишек! Вы победили со счетом ' . $this->gameStatus['users'][$userWinner]['score'], $num);
+                $this->addToLog(
+                    'остался без фишек! Вы победили со счетом ' . $this->gameStatus['users'][$userWinner]['score'],
+                    $num
+                );
             }
         }
 
@@ -1531,7 +1827,7 @@ LIMIT 40";
         $maxres = 0;
         $userWinner = 0;
         if ($this->gameStatus['users'][$numLostUser]['score'] === 0) {
-            $this->gameStatus['users'][$numLostUser]['isActive'] = FALSE;
+            $this->gameStatus['users'][$numLostUser]['isActive'] = false;
         }
 
         foreach ($this->gameStatus['users'] as $num => $user) {
@@ -1540,7 +1836,10 @@ LIMIT 40";
                 $userWinner = $num;
             }
         }
-        $this->addToLog('пропустил 3 хода! Победитель - ' . $this->gameStatus['users'][$userWinner]['username'] . ' со счетом ' . $this->gameStatus['users'][$userWinner]['score'], $numLostUser);
+        $this->addToLog(
+            'пропустил 3 хода! Победитель - ' . $this->gameStatus['users'][$userWinner]['username'] . ' со счетом ' . $this->gameStatus['users'][$userWinner]['score'],
+            $numLostUser
+        );
 
         return $this->gameStatus['users'][$userWinner]['ID'];
     }
@@ -1555,9 +1854,10 @@ LIMIT 40";
                 &&
                 !isset($this->gameStatus['users'][$numUser]['lastActiveTime'])
                 &&
-                $this->gameStatus['turnNumber'] > ($this->gameStatus['users'][$numUser]['inactiveTurn'] + $this->activeGameUsers())
+                $this->gameStatus['turnNumber'] > ($this->gameStatus['users'][$numUser]['inactiveTurn'] + $this->activeGameUsers(
+                    ))
             ) {
-                $this->exitGame($numUser, FALSE);
+                $this->exitGame($numUser, false);
             }
             //Выпиливаем неактивного юзера
         }
@@ -1567,13 +1867,13 @@ LIMIT 40";
             return $this->checkGameStatus();
         }
 
-        $isActiveUserFound = FALSE;
+        $isActiveUserFound = false;
 
         while (!$isActiveUserFound) {
             $nextActiveUser = ($this->gameStatus['activeUser'] + 1) % count($this->gameStatus['users']);
             $this->gameStatus['activeUser'] = $nextActiveUser;
             if ($this->gameStatus['users'][$nextActiveUser]['isActive']) {
-                $isActiveUserFound = TRUE;
+                $isActiveUserFound = true;
             }
         }
 
@@ -1599,21 +1899,21 @@ LIMIT 40";
     private function adv2Chat()
     {
         if (($this->gameStatus['turnNumber'] == 2) && isset($this->config['advMessage']) && ($this->config['advMessage'] !== false)) {
-            $this->addToChat($this->config['advMessage'], 'adv', FALSE);
+            $this->addToChat($this->config['advMessage'], 'adv', false);
         }
         //Кидаем всем в чат рекламу (кроме пользователей яндекса)
     }
 
-    public function exitGame($numuser = false, $commitState = TRUE)
+    public function exitGame($numuser = false, $commitState = true)
     {
         if (!$numuser) {
             $numuser = $this->numUser;
         }
 
-        $this->p->redis->del('erudit.get_game_' . $this->gameStatus['users'][$numuser]['ID']);
+        Cache::del('erudit.get_game_' . $this->gameStatus['users'][$numuser]['ID']);
         //Удалили указатель на текущую игру для пользователя
 
-        $this->gameStatus['users'][$numuser]['isActive'] = FALSE;
+        $this->gameStatus['users'][$numuser]['isActive'] = false;
         //Игрок стал неактивен
 
         $this->addToLog("покинул игру", $numuser);
@@ -1625,7 +1925,6 @@ LIMIT 40";
 
     public function newGame()
     {
-
         /** todo
          * Нужно доделать - уведомление остальных игроков,
          * поражение пользователю,
@@ -1645,7 +1944,7 @@ LIMIT 40";
         }
 
         if ($this->currentGame) {
-            $this->gameStatus['users'][$this->numUser]['isActive'] = FALSE;
+            $this->gameStatus['users'][$this->numUser]['isActive'] = false;
             //Игрок стал неактивен
             $this->addToLog("покинул игру", $this->numUser);
         }
@@ -1712,7 +2011,7 @@ LIMIT 40";
         //Голосование проведено
     }
 
-    public function gameStarted($statusUpdateNeeded = FALSE)
+    public function gameStarted($statusUpdateNeeded = false)
     {
         if ($statusUpdateNeeded) {
             $firstTurnUser = rand(0, count($this->currentGameUsers) - 1);
@@ -1721,14 +2020,14 @@ LIMIT 40";
             $this->gameStatus['activeUser'] = $firstTurnUser;
             $this->gameStatus['gameBeginTime'] = date('U');
             $this->gameStatus['turnBeginTime'] = $this->gameStatus['gameBeginTime'];
-            $this->gameStatus['turnTime'] = $this->makeWishTime();//(is_array($this->turnTime) ? $this->turnTime[count($this->currentGameUsers)] : $this->turnTime);
+            $this->gameStatus['turnTime'] = $this->makeWishTime();
             $this->gameStatus['turnNumber'] = 1;
             $this->gameStatus['firstTurnUser'] = $firstTurnUser;
             $this->gameStatus['bankFishki'] = $this->gameStatus['lngClass']::generateBankFishki();
             $this->gameStatus['wordsAccepted'] = [];
-            $this->gameStatus['winScore'] = $this->makeWishWinscore();//$this->winScore;//300;//( (rand(1,12) % 2) ? 200 : 300);
+            $this->gameStatus['winScore'] = $this->makeWishWinscore(
+            );//$this->winScore;//300;//( (rand(1,12) % 2) ? 200 : 300);
             $this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] = false;
-            //print '!!!!!!!!!!!!';print_r($this->currentGameUsers);print_r($this->gameStatus);
             $this->updateUserStatus('myTurn', $this->currentGameUsers[$firstTurnUser]);
             //Назначили ход случайному юзеру
 
@@ -1753,59 +2052,88 @@ LIMIT 40";
                 $this->gameStatus['users'][$num]['common_id'] = $this->getPlayerID($user['ID'], 'createCommonID');
                 //Прописали рейтинг и common_id игрока в статусе игры - только для games_statistic.php
             }
-            $this->addToLog('Новая игра начата! <br />Набери <strong>' . $this->gameStatus['winScore'] . '</strong> очков');
+            $this->addToLog(
+                'Новая игра начата! <br />Набери <strong>' . $this->gameStatus['winScore'] . '</strong> очков'
+            );
         }
 
 
-        return $this->makeResponse(['gameState' => $this->getUserStatus(),
-            'usersInfo' => serialize($this->currentGameUsers)]);
+        return $this->makeResponse(
+            [
+                'gameState' => $this->getUserStatus(),
+                'usersInfo' => $this->currentGameUsers,//хз зачем этот ключ - нигде не используется
+            ]
+        );
     }
 
-    private function userLastActivity($user = FALSE)
+    private function userLastActivity($user = false)
     {
-        $lastAct = $this->p->redis->get('erudit.user_' . ($user ? $user : $this->User) . '_last_activity');
+        $lastAct = Cache::get('erudit.user_' . ($user ? $user : $this->User) . '_last_activity');
         if (!$lastAct) {
-            return FALSE;
+            return false;
         }
         //Если кеш сгорел, возвращаем неактивность
 
         if ((date('U') - $lastAct) > $this->activityTimeout) {
-            return FALSE;
+            return false;
         }
         //Если неактивен долго, возвращаем неактивность
 
-        return TRUE;
+        return true;
     }
 
 
     private function addToGame($waiting_game, $timeWaiting = false)
     {
         $time = date('U') - ($timeWaiting ? $timeWaiting : 0);
-        $waiting_game = array_merge($waiting_game, [$this->User => ['time' => $time, 'options' => (isset($_POST['ochki_num']) ? $_POST : false)]]);
-        $this->p->redis->rpush('erudit.games_waiting_v2', serialize($waiting_game));
+        $waiting_game = array_merge(
+            $waiting_game,
+            [
+                $this->User => [
+                    'time' => $time,
+                    'options' => (isset($_POST['ochki_num']) ? $_POST : false)
+                ]
+            ]
+        );
+        Cache::rpush('erudit.games_waiting_v2', $waiting_game);
         //Поместили список игроков в начало очереди
         $this->gamePlayersWaiting = count($waiting_game);
         $this->updateUserStatus('initGame');
         if ($timeWaiting) {
-            return $this->makeResponse(['gameState' => 'initGame', 'gameSubState' => $this->gamePlayersWaiting, 'timeWaiting' => $timeWaiting, 'gameWaitLimit' => $this->gameWaitLimit]);
+            return $this->makeResponse(
+                [
+                    'gameState' => 'initGame',
+                    'gameSubState' => $this->gamePlayersWaiting,
+                    'timeWaiting' => $timeWaiting,
+                    'gameWaitLimit' => $this->gameWaitLimit
+                ]
+            );
         } else {
-            return $this->makeResponse(['gameState' => 'initGame', 'gameSubState' => $this->gamePlayersWaiting, 'gameWaitLimit' => $this->gameWaitLimit]);
+            return $this->makeResponse(
+                [
+                    'gameState' => 'initGame',
+                    'gameSubState' => $this->gamePlayersWaiting,
+                    'gameWaitLimit' => $this->gameWaitLimit
+                ]
+            );
         }
     }
 
     private function cleanUp($User, $queue)
     {
-        $this->p->redis->hdel('erudit.' . $queue . 'players_waiters', $User);
+        Cache::hdel('erudit.' . $queue . 'players_waiters', $User);
     }
 
     public function startGame()
     {
         if ($this->currentGame && is_array($this->currentGameUsers)) {
-            return $this->gameStarted(FALSE);
+            return $this->gameStarted(false);
             //Вернули статус начатой игры без обновления статусов в кеше
         }
 
-        return (new \Erudit\Queue($this->User, $this, $this->p, $_POST))->doSomethingWithThisStuff((isset($_GET['lang']) && $_GET['lang'] == 'EN') ? $_GET['lang'] : '');
+        return (new Queue($this->User, $this, $this->p, $_POST))->doSomethingWithThisStuff(
+            (isset($_GET['lang']) && $_GET['lang'] == 'EN') ? $_GET['lang'] : ''
+        );
     }
 
     private function processInvites(&$arr)
@@ -1849,7 +2177,8 @@ LIMIT 40";
             }
         }
 
-        $arr['gameSubState'] = $gameSubState . $arr['inviteStatus'];
+        $arr['active_users'] = $numActiveUsers;
+        $arr['gameSubState'] = $gameSubState . $arr['inviteStatus'] . $arr['active_users'];
     }
 
     public function makeResponse(array $arr)
@@ -1860,11 +2189,17 @@ LIMIT 40";
 
         if (isset($this->gameStatus[$this->User])) {
             if (isset($this->statusComments[$arr['gameState']])) {
-                $arr = array_merge($arr, ['comments' => call_user_func([$this, 'statusComments_' . $arr['gameState']])]);
+                $arr = array_merge(
+                    $arr,
+                    ['comments' => call_user_func([$this, 'statusComments_' . $arr['gameState']])]
+                );
             }
+
+            // Возвращаем Десинк без сохранения состояния игры - разлочка в __destruct
             if ($arr['gameState'] == 'desync') {
                 return json_encode($arr);
             }
+
             if (is_array($this->gameStatus['users'][$this->numUser]['fishki'])) {
                 if (count($this->gameStatus['users'][$this->numUser]['fishki'])) {
                     $arr = array_merge($arr, ['fishki' => $this->gameStatus['users'][$this->numUser]['fishki']]);
@@ -1884,7 +2219,6 @@ LIMIT 40";
                     //Если игрок неактивен (слился, пропуски ходов), то его имя='' для фронта
 
                     $score .= ' ' . $this->gameStatus['users'][$nextUserNum]['username'] . ':' . $this->gameStatus['users'][$nextUserNum]['score'];
-
                 }
 
                 $arr = array_merge($arr, ['score' => $score]);
@@ -1903,7 +2237,9 @@ LIMIT 40";
 
 
             if ($this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] > 0) {
-                $turnTimeLeft = ($this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] + $this->gameStatus['turnTime']) - date('U');
+                $turnTimeLeft = ($this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] + $this->gameStatus['turnTime']) - date(
+                        'U'
+                    );
             } else {
                 $turnTimeLeft = ($this->gameStatus['turnBeginTime'] + $this->gameStatus['turnTime']) - date('U');
             }
@@ -1923,7 +2259,14 @@ LIMIT 40";
 
             $turnTimeLeft = "Время на ход " . $turnTimeLeft;
 
-            $arr = array_merge($arr, ['timeLeft' => $turnTimeLeft, 'secondsLeft' => (int)$turnSecondsLeft, 'minutesLeft' => $turnMinutesLeft]);
+            $arr = array_merge(
+                $arr,
+                [
+                    'timeLeft' => $turnTimeLeft,
+                    'secondsLeft' => (int)$turnSecondsLeft,
+                    'minutesLeft' => $turnMinutesLeft
+                ]
+            );
 
             if ($arr['gameState'] == 'myTurn') {
                 $arr = array_merge($arr, ['turnTime' => $this->gameStatus['turnTime']]);
@@ -1937,7 +2280,9 @@ LIMIT 40";
                 if (count($this->gameStatus['users'][$this->numUser]['logStack'])) {
                     $log = [];
                     while ($logRecord = array_shift($this->gameStatus['users'][$this->numUser]['logStack'])) {
-                        $log[] = trim(($logRecord[0] !== false ? $this->gameStatus['users'][$logRecord[0]]['username'] : '') . ' ' . $logRecord[1]);
+                        $log[] = trim(
+                            ($logRecord[0] !== false ? $this->gameStatus['users'][$logRecord[0]]['username'] : '') . ' ' . $logRecord[1]
+                        );
                     }
                     $arr = array_merge($arr, ['log' => $log]);
                     //Добавили лог событий в ответ юзеру
@@ -1972,8 +2317,8 @@ LIMIT 40";
             //Игра еще не создана, но комменты для статуса раздаем
         }
 
-            $this->destruct();
-            //Сохранили статус игры
+        $this->destruct();
+        //Сохранили статус игры
 
         if (isset($_GET['queryNumber'])) {
             return json_encode(array_merge($arr, ['query_number' => $_GET['queryNumber']]));

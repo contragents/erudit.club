@@ -1,542 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="083cf621-0e75-4976-a3cb-6b5812dcdbdc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/erudit.club.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/yii2settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JsComposer.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bootbox.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/PlayerInfoProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/conf.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cpanel/checkStatus.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cpanel/index.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cpanel/tpl/2yourTurn.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cpanel/tpl/gamesTableFooter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cpanel/tpl/gamesTableHeader.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cpanel/tpl/gamesTableRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cpanel/tpl/otherTurn.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cpanel/tpl/yourTurn.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cpanel/turnBeeper.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/choose_css.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/choose_css.css1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/choose_css.css_bak1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/choose_css.css_release" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/choose_css.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/knopki.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/knopki_english.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/snapshots.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/checkButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/dups/findPlaceFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/dups/getCheckButtonFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/dups/getShareButtonFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/dups/submitButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/findPlaceFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/fishkaDragEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/getButtonFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/getSVGButtonFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/newGameButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/shareButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/create/submitButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/createFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globalFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/ajaxGetGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/bootBoxIsOpenedGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/buttonGlobalFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/buttonSettingsGlobal.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/changeFishkiGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/ajaxGetGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/buttonGlobalFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/buttonGlobalFunctions_pre_fix_97.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/buttonSettingsGlobal_20201229.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/findPlaceGlobalFunction_20200918.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/findPlaceGlobalFunction_20201012.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/findPlaceGlobalFunction_20201015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/gameStates_20201126.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/gameStates_time_wait_change.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/getFishkaGlobalFunction_20210109.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/parseDeskGlobalFunction_20201114.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/findPlaceGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/gagetTypeFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/gameStates.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/getFishkaGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/initCellsGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/instruction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/instruction_eng.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/letterPrices.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/openWindowGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/parseDeskGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/rusLetters.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/wav.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/initializeFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/main.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/CacheLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/CookieLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/DBLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/EngLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/EruditGame.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/HintsLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/PlayerLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/PrizesLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/QueueLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/RuLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/StatsLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/avatar_url_parser.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/checkWordFishkiFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/checkWordFishkiFunctionENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/client.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/clientLists.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/clientListsENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/checkWordFishkiFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/client.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/clientLists.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/clientListsV3.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/clientListsV3__.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/clientLists_28032021.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/clientLists_newFormat.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/client_20201026.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/client_20201104.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/client_20201106.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/client_argv.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/findWordSlevaFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/findWordSpravaFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/findWordSverhuFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/findWordVnizFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/games_statistics.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/games_statistics14.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/games_statistics_12032021.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/games_statistics_20210222.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/games_statistics_escapes.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/games_statistics_prerelease.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/maxToFunctions.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/newBotsGen.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/newBotsGenV2.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/newBotsGenV3.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/dups/newBotsGen_new_WG_FORMAT.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSlevaFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSlevaFunctionENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSpravaFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSpravaFunctionENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSverhuFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSverhuFunctionENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordVnizFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordVnizFunctionENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/games_statistics.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/maxToFunctions.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/newBotsGen.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/newBotsGenV2.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/newBotsGenV3.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/newBotsGenV3ENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/redisDailyCleaner.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/change_fishki.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/choose_css.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/cookie_checker.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/dups/EruditGame.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/dups/PrizesLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/dups/RuLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/exit_game.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/game_page.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/game_starter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/games_history.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/hash_str_2_int.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/invite_to_new_game.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/merge_the_ids.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/new_game.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/player_cabinet.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/players_ratings.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/send_chat_message.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/set_inactive.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/set_player_avatar_url.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/set_player_name.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/status_checker.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/test.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/testCache.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/tpl/dups/ratingsTableRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/tpl/ratingsTableFooter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/tpl/ratingsTableHeader.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/tpl/ratingsTableNicknameFormRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/tpl/ratingsTablePrizesRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/tpl/ratingsTableRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/turn_submitter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/word.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/word_checker.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/youtube_videos.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/yowser/index.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/preloadFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/updateFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/ysdk.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev2.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dict.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dict/efremova.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dict/import_cambrige.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dict/import_efremova.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dict/import_gufo.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dict/import_lexu_me.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dict/import_meb.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dict_2_letters.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/ER_LOGO_1024v4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/alarm/chat.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/alarm/igroki.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/alarm/instrukt.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/alarm/log.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/alarm/new_game.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/alarm/otpravit.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/alarm/pomenyat.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/alarm/proveryt.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/alarm/steret.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/arrow-left-right.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/background.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/bid-win.jfif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/black_tile+rflct_v7.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/black_tile3.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/black_tile_v2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/black_tile_v6.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/button_imgs/changeButton_disabled.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/button_imgs/changeButton_enabled.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/button_imgs/checkButton_enabled.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/button_imgs/logButton_enabled.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/button_imgs/newGameButton_enabled.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/button_imgs/resetButton_enabled.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/button_imgs/submitButton_disabled.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/button_imgs/submitButton_enabled.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/chat_messages/chat_m1.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/chat_messages/chat_m2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/chat_messages/chat_m3.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/chat_messages/chat_m4.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/chat_messages/chat_m5.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/chat_messages/chat_m6.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/chat_messages/chat_m7.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/chat_messages/chat_m8.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/chat_messages/chat_m9+.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/chat_messages/chat_m9.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/donate.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/e_8x8_2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/field_source.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/field_source.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/field_source_280921_1.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/field_source_old.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/fishka_back.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/fishka_empty.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/fishka_empty.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/fullscreen.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/idea.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/inactive/chat.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/inactive/dups/otpravit.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/inactive/igroki.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/inactive/instrukt.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/inactive/log.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/inactive/new_game.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/inactive/otpravit.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/inactive/pomenyat.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/inactive/proveryt.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/inactive/steret.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/letters.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/letters.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/letters_black.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/letters_english.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/letters_english.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/chat.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/dups/new_game.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/dups/otpravit.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/igroki.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/instrukt.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/log.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/new_game.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/otpravit.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/pomenyat.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/proveryt.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/razdv.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/rekordy.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/najatie/steret.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/chat.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/chat1.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/igroki.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/instrukt.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/log.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/new_game.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/otpravit.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/pomenyat.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/proveryt.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/razdv.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/rekordy.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/navedenie/steret.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/no-network-logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/no-network-logo_bac.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/no_network_transparent.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/numbers/1.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/numbers/2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/numbers/3.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/numbers/4.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/numbers/5.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/numbers/6.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/numbers/7.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/numbers/8.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/numbers/9+.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/numbers/9.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/nums.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/chat.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/chat_bak.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/igroki.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/instrukt.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/log.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/new_game.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/otpravit.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/pomenyat.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/proveryt.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/razdv.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/rekordy.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/otjat/steret.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/dlinnoe_slovo_day.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/dlinnoe_slovo_day.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/dlinnoe_slovo_day.svg1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/ochki_za_hod_day.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/ochki_za_hod_day.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/ochki_za_hod_day.svg1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/ochki_za_igru_day.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/ochki_za_slovo_day.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/ochki_za_slovo_day.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/ochki_za_slovo_day.svg1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/sygrano_partiy_day.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/daily/sygrano_partiy_day.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/monthly/dlinnoe_slovo_month.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/monthly/dlinnoe_slovo_month.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/monthly/ochki_za_hod_month.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/monthly/ochki_za_hod_month.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/monthly/ochki_za_igru_month.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/monthly/ochki_za_slovo_month.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/monthly/ochki_za_slovo_month.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/monthly/sygrano_partiy_month.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/monthly/sygrano_partiy_month.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/top_1.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/top_10.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/top_2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/top_3.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/top_4.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/top_5.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/top_6.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/top_7.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/top_8.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/top_9.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/weekly/dlinnoe_slovo_week.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/weekly/dlinnoe_slovo_week.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/weekly/ochki_za_hod_week.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/weekly/ochki_za_hod_week.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/weekly/ochki_za_igru_week.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/weekly/ochki_za_slovo_week.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/weekly/ochki_za_slovo_week.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/weekly/sygrano_partiy_week.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/weekly/sygrano_partiy_week.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/yearly/dlinnoe_slovo_year.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/yearly/dlinnoe_slovo_year.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/yearly/ochki_za_hod_year.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/yearly/ochki_za_hod_year.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/yearly/ochki_za_hod_year.svg1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/yearly/ochki_za_igru_year.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/yearly/ochki_za_slovo_year.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/yearly/ochki_za_slovo_year.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/yearly/sygrano_partiy_year.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/prizes/yearly/sygrano_partiy_year.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/fb_share.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/fb_share.png1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/hor_640_360.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/ok_share.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/ok_share.png1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/share_yandex.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/tg_share.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/tg_share.png1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/tw_share.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/tw_share.png1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/vk_share.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/share/vk_share.png1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/star_transparent.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/star_transparent_2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/test.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/installer.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/noop.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/noop.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/palindrom.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/phaser.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/png_retriever.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/privacy.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ranks" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/robots.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scramble.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/snapshot.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/snapshots/draw_file.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tmp/image.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tmp/image2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tmp/wget-log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/top2char.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tpl/main_footer.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tpl/main_header.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/ili_ava.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/DB/CacheProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/DB/DB.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/DB/dups/DB.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/DB/dups/DB_preValue.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/bootbox_5.4.0/bootbox.locales.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/bootbox_5.4.0/bootbox.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/bootstrap_4.5.2/bootstrap.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/bootstrap_4.5.2/bootstrap.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/deprecated/xcache_functions.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/jquery_1.12.4/jquery.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/phaser_3/phaser.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/phaser_35/phaser.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/popper_2.4.4/popper.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/checkButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/dups/findPlaceFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/dups/getCheckButtonFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/dups/getShareButtonFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/dups/submitButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/findPlaceFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/fishkaDragEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/getButtonFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/getSVGButtonFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/newGameButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/shareButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/create/submitButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/createFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globalFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globalVars.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/ajaxGetGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/bootBoxIsOpenedGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/buttonGlobalFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/buttonSettingsGlobal.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/changeFishkiGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/ajaxGetGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/buttonGlobalFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/buttonGlobalFunctions_pre_fix_97.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/buttonSettingsGlobal_20201229.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/findPlaceGlobalFunction_20200918.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/findPlaceGlobalFunction_20201012.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/findPlaceGlobalFunction_20201015.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/gameStates_20201126.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/gameStates_time_wait_change.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/getFishkaGlobalFunction_20210109.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/parseDeskGlobalFunction_20201114.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/findPlaceGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/gagetTypeFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/gameStates.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/getFishkaGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/initCellsGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/instruction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/instruction_eng.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/letterPrices.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/openWindowGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/parseDeskGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/rusLetters.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/globals/wav.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/initializeFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/main.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/CacheLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/CookieLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/DBLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/EngLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/EruditGame.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/HintsLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/PlayerLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/PrizesLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/QueueLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/RuLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/StatsLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/avatar_url_parser.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/checkWordFishkiFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/checkWordFishkiFunctionENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/client.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/clientLists.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/clientListsENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/checkWordFishkiFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/client.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/clientLists.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/clientListsV3.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/clientListsV3__.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/clientLists_28032021.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/clientLists_newFormat.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/client_20201026.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/client_20201104.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/client_20201106.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/client_argv.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/findWordSlevaFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/findWordSpravaFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/findWordSverhuFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/findWordVnizFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/games_statistics.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/games_statistics14.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/games_statistics_12032021.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/games_statistics_20210222.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/games_statistics_escapes.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/maxToFunctions.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/newBotsGen.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/newBotsGenV2.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/newBotsGenV3.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/newBotsGen_new_WG_FORMAT.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSlevaFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSlevaFunctionENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSpravaFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSpravaFunctionENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSverhuFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSverhuFunctionENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordVnizFunction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordVnizFunctionENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/games_statistics.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/maxToFunctions.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/newBotsGen.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/newBotsGenV2.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/newBotsGenV3.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/newBotsGenV3ENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/redisDailyCleaner.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/change_fishki.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/choose_css.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/cookie_checker.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/dups/EruditGame.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/dups/PrizesLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/dups/RuLangProvider.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/exit_game.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/game_page.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/game_starter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/games_history.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/hash_str_2_int.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/invite_to_new_game.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/merge_the_ids.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/new_game.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/player_cabinet.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/players_ratings.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/send_chat_message.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/set_inactive.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/set_player_avatar_url.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/set_player_name.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/status_checker.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/test.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/testCache.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/dups/ratingsTableRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/ratingsTableFooter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/ratingsTableHeader.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/ratingsTableNicknameFormRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/ratingsTablePrizesRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/ratingsTableRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/turn_submitter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/word.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/word_checker.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/youtube_videos.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/php/yowser/index.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/preloadFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/updateFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex1.0.1.1/ysdk.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/yandex_204db8b54d13840c.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/BadRequestLangProvider.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globalFunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globalFunctions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/ajaxGetGlobalFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/ajaxGetGlobalFunction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/buttonGlobalFunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/buttonGlobalFunctions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/gameStates.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/gameStates.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/EruditGame.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/EruditGame.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/games_history.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/games_history.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game.php" beforeDir="false" afterPath="$PROJECT_DIR$/game.php" afterDir="false" />
+    </list>
+    <list id="493eaa45-d165-4bb4-bddd-131381b96e0a" name="ignore" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -547,7 +34,35 @@
     <execution />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="staging" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/.idea/workspace.xml">
+      <ranges>
+        <range start1="9" end1="10" start2="9" end2="16" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
+        <range start1="13" end1="13" start2="19" end2="20" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="14" end1="14" start2="21" end2="24" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="15" end1="169" start2="25" end2="32" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="181" end1="182" start2="44" end2="45" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="185" end1="185" start2="48" end2="71" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="195" end1="196" start2="81" end2="84" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="199" end1="199" start2="87" end2="260" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="209" end1="209" start2="270" end2="285" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="217" end1="218" start2="293" end2="413" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="228" end1="229" start2="423" end2="436" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="233" end1="233" start2="440" end2="441" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="237" end1="238" start2="445" end2="461" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="240" end1="241" start2="463" end2="488" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="243" end1="244" start2="490" end2="491" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="248" end1="249" start2="495" end2="500" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="251" end1="252" start2="502" end2="507" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+      </ranges>
+    </file>
   </component>
   <component name="ProjectId" id="2HUDnNOLmFyPgnYqujyuNJ4T097" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -558,9 +73,184 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="PHP" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/dev1.0.1.2/php" />
+    <property name="php.override.implement.member.chooser.php.doc" value="COPY_ALWAYS" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\dev1.0.1.2\php" />
+    </key>
+  </component>
+  <component name="RestClientSettings">
+    <option name="REQUEST_HISTORY">
+      <list>
+        <RestClientRequest>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://api.openai.com/v1/completions" />
+          <option name="urlPath" value="" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Authorization" />
+                <option name="value" value="Bearer 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" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Content-Type" />
+                <option name="value" value="application/json" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="haveTextToSend" value="true" />
+          <option name="textToSend" value="{&#10;  &quot;model&quot;: &quot;text-davinci-002&quot;,&#10;  &quot;prompt&quot;: &quot;Расскажи про игру Эрудит&quot;,&#10;  &quot;max_tokens&quot;: 2048,&#10;  &quot;temperature&quot;: 0&#10;}" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://api.openai.com/v1/completions" />
+          <option name="urlPath" value="" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Authorization" />
+                <option name="value" value="Bearer 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" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Content-Type" />
+                <option name="value" value="application/json" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="haveTextToSend" value="true" />
+          <option name="textToSend" value="{&#10;  &quot;model&quot;: &quot;text-davinci-002&quot;,&#10;  &quot;prompt&quot;: &quot;Расскажи про игру Эрудит&quot;,&#10;  &quot;max_tokens&quot;: 6,&#10;  &quot;temperature&quot;: 0&#10;}" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://api.openai.com/v1/completions" />
+          <option name="urlPath" value="" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Authorization" />
+                <option name="value" value="Bearer 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" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Content-Type" />
+                <option name="value" value="application/json" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="haveTextToSend" value="true" />
+          <option name="textToSend" value="{&#10;  &quot;model&quot;: &quot;text-davinci-002&quot;,&#10;  &quot;prompt&quot;: &quot;Say this is a test&quot;,&#10;  &quot;max_tokens&quot;: 6,&#10;  &quot;temperature&quot;: 0&#10;}" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="httpMethod" value="GET" />
+          <option name="urlBase" value="https://api.openai.com/v1/completions" />
+          <option name="urlPath" value="" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Authorization" />
+                <option name="value" value="Bearer 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" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parameters">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="model" />
+                <option name="value" value="привет бот" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parametersEnabled" value="true" />
+          <option name="textToSend" value="" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="httpMethod" value="GET" />
+          <option name="urlBase" value="https://api.openai.com/v1/completions" />
+          <option name="urlPath" value="" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Authorization" />
+                <option name="value" value="Bearer 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" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parameters">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="привет бот" />
+                <option name="value" value="" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parametersEnabled" value="true" />
+          <option name="textToSend" value="" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="HTTP Request.rest-api_5#1">
+    <configuration name="rest-api_4#1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$APPLICATION_CONFIG_DIR$/scratches/rest-api_4.http" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="rest-api_5#1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$APPLICATION_CONFIG_DIR$/scratches/rest-api_5.http" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="HTTP Request.rest-api_5#1" />
+        <item itemvalue="HTTP Request.rest-api_4#1" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -571,24 +261,243 @@
       <option name="presentableId" value="Default" />
       <updated>1668330934462</updated>
       <workItem from="1668330935508" duration="1387000" />
+      <workItem from="1668332438322" duration="2924000" />
+      <workItem from="1669357918601" duration="1424000" />
+      <workItem from="1669406070228" duration="6787000" />
+      <workItem from="1669665576608" duration="4211000" />
+      <workItem from="1669740031537" duration="2098000" />
+      <workItem from="1669803010422" duration="6000" />
+      <workItem from="1669803637098" duration="9956000" />
+      <workItem from="1669913463918" duration="5319000" />
+      <workItem from="1671639224462" duration="141000" />
+      <workItem from="1671639540383" duration="11977000" />
+      <workItem from="1671708320570" duration="16984000" />
+      <workItem from="1671996852855" duration="5221000" />
+      <workItem from="1672130158168" duration="1424000" />
+      <workItem from="1672223154319" duration="29002000" />
+      <workItem from="1672604109257" duration="5962000" />
+      <workItem from="1672741194650" duration="1107000" />
     </task>
+    <task id="LOCAL-00001" summary="Master initial commit">
+      <created>1668333587736</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1668333587736</updated>
+    </task>
+    <task id="LOCAL-00002" summary="CLUB-237 for test">
+      <created>1669024378016</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1669024378016</updated>
+    </task>
+    <task id="LOCAL-00003" summary="staging hotfix">
+      <created>1669365494887</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1669365494887</updated>
+    </task>
+    <task id="LOCAL-00004" summary="staging to test. desync hotfix">
+      <created>1669411433683</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1669411433683</updated>
+    </task>
+    <task id="LOCAL-00005" summary="CLUB-238 for test">
+      <created>1669665945833</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1669665945833</updated>
+    </task>
+    <task id="LOCAL-00006" summary="CLUB-238 for test">
+      <created>1669666091287</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1669666091287</updated>
+    </task>
+    <task id="LOCAL-00007" summary="CLUB-238 for test">
+      <created>1669666357463</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1669666357463</updated>
+    </task>
+    <task id="LOCAL-00008" summary="CLUB-238 for test 2">
+      <created>1669715377061</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1669715377061</updated>
+    </task>
+    <task id="LOCAL-00009" summary="staging added hints for desync release">
+      <created>1669743518053</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1669743518053</updated>
+    </task>
+    <task id="LOCAL-00010" summary="CLUB-236 for test on dev #1&#10;Some problems with autogenerated names">
+      <created>1669843216754</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1669843216754</updated>
+    </task>
+    <task id="LOCAL-00011" summary="CLUB-236 on release">
+      <created>1669917974221</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1669917974221</updated>
+    </task>
+    <task id="LOCAL-00012" summary="CLUB-236 on release 2">
+      <created>1669918171817</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1669918171817</updated>
+    </task>
+    <task id="LOCAL-00013" summary="CLUB-236 on release 3">
+      <created>1669918518344</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1669918518344</updated>
+    </task>
+    <task id="LOCAL-00014" summary="CLUB-239 done">
+      <created>1671813742843</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1671813742843</updated>
+    </task>
+    <task id="LOCAL-00015" summary="CLUB-239 fixed for yandex">
+      <created>1671910329534</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1671910329534</updated>
+    </task>
+    <task id="LOCAL-00016" summary="CLUB-239 добавлена подсказка">
+      <created>1671998643782</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1671998643782</updated>
+    </task>
+    <task id="LOCAL-00017" summary="CLUB-235 done">
+      <created>1672171467140</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1672171467140</updated>
+    </task>
+    <task id="LOCAL-00018" summary="CLUB-240 for test on prod">
+      <created>1672355417300</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1672355417300</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="staging" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial commit" />
+    <MESSAGE value="Master initial commit" />
+    <MESSAGE value="CLUB-237 for test" />
+    <MESSAGE value="staging hotfix" />
+    <MESSAGE value="staging to test. desync hotfix" />
+    <MESSAGE value="CLUB-238 for test" />
+    <MESSAGE value="CLUB-238 for test 2" />
+    <MESSAGE value="staging added hints for desync release" />
+    <MESSAGE value="CLUB-236 for test on dev #1&#10;Some problems with autogenerated names" />
+    <MESSAGE value="CLUB-236 on release" />
+    <MESSAGE value="CLUB-236 on release 2" />
+    <MESSAGE value="CLUB-236 on release 3" />
+    <MESSAGE value="CLUB-239 done" />
+    <MESSAGE value="CLUB-239 fixed for yandex" />
+    <MESSAGE value="CLUB-239 добавлена подсказка" />
+    <MESSAGE value="CLUB-235 done" />
+    <MESSAGE value="CLUB-240 for test on prod" />
+    <option name="LAST_COMMIT_MESSAGE" value="CLUB-240 for test on prod" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="549" y="143" key="FileChooserDialogImpl" timestamp="1668331059238">
+    <state x="574" y="83" key="#com.intellij.ide.util.MemberChooser" timestamp="1672419919868">
       <screen x="0" y="0" width="1536" height="802" />
     </state>
-    <state x="549" y="143" key="FileChooserDialogImpl/0.0.1536.802@0.0.1536.802" timestamp="1668331059238" />
+    <state x="574" y="83" key="#com.intellij.ide.util.MemberChooser/0.0.1536.802@0.0.1536.802" timestamp="1672419919868" />
+    <state x="93" y="93" width="1350" height="617" key="DiffContextDialog" timestamp="1672273213470">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state x="93" y="93" width="1350" height="617" key="DiffContextDialog/0.0.1536.802@0.0.1536.802" timestamp="1672273213470" />
+    <state x="549" y="143" key="FileChooserDialogImpl" timestamp="1672419644654">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state x="549" y="143" key="FileChooserDialogImpl/0.0.1536.802@0.0.1536.802" timestamp="1672419644654" />
+    <state width="1493" height="357" key="GridCell.Tab.0.bottom" timestamp="1672658112144">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state width="1493" height="357" key="GridCell.Tab.0.bottom/0.0.1536.802@0.0.1536.802" timestamp="1672658112144" />
+    <state width="1493" height="357" key="GridCell.Tab.0.center" timestamp="1672658112143">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state width="1493" height="357" key="GridCell.Tab.0.center/0.0.1536.802@0.0.1536.802" timestamp="1672658112143" />
+    <state width="1493" height="357" key="GridCell.Tab.0.left" timestamp="1672658112143">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state width="1493" height="357" key="GridCell.Tab.0.left/0.0.1536.802@0.0.1536.802" timestamp="1672658112143" />
+    <state width="1493" height="357" key="GridCell.Tab.0.right" timestamp="1672658112144">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state width="1493" height="357" key="GridCell.Tab.0.right/0.0.1536.802@0.0.1536.802" timestamp="1672658112144" />
     <state x="277" y="46" key="SettingsEditor" timestamp="1668331405732">
       <screen x="0" y="0" width="1536" height="802" />
     </state>
     <state x="277" y="46" key="SettingsEditor/0.0.1536.802@0.0.1536.802" timestamp="1668331405732" />
+    <state x="599" y="271" key="VCS.EditChangelistDialog" timestamp="1669024258276">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state x="599" y="271" key="VCS.EditChangelistDialog/0.0.1536.802@0.0.1536.802" timestamp="1669024258276" />
+    <state x="477" y="134" width="581" height="534" key="find.popup" timestamp="1672607656588">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state x="477" y="134" width="581" height="534" key="find.popup/0.0.1536.802@0.0.1536.802" timestamp="1672607656588" />
+    <state x="431" y="123" width="672" height="678" key="search.everywhere.popup" timestamp="1672272195636">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state x="431" y="123" width="672" height="678" key="search.everywhere.popup/0.0.1536.802@0.0.1536.802" timestamp="1672272195636" />
   </component>
 </project>

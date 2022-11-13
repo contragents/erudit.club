@@ -8,21 +8,8 @@ class Cache
 
     public function __construct()
     {
-
-        //$this->_instance = new \Redis();
-        //$this->_instance->pconnect("localhost", 6379);;
         $this->redis = new \Redis;
         $this->redis->pconnect("127.0.0.1", 6379);
-        //print "connect!!!";
-
-    }
-
-    private function __clone()
-    {
-    }
-
-    private function __wakeup()
-    {
     }
 
     public static function __callStatic($name, $arguments)
@@ -52,7 +39,7 @@ class Cache
         if (!$res)
             return FALSE;
 
-        $unserRes = is_array($res) ? false : unserialize($res);
+        $unserRes = is_array($res) ? false : @unserialize($res);
         if ($unserRes === false) {
             return $res;
         } else {
@@ -70,4 +57,3 @@ class Cache
         return self::$_instance;
     }
 }
-//$dd = new Cache;

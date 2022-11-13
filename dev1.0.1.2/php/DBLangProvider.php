@@ -2,17 +2,12 @@
 
 namespace Dadata;
 
-class DB
+class DB extends DBCredentials
 {
     private static $_instance = null;
 
     public $redis;
     public static $DBConnect = false;
-    const SQL_HOST = 'localhost';
-    const SQL_USER = 'ili';
-    const SQL_PASSWORD = 'sveta2883';
-    const ORACLE_SQL_PASSWORD = 'Aw!gP!mx_Jh6M.V';
-    const SQL_DB = 'erudit';
 
     private function __construct()
     {
@@ -24,32 +19,29 @@ class DB
         $connection = mysqli_init();
         $connection->options(MYSQLI_OPT_CONNECT_TIMEOUT, 100);
         $connection->options(MYSQLI_OPT_READ_TIMEOUT, 100);
-        $connection->real_connect(self::SQL_HOST,
-            self::SQL_USER, self::ORACLE_SQL_PASSWORD,
-            /**todo убрать isset($_SERVER['SERVER_ADDR'])
-                        ? ($_SERVER['SERVER_ADDR'] == '167.71.60.229'
-                            ? self::SQL_PASSWORD
-                            : self::ORACLE_SQL_PASSWORD)
-                        : (isset($_SERVER['argv'][1]) && $_SERVER['argv'][1] == 'oracle'
-                            ? self::ORACLE_SQL_PASSWORD
-                            : self::SQL_PASSWORD),*/
-            self::SQL_DB);
+        $connection->real_connect(
+            self::SQL_HOST,
+            self::SQL_USER,
+            self::ORACLE_SQL_PASSWORD,
+            self::SQL_DB
+        );
         self::$DBConnect = $connection;
-        //print "!!!!!!!!!!!!connected!!!!";
     }
 
     public static function escapeString($str)
     {
-        if (self::$DBConnect === false)
+        if (self::$DBConnect === false) {
             self::connect();
+        }
 
         return mysqli_real_escape_string(self::$DBConnect, $str);
     }
 
     public static function queryInsert($mysqlQuery)
     {
-        if (self::$DBConnect === false)
+        if (self::$DBConnect === false) {
             self::connect();
+        }
         $res = mysqli_query(self::$DBConnect, $mysqlQuery);
         $affectedRows = mysqli_affected_rows(self::$DBConnect);
 
@@ -63,12 +55,14 @@ class DB
 
     public static function queryArray($mysqlQuery)
     {
-        if (self::$DBConnect === false)
+        if (self::$DBConnect === false) {
             self::connect();
+        }
         if ($res = mysqli_query(self::$DBConnect, $mysqlQuery)) {
             $rows = [];
-            while ($row = mysqli_fetch_assoc($res))
+            while ($row = mysqli_fetch_assoc($res)) {
                 $rows[] = $row;
+            }
             return $rows;
         } else {
             return false;
@@ -77,10 +71,10 @@ class DB
 
     public static function queryValue($mysqlQuery)
     {
-        if (self::$DBConnect === false)
+        if (self::$DBConnect === false) {
             self::connect();
+        }
         if ($res = mysqli_query(self::$DBConnect, $mysqlQuery)) {
-
             $row = mysqli_fetch_assoc($res);
             if ($row) {
                 foreach ($row as $key => $value) {
@@ -94,10 +88,11 @@ class DB
 
     public static function status()
     {
-        if (self::$DBConnect === false)
+        if (self::$DBConnect === false) {
             return 'Not connected';
-        else
+        } else {
             return mysqli_stat(self::$DBConnect);
+        }
     }
 
     public static function getInstance()
