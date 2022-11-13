@@ -17,6 +17,8 @@ var lang = 'RU';
 */
 
 var turnAutocloseDialog = false;
+var timeToCloseDilog = false;
+var automaticDialogClosed = false;
 
 var reloadInervalNumber = false;
 

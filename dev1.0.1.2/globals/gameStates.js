@@ -602,7 +602,11 @@ function commonCallback(data) {
                         }
 
                         if (turnAutocloseDialog) {
-                            cancelLabel = 'Закроется автоматически';
+                            if (timeToCloseDilog == 5) {
+                                cancelLabel = 'Закрывать сразу';
+                            } else {
+                                cancelLabel = 'Закроется автоматически';
+                            }
                         }
 
                         dialog = bootbox.confirm({
@@ -621,6 +625,14 @@ function commonCallback(data) {
                             callback: function (result) {
                                 if (!result) {
                                     turnAutocloseDialog = true;
+
+                                    if (!timeToCloseDilog) {
+                                        timeToCloseDilog = 5;
+                                    } else if (!automaticDialogClosed){
+                                        timeToCloseDilog = 1.5;
+                                    }
+
+                                    automaticDialogClosed = false;
                                 }
                                 activateFullScreenForMobiles();
                             }
@@ -632,9 +644,10 @@ function commonCallback(data) {
                         if (turnAutocloseDialog) {
                             setTimeout(
                                 function () {
+                                    automaticDialogClosed = true;
                                     dialog.find(".bootbox-close-button").trigger("click");
                                 }
-                                , 5000
+                                , timeToCloseDilog * 1000
                             );
                         }
                     }

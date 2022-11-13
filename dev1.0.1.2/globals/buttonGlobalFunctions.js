@@ -230,7 +230,6 @@ function chatButtonFunction() {
                         else
                             var responseText = data['message'];
                         dialog = bootbox.alert({
-                            //title: ,
                             message: responseText,
                             size: 'small'
                         });
