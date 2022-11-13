@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My page</title>
+
+    <!-- CSS dependencies -->
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/choose_css.php">
+    <link rel="stylesheet" type="text/css" href="/css/knopki.css">
+</head>
+<body>
+
+    <p>Content here. <a class="show-alert" href=#>Alert!</a></p>
+
+    <!-- JS dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Bootstrap 4 dependency -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.4/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- bootbox code -->
+    <script src="https://github.com/makeusabrew/bootbox/releases/download/v5.4.0/bootbox.min.js"></script>
+    <script src="https://github.com/makeusabrew/bootbox/releases/download/v5.4.0/bootbox.locales.min.js"></script>
+    <script>
+        $(document).on("click", ".show-alert", function(e) {
+            bootbox.alert("Hello world!", function() {
+                console.log("Alert Callback");
+            });
+            bootbox.alert({
+    message: "This is the small alert!",
+    size: 'small'
+});
+        });
+    var bukvy = '';
+    var buttons1 = {}
+    for (let i = 0; i<= 31; i++) {
+    
+        bukvy ='<div class="letter_'+i+'"></div>';
+        buttons1[i] = {label: bukvy,
+            className: 'button1',
+            callback: function(){
+                console.log('You choose '+i);
+            }}
+        }
+    bootbox.dialog({
+    //title: 'Выберите букву',
+    message: "Выберите букву",
+    size: 'large',
+    buttons: buttons1,
+    closeButton: false
+});
+
+    </script>
+    <div id="hiddenForm" class="hidden">
+    <form id="myForm" class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-sm-2">First Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="FirstName" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Last Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="LastName" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">City</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="City" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">State</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="State" />
+            </div>
+        </div>
+        <div>
+            <input type="checkbox" id="fishka_1_0" name="fishka_1_0" checked>
+            <label for="scales"><div class="letter_0" onclick = "$('#fishka_1_0').trigger('click');"></div></label>
+        </div>
+
+        <div>
+            <input type="checkbox" id="fishka_2_0" name="fishka_2_0">
+            <label for="horns"><div class="letter_0" onclick = "$('#fishka_2_0').trigger('click');"></div></label>
+        </div>
+    </form>
+</div>
+<script>
+var form = $("#hiddenForm").html();
+bootbox.confirm({
+    message: form,
+    callback: function (result) {
+        console.log($(".bootbox-body #myForm").serialize());
+    }
+});
+</script>
+    <div class="letter_0">
+    </div>
+    <div class="letter_1">
+    </div>
+    <div class="letter_2">
+    </div>
+    <div class="letter_3">
+    </div>
+    <div class="letter_4">
+    </div>
+    <div class="letter_5">
+    </div>
+    <div class="letter_6">
+    </div>
+    <div class="letter_7">
+    </div>
+    <div class="letter_8">
+    </div>
+    <div class="letter_9">
+    </div>
+    <div class="letter_10">
+    </div>
+    <div class="letter_11">
+    </div>
+    <div class="letter_12">
+    </div>
+    <div class="letter_13">
+    </div>
+    <div class="letter_14">
+    </div>
+    <div class="letter_15">
+    </div>
+    <div class="letter_16">
+    </div>
+    <div class="letter_17">
+    </div>
+    <div class="letter_18">
+    </div>
+    <div class="letter_19">
+    </div>
+    <div class="letter_20">
+    </div>
+    <div class="letter_21">
+    </div>
+    <div class="letter_22">
+    </div>
+    <div class="letter_23">
+    </div>
+    <div class="letter_24">
+    </div>
+    <div class="letter_25">
+    </div>
+    <div class="letter_26">
+    </div>
+    <div class="letter_27">
+    </div>
+    <div class="letter_28">
+    </div>
+    <div class="letter_29">
+    </div>
+    <div class="letter_30">
+    </div>
+    <div class="letter_31">
+    </div>
+</body>
+</html>

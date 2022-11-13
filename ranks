@@ -1,0 +1,19 @@
+Array
+(
+    [0] => Array
+        (
+            [cookie] => aa68862dc85eb2a61cd2aed7f1ffca38
+            [score] => 217
+            [isActive] => 1
+            [userID] => 
+        )
+
+    [1] => Array
+        (
+            [cookie] => botV3#0
+            [score] => 119
+            [isActive] => 1
+            [userID] => 
+        )
+
+)

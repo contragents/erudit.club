@@ -1,0 +1,15 @@
+.crop{
+	float:left;
+	position:relative;
+	width:200px;
+	height:120px;
+	#border:1px solid #ccc;
+	#margin:.5em 10px .5em 0;
+	}
+.crop img{
+	margin:0;
+	position:absolute;
+	#top:-40px;
+	left:-300px;
+	#clip:rect(40px 250px 160px 50px);
+	}

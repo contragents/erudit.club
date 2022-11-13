@@ -1,0 +1,13 @@
+body{
+    margin: 0;
+    background-color: white;
+}
+.button1{
+    float:left;
+    position:relative;
+    margin: 2px;
+    padding: 0;
+    width:76px;
+    height:92px;
+    background-color: grey;
+}
