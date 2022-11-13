@@ -230,11 +230,16 @@ function chatButtonFunction() {
                         else
                             var responseText = data['message'];
                         dialog = bootbox.alert({
-                            title: responseText,
-                            message: ' ',
+                            //title: ,
+                            message: responseText,
                             size: 'small'
                         });
-
+                        setTimeout(
+                            function () {
+                                dialog.find(".bootbox-close-button").trigger("click");
+                            }
+                            , 1000
+                        );
                         buttons['chatButton']['svgObject'].setInteractive();
                         buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Otjat'));
                         buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', false);
