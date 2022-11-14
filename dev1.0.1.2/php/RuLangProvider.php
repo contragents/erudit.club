@@ -110,13 +110,10 @@ class Ru
             return false;
 
         return $zvezdyTemporary;
-
-
     }
 
     public static function submit(&$cells, &$desk, &$gameStatus)
     {
-
         self::$words = [];
         self::$badWords = [];
         self::$goodWords = [];
@@ -124,19 +121,7 @@ class Ru
 
         if (!$desk) {
             $desk = self::init_desk();
-            $new_game = TRUE;
-        } else
-            $new_game = FALSE;
-
-        $bukvy = static::$bukvy;
-
-        $fishki_na_rukah = 7;
-
-        //$cells = json_decode($_POST['cells'],true);
-
-        $fishki = [];
-
-        $new_fishki = [];
+        }
 
         $bad_fishki = [];
 
@@ -168,15 +153,12 @@ class Ru
                 }
 
         foreach ($fishki as $num => $fishka)
-            if (!isset($fishka['connected'])) {//$fishka['connected']) {
+            if (!isset($fishka['connected'])) {
                 $cells[$fishka[0]][$fishka[1]][0] = false;
                 $cells[$fishka[0]][$fishka[1]][1] = false;
                 $bad_fishki[] = $fishki[$num];
                 unset($fishki[$num]);
             }
-
-        //$p->setex('erudit.current_game_'.$game_number,30000,serialize($cells));
-        //EruditGame сохраняет новую доску
 
         foreach ($bad_fishki as $bad_fishka) {
             if (isset(self::$words[$bad_fishka[0] . '-' . $bad_fishka[1]]))
@@ -221,14 +203,6 @@ class Ru
             //Посчитали очки для всех хороших слов
         }
 
-
-        /*foreach($fishki as $nn=>$fishka)
-            if ($fishka > 999)
-                if (is_array($zvezdy))
-                    if (count($zvezdy))
-                        $fishki[$nn] = array_pop($zvezdy);*/
-        //Эксперимент по учету забранных с поля фишек
-        //print_r($zvezdy);
         foreach ($fishki as $nn => $fishka)
             if ($fishka[3] !== false) {
                 foreach ($zvezdy as $num => $zvezda)
@@ -239,7 +213,7 @@ class Ru
                     }
             }
         //Обнулили и освободили сыгравшую забратую фишку
-        //print_r($fishka);
+
         foreach ($bad_fishki as $nn => $bfishka)
             if ($bfishka[3] !== false)
                 foreach ($zvezdy as $num => $zvezda)
@@ -247,12 +221,9 @@ class Ru
                         $cells[$zvezda[0]][$zvezda[1]][2] = false;
                         unset($zvezda[$num]);
                     }
-
         //ТОЛЬКО освободили НЕсыгравшую забратую фишку
 
         return ['bad' => $bad_fishki, 'good' => $fishki, 'words' => $good_words, 'badWords' => self::$badWords, 'goodWords' => self::$goodWords, 'goodWordsLinks' => self::$goodWordsLinks];
-        //return ['bad' => $bad_fishki, 'new' => $new_fishki, 'good' => $fishki, 'words' => $good_words, 'badWords' => self::$badWords, 'goodWords' => self::$goodWords, 'goodWordsLinks' => self::$goodWordsLinks];
-
     }
 
     public static function getLetterCode($letter)
@@ -334,11 +305,11 @@ class Ru
                     return FALSE;
                 elseif ($cells[$i][$j][0] != $desk[$i][$j][0])
                     $fshki[] = [$i, $j, $cells[$i][$j][1], $cells[$i][$j][2]];
-                //$cells[$i][$j][2] = false;//Обнулили подмену звездочки
             }
 
-        if (count($fshki) > count($gameStatus['users'][$gameStatus['activeUser']]['fishki']))
+        if (count($fshki) > count($gameStatus['users'][$gameStatus['activeUser']]['fishki'])) {
             return false;
+        }
 
         return $fshki;
     }
@@ -413,7 +384,6 @@ class Ru
 
     private static function fishka_correct(&$fishka, &$cells, &$desk, &$gameStatus)
     {
-
         //Определяем слово по горизонтали
         //$i - столбец
         $hor_word = static::$bukvy[self::code($fishka[2])][0];
