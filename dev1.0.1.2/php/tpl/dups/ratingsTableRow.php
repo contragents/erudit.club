@@ -5,7 +5,7 @@ return "<tr>
       ? "<strong>Вы</strong>" 
       : $this->gameStatus['users'][$this->gameStatus[$user['ID']]]['username'] )
       .(!$rating['isActive'] 
-      ? '&nbsp;<img title="Игрок отключился" height="24px" src="img/no-network-logo.png" />'
+      ? '&nbsp;<img title="Игрок отключился" height="24px" src="https://xn--d1aiwkc2d.club/img/no-network-logo.png" />'
       : '')
       ."</th>
       <td class=\"text-center\"><strong>{$rating['rating']}</strong>".(is_numeric($rating['top']) ? ' <br /><strong>№'.$rating['top']. '</strong>' : '')."</td>
