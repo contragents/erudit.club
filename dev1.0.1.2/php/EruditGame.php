@@ -131,8 +131,27 @@ class Game
             $this->isStateLocked = true;
             $this->gameStatus = unserialize($this->p->redis->get('erudit.game_status_' . $this->currentGame));
             //Забрали статус игры из кэша
+
             $this->numUser = $this->gameStatus[$this->User];
             //Номер пользователя по порядку
+
+            if (($_GET['queryNumber'] ?? 1000) < $this->gameStatus['users'][$this->numUser]['last_request_num']) {
+                print json_encode(
+                    [
+                        'gameState' => 'desync',
+                        'comments' => call_user_func([$this, 'statusComments_desync'])
+                    ]
+                );
+
+                $this->destruct();
+                exit();
+                //Вышли с Десинком, если не смогли получить Лок
+            } else {
+                $this->gameStatus['users'][$this->numUser]['last_request_num']
+                    =
+                    ($_GET['queryNumber'] ?? $this->gameStatus['users'][$this->numUser]['last_request_num']);
+            }
+
             if (!(isset($_GET['page_hidden']) && $_GET['page_hidden'] == 'true')) {
                 $this->gameStatus['users'][$this->numUser]['lastActiveTime'] = date('U');
                 $this->gameStatus['users'][$this->numUser]['inactiveTurn'] = 1000;
