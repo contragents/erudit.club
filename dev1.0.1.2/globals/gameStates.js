@@ -35,7 +35,7 @@ var gameStates = {
     },
     desync: {
         1: 'waiting', 2: 'done',
-        refresh: 10,
+        refresh: 5,
         message: 'Синхронизация с сервером...'
     },
     noGame: {
@@ -290,6 +290,10 @@ var gameStates = {
             if ('fishki' in data)
                 placeFishki(data['fishki']);
         },
+        from_desync: function (data) {
+            if ('fishki' in data)
+                placeFishki(data['fishki']);
+        },
         from_gameResults: function () {
             gameStates['startGame']['from_initGame']();
         },
@@ -311,6 +315,10 @@ var gameStates = {
 
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
+        },
+        from_desync: function (data) {
+            if ('fishki' in data)
+                placeFishki(data['fishki']);
         },
         from_initRatingGame: function (data) {
             gameStates['startGame']['from_initGame']();
@@ -343,6 +351,10 @@ var gameStates = {
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
+        },
+        from_desync: function (data) {
+            if ('fishki' in data)
+                placeFishki(data['fishki']);
         },
         from_initRatingGame: function (data) {
             gameStates['startGame']['from_initGame']();

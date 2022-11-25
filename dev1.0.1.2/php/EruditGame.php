@@ -119,14 +119,18 @@ class Game
         } else {
             $this->currentGameUsers = unserialize($this->p->redis->get("erudit.game_{$this->currentGame}_users"));
             if (!$this->lockTry()) {
-                print json_encode(
+                //Вышли с Десинком, если не смогли получить Лок
+                return $this->desync();
+
+                /*print json_encode(
                     [
                         'gameState' => 'desync',
                         'comments' => call_user_func([$this, 'statusComments_desync'])
                     ]
                 );
-                exit();
-                //Вышли с Десинком, если не смогли получить Лок
+                exit();*/
+
+
             }
             $this->isStateLocked = true;
             $this->gameStatus = unserialize($this->p->redis->get('erudit.game_status_' . $this->currentGame));
@@ -135,19 +139,22 @@ class Game
             $this->numUser = $this->gameStatus[$this->User];
             //Номер пользователя по порядку
 
-            /*if (($_GET['queryNumber'] ?? 1000) < $this->gameStatus['users'][$this->numUser]['last_request_num']) {
+            if (isset($_GET['queryNumber']) && $_GET['queryNumber'] > 5 && $_GET['queryNumber'] < $this->gameStatus['users'][$this->numUser]['last_request_num']) {
                 // todo  при возврате десинка в игре проблемы с получением фишек. обычно при перезагрузке страницы
-                print json_encode(
+
+                return $this->desync($this->gameStatus['users'][$this->numUser]['last_request_num']);
+
+                /*print json_encode(
                     [
                         'gameState' => 'desync',
                         'comments' => call_user_func([$this, 'statusComments_desync'])
                     ]
-                );
+                );*/
 
-                $this->destruct();
-                exit();
+                //$this->destruct();
+                //exit();
                 //Вышли с Десинком, если не смогли получить Лок
-            } else*/ {
+            } else {
                 $this->gameStatus['users'][$this->numUser]['last_request_num']
                     =
                     ($_GET['queryNumber'] ?? $this->gameStatus['users'][$this->numUser]['last_request_num']);
@@ -1287,11 +1294,16 @@ LIMIT 40";
         $this->isStateLocked = false;
     }
 
-    private function desync()
+    private function desync($queryNumber = false)
     {
         $this->updateUserStatus('desync');
+        $arr = ['gameState' => 'desync'];
 
-        return $this->makeResponse($arr = ['gameState' => 'desync']);
+        if ($queryNumber) {
+            $arr['queryNumber'] = $queryNumber;
+        }
+
+        return $this->makeResponse($arr);
     }
 
     public function submitTurn()
@@ -2128,9 +2140,12 @@ LIMIT 40";
                     ['comments' => call_user_func([$this, 'statusComments_' . $arr['gameState']])]
                 );
             }
+
+            // Возвращаем Десинк без сохранения состояния игры - разлочка в __destruct
             if ($arr['gameState'] == 'desync') {
                 return json_encode($arr);
             }
+
             if (is_array($this->gameStatus['users'][$this->numUser]['fishki'])) {
                 if (count($this->gameStatus['users'][$this->numUser]['fishki'])) {
                     $arr = array_merge($arr, ['fishki' => $this->gameStatus['users'][$this->numUser]['fishki']]);
