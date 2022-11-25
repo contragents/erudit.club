@@ -135,7 +135,8 @@ class Game
             $this->numUser = $this->gameStatus[$this->User];
             //Номер пользователя по порядку
 
-            if (($_GET['queryNumber'] ?? 1000) < $this->gameStatus['users'][$this->numUser]['last_request_num']) {
+            /*if (($_GET['queryNumber'] ?? 1000) < $this->gameStatus['users'][$this->numUser]['last_request_num']) {
+                // todo  при возврате десинка в игре проблемы с получением фишек. обычно при перезагрузке страницы
                 print json_encode(
                     [
                         'gameState' => 'desync',
@@ -146,7 +147,7 @@ class Game
                 $this->destruct();
                 exit();
                 //Вышли с Десинком, если не смогли получить Лок
-            } else {
+            } else*/ {
                 $this->gameStatus['users'][$this->numUser]['last_request_num']
                     =
                     ($_GET['queryNumber'] ?? $this->gameStatus['users'][$this->numUser]['last_request_num']);
