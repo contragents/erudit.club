@@ -14,7 +14,7 @@ function () {
         var androidText1 = this.make.text({
             x: textAPPWidth / 2,
             y: textAPPHeight / 2 - 150,
-            text: 'В приложении Android если игра не началась (белый экран)',
+            text: 'Внимание. Вышла новая версия Игры. Обновите ее, нажав shift-F5 в браузере',
             style: {
                 font: '26px monospace',
                 fill: '#ff0000'
@@ -24,7 +24,7 @@ function () {
         var androidText2 = this.make.text({
             x: textAPPWidth / 2,
             y: textAPPHeight / 2 - 120,
-            text: 'пожалуйста, обновите страницу, пролистнув ее вниз',
+            text: 'или в Яндекс-Играх. В приложении Android Необходимо очистить кэш.',
             style: {
                 font: '26px monospace',
                 fill: '#ff0000'
