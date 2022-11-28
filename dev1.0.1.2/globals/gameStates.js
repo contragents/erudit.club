@@ -36,7 +36,15 @@ var gameStates = {
     desync: {
         1: 'waiting', 2: 'done',
         refresh: 5,
-        message: 'Синхронизация с сервером...'
+        action: function (data) {
+            gameState = gameOldState;
+            gameSubState = gameOldSubState;
+
+            if ('queryNumber' in data) {
+                queryNumber = data['queryNumber'];
+            }
+        },
+        //message: 'Синхронизация с сервером...'
     },
     noGame: {
         1: 'waiting', 2: 'done',
@@ -640,7 +648,7 @@ function commonCallback(data) {
 
                                     if (!timeToCloseDilog) {
                                         timeToCloseDilog = 5;
-                                    } else if (!automaticDialogClosed){
+                                    } else if (!automaticDialogClosed) {
                                         timeToCloseDilog = 1.5;
                                     }
 

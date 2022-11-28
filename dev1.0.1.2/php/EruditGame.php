@@ -121,7 +121,6 @@ class Game
             if (!$this->lockTry()) {
                 //Вышли с Десинком, если не смогли получить Лок
                 return $this->desync();
-
                 /*print json_encode(
                     [
                         'gameState' => 'desync',
@@ -129,8 +128,6 @@ class Game
                     ]
                 );
                 exit();*/
-
-
             }
             $this->isStateLocked = true;
             $this->gameStatus = unserialize($this->p->redis->get('erudit.game_status_' . $this->currentGame));
@@ -1297,7 +1294,7 @@ LIMIT 40";
     private function desync($queryNumber = false)
     {
         $this->updateUserStatus('desync');
-        $arr = ['gameState' => 'desync'];
+        $arr = ['gameState' => 'desync', 'noDialog' => true];
 
         if ($queryNumber) {
             $arr['queryNumber'] = $queryNumber;
