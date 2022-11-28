@@ -7,6 +7,7 @@ function () {
     progressBox.fillRect(gameWidth / 2 - 320 / 2, gameHeight / 2 - 50 / 5, 320, 50);
 
     var showCaution = false;
+    /*
     if (screenOrient == 'vertical' && !isYandexAppGlobal() && !isIOSDevice() && !isVkAppGlobal()) {
         showCaution = true;
         var textAPPWidth = this.cameras.main.width;
@@ -32,7 +33,7 @@ function () {
         });
         androidText2.setOrigin(0.5, 0.5);
     }
-
+    */
     var textWidth = this.cameras.main.width;
     var textHeight = this.cameras.main.height;
     var loadingText = this.make.text({
