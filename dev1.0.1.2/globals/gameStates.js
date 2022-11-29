@@ -36,10 +36,11 @@ var gameStates = {
     desync: {
         1: 'waiting', 2: 'done',
         refresh: 5,
+        noDialog: true,
         action: function (data) {
             gameState = gameOldState;
             gameSubState = gameOldSubState;
-
+            enableButtons();
             if ('queryNumber' in data) {
                 queryNumber = data['queryNumber'];
             }
