@@ -1,6 +1,7 @@
 <?php
 
 namespace Dadata;
+
 //ini_set("display_errors", 1); error_reporting(E_ALL);
 
 class Hints
@@ -42,13 +43,18 @@ class Hints
             'share' => 'isAndroidApp',
             'В приложении для Android в случае <strong>проблем с перемещением фишек</strong> разверните Игру на <strong>весь экран</strong> - кнопка 
             <img src="img/otjat/razdv.svg" height="24px"/>' => 'IsNotAndroidApp',
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные' => 'IsNotAndroidApp',
             'Оставьте Ваш отзыв о приложении - мы ценим мнение каждого игрока и постоянно улучшаем Игру - <strong><a href="https://play.google.com/store/apps/details?id=club.erudite.app">Оценить</a></strong>' => 'IsNotAndroidApp',
             'video' => 'isAndroidApp',
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift-F5</strong>' => 'isAndroidApp',
         ],
         'myTurn' => [//Подсказки для myTurn
-            'share' => 'isMyTurn',//не просить поделиться во время хода игрока
-            'video' => 'isMyTurn',//не показывать видео во время хода игрока
+            'share' => 'isMyTurn',
+            //не просить поделиться во время хода игрока
+            'video' => 'isMyTurn',
+            //не показывать видео во время хода игрока
             'Оставьте Ваш отзыв о приложении - мы ценим мнение каждого игрока и постоянно улучшаем Игру - <strong><a href="https://play.google.com/store/apps/details?id=club.erudite.app">Оценить</a></strong>' => 'isMyTurn',
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift-F5</strong>' => 'isMyTurn',
         ],
         'Yandex' => [//подсказки, зависящие от Яндекса
             'Ссылка на наш <a target="_blank" href="https://www.youtube.com/channel/UCipptDPm5oRX_VCo5TaTHaQ">Youtube-канал</a> - откроется в новом окне' => 'isYandexApp',
@@ -58,6 +64,8 @@ class Hints
 
     const HINTS = [
         1 => [
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные',
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift-F5</strong>',
             'Появляющийся значок <img height="24px" src="https://xn--d1aiwkc2d.club/img/no-network-logo.png" /> означает, что Вы находитесь в зоне <strong>слабого приема Интернета</strong>. Сервер отвечает с задержкой',
             'При выборе игры <strong>на Английском инструкция изменится</strong> - ознакомьтесь с ней в процессе игры',
             'При выборе игры <strong>на Английском</strong> подбор по рейтингу ВРЕМЕННО не учитывается',
@@ -74,6 +82,8 @@ class Hints
             'wordsEnHint',
         ],
         1800 => [
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные',
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift-F5</strong>',
             'Зеленое поле <span style="background-color: chartreuse;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> увеличивает очки за БУКВУ в 2 раза',
             'Желтое поле <span style="background-color: #fd0;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> увеличивает очки за БУКВУ в 3 раза',
             'Синее поле <span style="background-color: blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> увеличивает очки за СЛОВО в 2 раза',
@@ -89,6 +99,8 @@ class Hints
             'В наш Эрудит можно играть как со смартфона, так и с ПК',
         ],
         1900 => [
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные',
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift-F5</strong>',
             'Оцените Игру по <a href="' . self::YANDEX_RATING_URL . '" target="_blank">ссылке</a> - откроется в новом окне',
             'share',
             'Буква <strong>В</strong> - самая бесполезная. Стоит 1 очко. С ней можно составить только одно слово из 2-х букв - <strong>ВА</strong>',
@@ -116,6 +128,8 @@ class Hints
 
         ],
         2100 => [
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные',
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift-F5</strong>',
             'Оцените Игру по <a href="' . self::YANDEX_RATING_URL . '" target="_blank">ссылке</a> - откроется в новом окне',
             'share',
             'При замене фишек, возможно, стоит сохранить ценные буквы - <strong>Ф,Ш,Щ,Ю,Э</strong>',
@@ -130,6 +144,8 @@ class Hints
             'Оцените Игру по <a href="' . self::YANDEX_RATING_URL . '" target="_blank">ссылке</a> - откроется в новом окне',
         ],
         2300 => [
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные',
+            '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift-F5</strong>',
             'Оцените Игру по <a href="' . self::YANDEX_RATING_URL . '" target="_blank">ссылке</a> - откроется в новом окне',
             'share',
             'Иногда выгоднее усложнить позицию сопернику, чем набрать много очков',
@@ -149,7 +165,11 @@ class Hints
         $showsCount = self::$p->redis->get(self::HINT_USER_CACHE_KEY . $User . $hint);
 
         if (!$showsCount || $showsCount < self::HINT_DAILY_SHOW) {
-            self::$p->redis->setex(self::HINT_USER_CACHE_KEY . $User . $hint, self::HINT_CACHE_TTL, $showsCount ? ++$showsCount : 1);
+            self::$p->redis->setex(
+                self::HINT_USER_CACHE_KEY . $User . $hint,
+                self::HINT_CACHE_TTL,
+                $showsCount ? ++$showsCount : 1
+            );
             $gameStatus['users'][$gameStatus[$User]]['hints'][$gameStatus['turnNumber']] = $hint;
 
             return false;
@@ -253,9 +273,12 @@ class Hints
     private static function supportHint()
     {
         $result = 'Получить <strong>поддержку</strong> и оставить <strong>сообщение об ошибках</strong> Вы можете в нашей '
-            . self::link(self::isMobileDevice()
-                ? self::TG_GROUP_LINK['mobile']
-                : self::TG_GROUP_LINK['desktop'], 'группе')
+            . self::link(
+                self::isMobileDevice()
+                    ? self::TG_GROUP_LINK['mobile']
+                    : self::TG_GROUP_LINK['desktop'],
+                'группе'
+            )
             . ' Telegram. Советуем подписаться заранее';
 
         return $result;
@@ -286,7 +309,6 @@ class Hints
 
         foreach (self::SHARE_SOCIAL_LINKS as $socSet => $info) {
             foreach ($info as $imgLink => $link) {
-
                 $result .= "<a href=\"$link\" target=\"_blank\" style=\"cursor: pointer;\">
 <img src='$imgLink' height='20px' />
 </a> &nbsp;";
@@ -313,9 +335,12 @@ class Hints
 
     public static function isMobileDevice()
     {
-        return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo
+        return preg_match(
+            "/(android|avantgo|blackberry|bolt|boost|cricket|docomo
 |fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i"
-            , $_SERVER["HTTP_USER_AGENT"]);
+            ,
+            $_SERVER["HTTP_USER_AGENT"]
+        );
     }
 
     public static function isDesktopDevice()
