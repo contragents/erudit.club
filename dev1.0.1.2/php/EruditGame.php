@@ -12,6 +12,7 @@ use Dadata\Stats;
 
 class Game
 {
+    public static $configStatic;
     public $serverName;
     public $config;
     public $p;
@@ -83,6 +84,7 @@ class Game
 
 
         $this->config = include("{$_SERVER['DOCUMENT_ROOT']}/configs/conf.php");//('../../configs/conf.php');
+        self::$configStatic = $this->config;
         $this->turnTime = $this->config['turnTime'];
         $this->winScore = $this->config['winScore'];
         $this->gameWaitLimit = $this->config['gameWaitLimit'];
@@ -283,7 +285,7 @@ class Game
         $res = DB::queryValue(
             "SELECT name FROM player_names 
             WHERE
-            some_id=" . $this->hash_str_2_int($idSource)
+            some_id=" . self::hash_str_2_int($idSource)
             . " LIMIT 1"
         )
         ) {
@@ -585,7 +587,7 @@ p1.cookie='$cookie'
         }
         foreach ($this->gameStatus['users'] as $num => $user) {
             if (isset($user['userID'])) {
-                if (!($deltaRating = $this->getDeltaRating($this->hash_str_2_int($user['userID'])))) {
+                if (!($deltaRating = $this->getDeltaRating(self::hash_str_2_int($user['userID'])))) {
                     $deltaRating = $this->getDeltaRating($user['ID']);
                 }
             } else {
@@ -909,7 +911,7 @@ LIMIT 40";
         return $ratingInfo;
     }
 
-    public function hash_str_2_int($str, $len = 16)
+    public static function hash_str_2_int($str, $len = 16)
     {
         $hash_int = base_convert("0x" . substr(md5($str), 0, $len), 16, 10);
         return $hash_int;
@@ -925,11 +927,11 @@ LIMIT 40";
                         $ratings[$user['ID']] = $this->getRatingWithCommonID(
                             $this->getCommonID(
                                 $user['ID'],
-                                isset($user['userID']) ? $this->hash_str_2_int($user['userID']) : false
+                                isset($user['userID']) ? self::hash_str_2_int($user['userID']) : false
                             ),
                             $user['ID'],
                             isset($user['userID'])
-                                ? $this->hash_str_2_int($user['userID'])
+                                ? self::hash_str_2_int($user['userID'])
                                 : false
                         );
                     }
@@ -961,7 +963,7 @@ LIMIT 40";
                 $userID = isset($this->gameStatus) &&
                 isset($this->gameStatus[$userCookie]) &&
                 isset($this->gameStatus['users'][$this->gameStatus[$userCookie]]['userID'])
-                    ? $this->hash_str_2_int($this->gameStatus['users'][$this->gameStatus[$userCookie]]['userID'])
+                    ? self::hash_str_2_int($this->gameStatus['users'][$this->gameStatus[$userCookie]]['userID'])
                     : false;
 
                 $ratings[$userCookie] = $this->getRatingWithCommonID(
@@ -981,10 +983,10 @@ LIMIT 40";
             $ratings = $this->getRatingWithCommonID(
                 $this->getCommonID(
                     $userCookie['cookie'],
-                    $this->hash_str_2_int($userCookie['userID'])
+                    self::hash_str_2_int($userCookie['userID'])
                 ),
                 $userCookie['cookie'],
-                $this->hash_str_2_int($userCookie['userID'])
+                self::hash_str_2_int($userCookie['userID'])
             );
 
             return count($ratings) ? $ratings[0] : false;

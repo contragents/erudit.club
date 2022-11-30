@@ -1,4 +1,5 @@
 <?php
+
 namespace Dadata;
 
 class Prizes
@@ -47,7 +48,7 @@ class Prizes
     private const GAMES_PLAYED_MONTHLY = 'erudit_games_played_monthly_';
     private const GAMES_PLAYED_YEARLY = 'erudit_games_played_yearly_';
 
-    private const PRIZE_LINKS =[
+    private const PRIZE_LINKS = [
         'game_price-year' => 'img/prizes/yearly/ochki_za_igru_year.svg',
         'game_price-month' => 'img/prizes/monthly/ochki_za_igru_month.svg',
         'game_price-week' => 'img/prizes/weekly/ochki_za_igru_week.svg',
@@ -74,98 +75,166 @@ class Prizes
         'games_played-day' => 'img/prizes/daily/sygrano_partiy_day.svg',
     ];
 
-    public static function playerCurrentRecords($cookie = false, $playerName = false) {
-        $cookie = $cookie ? $cookie : $_COOKIE['erudit_user_session_ID'];
+    const PRIZE_TITLES = [
+        'game_price-year' => 'Очки за ИГРУ - Рекорд Года!',
+        'game_price-month' => 'Очки за ИГРУ - Рекорд Месяца!',
+        'game_price-week' => 'Очки за ИГРУ - Рекорд Недели!',
+        'game_price-day' => 'Очки за ИГРУ - Рекорд Дня!',
+
+        'turn_price-year' => 'Очки за ХОД - Рекорд Года!',
+        'turn_price-month' => 'Очки за ХОД - Рекорд Месяца!',
+        'turn_price-week' => 'Очки за ХОД - Рекорд Недели!',
+        'turn_price-day' => 'Очки за ХОД - Рекорд Дня!',
+
+        'word_price-year' => 'Очки за СЛОВО - Рекорд Года!',
+        'word_price-month' => 'Очки за СЛОВО - Рекорд Месяца!',
+        'word_price-week' => 'Очки за СЛОВО - Рекорд Недели!',
+        'word_price-day' => 'Очки за СЛОВО - Рекорд Дня!',
+
+        'word_len-year' => 'Самое длинное СЛОВО - Рекорд Года!',
+        'word_len-month' => 'Самое длинное СЛОВО - Рекорд Месяца!',
+        'word_len-week' => 'Самое длинное СЛОВО - Рекорд Недели!',
+        'word_len-day' => 'Самое длинное СЛОВО - Рекорд Дня!',
+
+        'games_played-year' => 'Сыграно ПАРТИЙ - Рекорд Года!',
+        'games_played-month' => 'Сыграно ПАРТИЙ - Рекорд Месяца!',
+        'games_played-week' => 'Сыграно ПАРТИЙ - Рекорд Недели!',
+        'games_played-day' => 'Сыграно ПАРТИЙ - Рекорд Дня!',
+    ];
+
+    public static function playerCurrentRecords($cookie = false, $playerName = false)
+    {
+        $cookie = $cookie ?: $_COOKIE['erudit_user_session_ID'];
         $allRecords = Cache::hgetall(self::ALL_RECORDS);
         $records = [];
 
-        foreach($allRecords as $type => $record) {
+        foreach ($allRecords as $type => $record) {
             $record = unserialize($record);
             if ($record['cookie'] == $cookie) {
-                $records[$type] = array_merge($record,['link' => self::PRIZE_LINKS[$type], 'type' => $type]);
+                $records[$type] = array_merge($record, ['link' => self::PRIZE_LINKS[$type], 'type' => $type]);
             }
         }
 
-		if (count($records) > 1) {
-			usort($records, ['self','recordsSort']);
-		}
+        if (count($records) > 1) {
+            usort($records, ['self', 'recordsSort']);
+        }
 
         return $records;
     }
 
-	private static function recordsSort ($a, $b)
-{
-    if (strpos($a['type'],'year') && strpos($b['type'],'year')) {
-		return 0;
-	}
+    public static function getRandomRecord()
+    {
+        $allRecords = Cache::hgetall(self::ALL_RECORDS);
 
-	if (strpos($a['type'],'year')) {
-		return -1;
-	}
+        foreach ($allRecords as $type => $record) {
+            $record = unserialize($record);
+            $record = array_merge(
+                $record,
+                [
+                    'link' => self::PRIZE_LINKS[$type],
+                    'type' => $type,
+                    'common_id' => Players::getCommonIDByCookie($record['cookie'])
+                ]
+            );
+            if ((rand(1, count($allRecords)) / count($allRecords)) <= 0.2) {
+                break;
+            }
+        }
 
-	if (strpos($b['type'],'year')) {
-		return 1;
-	}
+        return $record;
+    }
 
-	if (strpos($a['type'],'month') && strpos($b['type'],'month')) {
-		return 0;
-	}
 
-	if (strpos($a['type'],'month')) {
-		return -1;
-	}
+    private
+    static function recordsSort(
+        $a,
+        $b
+    ) {
+        if (strpos($a['type'], 'year') && strpos($b['type'], 'year')) {
+            return 0;
+        }
 
-	if (strpos($b['type'],'month')) {
-		return 1;
-	}
+        if (strpos($a['type'], 'year')) {
+            return -1;
+        }
 
-	if (strpos($a['type'],'week') && strpos($b['type'],'week')) {
-		return 0;
-	}
+        if (strpos($b['type'], 'year')) {
+            return 1;
+        }
 
-	if (strpos($a['type'],'week')) {
-		return -1;
-	}
+        if (strpos($a['type'], 'month') && strpos($b['type'], 'month')) {
+            return 0;
+        }
 
-	if (strpos($b['type'],'week')) {
-		return 1;
-	}
+        if (strpos($a['type'], 'month')) {
+            return -1;
+        }
 
-	return 0;
-}
+        if (strpos($b['type'], 'month')) {
+            return 1;
+        }
 
-    private static function saveHistory($eventType, $eventPeriod, array $arr) {
+        if (strpos($a['type'], 'week') && strpos($b['type'], 'week')) {
+            return 0;
+        }
+
+        if (strpos($a['type'], 'week')) {
+            return -1;
+        }
+
+        if (strpos($b['type'], 'week')) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    private
+    static function saveHistory(
+        $eventType,
+        $eventPeriod,
+        array $arr
+    ) {
         $commonID = Player::getPlayerID($arr['cookie'], true);
-        if (!$commonID)
+        if (!$commonID) {
             return false;
+        }
 
         if (
-            DB::queryInsert("INSERT INTO achieves
+        DB::queryInsert(
+            "INSERT INTO achieves
             SET
             common_id = $commonID,
-            date_achieved = '".date('Y-m-d H:i:s', $arr['record_date'])."',
+            date_achieved = '" . date('Y-m-d H:i:s', $arr['record_date']) . "',
             event_type = '$eventType',
             event_period = '$eventPeriod',
             word = '" . ($arr['word'] ? $arr['word'] : '') . "',
             event_value = {$arr['value']}
-            ")
-            ) {
-                return true;
-            }
+            "
+        )
+        ) {
+            return true;
+        }
 
         return false;
     }
 
-    private static function saveAchieve($cookie, $eventType, $eventPeriod, $eventValue, $word = false)
-    {
-        $lastRecord = Cache::hget(self::ALL_RECORDS, $eventType.'-'.$eventPeriod);
+    private
+    static function saveAchieve(
+        $cookie,
+        $eventType,
+        $eventPeriod,
+        $eventValue,
+        $word = false
+    ) {
+        $lastRecord = Cache::hget(self::ALL_RECORDS, $eventType . '-' . $eventPeriod);
         if ($lastRecord) {
             self::saveHistory($eventType, $eventPeriod, $lastRecord);
         }
 
         Cache::hset(
             self::ALL_RECORDS,
-            $eventType.'-'.$eventPeriod,
+            $eventType . '-' . $eventPeriod,
             [
                 'cookie' => $cookie ? $cookie : $_COOKIE['erudit_user_session_ID'],
                 'value' => $eventValue,
@@ -177,8 +246,10 @@ class Prizes
         return true;
     }
 
-    public static function checkDayGamesPlayedRecord(array $players)
-    {
+    public
+    static function checkDayGamesPlayedRecord(
+        array $players
+    ) {
         $todayRecord = Cache::get(self::GAMES_PLAYED_DAILY . strtotime('today'));
 
         if (!$todayRecord) {
@@ -220,11 +291,19 @@ class Prizes
 
         foreach ($players as $cookie) {
             $playerDailyPlayedGames = Cache::incr(self::GAMES_PLAYED_DAILY . $cookie . strtotime('today'));
-            Cache::setex(self::GAMES_PLAYED_DAILY . $cookie . strtotime('today'), self::DAY_TTL, $playerDailyPlayedGames);
+            Cache::setex(
+                self::GAMES_PLAYED_DAILY . $cookie . strtotime('today'),
+                self::DAY_TTL,
+                $playerDailyPlayedGames
+            );
             //Просто пересохранили в кеше с ТТЛ
 
             if ($playerDailyPlayedGames > $todayRecord['number']) {
-                Cache::setex(self::GAMES_PLAYED_DAILY . strtotime('today'), self::DAY_TTL, ['number' => $playerDailyPlayedGames]);
+                Cache::setex(
+                    self::GAMES_PLAYED_DAILY . strtotime('today'),
+                    self::DAY_TTL,
+                    ['number' => $playerDailyPlayedGames]
+                );
                 self::saveAchieve($cookie, 'games_played', self::PERIODS['день'], $playerDailyPlayedGames, false);
                 $todayRecord['number'] = $playerDailyPlayedGames;
                 $playersRecords['день'] = [$cookie => $playerDailyPlayedGames];
@@ -236,8 +315,18 @@ class Prizes
                 //Просто пересохранили в кеше с ТТЛ
 
                 if ($playerWeeklyPlayedGames > $weekRecord['number']) {
-                    Cache::setex(self::GAMES_PLAYED_WEEKLY . date('W'), self::WEEK_TTL, ['number' => $playerWeeklyPlayedGames]);
-                    self::saveAchieve($cookie, 'games_played', self::PERIODS['неделю'], $playerWeeklyPlayedGames, false);
+                    Cache::setex(
+                        self::GAMES_PLAYED_WEEKLY . date('W'),
+                        self::WEEK_TTL,
+                        ['number' => $playerWeeklyPlayedGames]
+                    );
+                    self::saveAchieve(
+                        $cookie,
+                        'games_played',
+                        self::PERIODS['неделю'],
+                        $playerWeeklyPlayedGames,
+                        false
+                    );
                     $weekRecord['number'] = $playerWeeklyPlayedGames;
                     $playersRecords['неделю'] = [$cookie => $playerWeeklyPlayedGames];
                 }
@@ -245,12 +334,26 @@ class Prizes
 
             if ($playerDailyPlayedGames > 3 || Cache::get(self::GAMES_PLAYED_MONTHLY . $cookie . date('n'))) {
                 $playerMonthlyPlayedGames = Cache::incr(self::GAMES_PLAYED_MONTHLY . $cookie . date('n'));
-                Cache::setex(self::GAMES_PLAYED_MONTHLY . $cookie . date('n'), self::MONTH_TTL, $playerMonthlyPlayedGames);
+                Cache::setex(
+                    self::GAMES_PLAYED_MONTHLY . $cookie . date('n'),
+                    self::MONTH_TTL,
+                    $playerMonthlyPlayedGames
+                );
                 //Просто пересохранили в кеше с ТТЛ
 
                 if ($playerMonthlyPlayedGames > $monthRecord['number']) {
-                    Cache::setex(self::GAMES_PLAYED_MONTHLY . date('n'), self::MONTH_TTL, ['number' => $playerMonthlyPlayedGames]);
-                    self::saveAchieve($cookie, 'games_played', self::PERIODS['месяц'], $playerMonthlyPlayedGames, false);
+                    Cache::setex(
+                        self::GAMES_PLAYED_MONTHLY . date('n'),
+                        self::MONTH_TTL,
+                        ['number' => $playerMonthlyPlayedGames]
+                    );
+                    self::saveAchieve(
+                        $cookie,
+                        'games_played',
+                        self::PERIODS['месяц'],
+                        $playerMonthlyPlayedGames,
+                        false
+                    );
                     $monthRecord['number'] = $playerMonthlyPlayedGames;
                     $playersRecords['месяц'] = [$cookie => $playerMonthlyPlayedGames];
                 }
@@ -262,7 +365,11 @@ class Prizes
                 //Просто пересохранили в кеше с ТТЛ
 
                 if ($playerYearlyPlayedGames > $yearRecord['number']) {
-                    Cache::setex(self::GAMES_PLAYED_YEARLY . date('Y'), self::YEAR_TTL, ['number' => $playerYearlyPlayedGames]);
+                    Cache::setex(
+                        self::GAMES_PLAYED_YEARLY . date('Y'),
+                        self::YEAR_TTL,
+                        ['number' => $playerYearlyPlayedGames]
+                    );
                     self::saveAchieve($cookie, 'games_played', self::PERIODS['год'], $playerYearlyPlayedGames, false);
                     $yearRecord['number'] = $playerYearlyPlayedGames;
                     $playersRecords['год'] = [$cookie => $playerYearlyPlayedGames];
@@ -273,8 +380,11 @@ class Prizes
         return $playersRecords;
     }
 
-    public static function checkDayGamePriceRecord($price, $cookie = false)
-    {
+    public
+    static function checkDayGamePriceRecord(
+        $price,
+        $cookie = false
+    ) {
         $todayRecord = Cache::get(self::GAME_PRICE_DAILY . strtotime('today'));
 
         if (!$todayRecord) {
@@ -288,7 +398,7 @@ class Prizes
             Cache::setex(self::GAME_PRICE_DAILY . strtotime('today'), self::DAY_TTL, ['price' => $price]);
 
             $res = array_merge(['день' => true], self::checkWeekGamePriceRecord($price));
-            foreach($res as $period => $value) {
+            foreach ($res as $period => $value) {
                 self::saveAchieve($cookie, 'game_price', self::PERIODS[$period], $price, false);
             }
 
@@ -298,8 +408,10 @@ class Prizes
         return [];
     }
 
-    public static function checkWeekGamePriceRecord($price)
-    {
+    public
+    static function checkWeekGamePriceRecord(
+        $price
+    ) {
         $weekRecord = Cache::get(self::GAME_PRICE_WEEKLY . date('W'));
 
         if (!$weekRecord) {
@@ -318,8 +430,10 @@ class Prizes
         return [];
     }
 
-    public static function checkMonthGamePriceRecord($price)
-    {
+    public
+    static function checkMonthGamePriceRecord(
+        $price
+    ) {
         $monthRecord = Cache::get(self::GAME_PRICE_MONTHLY . date('n'));
 
         if (!$monthRecord) {
@@ -338,8 +452,10 @@ class Prizes
         return [];
     }
 
-    public static function checkYearGamePriceRecord($price)
-    {
+    public
+    static function checkYearGamePriceRecord(
+        $price
+    ) {
         $yearRecord = Cache::get(self::GAME_PRICE_YEARLY . date('Y'));
 
         if (!$yearRecord) {
@@ -358,8 +474,11 @@ class Prizes
         return [];
     }
 
-    public static function checkDayTurnPriceRecord($price , $cookie = false)
-    {
+    public
+    static function checkDayTurnPriceRecord(
+        $price,
+        $cookie = false
+    ) {
         $todayRecord = Cache::get(self::TURN_PRICE_DAILY . strtotime('today'));
 
         if (!$todayRecord) {
@@ -373,7 +492,7 @@ class Prizes
             Cache::setex(self::TURN_PRICE_DAILY . strtotime('today'), self::DAY_TTL, ['price' => $price]);
 
             $res = array_merge(['день' => true], self::checkWeekTurnPriceRecord($price));
-            foreach($res as $period => $value) {
+            foreach ($res as $period => $value) {
                 self::saveAchieve($cookie, 'turn_price', self::PERIODS[$period], $price, false);
             }
 
@@ -383,8 +502,10 @@ class Prizes
         return [];
     }
 
-    public static function checkWeekTurnPriceRecord($price)
-    {
+    public
+    static function checkWeekTurnPriceRecord(
+        $price
+    ) {
         $weekRecord = Cache::get(self::TURN_PRICE_WEEKLY . date('W'));
 
         if (!$weekRecord) {
@@ -403,8 +524,10 @@ class Prizes
         return [];
     }
 
-    public static function checkMonthTurnPriceRecord($price)
-    {
+    public
+    static function checkMonthTurnPriceRecord(
+        $price
+    ) {
         $monthRecord = Cache::get(self::TURN_PRICE_MONTHLY . date('n'));
 
         if (!$monthRecord) {
@@ -423,8 +546,10 @@ class Prizes
         return [];
     }
 
-    public static function checkYearTurnPriceRecord($price)
-    {
+    public
+    static function checkYearTurnPriceRecord(
+        $price
+    ) {
         $yearRecord = Cache::get(self::TURN_PRICE_YEARLY . date('Y'));
 
         if (!$yearRecord) {
@@ -443,8 +568,12 @@ class Prizes
         return [];
     }
 
-    public static function checkDayWordPriceRecord($word, $price, $cookie = false)
-    {
+    public
+    static function checkDayWordPriceRecord(
+        $word,
+        $price,
+        $cookie = false
+    ) {
         $todayRecord = Cache::get(self::WORD_PRICE_DAILY . strtotime('today'));
 
         if (!$todayRecord) {
@@ -455,22 +584,28 @@ class Prizes
         }
 
         if ($price > $todayRecord['price']) {
-            Cache::setex(self::WORD_PRICE_DAILY . strtotime('today'), self::DAY_TTL, ['word' => $word, 'price' => $price]);
+            Cache::setex(
+                self::WORD_PRICE_DAILY . strtotime('today'),
+                self::DAY_TTL,
+                ['word' => $word, 'price' => $price]
+            );
 
             $res = array_merge(['день' => true], self::checkWeekWordPriceRecord($word, $price));
-            foreach($res as $period => $value) {
+            foreach ($res as $period => $value) {
                 self::saveAchieve($cookie, 'word_price', self::PERIODS[$period], $price, $word);
             }
 
             return $res;
-
         }
 
         return [];
     }
 
-    public static function checkWeekWordPriceRecord($word, $price)
-    {
+    public
+    static function checkWeekWordPriceRecord(
+        $word,
+        $price
+    ) {
         $weekRecord = Cache::get(self::WORD_PRICE_WEEKLY . date('W'));
 
         if (!$weekRecord) {
@@ -489,8 +624,11 @@ class Prizes
         return [];
     }
 
-    public static function checkMonthWordPriceRecord($word, $price)
-    {
+    public
+    static function checkMonthWordPriceRecord(
+        $word,
+        $price
+    ) {
         $monthRecord = Cache::get(self::WORD_PRICE_MONTHLY . date('n'));
 
         if (!$monthRecord) {
@@ -509,8 +647,11 @@ class Prizes
         return [];
     }
 
-    public static function checkYearWordPriceRecord($word, $price)
-    {
+    public
+    static function checkYearWordPriceRecord(
+        $word,
+        $price
+    ) {
         $yearRecord = Cache::get(self::WORD_PRICE_YEARLY . date('Y'));
 
         if (!$yearRecord) {
@@ -530,8 +671,11 @@ class Prizes
     }
 
 
-    public static function checkDayWordLenRecord($word, $cookie = false)
-    {
+    public
+    static function checkDayWordLenRecord(
+        $word,
+        $cookie = false
+    ) {
         $wordLen = mb_strlen($word, 'UTF-8');
         $todayRecord = Cache::get(self::WORD_LEN_DAILY . strtotime('today'));
         if (!$todayRecord) {
@@ -542,10 +686,14 @@ class Prizes
         }
 
         if ($wordLen > $todayRecord['length']) {
-            Cache::setex(self::WORD_LEN_DAILY . strtotime('today'), self::DAY_TTL, ['word' => $word, 'length' => $wordLen]);
+            Cache::setex(
+                self::WORD_LEN_DAILY . strtotime('today'),
+                self::DAY_TTL,
+                ['word' => $word, 'length' => $wordLen]
+            );
 
             $res = array_merge(['день' => true], self::checkWeekWordLenRecord($word));
-            foreach($res as $period => $value) {
+            foreach ($res as $period => $value) {
                 self::saveAchieve($cookie, 'word_len', self::PERIODS[$period], $wordLen, $word);
             }
 
@@ -555,8 +703,10 @@ class Prizes
         return [];
     }
 
-    public static function checkWeekWordLenRecord($word)
-    {
+    public
+    static function checkWeekWordLenRecord(
+        $word
+    ) {
         $wordLen = mb_strlen($word, 'UTF-8');
         $weekRecord = Cache::get(self::WORD_LEN_WEEKLY . date('W'));
         if (!$weekRecord) {
@@ -575,8 +725,10 @@ class Prizes
         return [];
     }
 
-    public static function checkMonthWordLenRecord($word)
-    {
+    public
+    static function checkMonthWordLenRecord(
+        $word
+    ) {
         $wordLen = mb_strlen($word, 'UTF-8');
         $monthRecord = Cache::get(self::WORD_LEN_MONTHLY . date('n'));
         if (!$monthRecord) {
@@ -595,8 +747,10 @@ class Prizes
         return [];
     }
 
-    public static function checkYearWordLenRecord($word)
-    {
+    public
+    static function checkYearWordLenRecord(
+        $word
+    ) {
         $wordLen = mb_strlen($word, 'UTF-8');
         $yearRecord = Cache::get(self::WORD_LEN_YEARLY . date('Y'));
         if (!$yearRecord) {

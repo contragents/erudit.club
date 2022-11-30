@@ -2,7 +2,7 @@
 
 namespace Dadata;
 
-//ini_set("display_errors", 1); error_reporting(E_ALL);
+ini_set("display_errors", 1); error_reporting(E_ALL);
 
 class Hints
 {
@@ -125,7 +125,7 @@ class Hints
             'Очки за слово считаются по сумме всех букв с учетом <span style="background-color: chartreuse;">букваХ2</span>, <span style="background-color: #fd0;">букваХ3</span>
             , а затем к полученному числу применяются модификаторы СИНИХ <span style="background-color: blue; color: white;">словоХ2</span> и КРАСНЫХ <span style="background-color: firebrick; color: white;">словоХ3</span> клеток',
             'Оставьте Ваш отзыв о приложении - мы ценим мнение каждого игрока и постоянно улучшаем Игру - <strong><a href="https://play.google.com/store/apps/details?id=club.erudite.app">Оценить</a></strong>',
-
+            'recordsHint',
         ],
         2100 => [
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные',
@@ -142,8 +142,9 @@ class Hints
             'Аватар можно задать в ЛИЧНОМ КАБИНЕТЕ. Пока только по ссылке (URL)',
             'Старайтесь запомнить как можно больше слов из 3-х букв',
             'Оцените Игру по <a href="' . self::YANDEX_RATING_URL . '" target="_blank">ссылке</a> - откроется в новом окне',
+            'recordsHint',
         ],
-        2300 => [
+        2300 => [/*
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные',
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift-F5</strong>',
             'Оцените Игру по <a href="' . self::YANDEX_RATING_URL . '" target="_blank">ссылке</a> - откроется в новом окне',
@@ -156,11 +157,14 @@ class Hints
             'Оцените Игру по <a href="' . self::YANDEX_RATING_URL . '" target="_blank">ссылке</a> - откроется в новом окне',
             'wordsEnHint',
             'Оставьте Ваш отзыв о приложении - мы ценим мнение каждого игрока и постоянно улучшаем Игру - <strong><a href="https://play.google.com/store/apps/details?id=club.erudite.app">Оценить</a></strong>',
+            */
+            'recordsHint',
         ]
     ];
 
     private static function checkCache($User, &$gameStatus, $hint)
     {
+        return false;
         self::$p = Cache::getInstance();
         $showsCount = self::$p->redis->get(self::HINT_USER_CACHE_KEY . $User . $hint);
 
@@ -289,6 +293,58 @@ class Hints
         return "<a href=\"$url\" target=\"_blank\">$anchor</a>";
     }
 
+    private static function recordsHint()
+    {
+        $record = Prizes::getRandomRecord();
+        $recorderCommonID = Players::getCommonIDByCookie($record['cookie']);
+        $recorderPlayerID = false;
+        $recordPlayerName = Players::getPlayerName(
+            ['ID' => $record['cookie'], 'common_id' => $recorderCommonID, 'userID' => $recorderPlayerID]
+        );
+        $recordPlayerAvatarUrl = Players::getAvatarUrl($recorderCommonID);
+
+
+        return self::renderRecordsView(
+            array_merge(
+                $record,
+                [
+                    'CommonID' => $recorderCommonID,
+                    'PlayerID' => $recorderPlayerID,
+                    'PlayerName' => $recordPlayerName,
+                    'AvatarUrl' => $recordPlayerAvatarUrl,
+                ]
+            )
+        );
+    }
+
+    private static function renderRecordsView(array $recordData)
+    {
+        return
+            "
+Поздравляем Игрока <strong>{$recordData['PlayerName']}</strong>!!!&nbsp
+<img style=\"border-radius: 5px 5px 5px 5px; margin-left:20px;padding-top:0;\" alt=\"😰\" src=\"{$recordData['AvatarUrl']}\" height=\"75px\" max-width=\"100px\" />
+<br />
+Новое достижение - <strong>" . Prizes::PRIZE_TITLES[$recordData['type']] . "</strong> <br />"
+            . ($recordData['word']
+                ? "Составленное слово - <strong>{$recordData['word']}</strong> <br />"
+                : ''
+            )
+            . "Результат - <strong>{$recordData['value']}</strong> <br />"
+
+            . "
+Получен жетон <img style=\"
+						cursor: pointer; 
+						margin-left: 0px; padding: 0;
+						margin-top: -10px;
+						z-index: 50;
+				\" 
+				title=\"Кликните для увеличения изображения\" 
+				id=\"{$recordData['type']}\" 
+				onclick=\"showFullImage('{$recordData['type']}', 500, 100);\" 
+				src=\"https://xn--d1aiwkc2d.club/{$recordData['link']}\" width=\"100px\" /> <br />
+Дата установления достижения: " . date("d.m.Y H:i", $recordData['record_date']);
+    }
+
     private static function wordsRuHint()
     {
         return self::wordsEnHint('wordsRu');
@@ -304,7 +360,7 @@ class Hints
     {
         $result = 'Поделитесь Игрой в любимых соцсетях - &nbsp;';
         if (self::isMobileDevice()) {
-            return $result . "<span style=\"background-color: #cccccc; padding-left: 5px; padding-top: 8px; padding-right: 6px; padding-bottom: 12px; border-radius: 5px 5px 5px; border: 1px solid black;\" onclick='mobileShare();'>" . self::SVG_IMAGES['share'] . "</span>";
+            return $result . " < span style = \"background-color: #cccccc; padding-left: 5px; padding-top: 8px; padding-right: 6px; padding-bottom: 12px; border-radius: 5px 5px 5px; border: 1px solid black;\" onclick='mobileShare();'>" . self::SVG_IMAGES['share'] . "</span>";
         }
 
         foreach (self::SHARE_SOCIAL_LINKS as $socSet => $info) {
@@ -318,7 +374,8 @@ class Hints
         return $result;
     }
 
-    public static function videoHint()
+    public
+    static function videoHint()
     {
         self::$VIDEOS = self::$EXT_ASSETS['videos'];
         $videoID = self::$VIDEOS[rand(0, count(self::$VIDEOS) - 1)];
@@ -333,7 +390,8 @@ class Hints
             . "<a target=\"_blank\" href=\"https://youtu.be/$videoID\">Открыть</a> в новой вкладке";
     }
 
-    public static function isMobileDevice()
+    public
+    static function isMobileDevice()
     {
         return preg_match(
             "/(android|avantgo|blackberry|bolt|boost|cricket|docomo
@@ -343,17 +401,20 @@ class Hints
         );
     }
 
-    public static function isDesktopDevice()
+    public
+    static function isDesktopDevice()
     {
         return !self::isMobileDevice();
     }
 
-    public static function IsNotAndroidApp()
+    public
+    static function IsNotAndroidApp()
     {
         return !self::isAndroidApp();
     }
 
-    public static function isAndroidApp()
+    public
+    static function isAndroidApp()
     {
         if (isset($_COOKIE['DEVICE']) && $_COOKIE['DEVICE'] == 'Android') {
             return true;
@@ -366,7 +427,8 @@ class Hints
         return false;
     }
 
-    public static function isVkApp()
+    public
+    static function isVkApp()
     {
         if (isset($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'], 'api.vk.com') !== false)) {
             return true;
@@ -375,7 +437,8 @@ class Hints
         return false;
     }
 
-    public static function isYandexApp()
+    public
+    static function isYandexApp()
     {
         if (isset($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'], 'games.s3.yandex') !== false)) {
             return true;
@@ -384,12 +447,14 @@ class Hints
         return false;
     }
 
-    public static function isClubApp()
+    public
+    static function isClubApp()
     {
         return !(self::isAndroidApp() || self::isVkApp() || self::isYandexApp());
     }
 
-    public static function isMyTurn()
+    public
+    static function isMyTurn()
     {
         if (self::$gameState['users'][self::$gameState[self::$User]]['status'] == 'myTurn') {
             return true;
