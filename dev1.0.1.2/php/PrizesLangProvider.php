@@ -195,7 +195,7 @@ class Prizes
         $eventPeriod,
         array $arr
     ) {
-        $commonID = Player::getPlayerID($arr['cookie'], true);
+        $commonID = Players::getPlayerID($arr['cookie'], true);
         if (!$commonID) {
             return false;
         }

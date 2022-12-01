@@ -2,7 +2,8 @@
 
 namespace Dadata;
 
-ini_set("display_errors", 1); error_reporting(E_ALL);
+ini_set("display_errors", 1);
+error_reporting(E_ALL);
 
 class Hints
 {
@@ -164,7 +165,6 @@ class Hints
 
     private static function checkCache($User, &$gameStatus, $hint)
     {
-        return false;
         self::$p = Cache::getInstance();
         $showsCount = self::$p->redis->get(self::HINT_USER_CACHE_KEY . $User . $hint);
 
@@ -297,9 +297,11 @@ class Hints
     {
         $record = Prizes::getRandomRecord();
         $recorderCommonID = Players::getCommonIDByCookie($record['cookie']);
-        $recorderPlayerID = false;
+        $recorderPlayerID = Players::getUserIDByCookie($record['cookie']);
         $recordPlayerName = Players::getPlayerName(
-            ['ID' => $record['cookie'], 'common_id' => $recorderCommonID, 'userID' => $recorderPlayerID]
+            $recorderPlayerID
+                ? ['ID' => $record['cookie'], 'common_id' => $recorderCommonID,]
+                : ['ID' => $record['cookie'], 'common_id' => $recorderCommonID, 'userID' => $recorderPlayerID]
         );
         $recordPlayerAvatarUrl = Players::getAvatarUrl($recorderCommonID);
 
@@ -317,19 +319,24 @@ class Hints
         );
     }
 
+
     private static function renderRecordsView(array $recordData)
     {
         return
             "
-Поздравляем Игрока <strong>{$recordData['PlayerName']}</strong>!!!&nbsp
+<strong><span style=\"color:purple\">Поздравляем Игрока</span> {$recordData['PlayerName']}&nbsp;!!!</strong>&nbsp;
 <img style=\"border-radius: 5px 5px 5px 5px; margin-left:20px;padding-top:0;\" alt=\"😰\" src=\"{$recordData['AvatarUrl']}\" height=\"75px\" max-width=\"100px\" />
 <br />
 Новое достижение - <strong>" . Prizes::PRIZE_TITLES[$recordData['type']] . "</strong> <br />"
             . ($recordData['word']
-                ? "Составленное слово - <strong>{$recordData['word']}</strong> <br />"
+                ? "Составленное слово: <strong>{$recordData['word']}</strong> <br />"
                 : ''
             )
-            . "Результат - <strong>{$recordData['value']}</strong> <br />"
+            . "Результат: <strong>{$recordData['value']} "
+            . (strpos($recordData['type'], '_len')
+                ? '&nbsp;букв'
+                : '')
+            . "</strong> <br />"
 
             . "
 Получен жетон <img style=\"
@@ -342,7 +349,7 @@ class Hints
 				id=\"{$recordData['type']}\" 
 				onclick=\"showFullImage('{$recordData['type']}', 500, 100);\" 
 				src=\"https://xn--d1aiwkc2d.club/{$recordData['link']}\" width=\"100px\" /> <br />
-Дата установления достижения: " . date("d.m.Y H:i", $recordData['record_date']);
+Дата установления достижения: <strong>" . date("d.m.Y H:i", $recordData['record_date']) . "</strong>";
     }
 
     private static function wordsRuHint()
