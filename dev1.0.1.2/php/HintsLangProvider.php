@@ -159,6 +159,10 @@ class Hints
             'wordsEnHint',
             'Оставьте Ваш отзыв о приложении - мы ценим мнение каждого игрока и постоянно улучшаем Игру - <strong><a href="https://play.google.com/store/apps/details?id=club.erudite.app">Оценить</a></strong>',
             'recordsHint',
+            'recordsHint',
+            'recordsHint',
+            'recordsHint',
+            'recordsHint',
         ]
     ];
 
