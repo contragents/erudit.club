@@ -147,7 +147,7 @@ var gameStates = {
                                         else
                                             var responseArr = JSON.parse(dataCabinet['message']);
                                         console.log(responseArr);
-                                        var message = '<form>';
+                                        var message = '<form id="superForm" >';
                                         for (k in responseArr['form']) {
                                             message += '<div class="form-group"><div class="col-sm-6">' +
                                                 '<label for="' + responseArr['form'][k]['inputId'] + '">'
@@ -167,20 +167,33 @@ var gameStates = {
                                                 message += 'placeholder="' + responseArr['form'][k]['placeholder'] + '"';
                                             }
 
-                                            message += 'type="text" class="form-control" name="'
+                                            message += (('type' in responseArr['form'][k])
+                                                ? 'type="' + responseArr['form'][k]['type'] + '"'
+                                                : 'type="text"')
+                                                + ' class="form-control" name="'
                                                 + responseArr['form'][k]['inputName']
                                                 + '" id="'
                                                 + responseArr['form'][k]['inputId']
-                                                + '"></div>';
-                                            message += '<div class="col-sm-4 col-form-label">'
-                                                + '<button type="submit" class="form-control btn btn-outline-secondary" onclick="'
-                                                + responseArr['form'][k]['onclick']
-                                                + '($(\'#' + responseArr['form'][k]['inputId']
-                                                + '\').val(),'
-                                                + responseArr['common_id']
-                                                + ');return false;">'
-                                                + responseArr['form'][k]['buttonCaption']
-                                                + '</button></div></div>';
+                                                + '" '
+                                                + ('required' in responseArr['form'][k]
+                                                    ? ' required '
+                                                    : '')
+                                                + '></div>';
+                                            message += !('type' in responseArr['form'][k] && responseArr['form'][k]['type'] === 'hidden')
+                                                ? (
+                                                    '<div class="col-sm-4 col-form-label">'
+                                                    + '<button type="submit" class="form-control btn btn-outline-secondary" onclick="'
+                                                    + responseArr['form'][k]['onclick']
+                                                    + '($(\'#' + responseArr['form'][k]['inputId']
+                                                    + '\').val(),'
+                                                    + responseArr['common_id']
+                                                    + ');return false;">'
+                                                    + responseArr['form'][k]['buttonCaption']
+                                                    + '</button></div>'
+                                                )
+                                                : ('')
+                                                +
+                                                '</div>';
                                             message += '</div>';
                                         }
                                         message += '</form>';

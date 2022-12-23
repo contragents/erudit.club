@@ -5,6 +5,7 @@ namespace Erudit;
 use Dadata\Cache;
 use Dadata\DB;
 use Dadata\Hints;
+use Dadata\Players;
 use Dadata\Prizes;
 use Dadata\Stats;
 
@@ -70,7 +71,6 @@ class Game
 
     const CHECK_STATUS_RESULTS_KEY = 'erudit.game_results_';
     const CHECK_STATUS_RESULTS_KEY_TTL = 24 * 60 * 60;
-
     public function __construct($server_name = '')
     {
         spl_autoload_register(
@@ -467,12 +467,19 @@ p1.cookie='$cookie'
             'placeholder' => 'новый Ник'
         ];
         $message['form'][] = [
-            'prompt' => 'URL аватара',
+            'prompt' => '',
+            'type' => 'hidden',
+            'inputName' => 'MAX_FILE_SIZE',
+            'value' => Players::MAX_UPLOAD_SIZE,
+        ];
+        $message['form'][] = [
+            'prompt' => 'Загрузка Аватара',
+            'type' => 'file',
             'inputName' => 'url',
-            'inputId' => 'player_avatar_url',
+            'inputId' => 'player_avatar_file',
             'onclick' => 'savePlayerAvatar',
-            'buttonCaption' => 'Применить',
-            'placeholder' => 'https://'
+            'buttonCaption' => 'Отправить',
+            'required' => true,
         ];
 
         $message['form'][] = [
@@ -487,7 +494,7 @@ p1.cookie='$cookie'
 
         $message['form'][] = [
             'prompt' => 'Ключ основного аккаунта',
-            'inputName' => 'url',
+            'inputName' => 'key',
             'inputId' => 'old_account_key',
             'onclick' => 'mergeTheIDs',
             'buttonCaption' => 'Связать',

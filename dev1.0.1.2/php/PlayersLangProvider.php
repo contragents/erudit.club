@@ -2,13 +2,91 @@
 
 namespace Dadata;
 
+//ini_set("display_errors", 1); error_reporting(E_ALL);
+
 use Erudit\Game;
 use Lang\Ru;
 
 class Players
 {
-    public static function getCommonIDByCookie($cookie)
+    const UPLOAD_DIR = '/img/upload/';
+    const BASE_UPLOAD_FILE_URL = 'https://xn--d1aiwkc2d.club/img/upload/';
+    const ENABLE_UPLOAD_EXT = [
+        'jpg' => 'jpg',
+        'jpeg' => 'jpeg',
+        'png' => 'png',
+        'gif' => 'gif',
+        'svg' => 'svg',
+        'ico' => 'ico',
+        'bmp' => 'bmp'
+    ];
+
+    const MAX_UPLOAD_SIZE = 2 * 1024 * 1024;
+
+    public static function avatarUpload($files, $cookie): string
     {
+        $status = 'error';
+
+        $parts = explode(".", $files['url']['name']);
+        $extension = strtolower(end($parts));
+        $filename = $cookie . '.' . $extension;
+        if (isset(self::ENABLE_UPLOAD_EXT[$extension]) && $files['url']['size'] < self::MAX_UPLOAD_SIZE) {
+            if (move_uploaded_file(
+                $files['url']['tmp_name'],
+                $_SERVER['DOCUMENT_ROOT'] . self::UPLOAD_DIR . $filename
+            )) {
+                $avatarAddRes = self::addUserAvatarUrl(
+                    self::BASE_UPLOAD_FILE_URL . $filename,
+                    self::getCommonIDByCookie($cookie)
+                );
+
+                return $avatarAddRes;
+            }
+        }
+
+        return json_encode(
+            [
+                'result' => $status,
+                'message' => '<strong>Ошибка загрузки файла!</strong><br /> Проверьте:<br /> <ul><li>размер файла (не более <strong>'
+                    . round(
+                        self::MAX_UPLOAD_SIZE / 1024 / 1024,
+                        1
+                    )
+                    . 'MB</strong>)</li><li>разрешение - <strong>'
+                    . implode('</strong> или <strong>', self::ENABLE_UPLOAD_EXT)
+                    . '</strong></li></ul>'
+            ]
+        );
+    }
+
+    public static function addUserAvatarUrl($url, $commonID): string
+    {
+        if (!preg_match('/^https?:\/\//', $url)) {
+            return json_encode(
+                [
+                    'result' => 'error',
+                    'message' => 'Неверный формат URL! <br />Должно начинаться с <strong>http(s)://</strong>'
+                ]
+            );
+        }
+
+        $avatarUpdateQuery = "UPDATE users
+                SET 
+                    avatar_url = '" . DB::escapeString($url) . "'
+                WHERE 
+                    id = $commonID";
+
+        if (DB::queryInsert($avatarUpdateQuery)) {
+            return json_encode(['result' => 'saved', 'url' => $url]);
+        } else {
+            return json_encode(['result' => 'saved', 'message' => 'Файл перезаписан', 'url' => $url]);
+        }
+    }
+
+    public
+    static function getCommonIDByCookie(
+        $cookie
+    ) {
         $commonIDQuery = "SELECT CASE WHEN common_id IS NULL THEN id ELSE common_id END FROM players WHERE cookie = '$cookie' LIMIT 1";
         if ($res = DB::queryValue($commonIDQuery)) {
             return $res;
@@ -17,8 +95,10 @@ class Players
         }
     }
 
-    public static function getUserIDByCookie($cookie)
-    {
+    public
+    static function getUserIDByCookie(
+        $cookie
+    ) {
         $userIDQuery = "SELECT user_id FROM players WHERE cookie = '$cookie' LIMIT 1";
         if ($res = DB::queryValue($userIDQuery)) {
             return $res;
@@ -27,8 +107,10 @@ class Players
         }
     }
 
-    public static function getAvatarUrl(int $commonID)
-    {
+    public
+    static function getAvatarUrl(
+        int $commonID
+    ) {
         $avatarUrl = DB::queryValue("SELECT avatar_url FROM users WHERE id = $commonID");
 
         if ($avatarUrl) {
@@ -38,15 +120,19 @@ class Players
         }
     }
 
-    private static function getDefaultAvatar($commonID)
-    {
+    private
+    static function getDefaultAvatar(
+        $commonID
+    ) {
         $maxImgId = 34768;
         $imgId = $commonID % $maxImgId;
         return DB::queryValue("SELECT concat(site,mini_url) FROM avatar_urls WHERE site_img_id >= $imgId LIMIT 1");
     }
 
-    public static function getPlayerName(array $user = ['ID' => 'cookie', 'common_id' => 15, 'userID' => 'user_ID'])
-    {
+    public
+    static function getPlayerName(
+        array $user = ['ID' => 'cookie', 'common_id' => 15, 'userID' => 'user_ID']
+    ) {
         if (strpos($user['ID'], 'bot') !== false) {
             return Game::$configStatic['botNames'][substr($user['ID'], (strlen($user['ID']) == 7 ? -1 : -2))];
         }
@@ -120,8 +206,11 @@ class Players
         }
     }
 
-    public static function getPlayerID($cookie, $createIfNotExist = false)
-    {
+    public
+    static function getPlayerID(
+        $cookie,
+        $createIfNotExist = false
+    ) {
         $findIDQuery = "SELECT 
             p1.common_id AS cid1, 
             p2.common_id AS cid2 
@@ -136,7 +225,6 @@ class Players
 
         $userIDArr = DB::queryArray($findIDQuery);
         if ($userIDArr) {
-
             if ($userIDArr[0]['cid2']) {
                 return $userIDArr[0]['cid2'];
             }
@@ -161,7 +249,6 @@ class Players
                 }
             }
         } elseif ($createIfNotExist) {
-
             $cookieInsertQuery = "INSERT 
                 INTO 
                     players
@@ -170,14 +257,10 @@ class Players
                     user_id = conv(substring(md5('$cookie'),1,16),16,10)";
 
             if (DB::queryInsert($cookieInsertQuery)) {
-
                 return self::getPlayerID($cookie, 'createCommonID');
             }
-
         }
 
         return false;
     }
-
-
 }

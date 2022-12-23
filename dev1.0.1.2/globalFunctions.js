@@ -214,7 +214,7 @@ function copyKeyForID(key, commonID = '') {
 function copyDonateKey() {
     $('#donate_id').select();
     document.execCommand("copy");
-    console.log( $('#donate_id').val());
+    console.log($('#donate_id').val());
 }
 
 function savePlayerName(name, commonID = '') {
@@ -236,6 +236,80 @@ function savePlayerName(name, commonID = '') {
 }
 
 function savePlayerAvatar(url, commonID) {
+    //$('#player_avatar_file').trigger('click');
+    //event.preventDefault();
+
+    // складируем форму в ......форму))
+    const checkElement = document.getElementById("player_avatar_file");
+    if (!checkElement.checkValidity()) {
+        /*
+        <?php
+        ini_set("display_errors", 1); error_reporting(E_ALL);
+            include_once 'php/PlayersLangProvider.php';
+        ?>
+        */
+        showCabinetActionResult({
+            result : 'error',
+            message: 'Ошибка! Выберите файл-картинку размером не более <?= round(\Dadata\Players::MAX_UPLOAD_SIZE / 1024 / 1024, 2); ?>MB'
+        });
+
+        return false;
+    }
+
+    var formData = new FormData($('#superForm')[0]);
+
+    if (pageActive != 'hidden') {
+        requestSended = true;
+        requestTimestamp = (new Date()).getTime();
+    }
+
+    let script = 'avatar_upload.php';
+
+    let URL = useLocalStorage
+        ? (
+            '//xn--d1aiwkc2d.club/<?=$dir?>/php/yowser/index.php'
+            + '?cooki='
+            + localStorage.erudit_user_session_ID
+            + '&script='
+            + script
+            + '&queryNumber='
+            + (queryNumber++)
+            + '&lang=' + lang
+            + (pageActive === 'hidden' ? '&page_hidden=true' : '')
+        )
+        : (
+            '//xn--d1aiwkc2d.club/<?=$dir?>/php/'
+            + script
+            + '?queryNumber=' + (queryNumber++)
+            + '&lang=' + lang
+            + (pageActive === 'hidden' ? '&page_hidden=true' : '')
+        );
+
+    $.ajax({
+        url: URL,
+        type: 'POST',
+        data: formData,
+        async: false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (returndata) {
+            //alert(returndata);
+            resp = JSON.parse(returndata);
+
+            if (resp['result'] === 'saved') {
+                $('#playersAvatar').html('<img src="' + resp['url'] + '" width="100px" max-height = "100px"/>');
+            }
+
+            showCabinetActionResult(resp);
+
+            return false;
+        }
+    });
+
+    return false;
+
+    /*
     if (url.trim() == '') {
         let resp = {result: 'error', message: 'Задано пустое значение'};
         showCabinetActionResult(resp);
@@ -250,6 +324,8 @@ function savePlayerAvatar(url, commonID) {
                 $('#playersAvatar').html('<img src="' + url + '" width="100px" max-height = "100px"/>');
             showCabinetActionResult(resp);
         });
+        */
+
 }
 
 function initLotok() {
