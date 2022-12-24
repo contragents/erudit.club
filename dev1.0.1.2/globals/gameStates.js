@@ -149,7 +149,11 @@ var gameStates = {
                                         console.log(responseArr);
                                         var message = '<form id="superForm" >';
                                         for (k in responseArr['form']) {
-                                            message += '<div class="form-group"><div class="col-sm-6">' +
+                                            message += '<div class="form-group"'
+                                                + (('type' in responseArr['form'][k] && responseArr['form'][k]['type'] === 'hidden')
+                                                    ? ' style="display:none" '
+                                                    : '')
+                                                + '><div class="col-sm-6">' +
                                                 '<label for="' + responseArr['form'][k]['inputId'] + '">'
                                                 + responseArr['form'][k]['prompt']
                                                 + '</label>'

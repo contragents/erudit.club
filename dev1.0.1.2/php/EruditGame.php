@@ -358,9 +358,9 @@ class Game
                     id = $commonID";
 
         if (DB::queryInsert($avatarUpdateQuery)) {
-            return json_encode(['result' => 'saved']);
+            return json_encode(['result' => 'saved', 'message' => 'Файл сохранен']);
         } else {
-            return json_encode(['result' => 'saved', 'message' => 'Ссылка ранее уже была сохранена на сервере']);
+            return json_encode(['result' => 'saved', 'message' => 'Файл перезаписан']);
         }
     }
 
@@ -465,6 +465,12 @@ p1.cookie='$cookie'
             'onclick' => 'savePlayerName',
             'buttonCaption' => 'Задать',
             'placeholder' => 'новый Ник'
+        ];
+        $message['form'][] = [
+            'prompt' => '',
+            'type' => 'hidden',
+            'inputName' => 'cookie',
+            'value' => $this->User,
         ];
         $message['form'][] = [
             'prompt' => '',

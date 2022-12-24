@@ -16,12 +16,16 @@ if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] != '') {
 //Устанавливаем домен в куки - эрудит или 5-5.су или яндекс..
 
 if (!isset($_COOKIE['erudit_user_session_ID'])) {
-    include_once 'CookieLangProvider.php';
+    if (!empty($_POST['cookie'])) {
+        $_COOKIE['erudit_user_session_ID'] = $_POST['cookie'];
+    } else {
+        include_once 'CookieLangProvider.php';
 
-    $_COOKIE = Cookie::setGetCook();
-    print json_encode(['gameState' => 'cookieTest', 'cookie' => $_COOKIE[Cookie::COOKIE_NAME] ?? '']);
-    exit();
-    //new scenario
+        $_COOKIE = Cookie::setGetCook();
+        print json_encode(['gameState' => 'cookieTest', 'cookie' => $_COOKIE[Cookie::COOKIE_NAME] ?? '']);
+        exit();
+        //new scenario
+    }
 }
 
 
