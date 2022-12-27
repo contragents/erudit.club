@@ -136,6 +136,7 @@ var submitButton = false;
 var submitButton = false;
 
 var dialog = false;
+var dialogResponse = false;
 
 var winScore = '';
 var ochki = false;

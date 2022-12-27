@@ -444,6 +444,14 @@ var gameStates = {
                                                 gameStates['gameResults']['results'](dataInvite);
                                             }
                                         });
+
+                                        setTimeout(
+                                            function () {
+                                                dialogResponse.find(".bootbox-close-button").trigger("click");
+                                            }
+                                            , 2000
+                                        );
+
                                         return false;
                                     });
                             }, 100);
@@ -460,8 +468,13 @@ var gameStates = {
             });
         },
         decision: function (data) {
-            if (dialog && canCloseDialog)
+            if (dialog && canCloseDialog) {
                 dialog.modal('hide');
+            }
+            if (dialogResponse) {
+                dialogResponse.modal('hide');
+            }
+
             dialog = bootbox.dialog({
                 //title: 'Игра завершена',
                 message: data['comments'],
@@ -492,9 +505,17 @@ var gameStates = {
                                             callback: function () {
                                                 dialogResponse.modal('hide');
                                                 dataInvite['comments'] = data['comments'];
-                                                gameStates['gameResults']['decision'](dataInvite);
+                                                //gameStates['gameResults']['decision'](dataInvite);
                                             }
                                         });
+
+                                        setTimeout(
+                                            function () {
+                                                dialogResponse.find(".bootbox-close-button").trigger("click");
+                                            }
+                                            , 2000
+                                        );
+
                                         return false;
                                     });
                             }, 100);
