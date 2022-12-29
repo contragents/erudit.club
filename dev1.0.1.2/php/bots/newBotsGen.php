@@ -1,8 +1,7 @@
 <?php
 define("BOTSNUM",100);
 
-//error_reporting(E_ALL & ~E_NOTICE);
-ini_set('display_errors', 0);
+//error_reporting(E_ALL & ~E_NOTICE); ini_set('display_errors', 0);
 include_once(__DIR__.'/../../../vendor/deprecated/xcache_functions.php');
 include_once(__DIR__.'/../CacheLangProvider.php');
 

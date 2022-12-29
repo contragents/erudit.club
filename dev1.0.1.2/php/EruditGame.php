@@ -71,6 +71,7 @@ class Game
 
     const CHECK_STATUS_RESULTS_KEY = 'erudit.game_results_';
     const CHECK_STATUS_RESULTS_KEY_TTL = 24 * 60 * 60;
+
     public function __construct($server_name = '')
     {
         spl_autoload_register(
@@ -519,8 +520,7 @@ p1.cookie='$cookie'
 
     private function genKeyForCommonID($ID)
     {
-        ini_set("display_errors", 1);
-        error_reporting(E_ALL);
+        //ini_set("display_errors", 1); error_reporting(E_ALL);
         $messageToEncrypt = $ID;
         $secretKey = 'eruditforever';//$this->config['secret_key'];
         $method = 'AES-128-CBC';//$this->config['encrypt_method'];
@@ -1593,6 +1593,15 @@ LIMIT 40";
                     }
                     if ($rating['rating'] > 2400) {
                         $rangedOnlinePlayers[2400]++;
+                    }
+                    if ($rating['rating'] > 2500) {
+                        $rangedOnlinePlayers[2500]++;
+                    }
+                    if ($rating['rating'] > 2600) {
+                        $rangedOnlinePlayers[2600]++;
+                    }
+                    if ($rating['rating'] > 2700) {
+                        $rangedOnlinePlayers[2700]++;
                     }
                 }
             }
