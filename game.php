@@ -1,5 +1,5 @@
 <?php
-ini_set("display_errors", 1); error_reporting(E_ALL);
+//ini_set("display_errors", 1); error_reporting(E_ALL);
 
 $title = 'Игра №' . $_GET['game_id'];
 include ('tpl/main_header.php');

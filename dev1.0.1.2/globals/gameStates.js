@@ -542,6 +542,11 @@ var lastQueryTime = 0;
 var gameOldState = '';
 
 function commonCallback(data) {
+    if ('http_status' in data && (data['http_status'] === 400 || data['http_status'] === 404)) {
+        console.log(data['message']);
+        return;
+    }
+
     gameOldState = gameState;
     gameOldSubState = gameSubState;
 
@@ -568,8 +573,7 @@ function commonCallback(data) {
 
     if ('gameSubState' in data)
         gameSubState = data['gameSubState'];
-    else
-        gameSubState = gameStates[gameState]['1'];
+    //else gameSubState = gameStates[gameState]['1'];
 
 
     console.log(gameOldState + '->' + gameState);

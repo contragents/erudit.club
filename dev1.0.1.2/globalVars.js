@@ -16,6 +16,9 @@ var lang = 'RU';
 ?>
 */
 
+const BAD_REQUEST = 400;
+const PAGE_NOT_FOUND = 404;
+
 var turnAutocloseDialog = false;
 var timeToCloseDilog = false;
 var automaticDialogClosed = false;

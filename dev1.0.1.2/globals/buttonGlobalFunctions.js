@@ -8,12 +8,22 @@ function submitButtonFunction() {
     setTimeout(function () {
         fetchGlobal('turn_submitter.php', 'cells', cells)
             .then((data) => {
-                gameState = 'afterSubmit';
-                parseDeskGlobal(data); // JSON data parsed by `response.json()` call
+                if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
+                    buttons['submitButton']['svgObject'].setInteractive();
+                    buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Otjat'));
+                    dialog = bootbox.alert({
+                        message: ('message' in data && data['message'] !== '')
+                            ? (data['message'] + '<br /> Попробуйте отправить заново')
+                            : '<strong>Ошибка связи с сервером!<br /> Попробуйте отправить заново</strong>',
+                        size: 'small'
+                    });
+                } else {
+                    gameState = 'afterSubmit';
+                    parseDeskGlobal(data); // JSON data parsed by `response.json()` call
+                }
             });
     }, 100);
 }
-;
 
 
 function checkButtonFunction() {

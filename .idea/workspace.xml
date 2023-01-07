@@ -11,162 +11,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="083cf621-0e75-4976-a3cb-6b5812dcdbdc" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/dev1.0.1.2/php/BadRequestLangProvider.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globalFunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globalFunctions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/ajaxGetGlobalFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/ajaxGetGlobalFunction.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/buttonGlobalFunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/buttonGlobalFunctions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/ajaxGetGlobalFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/buttonGlobalFunctions.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/buttonGlobalFunctions_pre_fix_97.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/buttonSettingsGlobal_20201229.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/findPlaceGlobalFunction_20200918.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/findPlaceGlobalFunction_20201012.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/findPlaceGlobalFunction_20201015.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/gameStates_20201126.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/gameStates_time_wait_change.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/getFishkaGlobalFunction_20210109.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/dups/parseDeskGlobalFunction_20201114.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/dups/EruditGame.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/dups/PrizesLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/dups/RuLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/checkButtonEvents.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/dups/findPlaceFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/dups/getCheckButtonFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/dups/getShareButtonFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/dups/submitButtonEvents.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/findPlaceFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/fishkaDragEvents.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/getButtonFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/getSVGButtonFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/newGameButtonEvents.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/shareButtonEvents.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/create/submitButtonEvents.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/createFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globalFunctions.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globalVars.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/ajaxGetGlobalFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/bootBoxIsOpenedGlobalFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/buttonGlobalFunctions.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/buttonSettingsGlobal.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/changeFishkiGlobalFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/ajaxGetGlobalFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/buttonGlobalFunctions.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/buttonGlobalFunctions_pre_fix_97.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/buttonSettingsGlobal_20201229.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/findPlaceGlobalFunction_20200918.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/findPlaceGlobalFunction_20201012.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/findPlaceGlobalFunction_20201015.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/gameStates_20201126.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/gameStates_time_wait_change.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/getFishkaGlobalFunction_20210109.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/dups/parseDeskGlobalFunction_20201114.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/findPlaceGlobalFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/gagetTypeFunctions.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/gameStates.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/getFishkaGlobalFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/initCellsGlobalFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/instruction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/instruction_eng.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/letterPrices.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/openWindowGlobalFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/parseDeskGlobalFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/rusLetters.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/globals/wav.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/initializeFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/CacheLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/CookieLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/DBLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/EngLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/EruditGame.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/HintsLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/PlayerLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/PrizesLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/QueueLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/RuLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/StatsLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/avatar_url_parser.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/checkWordFishkiFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/checkWordFishkiFunctionENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/client.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/clientLists.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/clientListsENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/checkWordFishkiFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/client.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/clientLists.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/clientListsV3.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/clientListsV3__.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/clientLists_28032021.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/clientLists_newFormat.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/client_20201026.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/client_20201104.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/client_20201106.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/client_argv.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/findWordSlevaFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/findWordSpravaFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/findWordSverhuFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/findWordVnizFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/games_statistics.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/games_statistics14.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/games_statistics_12032021.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/games_statistics_20210222.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/games_statistics_escapes.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/maxToFunctions.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/newBotsGen.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/newBotsGenV2.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/newBotsGenV3.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/dups/newBotsGen_new_WG_FORMAT.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSlevaFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSlevaFunctionENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSpravaFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSpravaFunctionENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSverhuFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordSverhuFunctionENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordVnizFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/findWordVnizFunctionENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/games_statistics.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/maxToFunctions.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/newBotsGen.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/newBotsGenV2.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/newBotsGenV3.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/newBotsGenV3ENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/bots/redisDailyCleaner.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/change_fishki.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/choose_css.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/cookie_checker.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/dups/EruditGame.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/dups/PrizesLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/dups/RuLangProvider.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/exit_game.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/game_page.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/game_starter.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/games_history.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/hash_str_2_int.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/invite_to_new_game.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/merge_the_ids.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/new_game.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/player_cabinet.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/players_ratings.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/send_chat_message.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/set_inactive.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/set_player_avatar_url.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/set_player_name.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/status_checker.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/test.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/testCache.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/dups/ratingsTableRow.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/ratingsTableFooter.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/ratingsTableHeader.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/ratingsTableNicknameFormRow.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/ratingsTablePrizesRow.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/tpl/ratingsTableRow.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/turn_submitter.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/word.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/word_checker.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/youtube_videos.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/php/yowser/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/preloadFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/updateFunction.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex1.0.1.1/ysdk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/gameStates.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/gameStates.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/EruditGame.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/EruditGame.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/games_history.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/games_history.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game.php" beforeDir="false" afterPath="$PROJECT_DIR$/game.php" afterDir="false" />
+    </list>
+    <list id="493eaa45-d165-4bb4-bddd-131381b96e0a" name="ignore" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,10 +36,33 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="staging" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/.idea/workspace.xml">
+      <ranges>
+        <range start1="9" end1="10" start2="9" end2="16" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
+        <range start1="13" end1="13" start2="19" end2="20" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="14" end1="14" start2="21" end2="24" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="15" end1="169" start2="25" end2="32" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="181" end1="182" start2="44" end2="45" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="185" end1="185" start2="48" end2="71" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="195" end1="196" start2="81" end2="84" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="199" end1="199" start2="87" end2="260" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="209" end1="209" start2="270" end2="285" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="217" end1="218" start2="293" end2="413" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="228" end1="229" start2="423" end2="436" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="233" end1="233" start2="440" end2="441" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="237" end1="238" start2="445" end2="461" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="240" end1="241" start2="463" end2="488" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="243" end1="244" start2="490" end2="491" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="248" end1="249" start2="495" end2="500" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="251" end1="252" start2="502" end2="507" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+      </ranges>
+    </file>
   </component>
   <component name="ProjectId" id="2HUDnNOLmFyPgnYqujyuNJ4T097" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -193,9 +73,184 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="PHP" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/dev1.0.1.2/php" />
+    <property name="php.override.implement.member.chooser.php.doc" value="COPY_ALWAYS" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\dev1.0.1.2\php" />
+    </key>
+  </component>
+  <component name="RestClientSettings">
+    <option name="REQUEST_HISTORY">
+      <list>
+        <RestClientRequest>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://api.openai.com/v1/completions" />
+          <option name="urlPath" value="" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Authorization" />
+                <option name="value" value="Bearer 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" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Content-Type" />
+                <option name="value" value="application/json" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="haveTextToSend" value="true" />
+          <option name="textToSend" value="{&#10;  &quot;model&quot;: &quot;text-davinci-002&quot;,&#10;  &quot;prompt&quot;: &quot;Расскажи про игру Эрудит&quot;,&#10;  &quot;max_tokens&quot;: 2048,&#10;  &quot;temperature&quot;: 0&#10;}" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://api.openai.com/v1/completions" />
+          <option name="urlPath" value="" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Authorization" />
+                <option name="value" value="Bearer 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" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Content-Type" />
+                <option name="value" value="application/json" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="haveTextToSend" value="true" />
+          <option name="textToSend" value="{&#10;  &quot;model&quot;: &quot;text-davinci-002&quot;,&#10;  &quot;prompt&quot;: &quot;Расскажи про игру Эрудит&quot;,&#10;  &quot;max_tokens&quot;: 6,&#10;  &quot;temperature&quot;: 0&#10;}" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://api.openai.com/v1/completions" />
+          <option name="urlPath" value="" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Authorization" />
+                <option name="value" value="Bearer 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" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Content-Type" />
+                <option name="value" value="application/json" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="haveTextToSend" value="true" />
+          <option name="textToSend" value="{&#10;  &quot;model&quot;: &quot;text-davinci-002&quot;,&#10;  &quot;prompt&quot;: &quot;Say this is a test&quot;,&#10;  &quot;max_tokens&quot;: 6,&#10;  &quot;temperature&quot;: 0&#10;}" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="httpMethod" value="GET" />
+          <option name="urlBase" value="https://api.openai.com/v1/completions" />
+          <option name="urlPath" value="" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Authorization" />
+                <option name="value" value="Bearer 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" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parameters">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="model" />
+                <option name="value" value="привет бот" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parametersEnabled" value="true" />
+          <option name="textToSend" value="" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="httpMethod" value="GET" />
+          <option name="urlBase" value="https://api.openai.com/v1/completions" />
+          <option name="urlPath" value="" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Authorization" />
+                <option name="value" value="Bearer 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" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parameters">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="привет бот" />
+                <option name="value" value="" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parametersEnabled" value="true" />
+          <option name="textToSend" value="" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="HTTP Request.rest-api_5#1">
+    <configuration name="rest-api_4#1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$APPLICATION_CONFIG_DIR$/scratches/rest-api_4.http" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="rest-api_5#1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$APPLICATION_CONFIG_DIR$/scratches/rest-api_5.http" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="HTTP Request.rest-api_5#1" />
+        <item itemvalue="HTTP Request.rest-api_4#1" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -207,6 +262,21 @@
       <updated>1668330934462</updated>
       <workItem from="1668330935508" duration="1387000" />
       <workItem from="1668332438322" duration="2924000" />
+      <workItem from="1669357918601" duration="1424000" />
+      <workItem from="1669406070228" duration="6787000" />
+      <workItem from="1669665576608" duration="4211000" />
+      <workItem from="1669740031537" duration="2098000" />
+      <workItem from="1669803010422" duration="6000" />
+      <workItem from="1669803637098" duration="9956000" />
+      <workItem from="1669913463918" duration="5319000" />
+      <workItem from="1671639224462" duration="141000" />
+      <workItem from="1671639540383" duration="11977000" />
+      <workItem from="1671708320570" duration="16984000" />
+      <workItem from="1671996852855" duration="5221000" />
+      <workItem from="1672130158168" duration="1424000" />
+      <workItem from="1672223154319" duration="29002000" />
+      <workItem from="1672604109257" duration="5962000" />
+      <workItem from="1672741194650" duration="1107000" />
     </task>
     <task id="LOCAL-00001" summary="Master initial commit">
       <created>1668333587736</created>
@@ -215,7 +285,126 @@
       <option name="project" value="LOCAL" />
       <updated>1668333587736</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="CLUB-237 for test">
+      <created>1669024378016</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1669024378016</updated>
+    </task>
+    <task id="LOCAL-00003" summary="staging hotfix">
+      <created>1669365494887</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1669365494887</updated>
+    </task>
+    <task id="LOCAL-00004" summary="staging to test. desync hotfix">
+      <created>1669411433683</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1669411433683</updated>
+    </task>
+    <task id="LOCAL-00005" summary="CLUB-238 for test">
+      <created>1669665945833</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1669665945833</updated>
+    </task>
+    <task id="LOCAL-00006" summary="CLUB-238 for test">
+      <created>1669666091287</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1669666091287</updated>
+    </task>
+    <task id="LOCAL-00007" summary="CLUB-238 for test">
+      <created>1669666357463</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1669666357463</updated>
+    </task>
+    <task id="LOCAL-00008" summary="CLUB-238 for test 2">
+      <created>1669715377061</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1669715377061</updated>
+    </task>
+    <task id="LOCAL-00009" summary="staging added hints for desync release">
+      <created>1669743518053</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1669743518053</updated>
+    </task>
+    <task id="LOCAL-00010" summary="CLUB-236 for test on dev #1&#10;Some problems with autogenerated names">
+      <created>1669843216754</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1669843216754</updated>
+    </task>
+    <task id="LOCAL-00011" summary="CLUB-236 on release">
+      <created>1669917974221</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1669917974221</updated>
+    </task>
+    <task id="LOCAL-00012" summary="CLUB-236 on release 2">
+      <created>1669918171817</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1669918171817</updated>
+    </task>
+    <task id="LOCAL-00013" summary="CLUB-236 on release 3">
+      <created>1669918518344</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1669918518344</updated>
+    </task>
+    <task id="LOCAL-00014" summary="CLUB-239 done">
+      <created>1671813742843</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1671813742843</updated>
+    </task>
+    <task id="LOCAL-00015" summary="CLUB-239 fixed for yandex">
+      <created>1671910329534</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1671910329534</updated>
+    </task>
+    <task id="LOCAL-00016" summary="CLUB-239 добавлена подсказка">
+      <created>1671998643782</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1671998643782</updated>
+    </task>
+    <task id="LOCAL-00017" summary="CLUB-235 done">
+      <created>1672171467140</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1672171467140</updated>
+    </task>
+    <task id="LOCAL-00018" summary="CLUB-240 for test on prod">
+      <created>1672355417300</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1672355417300</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -226,29 +415,89 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="staging" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
     <MESSAGE value="Master initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Master initial commit" />
+    <MESSAGE value="CLUB-237 for test" />
+    <MESSAGE value="staging hotfix" />
+    <MESSAGE value="staging to test. desync hotfix" />
+    <MESSAGE value="CLUB-238 for test" />
+    <MESSAGE value="CLUB-238 for test 2" />
+    <MESSAGE value="staging added hints for desync release" />
+    <MESSAGE value="CLUB-236 for test on dev #1&#10;Some problems with autogenerated names" />
+    <MESSAGE value="CLUB-236 on release" />
+    <MESSAGE value="CLUB-236 on release 2" />
+    <MESSAGE value="CLUB-236 on release 3" />
+    <MESSAGE value="CLUB-239 done" />
+    <MESSAGE value="CLUB-239 fixed for yandex" />
+    <MESSAGE value="CLUB-239 добавлена подсказка" />
+    <MESSAGE value="CLUB-235 done" />
+    <MESSAGE value="CLUB-240 for test on prod" />
+    <option name="LAST_COMMIT_MESSAGE" value="CLUB-240 for test on prod" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="549" y="143" key="FileChooserDialogImpl" timestamp="1668331059238">
+    <state x="574" y="83" key="#com.intellij.ide.util.MemberChooser" timestamp="1672419919868">
       <screen x="0" y="0" width="1536" height="802" />
     </state>
-    <state x="549" y="143" key="FileChooserDialogImpl/0.0.1536.802@0.0.1536.802" timestamp="1668331059238" />
+    <state x="574" y="83" key="#com.intellij.ide.util.MemberChooser/0.0.1536.802@0.0.1536.802" timestamp="1672419919868" />
+    <state x="93" y="93" width="1350" height="617" key="DiffContextDialog" timestamp="1672273213470">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state x="93" y="93" width="1350" height="617" key="DiffContextDialog/0.0.1536.802@0.0.1536.802" timestamp="1672273213470" />
+    <state x="549" y="143" key="FileChooserDialogImpl" timestamp="1672419644654">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state x="549" y="143" key="FileChooserDialogImpl/0.0.1536.802@0.0.1536.802" timestamp="1672419644654" />
+    <state width="1493" height="357" key="GridCell.Tab.0.bottom" timestamp="1672658112144">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state width="1493" height="357" key="GridCell.Tab.0.bottom/0.0.1536.802@0.0.1536.802" timestamp="1672658112144" />
+    <state width="1493" height="357" key="GridCell.Tab.0.center" timestamp="1672658112143">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state width="1493" height="357" key="GridCell.Tab.0.center/0.0.1536.802@0.0.1536.802" timestamp="1672658112143" />
+    <state width="1493" height="357" key="GridCell.Tab.0.left" timestamp="1672658112143">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state width="1493" height="357" key="GridCell.Tab.0.left/0.0.1536.802@0.0.1536.802" timestamp="1672658112143" />
+    <state width="1493" height="357" key="GridCell.Tab.0.right" timestamp="1672658112144">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state width="1493" height="357" key="GridCell.Tab.0.right/0.0.1536.802@0.0.1536.802" timestamp="1672658112144" />
     <state x="277" y="46" key="SettingsEditor" timestamp="1668331405732">
       <screen x="0" y="0" width="1536" height="802" />
     </state>
     <state x="277" y="46" key="SettingsEditor/0.0.1536.802@0.0.1536.802" timestamp="1668331405732" />
-    <state x="477" y="134" width="581" height="534" key="find.popup" timestamp="1668346335725">
+    <state x="599" y="271" key="VCS.EditChangelistDialog" timestamp="1669024258276">
       <screen x="0" y="0" width="1536" height="802" />
     </state>
-    <state x="477" y="134" width="581" height="534" key="find.popup/0.0.1536.802@0.0.1536.802" timestamp="1668346335725" />
+    <state x="599" y="271" key="VCS.EditChangelistDialog/0.0.1536.802@0.0.1536.802" timestamp="1669024258276" />
+    <state x="477" y="134" width="581" height="534" key="find.popup" timestamp="1672607656588">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state x="477" y="134" width="581" height="534" key="find.popup/0.0.1536.802@0.0.1536.802" timestamp="1672607656588" />
+    <state x="431" y="123" width="672" height="678" key="search.everywhere.popup" timestamp="1672272195636">
+      <screen x="0" y="0" width="1536" height="802" />
+    </state>
+    <state x="431" y="123" width="672" height="678" key="search.everywhere.popup/0.0.1536.802@0.0.1536.802" timestamp="1672272195636" />
   </component>
 </project>

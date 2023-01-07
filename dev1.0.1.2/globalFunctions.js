@@ -244,7 +244,7 @@ function savePlayerAvatar(url, commonID) {
     if (!checkElement.checkValidity()) {
         /*
         <?php
-        ini_set("display_errors", 1); error_reporting(E_ALL);
+        //ini_set("display_errors", 1); error_reporting(E_ALL);
             include_once 'php/PlayersLangProvider.php';
         ?>
         */

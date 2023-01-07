@@ -35,6 +35,10 @@ async function fetchGlobalNominal(script, param_name, param_data) {
 
     requestSended = false;
 
+    if (response.status === 400 || response.status === 404) {
+        return {message: response.statusText, status: "error", http_status: response.status};
+    }
+
     if (!response.ok) {
         console.log(`An error has occured: ${response.status}`);
         return {message: "Ошибка связи с сервером. Попробуйте еще раз...", status: "error"};
@@ -68,6 +72,10 @@ async function fetchGlobalYowser(script, param_name, param_data) {
     );
 
     requestSended = false;
+
+    if (response.status === 400 || response.status === 404) {
+        return {message: response.statusText, status: "error", http_status: response.status};
+    }
 
     if (!response.ok) {
         console.log(`An error has occured: ${response.status}`);
