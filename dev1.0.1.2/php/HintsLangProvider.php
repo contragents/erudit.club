@@ -425,7 +425,19 @@ class Hints
     {
         $result = 'Поделитесь Игрой в любимых соцсетях - &nbsp;';
         if (self::isMobileDevice()) {
-            return $result . " < span style = \"background-color: #cccccc; padding-left: 5px; padding-top: 8px; padding-right: 6px; padding-bottom: 12px; border-radius: 5px 5px 5px; border: 1px solid black;\" onclick='mobileShare();'>" . self::SVG_IMAGES['share'] . "</span>";
+            return $result
+                . " <span 
+                        style=\"
+                             background-color: #cccccc;
+                             padding-left: 5px; 
+                             padding-top: 8px; 
+                             padding-right: 6px; 
+                             padding-bottom: 12px; 
+                             border-radius: 5px 5px 5px; 
+                             border: 1px solid black;\" 
+                        onclick=\"mobileShare();\">"
+                . self::SVG_IMAGES['share']
+                . "</span>";
         }
 
         foreach (self::SHARE_SOCIAL_LINKS as $socSet => $info) {
