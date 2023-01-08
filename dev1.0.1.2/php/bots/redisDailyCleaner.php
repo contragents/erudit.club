@@ -26,4 +26,7 @@ while  ( (date('U') - $start_script_time) < $script_work_time) {
 
 }
 
+// Чистим лог ошибок сохранения статистики игры
+$red->redis->del('del erudit.games_statistics_failed');
+
 exit();
