@@ -463,6 +463,13 @@ var gameStates = {
                         callback: function () {
                             return true;
                         }
+                    },
+                    new: {
+                        label: 'Новая игра',
+                        className: 'btn-danger',
+                        callback: function () {
+                            newGameButtonFunction(true);
+                        }
                     }
                 }
             });
@@ -527,6 +534,13 @@ var gameStates = {
                         callback: function () {
                             return true;
                         }
+                    },
+                    new: {
+                        label: 'Новая игра',
+                        className: 'btn-danger',
+                        callback: function () {
+                            newGameButtonFunction(true);
+                        }
                     }
                 }
             });
@@ -588,9 +602,23 @@ function commonCallback(data) {
         }
         if (canOpenDialog) {
             if (gameState == 'initGame' || gameState == 'initRatingGame') {
-                dialog = bootbox.alert({
+                dialog = bootbox.confirm({
                     message: ('comments' in data) ? data['comments'] : gameStates[gameState]['message'],
-                    size: 'small'
+                    size: 'small',
+                    buttons: {
+                        confirm: {
+                            label: 'Ok',
+                        },
+                        cancel: {
+                            label: 'Новая игра',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if(!result) {
+                            newGameButtonFunction(true);
+                        }
+                    }
                 });
                 if ('gameWaitLimit' in data)
                     dialog.init(function () {

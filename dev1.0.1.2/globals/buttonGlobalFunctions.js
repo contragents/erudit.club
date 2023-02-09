@@ -60,9 +60,10 @@ function shareButtonFunction() {
     }).off("shown.bs.modal");
 };
 
-function newGameButtonFunction() {
-    if (bootBoxIsOpenedGlobal())
+function newGameButtonFunction(ignoreDialog = false) {
+    if (!ignoreDialog && bootBoxIsOpenedGlobal()) {
         return;
+    }
 
     buttons['newGameButton']['svgObject'].disableInteractive();
 
