@@ -412,6 +412,7 @@ var gameStates = {
             if ('inviteStatus' in data && data['inviteStatus'] == 'waiting') {
                 var okButtonCaption = 'OK';
             }
+
             dialog = bootbox.dialog({
                 //title: 'Игра завершена',
                 message: data['comments'],
@@ -556,7 +557,7 @@ var lastQueryTime = 0;
 var gameOldState = '';
 
 function commonCallback(data) {
-    if ('http_status' in data && (data['http_status'] === 400 || data['http_status'] === 404)) {
+    if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
         console.log(data['message']);
         return;
     }
@@ -594,6 +595,11 @@ function commonCallback(data) {
 
 
     if ((gameOldState != gameState) || (gameOldSubState != gameSubState)) {
+        if ('active_users' in data && data['active_users'] == 0) {
+            clearTimeout(requestToServerEnabledTimeout);
+            requestToServerEnabled = false;
+        }
+
         if (dialog && canCloseDialog)
             dialog.modal('hide');
         if (intervalId) {
