@@ -320,6 +320,10 @@ var gameStates = {
             if ('fishki' in data)
                 placeFishki(data['fishki']);
         },
+        from_desync: function (data) {
+            if ('fishki' in data)
+                placeFishki(data['fishki']);
+        },
         from_gameResults: function () {
             gameStates['startGame']['from_initGame']();
         },
