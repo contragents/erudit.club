@@ -320,6 +320,10 @@ var gameStates = {
             if ('fishki' in data)
                 placeFishki(data['fishki']);
         },
+        from_desync: function (data) {
+            if ('fishki' in data)
+                placeFishki(data['fishki']);
+        },
         from_gameResults: function () {
             gameStates['startGame']['from_initGame']();
         },
@@ -412,6 +416,7 @@ var gameStates = {
             if ('inviteStatus' in data && data['inviteStatus'] == 'waiting') {
                 var okButtonCaption = 'OK';
             }
+
             dialog = bootbox.dialog({
                 //title: 'Игра завершена',
                 message: data['comments'],
@@ -462,6 +467,13 @@ var gameStates = {
                         className: 'btn-info',
                         callback: function () {
                             return true;
+                        }
+                    },
+                    new: {
+                        label: 'Новая игра',
+                        className: 'btn-danger',
+                        callback: function () {
+                            newGameButtonFunction(true);
                         }
                     }
                 }
@@ -527,6 +539,13 @@ var gameStates = {
                         callback: function () {
                             return true;
                         }
+                    },
+                    new: {
+                        label: 'Новая игра',
+                        className: 'btn-danger',
+                        callback: function () {
+                            newGameButtonFunction(true);
+                        }
                     }
                 }
             });
@@ -542,7 +561,7 @@ var lastQueryTime = 0;
 var gameOldState = '';
 
 function commonCallback(data) {
-    if ('http_status' in data && (data['http_status'] === 400 || data['http_status'] === 404)) {
+    if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
         console.log(data['message']);
         return;
     }
@@ -580,6 +599,11 @@ function commonCallback(data) {
 
 
     if ((gameOldState != gameState) || (gameOldSubState != gameSubState)) {
+        if ('active_users' in data && data['active_users'] == 0) {
+            clearTimeout(requestToServerEnabledTimeout);
+            requestToServerEnabled = false;
+        }
+
         if (dialog && canCloseDialog)
             dialog.modal('hide');
         if (intervalId) {
@@ -588,9 +612,23 @@ function commonCallback(data) {
         }
         if (canOpenDialog) {
             if (gameState == 'initGame' || gameState == 'initRatingGame') {
-                dialog = bootbox.alert({
+                dialog = bootbox.confirm({
                     message: ('comments' in data) ? data['comments'] : gameStates[gameState]['message'],
-                    size: 'small'
+                    size: 'small',
+                    buttons: {
+                        confirm: {
+                            label: 'Ok',
+                        },
+                        cancel: {
+                            label: 'Новая игра',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if(!result) {
+                            newGameButtonFunction(true);
+                        }
+                    }
                 });
                 if ('gameWaitLimit' in data)
                     dialog.init(function () {

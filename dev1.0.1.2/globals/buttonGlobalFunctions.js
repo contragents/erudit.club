@@ -1,12 +1,11 @@
 //
 function submitButtonFunction() {
-    //if (bootBoxIsOpenedGlobal())        return;
 
     buttons['submitButton']['svgObject'].disableInteractive();
     buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
     setTimeout(function () {
-        fetchGlobal('turn_submitter.php', 'cells', cells)
+        fetchGlobal(SUBMIT_SCRIPT, 'cells', cells)
             .then((data) => {
                 if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
                     buttons['submitButton']['svgObject'].setInteractive();
@@ -33,7 +32,7 @@ function checkButtonFunction() {
     buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + 'Inactive'));
 
     setTimeout(function () {
-        fetchGlobal('word_checker.php', 'cells', cells)
+        fetchGlobal(CHECKER_SCRIPT, 'cells', cells)
             .then((data) => {
                 if (data == '')
                     var responseText = 'Вы не составили ни одного слова!';
@@ -60,9 +59,10 @@ function shareButtonFunction() {
     }).off("shown.bs.modal");
 };
 
-function newGameButtonFunction() {
-    if (bootBoxIsOpenedGlobal())
+function newGameButtonFunction(ignoreDialog = false) {
+    if (!ignoreDialog && bootBoxIsOpenedGlobal()) {
         return;
+    }
 
     buttons['newGameButton']['svgObject'].disableInteractive();
 
@@ -72,6 +72,7 @@ function newGameButtonFunction() {
             locale: 'ru',
             callback: function (result) {
                 if (result) {
+                    requestToServerEnabled = true;
                     fetchGlobal('new_game.php', '', 'gameState=' + gameState)
                         .then((data) => {
                             document.location.reload(true);

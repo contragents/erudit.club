@@ -2177,7 +2177,8 @@ LIMIT 40";
             }
         }
 
-        $arr['gameSubState'] = $gameSubState . $arr['inviteStatus'];
+        $arr['active_users'] = $numActiveUsers;
+        $arr['gameSubState'] = $gameSubState . $arr['inviteStatus'] . $arr['active_users'];
     }
 
     public function makeResponse(array $arr)
