@@ -44,8 +44,8 @@ function (time, delta) {
         || (queryNumber == 1)
     ) {
         lastQueryTime = flor;//Math.floor(time/1000);
-        //ajaxGetGlobal('status_checker.php','g',gameState);
-        fetchGlobal('status_checker.php', 'g', (uniqID == false) ? '0' : uniqID)
+
+        fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID == false) ? '0' : uniqID)
             .then((data) => {
                 commonCallback(data);
             });

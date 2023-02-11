@@ -17,7 +17,8 @@ var lang = 'RU';
 */
 
 const SUBMIT_SCRIPT = 'turn_submitter.php';
-const CHECKER_SCRIPT = 'word_checker.php';
+const WORD_CHECKER_SCRIPT = 'word_checker.php';
+const STATUS_CHECKER_SCRIPT = 'status_checker.php';
 
 const BAD_REQUEST = 400;
 const PAGE_NOT_FOUND = 404;
