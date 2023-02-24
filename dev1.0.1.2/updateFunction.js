@@ -41,11 +41,11 @@ function (time, delta) {
             (flor > lastQueryTime)
             && ((flor % gameStates[gameState]['refresh']) === 0)
         )
-        || (queryNumber == 1)
+        || (queryNumber === 1)
     ) {
         lastQueryTime = flor;//Math.floor(time/1000);
 
-        fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID == false) ? '0' : uniqID)
+        fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID === false) ? '0' : uniqID)
             .then((data) => {
                 commonCallback(data);
             });
@@ -54,8 +54,7 @@ function (time, delta) {
     if (ochki_arr !== false)
         if ('activeUser' in responseData)
             for (k in ochki_arr)
-
-                if ((k == responseData['activeUser']) && (responseData['userNames'][k] !== '')) {
+                if ((k === responseData['activeUser']) && (responseData['userNames'][k] !== '')) {
                     let x = ochki_arr[k].x;
                     if (((flor % 2) === 0) && (flor > lastflor)) {
                         ochki_arr[k].visible = false;

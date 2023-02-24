@@ -62,8 +62,6 @@ class Ru
         32 => ['ё', 1, 0, false],
         999 => ['*', 0, 3, false]];
 
-    //public static $bukvy = [0=>['а',1,8], 1=>['б',3,2], 2=>['в',1,4], 3=>['г',3,2], 4=>['д',2,4], 5=>['е',1,9], 6=>['ж',5,1], 7=>['з',5,2], 8=>['и',1,6], 9=>['й',4,1], 10=>['к',2,4], 11=>['л',2,4], 12=>['м',2,3], 13=>['н',1,5], 14=>['о',1,10], 15=>['п',2,4], 16=>['р',1,5], 17=>['с',1,5], 18=>['т',1,5], 19=>['у',2,4], 20=>['ф',8,1], 21=>['х',5,1], 22=>['ц',5,1], 23=>['ч',5,1], 24=>['ш',8,1], 25=>['щ',10,1], 26=>['ъ',15,1], 27=>['ы',4,2], 28=>['ь',3,2], 29=>['э',8,1], 30=>['ю',8,1], 31=>['я',3,2], 32=>['ё',1,0], 999=>['*',0,50]];//тестируем обмен звезд
-
     private static $words = [];
     private static $badWords = [];
     private static $goodWords = [];
@@ -131,7 +129,7 @@ class Ru
         else
             $zvezdy = self::validateFishki($fishki, $cells, $gameStatus['users'][$gameStatus['activeUser']]['fishki'], $desk);
 
-        //Проверяем слова на корректность и удаляем лишние фишки
+        // Проверяем слова на корректность и удаляем лишние фишки
         $num_fishki = count($fishki);
         for ($f = 0; $f < $num_fishki; $f++)
             foreach ($fishki as $num => $fishka)
@@ -316,8 +314,7 @@ class Ru
 
     private static function fishka_connected(&$fishka, &$cells, &$desk)
     {
-        if (isset($fishka['connected']))
-            if ($fishka['connected'])
+        if ($fishka['connected'] ?? false)
                 return TRUE;
 
         if (($fishka[0] == 7) && ($fishka[1] == 7))
@@ -400,6 +397,7 @@ class Ru
                 if ($i < 0)
                     break;
             }
+
         //Идем вправо от буквы
         $i = $fishka[0] + 1;
         if ($i <= 14)
@@ -433,6 +431,7 @@ class Ru
                 if ($j < 0)
                     break;
             }
+
         //Идем вниз от буквы
         $j = $fishka[1] + 1;
         if ($j <= 14)
@@ -442,7 +441,7 @@ class Ru
                 if ($j > 14)
                     break;
             }
-        //print_r($vert_word);
+
         if ((mb_strlen($vert_word, 'UTF-8') == 1) && (mb_strlen($hor_word, 'UTF-8') == 1))
             return FALSE;
 
