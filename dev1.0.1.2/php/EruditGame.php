@@ -1536,10 +1536,10 @@ LIMIT 40";
                 self::BAD_COMBINATIONS_HSET,
                 microtime(true),
                 [
-                    'new_fishki'=>$new_fishki,
-                    'old_cells'=> json_decode($_POST['cells'], true),
-                    'old_desk'=>$saveDesk,
-                    'new_desk'=>$cells,
+                    'new_fishki' => $new_fishki,
+                    'old_cells' => json_decode($_POST['cells'], true),
+                    'old_desk' => $saveDesk,
+                    'new_desk' => $cells,
                 ]
             );
         } else {
@@ -1550,7 +1550,9 @@ LIMIT 40";
         $this->destruct();
         //Сохранили статус игры
 
-        print json_encode(array_merge($ochkiZaHod ? $cells : $desk, [$this->gameStatus['users'][$this->numUser]['fishki']]));
+        print json_encode(
+            array_merge($ochkiZaHod ? $cells : $desk, [$this->gameStatus['users'][$this->numUser]['fishki']])
+        );
         //Сделать через отправку статуса
 
     }
@@ -1904,8 +1906,6 @@ LIMIT 40";
 
         $this->gameStatus['turnBeginTime'] = date('U');
         $this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] = false;
-
-        return;
     }
 
     private function adv2Chat()
