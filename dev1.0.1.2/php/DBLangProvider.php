@@ -2,8 +2,13 @@
 
 namespace Dadata;
 
-class DB extends DBCredentials
+class DB
 {
+    const SQL_HOST = 'localhost';
+    const SQL_USER = 'ili';
+    const ORACLE_SQL_PASSWORD = 'Aw!gP!mx_Jh6M.V';
+    const SQL_DB = 'erudit';
+
     private static $_instance = null;
 
     public $redis;

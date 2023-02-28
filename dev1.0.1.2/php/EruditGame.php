@@ -8,12 +8,13 @@ use Dadata\Hints;
 use Dadata\Players;
 use Dadata\Prizes;
 use Dadata\Stats;
-use http\Exception\BadConversionException;
 
 //ini_set("display_errors", 1); error_reporting(E_ALL);
 
 class Game
 {
+    const BAD_COMBINATIONS_HSET = 'bad_combinations';
+
     public static $configStatic;
     public $serverName;
     public $config;
@@ -338,12 +339,12 @@ class Game
                 }
 
                 if ($this->gameStatus['lngClass']::$bukvy[$letterNumber][3] == false) { // нет ошибки - класс неизвестен
-                    $letterNumber = 31;//меняем плохую букву на букву Я
+                    $letterNumber = 31; // меняем плохую букву на букву Я
                 }
 
                 if ($letterName == '') {
                     if ($letterNumber == 28) {
-                        continue;//Не ставим Ь в начало ника
+                        continue; // Не ставим Ь в начало ника
                     }
                     $letterName = $this->gameStatus['lngClass']::$bukvy[$letterNumber][0];
                     $soglas = $this->gameStatus['lngClass']::$bukvy[$letterNumber][3];
@@ -362,13 +363,6 @@ class Game
             }
 
             return mb_strtoupper(mb_substr($letterName, 0, 1)) . mb_substr($letterName, 1);
-            /*старая версия
-            if (isset($user['userID'])) {
-                return substr(md5($user['userID']), 0, 6);
-            } else {
-                return substr($user['ID'], 0, 6);
-            }
-            */
         }
     }
 
@@ -1219,7 +1213,7 @@ LIMIT 40";
     private function getUserStatus($user = false)
     {
         return $this->gameStatus['users'][$this->gameStatus[($user ? $user : $this->User)]]['status'];
-        //новая версия
+        // новая версия
     }
 
     public function updateUserStatus($newStatus, $user = false)
@@ -1278,6 +1272,8 @@ LIMIT 40";
 
         if ($result !== '') {
             $result .= '<strong>ИТОГО: ' . $summa . '</strong>';
+        } else {
+            $result = 'Вы не составили ни одного слова';
         }
         return json_encode($result);
     }
@@ -1375,6 +1371,7 @@ LIMIT 40";
                 ]
             );
         }
+
         if ($new_fishki === false) {
             $this->addToLog(
                 'не составил ни одного слова (ход #' . $this->gameStatus['turnNumber'] . ')',
@@ -1464,6 +1461,7 @@ LIMIT 40";
                     );
                 }
             }
+
             $this->addToLog(
                 'зарабатывает ' . $ochkiZaHod . ' за ход #' . $this->gameStatus['turnNumber'] . $this->logSlov(
                     $new_fishki['words']
@@ -1532,13 +1530,27 @@ LIMIT 40";
             );
         }
 
-        Cache::setex('erudit.current_game_' . $this->currentGame, $this->cacheTimeout, $cells);
-        //Измененная Присланная доска -> текущая
+        if ($ochkiZaHod === 0) {
+            // Сохраняем в лог комбинацию на 0 очков
+            Cache::hset(
+                self::BAD_COMBINATIONS_HSET,
+                microtime(true),
+                [
+                    'new_fishki'=>$new_fishki,
+                    'old_cells'=> json_decode($_POST['cells'], true),
+                    'old_desk'=>$saveDesk,
+                    'new_desk'=>$cells,
+                ]
+            );
+        } else {
+            Cache::setex('erudit.current_game_' . $this->currentGame, $this->cacheTimeout, $cells);
+            //Измененная Присланная доска -> текущая
+        }
 
         $this->destruct();
         //Сохранили статус игры
 
-        print json_encode(array_merge($cells, [$this->gameStatus['users'][$this->numUser]['fishki']]));
+        print json_encode(array_merge($ochkiZaHod ? $cells : $desk, [$this->gameStatus['users'][$this->numUser]['fishki']]));
         //Сделать через отправку статуса
 
     }

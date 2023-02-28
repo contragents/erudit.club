@@ -44,8 +44,8 @@ function (time, delta) {
         || (queryNumber == 1)
     ) {
         lastQueryTime = flor;//Math.floor(time/1000);
-        //ajaxGetGlobal('status_checker.php','g',gameState);
-        fetchGlobal('status_checker.php', 'g', (uniqID == false) ? '0' : uniqID)
+
+        fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID == false) ? '0' : uniqID)
             .then((data) => {
                 commonCallback(data);
             });
@@ -54,7 +54,6 @@ function (time, delta) {
     if (ochki_arr !== false)
         if ('activeUser' in responseData)
             for (k in ochki_arr)
-
                 if ((k == responseData['activeUser']) && (responseData['userNames'][k] !== '')) {
                     let x = ochki_arr[k].x;
                     if (((flor % 2) === 0) && (flor > lastflor)) {

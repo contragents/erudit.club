@@ -237,7 +237,7 @@ var gameStates = {
                         callback: function () {
                             activateFullScreenForMobiles();
                             gameState = 'noGame';
-                            fetchGlobal('status_checker.php', '', $(".bootbox-body #myGameForm").serialize())
+                            fetchGlobal(STATUS_CHECKER_SCRIPT, '', $(".bootbox-body #myGameForm").serialize())
                                 .then((data) => {
                                     if (data == '')
                                         var responseText = 'Ошибка';
@@ -260,7 +260,7 @@ var gameStates = {
                             //<?php include('instruction_eng.js'); ?>
                             /** todo not working on yandex*/
                             asyncCSS('https://xn--d1aiwkc2d.club/css/choose_css.css');
-                            fetchGlobal('status_checker.php', '', $(".bootbox-body #myGameForm").serialize())
+                            fetchGlobal(STATUS_CHECKER_SCRIPT, '', $(".bootbox-body #myGameForm").serialize())
                                 .then((data) => {
                                     if (data == '')
                                         var responseText = 'Ошибка';
@@ -313,10 +313,6 @@ var gameStates = {
             gameStates['myTurn']['from_noGame'](data);
         },
         from_noGame: function (data) {
-            if ('fishki' in data)
-                placeFishki(data['fishki']);
-        },
-        from_desync: function (data) {
             if ('fishki' in data)
                 placeFishki(data['fishki']);
         },
@@ -799,7 +795,7 @@ function commonCallback(data) {
     responseData = data;
 
     if (pageActive == 'hidden') {
-        fetchGlobal('status_checker.php', 'g', (uniqID == false) ? '0' : uniqID)
+        fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID == false) ? '0' : uniqID)
             .then((data) => {
                 commonCallback(data);
             });

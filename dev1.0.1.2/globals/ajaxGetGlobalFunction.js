@@ -1,8 +1,8 @@
 //
 async function fetchGlobal(script, param_name, param_data) {
-    if (!requestToServerEnabled && script !== SUBMIT_SCRIPT && script !== CHECKER_SCRIPT) {
+    if (!requestToServerEnabled && script === STATUS_CHECKER_SCRIPT) {
         console.log('Request to server forbidden');
-        return {message: "Игра приостановлена", http_status: BAD_REQUEST, status: "error"};
+        return {message: "Ошибка связи с сервером. Пожалуйста, повторите", http_status: BAD_REQUEST, status: "error"};
     }
 
     requestToServerEnabled = false;

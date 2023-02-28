@@ -32,7 +32,7 @@ function checkButtonFunction() {
     buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + 'Inactive'));
 
     setTimeout(function () {
-        fetchGlobal(CHECKER_SCRIPT, 'cells', cells)
+        fetchGlobal(WORD_CHECKER_SCRIPT, 'cells', cells)
             .then((data) => {
                 if (data == '')
                     var responseText = 'Вы не составили ни одного слова!';
