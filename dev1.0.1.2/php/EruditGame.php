@@ -1543,7 +1543,7 @@ LIMIT 40";
                     'old_cells' => json_decode($_POST['cells'], true),
                     'old_desk' => $saveDesk,
                     'new_desk' => $cells,
-                    'saved_words' =>$saveWords,
+                    'saved_words' => $saveWords,
                     'new_played_words' => $this->gameStatus['wordsAccepted'],
                 ]
             );
