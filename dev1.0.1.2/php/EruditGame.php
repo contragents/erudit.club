@@ -1356,6 +1356,9 @@ LIMIT 40";
             $saveDesk = $desk;
             // Сохранили доску
 
+            $saveWords = $this->gameStatus['wordsAccepted'];
+            // сохранили сыгранные слова
+
             $cells = json_decode($_POST['cells'], true);
             // Присланная доска
 
@@ -1540,6 +1543,8 @@ LIMIT 40";
                     'old_cells' => json_decode($_POST['cells'], true),
                     'old_desk' => $saveDesk,
                     'new_desk' => $cells,
+                    'saved_words' =>$saveWords,
+                    'new_played_words' => $this->gameStatus['wordsAccepted'],
                 ]
             );
         } else {

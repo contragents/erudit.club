@@ -266,7 +266,7 @@ function printr(&$cells) {
                 else print '.';
         print "\n";
     }
-    sleep (1);    
+    //sleep (1);
 }
 
 
