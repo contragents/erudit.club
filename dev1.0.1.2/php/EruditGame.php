@@ -1284,13 +1284,17 @@ LIMIT 40";
             return true;
         }
 
-        $lockTime = Cache::hget(
-            'erudit.games_' . date('Y_m_d') . '_locks',
-            $this->currentGame . '_lock_time'
-        );
         $cycleBeginTime = date('U');
+
         //Будем ждать освобождения семафора, не более $this->turnDeltaTime
         while ((date('U') - $cycleBeginTime) <= $this->turnDeltaTime) {
+
+            // По лучаем время блокировки
+            $lockTime = Cache::hget(
+                'erudit.games_' . date('Y_m_d') . '_locks',
+                $this->currentGame . '_lock_time'
+            ) ?: 0;
+
             if (
                 (
                     $this->p->redis
@@ -1303,12 +1307,16 @@ LIMIT 40";
                     (date('U') - $lockTime) > $this->turnDeltaTime
                 )
             ) {
-                Cache::hset('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 0);
+                // Обновляем время блокировки
                 Cache::hset(
                     'erudit.games_' . date('Y_m_d') . '_locks',
                     $this->currentGame . '_lock_time',
                     date('U')
                 );
+
+                // ставим блокировку
+                Cache::hset('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1);
+
                 $this->isStateLocked = true;
 
                 return true;
@@ -1324,6 +1332,11 @@ LIMIT 40";
     private function unlock()
     {
         Cache::hset('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 0);
+        Cache::hdel(
+            'erudit.games_' . date('Y_m_d') . '_locks',
+            $this->currentGame . '_lock_time'
+        );
+
         $this->isStateLocked = false;
     }
 
@@ -1422,7 +1435,8 @@ LIMIT 40";
 
                 $addFishki = $this->giveFishki(
                     $this->chisloFishek - count($this->gameStatus['users'][$this->numUser]['fishki'])
-                );//count($new_fishki['new']));
+                );
+
                 $this->gameStatus['users'][$this->numUser]['fishki'] = array_merge(
                     $this->gameStatus['users'][$this->numUser]['fishki'],
                     $addFishki
@@ -1556,7 +1570,7 @@ LIMIT 40";
         //Сохранили статус игры
 
         print json_encode(
-            array_merge($ochkiZaHod ? $cells : $desk, [$this->gameStatus['users'][$this->numUser]['fishki']])
+            array_merge($ochkiZaHod ? $cells : $saveDesk, [$this->gameStatus['users'][$this->numUser]['fishki']])
         );
         //Сделать через отправку статуса
 
