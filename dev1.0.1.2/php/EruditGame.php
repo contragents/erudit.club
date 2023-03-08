@@ -130,6 +130,13 @@ class Game
                 } else {
                     Cache::del(self::CHECK_STATUS_RESULTS_KEY . $this->User);
                 }
+
+                if (($_GET['queryNumber'] ?? 1) >= 10 && !$this->isUserInQueue()) {
+                    print $this->makeResponse(
+                        ['gameState' => 'noGame', 'comments' => 'Игра закончена. Начните новую игру!']
+                    );
+                    exit;
+                }
             }
         } else {
             $this->currentGameUsers = Cache::get("erudit.game_{$this->currentGame}_users");
@@ -1288,7 +1295,6 @@ LIMIT 40";
 
         //Будем ждать освобождения семафора, не более $this->turnDeltaTime
         while ((date('U') - $cycleBeginTime) <= $this->turnDeltaTime) {
-
             // По лучаем время блокировки
             $lockTime = Cache::hget(
                 'erudit.games_' . date('Y_m_d') . '_locks',
@@ -2356,6 +2362,17 @@ LIMIT 40";
         } else {
             return json_encode($arr);
         }
+    }
+
+    private function isUserInQueue()
+    {
+        foreach(Queue::QUEUES as $queue) {
+            if(Cache::hget($queue, $this->User)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
