@@ -217,49 +217,93 @@ function chatButtonFunction() {
     let textInput = '<div class="input-group input-group-lg">  <div class="input-group-prepend"></div>  <input type="text" id="chattext" class="form-control" name="messageText"></div>';
 
 
-    dialog = bootbox.confirm({
+    dialog = bootbox.dialog({
         title: '</h5><h6>Поддержка и чат игроков в <a target="_blank" title="Вступить в группу" href="' + (gameWidth < gameHeight ? 'https://t.me/eruditclub' : 'https://web.telegram.org/#/im?p=@eruditclub') + '">Telegram</a> </h6><h5>Отправьте сообщение в игре',
         message: '<form onsubmit="return false" id="myChatForm">' + radioButtons + textInput + '</form>',
         locale: 'ru',
         size: 'large',
-        callback: function (result) {
-            canOpenDialog = true;
-            canCloseDialog = true;
+        closeButton: false,
+        buttons: {
+            confirm: {
+                label: 'Отправить',
+                className: 'btn-primary',
+                callback: function () {
+                    canOpenDialog = true;
+                    canCloseDialog = true;
 
-            buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Otjat'));
-            buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', false);
+                    buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Otjat'));
+                    buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', false);
 
-            if (result && $(".bootbox-body #chattext").val() != '') {
+                    if ($(".bootbox-body #chattext").val() != '') {
 
-                buttons['chatButton']['svgObject'].disableInteractive();
-                buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Inactive'));
+                        buttons['chatButton']['svgObject'].disableInteractive();
+                        buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Inactive'));
 
-                fetchGlobal('send_chat_message.php', '', $(".bootbox-body #myChatForm").serialize())
-                    .then((data) => {
-                        if (data == '')
-                            var responseText = 'Ошибка';
-                        else
-                            var responseText = data['message'];
-                        dialog = bootbox.alert({
-                            message: responseText,
-                            size: 'small'
+                        fetchGlobal(CHAT_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
+                            .then((data) => {
+                                if (data == '')
+                                    var responseText = 'Ошибка';
+                                else
+                                    var responseText = data['message'];
+                                dialog2 = bootbox.alert({
+                                    message: responseText,
+                                    size: 'small'
+                                });
+                                setTimeout(
+                                    function () {
+                                        dialog2.find(".bootbox-close-button").trigger("click");
+                                    }
+                                    , 2000
+                                );
+                                buttons['chatButton']['svgObject'].setInteractive();
+                                buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Otjat'));
+                                buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', false);
+                            });
+
+                        //console.log('This was logged in the callback: ' + result+ $(".bootbox-body #myChatForm").serialize());
+                    }
+
+                    return false;
+                }
+            },
+            cancel: {
+                label: 'Выход',
+                callback: function () {
+                    canOpenDialog = true;
+                    canCloseDialog = true;
+                    return true;
+                }
+            },
+            complain: {
+                label: 'Пожаловаться',
+                className: 'btn-danger',
+                callback: function () {
+
+                    fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
+                        .then((data) => {
+                            if (data == '')
+                                var responseText = 'Ошибка';
+                            else
+                                var responseText = data['message'];
+                            dialog2 = bootbox.alert({
+                                message: responseText,
+                                size: 'small'
+                            });
+                            setTimeout(
+                                function () {
+                                    dialog2.find(".bootbox-close-button").trigger("click");
+                                }
+                                , 5000
+                            );
                         });
-                        setTimeout(
-                            function () {
-                                dialog.find(".bootbox-close-button").trigger("click");
-                            }
-                            , 1000
-                        );
-                        buttons['chatButton']['svgObject'].setInteractive();
-                        buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Otjat'));
-                        buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', false);
-                    });
 
-                //console.log('This was logged in the callback: ' + result+ $(".bootbox-body #myChatForm").serialize());
+                    return false;
+                }
             }
         }
     });
-};
+}
+;
 
 function logButtonFunction() {
     if (bootBoxIsOpenedGlobal())

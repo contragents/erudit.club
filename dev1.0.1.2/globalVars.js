@@ -19,6 +19,8 @@ var lang = 'RU';
 const SUBMIT_SCRIPT = 'turn_submitter.php';
 const WORD_CHECKER_SCRIPT = 'word_checker.php';
 const STATUS_CHECKER_SCRIPT = 'status_checker.php';
+const CHAT_SCRIPT = 'send_chat_message.php';
+const COMPLAIN_SCRIPT = 'complain.php';
 
 const BAD_REQUEST = 400;
 const PAGE_NOT_FOUND = 404;

@@ -3,6 +3,7 @@
 namespace Erudit;
 
 use Dadata\Cache;
+use Dadata\ComplainModel;
 use Dadata\DB;
 use Dadata\Hints;
 use Dadata\Players;
@@ -738,6 +739,68 @@ p1.cookie='$cookie'
         Cache::setex('erudit.user_' . $this->User . '_last_activity', $this->cacheTimeout, date('U'));
         $this->unlock();
         //Разлочили сохранение состояния
+    }
+
+    public function addComplain($toNumUser = 'all')
+    {
+        $message = 'Отправлена жалоба';
+
+        if (count($this->gameStatus['users']) > 2 && $toNumUser == 'all') {
+            return $this->makeResponse(['message' => 'Жалоба не принята! Пожалуйста, выберите игрока из списка']);
+        }
+
+        if ($toNumUser == 'all') {
+            $toUser = $this->numUser ? 0 : 1;
+        } else {
+            $toUser = $toNumUser;
+        }
+
+        $isSendSuccess = false;
+        if (ComplainModel::add(
+            $this->getCommonID($this->User)
+                ?: $this->getPlayerID($this->User, true),
+            $this->getCommonID($this->gameStatus['users'][$toUser]['ID'])
+                ?: $this->getPlayerID($this->gameStatus['users'][$toUser]['ID'], true),
+            $this->gameStatus['chatLog'] ?? []
+        )) {
+            $respMessage = '<span style="align-content: center;"><strong>Ваше обращение принято и будет рассмотрено модератором<br /><br /> В случае подтверждения к игроку будут применены санкции</strong></span>';
+            $isSendSuccess = true;
+        } else {
+            $respMessage = '<span style="align-content: center;"><strong><span style="color:red;">Ваше обращение НЕ принято!</span><br /><br /> В течение суток можно отправлять только одну жалобу на одного и того же игрока. Всего за сутки не более ' . ComplainModel::COMPLAINS_PER_DAY . '</strong></span>';
+        }
+
+        if ($isSendSuccess) {
+            $this->gameStatus['chatLog'][] = [$this->numUser, $toNumUser, $message];
+
+            if ($toNumUser == 'all') {
+                foreach ($this->gameStatus['users'] as $num => $User) {
+                    if ($num == $this->numUser) {
+                        $this->gameStatus['users'][$num]['chatStack'][] = ['Вы', 'всем: ' . $message];
+                    } else {
+                        $this->gameStatus['users'][$num]['chatStack'][] = [
+                            "От Игрока" . ($this->numUser + 1) . " (всем):",
+                            $message
+                        ];
+                    }
+                }
+            } else {
+                $this->gameStatus['users'][$toNumUser]['chatStack'][] = [
+                    "От Игрока" . ($this->numUser + 1) . ":",
+                    $message
+                ];
+                $this->gameStatus['users'][$this->numUser]['chatStack'][] = [
+                    'Вы',
+                    'Игроку' . ($toNumUser + 1) . ': ' . $message
+                ];
+            }
+        }
+
+        return $this->makeResponse(
+            [
+                'message' => $respMessage,
+                'gameState' => 'addToChat'
+            ]
+        );
     }
 
     public function addToChat($message, $toNumUser = 'all', $needConfirm = true)
@@ -2366,8 +2429,8 @@ LIMIT 40";
 
     private function isUserInQueue()
     {
-        foreach(Queue::QUEUES as $queue) {
-            if(Cache::hget($queue, $this->User)) {
+        foreach (Queue::QUEUES as $queue) {
+            if (Cache::hget($queue, $this->User)) {
                 return true;
             }
         }
