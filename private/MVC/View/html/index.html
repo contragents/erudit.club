@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barabarella</title>
+  <link rel="stylesheet" href="css/style.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+  <body class="page">
+    <header class="page__header header">
+  <div class="wrapper">
+    <div class="header__container">
+      <object class="header__logo" data="img/logo.svg" type="image/svg+xml"></object>
+    </div>
+  </div>
+</header>
+
+    <main class="page__main main">
+      <div class="wrapper">
+        <div class="main__container">
+          <section class="main__product main-row product">
+            <p class="product__navigation">
+              <a class="product__link" href="#">Сумки и рюкзаки</a>
+              /
+              <a class="product__link" href="#">сумки через плечо</a>
+            </p>
+            <h2 class="product__title">Furla</h2>
+            <h3 class="product__subtitle">Mini Metropolis</h3>
+            <div class="product__cost">19 655 ₽</div>
+          </section>
+          <!-- Slider main container -->
+          <div class="swiper">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+              <!-- Slides -->
+              <div class="swiper-slide">
+                <img src="img/slide1.png" alt="" />
+              </div>
+              <div class="swiper-slide">
+                <img src="img/slide2.png" alt="" />
+              </div>
+              <div class="swiper-slide">
+                <img src="img/slide3.png" alt="" />
+              </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+          <section class="main__description main-row description">
+            <h2 class="description__title main-row__title">Описание</h2>
+            <div class="btn-arrow">
+              <img class="btn-arrow-img" src="img/arrow.svg" alt="" />
+            </div>
+            <div class="description__box box-toggle">
+              <p class="description__text">
+                Золотистый логотип, застежка на молнии сверху и регулируемый
+                ремень на плечо.<br />
+                <span>Состав:</span><br />
+                Наружный Материал: Кожа 100%<br />
+                <span>Цвет</span>:<br />
+                Красный
+              </p>
+            </div>
+          </section>
+          <section class="main__sizes main-row sizes">
+            <h2 class="sizes__title main-row__title">Размер и крой</h2>
+            <div class="btn-arrow">
+              <img class="btn-arrow-img" src="img/arrow.svg" alt="" />
+            </div>
+            <div class="sizes__box box-toggle">
+              <table class="sizes__table">
+                <tr>
+                  <td class="sizes__table-col1">Глубина</td>
+                  <td class="sizes__table-col2">5 см</td>
+                </tr>
+                <tr>
+                  <td class="sizes__table-col1">Высота</td>
+                  <td class="sizes__table-col2">15 см</td>
+                </tr>
+                <tr>
+                  <td class="sizes__table-col1">Ремень</td>
+                  <td class="sizes__table-col2">59 см</td>
+                </tr>
+                <tr>
+                  <td class="sizes__table-col1">Ширина</td>
+                  <td class="sizes__table-col2">22 см</td>
+                </tr>
+              </table>
+            </div>
+          </section>
+          <section class="main__date main-row date">
+            <h2 class="date__title main-row__title">
+              Расчетные даты отправления
+            </h2>
+            <p class="date__text">12 - 18 февраля</p>
+          </section>
+          <section class="main__contacts main-row contacts">
+            <h2 class="contacts__title main-row__title">
+              Контактная информация
+            </h2>
+            <div class="btn-arrow">
+              <img class="btn-arrow-img" src="img/arrow.svg" alt="" />
+            </div>
+            <div class="contacts__box box-toggle">
+              <form class="contacts__form">
+                <input
+                  class="contacts__inp"
+                  type="text"
+                  placeholder="Ваше имя"
+                />
+                <input
+                  class="contacts__inp"
+                  type="tel"
+                  placeholder="Whats up messanger"
+                  required
+                />
+                <input
+                  class="contacts__inp"
+                  type="tel"
+                  placeholder="Телефон для связи"
+                />
+                <input
+                  id="inp-email"
+                  class="contacts__inp contacts__inp--mail-check"
+                  type="email"
+                  placeholder="Email"
+                />
+                <label for="inp-email"></label>
+                <p class="contacts__inp-confirm-text">
+                  Мы отправили на Ваш адрес электронной почты 6-ти значный код
+                  подтвержения. Пожалуйста, подтвердите Ваш адрес почты
+                </p>
+                <input
+                  class="contacts__inp contacts__inp--code"
+                  type="number"
+                />
+                <button class="order__button contacts__btn">
+                  Проверить email
+                </button>
+                <input class="contacts__inp" type="text" placeholder="Страна" />
+                <input class="contacts__inp" type="text" placeholder="Город" />
+                <input
+                  class="contacts__inp"
+                  type="number"
+                  placeholder="Индекс"
+                />
+                <label
+                  class="contacts__inp-adress-arrow"
+                  for="textarea-inp"
+                ></label>
+                <textarea
+                  id="textarea-inp"
+                  class="contacts__inp-adress contacts__inp-adress-check"
+                  name="inp-adress"
+                  placeholder="Адрес доставки"
+                  style="overflow: hidden"
+                  rows="3"
+                ></textarea>
+              </form>
+              <p class="contacts__error"></p>
+            </div>
+          </section>
+          <section class="main__delivery main-row delivery">
+            <h2 class="delivery__title main-row__title">Способ доставки</h2>
+            <div class="btn-arrow">
+              <img class="btn-arrow-img" src="img/arrow.svg" alt="" />
+            </div>
+            <div class="delivery__box box-toggle">
+              <form class="delivery__form">
+                <div class="delivery__form-row">
+                  <input
+                    type="radio"
+                    class="delivery__custom-radio"
+                    id="deliv1"
+                    name="deliv"
+                    value="yes"
+                  />
+                  <label for="deliv1"
+                    ><span class="delivery__text"
+                      >Пункт выдачи заказов SDEK Пункт выдачи заказов SDEKПункт
+                      выдачи заказов SDEK<br />
+                      <b class="delivery__adress"
+                        >Россия, Уфа, ул. Черняховского 178</b
+                      ></span
+                    >
+                    <span class="delivery__cost">3250 Р</span></label
+                  >
+                  <p class="delivery__hint">от 2 до 6 дней</p>
+                </div>
+                <div class="delivery__form-row">
+                  <input
+                    type="radio"
+                    class="delivery__custom-radio"
+                    id="deliv2"
+                    name="deliv"
+                    value="yes"
+                  />
+                  <label for="deliv2"
+                    ><span class="delivery__text"
+                      >Экспресс доставка Экспресс доставкаЭкспресс доставка<br />
+                      <b class="delivery__adress"
+                        >Россия, Уфа, ул. Черняховского 178 Россия, Уфа, ул.
+                        Черняховского 178 Россия, Уфа, ул. Черняховского 178</b
+                      ></span
+                    >
+                    <span class="delivery__cost">1250 Р</span></label
+                  >
+                  <p class="delivery__hint">от 2 до 6 дней</p>
+                </div>
+                <div class="delivery__form-row">
+                  <input
+                    type="radio"
+                    class="delivery__custom-radio"
+                    id="deliv3"
+                    name="deliv"
+                    value="yes"
+                  />
+                  <label for="deliv3"
+                    ><span class="delivery__text">
+                      Курьер SDEK <br />
+                      <b class="delivery__adress"
+                        >Доставка на дом Доставка на дом Доставка на дом
+                        Доставка на дом Доставка на дом</b
+                      >
+                    </span>
+                    <span class="delivery__cost">250 Р</span></label
+                  >
+                </div>
+                <p class="delivery__error"></p>
+              </form>
+            </div>
+          </section>
+          <div class="main__total main-row total">
+            <p class="total__order">Номер заказа : <span>874543</span></p>
+            <p class="total__price">Итого : <span>125 000 Р</span></p>
+          </div>
+          <div class="main__payment main-row payment">
+            <select id="p-select" class="payment__select" v-model="selected">
+              <option class="payment__option" value="">
+                Выберите способ оплаты
+              </option>
+              <option class="payment__option">Перевод на карту</option>
+              <option class="payment__option">WebMoney</option>
+              <option class="payment__option">Qiwi</option>
+            </select>
+            <label for="p-select"></label>
+          </div>
+          <section class="main__requisites main-row requisites">
+            <h2 class="requisites__title main-row__title">
+              Реквизиты для оплаты
+            </h2>
+            <div class="btn-arrow">
+              <img class="btn-arrow-img" src="img/arrow.svg" alt="" />
+            </div>
+            <div class="requisites__box box-toggle">
+              <p class="requisites__card">Номер карты</p>
+              <p class="requisites__num">4551 2288 0000 1265 2145</p>
+              <p class="requisites__text">
+                Пожалуйста, переведите итоговую сумму на нашу карту, указанную
+                выше. Для подтверждения платежа отправьте нам скриншот оплаты на
+                order@50x50x.com и укажите номер заказа в теме письма. После
+                получения платежа мы как можно скорее выкупим ваш заказ и
+                отправяим его по указанному адресу.
+                <br />
+                <br />
+                Большое спасибо за заказ!
+              </p>
+            </div>
+          </section>
+          <section class="main__date main__date--final main-row date">
+            <h2 class="date__title main-row__title">
+              Расчетные даты отправления
+            </h2>
+            <p class="date__text">12 - 18 февраля</p>
+          </section>
+          <div class="main__agree agree">
+            <form class="agree__form">
+              <input
+                type="checkbox"
+                class="agree__custom-checkbox"
+                id="agree"
+                name="agree"
+                value="yes"
+              />
+              <label for="agree"
+                >Я согласен с<a class="agree__link" href="#"
+                  >условиями Оферты</a
+                ></label
+              >
+            </form>
+            <p class="agree__error"></p>
+          </div>
+          <div class="main__order order">
+            <button id="btn-order" class="order__button">Заказать</button>
+            <button id="btn-contacts" class="order__button">Продолжить</button>
+            <button id="btn-delivery" class="order__button">Продолжить</button>
+            <button
+              id="btn-order-final"
+              class="order__button"
+              onclick="document.location='final.html'"
+            >
+              Оформить заказ
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <script src="js/app.min.js"></script>
+  </body>
+</html>
