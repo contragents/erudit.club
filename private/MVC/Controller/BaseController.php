@@ -13,13 +13,6 @@ class BaseController
     {
         static::$Request = $request;
 
-        // Приводим параметры к нижнему регистру в соответствии со списком полей FIELDS_TO_LOWER
-        foreach (self::FIELDS_TO_LOWER as $field) {
-            if (isset(static::$Request[$field])) {
-                static::$Request[$field] = strtolower(static::$Request[$field]);
-            }
-        }
-
         $this->Action = $action . 'Action';
     }
 

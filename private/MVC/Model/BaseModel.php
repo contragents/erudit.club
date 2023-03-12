@@ -3,7 +3,7 @@
 class BaseModel
 {
     const CONDITIONS = ['=' => '=', '!=' => '!=', 'in' => 'in', '<' => '<', '>' => '>', '<=' => '<=', '>=' => '>=',];
-    const TABLE_NAME = 'lots';
+    const TABLE_NAME = 'players';
     const AND_NOT_DELETED = ' AND is_deleted = 0 ';
 
     const UPDATED_AT_FIELD = 'updated_at';

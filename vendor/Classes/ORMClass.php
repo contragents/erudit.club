@@ -1,14 +1,7 @@
 <?php
-
+    /** Класс ORM для работы с MariaDB */
 class ORM
 {
-    public $rawExpression;
-
-    public function __construct($expression)
-    {
-        $this->rawExpression = $expression;
-    }
-
     /**
      * Use ORM::set() as next constructor element
      * @param $tblName
@@ -16,38 +9,22 @@ class ORM
      */
     public static function update($tblName)
     {
-        return "UPDATE $tblName ";
+        return "UPDATE `$tblName` ";
     }
 
     /**
-     * @param array $fieldsvals - ['field'=>,'value'=>,'raw'=>] or [['field'=>,'value'=>,'raw'=>],['field'=>,'value'=>,'raw'=>]..]
+     * @param array $fieldsvals - ['field'=>,'value'=>,'raw'=>] or [['field'=>,'value'=>,'raw'=>],..]
      * @return string
      */
     public static function set(array $fieldsvals)
     {
         if (!isset($fieldsvals[0])) {
-            return " SET {$fieldsvals['field']} = "
-                . (
-                $fieldsvals['value'] instanceof ORM
-                    ? $fieldsvals['value']->rawExpression
-                    : (isset($fieldsvals['raw'])
-                    ? $fieldsvals['value']
-                    : "'{$fieldsvals['value']}'")
-                )
-                . ' ';
+            return " SET {$fieldsvals['field']} = " . (isset($fieldsvals['raw']) ? $fieldsvals['value'] : "'{$fieldsvals['value']}'") . ' ';
         }
 
         $fields = [];
         foreach ($fieldsvals as $fv) {
-            $fields[] = " {$fv['field']} = "
-                . (
-                $fv['value'] instanceof ORM
-                    ? $fv['value']->rawExpression
-                    : (isset($fv['raw'])
-                    ? $fv['value']
-                    : "'{$fv['value']}'")
-                )
-                . ' ';
+            $fields[] = " {$fv['field']} = " . (isset($fv['raw']) ? $fv['value'] : "'{$fv['value']}'") . ' ';
         }
 
         return ' SET ' . implode(',', $fields);
@@ -58,11 +35,6 @@ class ORM
         return " WHERE ($fieldName $cond " . ($isRaw ? $value : "'$value'") . ') ';
     }
 
-    public static function whereIn($fieldName, array $values)
-    {
-        return " WHERE $fieldName IN (" . implode(',', $values) . ') ';
-    }
-
     public static function andWhere($fieldName, $cond, $value, $isRaw = false)
     {
         return " AND ($fieldName $cond " . ($isRaw ? $value : "'$value'") . ') ';
@@ -70,40 +42,25 @@ class ORM
 
     public static function orBegin($odin = '')
     {
-        if ($odin == '1') {
-            $odin = 'true';
-        }
-
         return " OR $odin ";
     }
 
-    public static function andGrBegin($odin = '')
-    {
-        if ($odin == '1') {
-            $odin = 'true';
-        }
-
+    public static function andGrBegin($odin = '') {
         return " AND ( $odin ";
     }
 
-    public static function grEnd()
-    {
+    public static function grEnd() {
         return " ) ";
     }
 
-    public static function insert($tblName)
+    public static function insert($tblName, $ignore = '')
     {
-        return "INSERT INTO $tblName ";
-    }
-
-    public static function ignore()
-    {
-        return " ON CONFLICT DO NOTHING ";
+        return "INSERT $ignore INTO `$tblName` ";
     }
 
     public static function insertFields(array $fields)
     {
-        return " (" . implode(', ', $fields) . ") ";
+        return " (`" . implode('`, `', $fields) . "`) ";
     }
 
     public static function rawValues(array $values)
@@ -111,20 +68,17 @@ class ORM
         return " VALUES (" . implode(", ", $values) . ") ";
     }
 
-    public static function onDupRaw(array $fieldsVals, array $conflictKeys)
+    public static function onDupRaw(array $fieldsVals, $conflictKeys=[])
     {
         if (is_array($fieldsVals[0])) {
-            $expressions = array_map(
-                function ($expr) {
-                    return '' . $expr[0] . '' . ' = ' . $expr[1];
-                },
-                $fieldsVals
-            );
+            $expressions = array_map(function ($expr) {
+                return '`' . $expr[0] . '`' . ' = ' . $expr[1];
+            }, $fieldsVals);
         } else {
-            $expressions = ['' . $fieldsVals[0] . '' . ' = ' . $fieldsVals[1]];
+            $expressions = ['`' . $fieldsVals[0] . '`' . ' = ' . $fieldsVals[1]];
         }
 
-        return "ON CONFLICT (" . implode(',', $conflictKeys) . ") DO UPDATE SET " . implode(', ', $expressions);
+        return " ON DUPLICATE KEY UPDATE " . implode(', ', $expressions);
     }
 
     public static function orderBy(string $orderCond, $asc = true): string
@@ -134,7 +88,7 @@ class ORM
 
     public static function orderByRand($asc = true): string
     {
-        return " ORDER BY RANDOM() " . ($asc ? 'ASC' : 'DESC');
+        return " ORDER BY rand() " . ($asc ? 'ASC' : 'DESC');
     }
 
     public static function select(array $fieldArr, string $tableName): string
@@ -157,18 +111,12 @@ class ORM
         return " INNER JOIN $tableName ";
     }
 
-    public static function leftJoin($tableName): string
-    {
-        return " LEFT JOIN $tableName ";
-    }
-
     public static function on($fieldName, $cond, $value, $isRaw = false)
     {
         return " ON ($fieldName $cond " . ($isRaw ? $value : "'$value'") . ') ';
     }
 
-    public static function unixtime($value)
-    {
-        return " TO_TIMESTAMP({$value}) ";
+    public static function unixtime($value){
+        return "FROM_UNIXTIME({$value})";
     }
 }

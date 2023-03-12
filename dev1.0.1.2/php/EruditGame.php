@@ -1358,7 +1358,7 @@ LIMIT 40";
 
         //Будем ждать освобождения семафора, не более $this->turnDeltaTime
         while ((date('U') - $cycleBeginTime) <= $this->turnDeltaTime) {
-            // По лучаем время блокировки
+            // Получаем время блокировки
             $lockTime = Cache::hget(
                 'erudit.games_' . date('Y_m_d') . '_locks',
                 $this->currentGame . '_lock_time'
@@ -1392,7 +1392,7 @@ LIMIT 40";
                 //Семафор освободился
             }
 
-            sleep(0.1);
+            usleep(100000);
         }
         //Ждали слишком долго - возвращаем десинхрон
         return false;
