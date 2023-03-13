@@ -10,7 +10,8 @@ class ModerationController extends BaseController
 
     public function indexAction()
     {
-        $somePlayer = PlayerModel::getRand();
-        return print_r($somePlayer, true);
+        //$somePlayer = PlayerModel::getRand();
+        //return print_r($somePlayer, true);
+        LotOrderView::render(compact('action', 'request', 'Lot', 'user', 'address', 'paymentMethods'), ['vueForm', 'test', 'vueFormJS', 'bootboxDialogs']);
     }
 }
