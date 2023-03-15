@@ -1,5 +1,5 @@
 <?php
-define("BOTSNUM", 100);
+define("BOTSNUM", 47);
 $minutesToGo = 5;
 $_SERVER['DOCUMENT_ROOT'] = '/var/www/erudit.club';
 set_time_limit($minutesToGo * 60 + 5);

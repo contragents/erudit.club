@@ -1,6 +1,6 @@
 <?php
 //error_reporting(E_ALL & ~E_NOTICE); ini_set('display_errors', 0);
-define("BOTSNUM",100);
+define("BOTSNUM",47);
 $minutesToGo = 5;
 $numRounds = 2;//Число проходов по полю
 $_SERVER['DOCUMENT_ROOT'] = '/var/www/erudit.club';

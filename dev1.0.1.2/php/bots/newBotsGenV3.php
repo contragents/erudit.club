@@ -166,7 +166,7 @@ class BotGenV3
                 return $botNum;
             } else {
                 if ($incr > 200) {
-                    $this->p->redis->hset('erudit.bot_v3_list', $botNum = ('botV3#' . $num), 1);
+                    $this->p->redis->hset('erudit.bot_v3_list', $botNum = ('botV3#' . ($num % BOTSNUM)), 1);
                     return $botNum;
                 }
             }
