@@ -16,6 +16,10 @@ class Game
 {
     const BAD_COMBINATIONS_HSET = 'bad_combinations';
 
+    const ERROR_STATUS = 'error';
+    const BOT_ERRORS_KEY = 'erudit_bot_errors';
+    const MAX_ERRORS = 100;
+
     public static $configStatic;
     public $serverName;
     public $config;
@@ -118,6 +122,7 @@ class Game
         $this->User = $this->validateCookie($_COOKIE['erudit_user_session_ID']);
 
         $this->currentGame = Cache::get('erudit.get_game_' . $this->User);
+
         if (!$this->currentGame) {
             $this->currentGame = false;
 
@@ -141,24 +146,17 @@ class Game
             }
         } else {
             $this->currentGameUsers = Cache::get("erudit.game_{$this->currentGame}_users");
+
             if (!$this->lockTry()) {
                 //Вышли с Десинком, если не смогли получить Лок
                 return $this->desync();
-                /*print json_encode(
-                    [
-                        'gameState' => 'desync',
-                        'comments' => call_user_func([$this, 'statusComments_desync'])
-                    ]
-                );
-                exit();*/
             }
-            $this->isStateLocked = true;
+
             $this->gameStatus = Cache::get('erudit.game_status_' . $this->currentGame);
             //Забрали статус игры из кэша
             try {
                 if (!isset($this->gameStatus[$this->User])) {
                     $this->newGame();
-                    throw new \BadRequest(serialize(is_array($this->gameStatus) ? $this->gameStatus : []));
                 }
 
                 $this->numUser = $this->gameStatus[$this->User];
@@ -186,10 +184,6 @@ class Game
                 \BadRequest::sendBadRequest(
                     [
                         'message' => 'Потеря синхронизации с сервером',
-                        'err_msg' => $e->getMessage(),
-                        'err_file' => $e->getFile(),
-                        'err_line' => $e->getLine(),
-                        'err_context' => $e->getTrace(),
                     ]
                 );
                 // todo протестировать десинк методом BadRequest::sendBadRequest или вернуться к прежнему
@@ -1085,10 +1079,10 @@ LIMIT 40";
             $ratings = $this->getRatingWithCommonID(
                 $this->getCommonID(
                     $userCookie['cookie'],
-                    self::hash_str_2_int($userCookie['userID'])
+                    isset($userCookie['userID']) ? self::hash_str_2_int($userCookie['userID']) : false
                 ),
                 $userCookie['cookie'],
-                self::hash_str_2_int($userCookie['userID'])
+                isset($userCookie['userID']) ? self::hash_str_2_int($userCookie['userID']) : false
             );
 
             return count($ratings) ? $ratings[0] : false;
@@ -1282,8 +1276,7 @@ LIMIT 40";
 
     private function getUserStatus($user = false)
     {
-        return $this->gameStatus['users'][$this->gameStatus[($user ? $user : $this->User)]]['status'];
-        // новая версия
+        return $this->gameStatus['users'][$this->gameStatus[($user ? $user : $this->User)]]['status'] ?? self::ERROR_STATUS;
     }
 
     public function updateUserStatus($newStatus, $user = false)
@@ -1322,22 +1315,24 @@ LIMIT 40";
 
         $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus);
         $summa = 0;
-        foreach ($new_fishki['badWords'] as $badWord) {
-            if (isset($this->gameStatus['wordsAccepted'][$badWord])) {
-                $result .= '<strong>' . $badWord . ' - ' . $check_statuses[3] . '</strong><br />';
-            } elseif (mb_strlen($badWord, 'UTF-8') == 1) {
-                $result .= '<strong>' . $badWord . ' - ' . $check_statuses[2] . '</strong><br />';
-            } elseif (mb_strlen($badWord, 'UTF-8') > 1) {
-                $result .= '<strong style="color:red;">' . $badWord . ' - ' . $check_statuses[0] . '</strong><br />';
+        if (is_array($new_fishki) && !empty($new_fishki)) {
+            foreach ($new_fishki['badWords'] as $badWord) {
+                if (isset($this->gameStatus['wordsAccepted'][$badWord])) {
+                    $result .= '<strong>' . $badWord . ' - ' . $check_statuses[3] . '</strong><br />';
+                } elseif (mb_strlen($badWord, 'UTF-8') == 1) {
+                    $result .= '<strong>' . $badWord . ' - ' . $check_statuses[2] . '</strong><br />';
+                } elseif (mb_strlen($badWord, 'UTF-8') > 1) {
+                    $result .= '<strong style="color:red;">' . $badWord . ' - ' . $check_statuses[0] . '</strong><br />';
+                }
             }
-        }
-        foreach ($new_fishki['words'] as $word => $price) {
-            $result .= $word . ' - стоимость: ' . $price . '<br />';
-            $summa += $price;
-        }
-        if (count($new_fishki['good']) == count($this->gameStatus['users'][$this->numUser]['fishki'])) {
-            $summa += 15;
-            $result .= '+15 за все фишки ';
+            foreach ($new_fishki['words'] as $word => $price) {
+                $result .= $word . ' - стоимость: ' . $price . '<br />';
+                $summa += $price;
+            }
+            if (count($new_fishki['good']) == count($this->gameStatus['users'][$this->numUser]['fishki'])) {
+                $summa += 15;
+                $result .= '+15 за все фишки ';
+            }
         }
 
         if ($result !== '') {
@@ -1345,6 +1340,7 @@ LIMIT 40";
         } else {
             $result = 'Вы не составили ни одного слова';
         }
+
         return json_encode($result);
     }
 
@@ -1832,8 +1828,11 @@ LIMIT 40";
 
 
         //Поставим коррекцию времени начала хода для учета периодичности запросов пользователей
-        if (($this->getUserStatus(
-                ) == 'myTurn') && !$this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']]) {
+        if (
+            $this->getUserStatus() == 'myTurn'
+            &&
+            !$this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']]
+        ) {
             if ((date('U') - $this->gameStatus['turnBeginTime']) < $this->turnDeltaTime) {
                 $this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] = date('U');
             } else {
@@ -1851,12 +1850,17 @@ LIMIT 40";
 
             if ($this->gameStatus['users'][$this->gameStatus['activeUser']]['lostTurns'] >= 3) {
                 $this->storeGameResults($this->lost3TurnsWinner($this->gameStatus['activeUser']));
-                //Начало фрагмента для объединения
-                if (!(($desk = Cache::get(
-                        ('erudit.current_game_' . $this->currentGame)
-                    )) && $this->currentGame)) {
+                // Начало фрагмента для объединения - чего с чем?
+
+                // todo зачем, если игра сыграна
+                $desk = Cache::get('erudit.current_game_' . $this->currentGame);
+                if (
+                !($desk && $this->currentGame)
+                ) {
                     $desk = [];
                 }
+                // todo конец зачем
+
                 $result = $this->gameStatus['results'];
                 if (isset($result['winner'])) {
                     if ($result['winner'] == $this->User) {
@@ -1883,11 +1887,24 @@ LIMIT 40";
             }
         }
 
+        $userStatus = $this->getUserStatus();
+
         if (($desk = Cache::get(('erudit.current_game_' . $this->currentGame))) && $this->currentGame) {
-            return $this->makeResponse(['gameState' => $this->getUserStatus(), 'desk' => $desk]);
+            if ($userStatus == self::ERROR_STATUS) {
+                Cache::hset(
+                    self::BOT_ERRORS_KEY,
+                    time() % self::MAX_ERRORS,
+                    ['date' => date('Y-m-d H:i:s'), 'gameState' => $this->gameStatus]
+                );
+                return $this->makeResponse(
+                    ['gameState' => $userStatus, 'desk' => $desk, 'gameStatus' => $this->gameStatus]
+                );
+            } else {
+                return $this->makeResponse(['gameState' => $userStatus, 'desk' => $desk]);
+            }
         } else {
-            if ($status = $this->getUserStatus()) {
-                return $this->makeResponse(['gameState' => $status]);
+            if ($userStatus != self::ERROR_STATUS && $userStatus) {
+                return $this->makeResponse(['gameState' => $userStatus]);
             } //Вернули статус пользователя из кеша
             else {
                 return $this->newGame();

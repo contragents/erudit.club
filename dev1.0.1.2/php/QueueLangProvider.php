@@ -92,7 +92,7 @@ class Queue
             }
 
             if (strpos($this->User, 'ot') === false) {
-                if (($curPlayerRating = $this->caller->getRatings($this->User)[0]['rating']) > 1900) {
+                if (($curPlayerRating = $this->caller->getRatings($this->User)[0]['rating'] ?? 0) > 1900) {
                     if (is_array($ratingPlayer = $this->findWaitingRaitingPlayer($curPlayerRating))) {
                         if ($this->tryNewGameSemaphore()) {
                             return $this->makeReverseRatingGame($ratingPlayer);

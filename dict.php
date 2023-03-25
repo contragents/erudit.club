@@ -4,7 +4,7 @@ if ($_GET['word'] == '') {
     include ('dict_2_letters.php');
     exit();
 }
-$title = 'Игра Эрудит.CLUB Слова из '. ((isset($_GET['strlen']) && ($_GET['strlen']>2) ) ? $_GET['strlen'] : двух). ' букв';
+$title = 'Игра Эрудит.CLUB Слова из '. ((isset($_GET['strlen']) && ($_GET['strlen']>2) ) ? $_GET['strlen'] : 'двух'). ' букв';
 include ('tpl/main_header.php');
 ?>
 <h1><?=$_GET['word']?></h1>

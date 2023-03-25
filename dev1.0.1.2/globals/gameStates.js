@@ -557,6 +557,10 @@ var lastQueryTime = 0;
 var gameOldState = '';
 
 function commonCallback(data) {
+    if (('gameState' in data) && !(data['gameState'] in gameStates)) {
+        return;
+    }
+
     if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
         console.log(data['message']);
         return;
