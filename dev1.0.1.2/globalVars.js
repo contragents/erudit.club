@@ -16,6 +16,18 @@ var lang = 'RU';
 ?>
 */
 
+var preloaderObject = false;
+
+const DEFAULT_FISHKA_SET = 'default';
+const TEST_FISHKA_SET = 'Gulnaraport';
+const FISHKA_AVAILABLE_SETS = {Gulnaraport: 30};
+var fishkiLoaded = {};
+var userFishkaSet = 'Gulnaraport';
+const CODES = {
+    'RU': [999, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+    'EN': [999, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65]
+}
+
 const SUBMIT_SCRIPT = 'turn_submitter.php';
 const WORD_CHECKER_SCRIPT = 'word_checker.php';
 const STATUS_CHECKER_SCRIPT = 'status_checker.php';
@@ -42,7 +54,7 @@ const standardVerticalHeight = 800 * 2;
 const standardHorizontalWidth = 960 * 2;
 const standardHorizontalHeight = standardVerticalWidth;
 
-const donateLink='https://pay.cloudtips.ru/p/9844e694';
+const donateLink = 'https://pay.cloudtips.ru/p/9844e694';
 
 var graphics;
 var letterMin = 0;
@@ -91,7 +103,7 @@ if (windowInnerWidth > windowInnerHeight) {
     }
 
     buttonHeightKoef = propKoef / (standardVerticalHeight / standardVerticalWidth);
-    console.log(propKoef+'-'+buttonHeightKoef);
+    console.log(propKoef + '-' + buttonHeightKoef);
     if (buttonHeightKoef < 1) {
         buttonHeightKoef = 1;
     }
@@ -106,8 +118,7 @@ if (windowInnerWidth > windowInnerHeight) {
         var fishkaScale = 1.2;
         var lotokCellStep = 40 * 2;
         var lotokCapacityX = 9;
-    }
-    else {
+    } else {
         var fishkaScale = buttonHeightKoef;
         var lotokCellStep = 40 * 2 * buttonHeightKoef;
         var lotokCapacityX = 9;
@@ -142,9 +153,6 @@ var correctionY = -7 * 2;
 
 var gameScene = 0;
 
-var submitButton = false;
-var submitButton = false;
-var submitButton = false;
 var submitButton = false;
 
 var dialog = false;

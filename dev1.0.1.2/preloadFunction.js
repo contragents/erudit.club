@@ -67,6 +67,8 @@ function () {
         }
     });
 
+    preloaderObject = this;
+
     this.load.image('no_network', '//xn--d1aiwkc2d.club/img/no_network_transparent.png');
     this.load.svg('ground', 'img/field_source.svg', {'width': 513 * 2, 'height': 500 * 2});
     this.load.svg('donate', '//xn--d1aiwkc2d.club/img/donate.svg');
