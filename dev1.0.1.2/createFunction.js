@@ -111,8 +111,6 @@ function () {
 
     let scale = (gameHeight - donate.y) / donate.height;
 
-    console.log(wid, donate.displayWidth, scale);
-
     if (scale > 0.07) {
         donate.setOrigin(0, 0);
         donate.x = ochki.x - 32 * scale;

@@ -8,6 +8,7 @@ function parseDeskGlobal(newDesc) {
             cells[i][j][0] = false;//newCells[i][j][0];
             cells[i][j][1] = newCells[i][j][1];
             cells[i][j][2] = false;//newCells[i][j][2];
+            cells[i][j][3] = newCells[i][j][3];
         }
 
     for (var k = 400; k >= 0; k--)
@@ -19,7 +20,7 @@ function parseDeskGlobal(newDesc) {
     for (var i = 0; i <= 14; i++)
         for (var j = 0; j <= 14; j++)
             if (cells[i][j][1] !== false) {
-                var fixFishka = getFishkaGlobal(cells[i][j][1], 1, 1, this.game.scene.scenes[gameScene], false).disableInteractive();
+                var fixFishka = getFishkaGlobal(cells[i][j][1], 1, 1, this.game.scene.scenes[gameScene], false, cells[i][j][3]).disableInteractive();
                 findPlaceGlobal(fixFishka, 1, 1, i, j);
                 fixFishka.setData('cellX', i);
                 fixFishka.setData('cellY', j);

@@ -1,13 +1,8 @@
 //
 function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = DEFAULT_FISHKA_SET) {
-    if (fishkaSet == DEFAULT_FISHKA_SET) {
-        fishkaSet = userFishkaSet;
-    }
-
     if (fishkaSet != DEFAULT_FISHKA_SET) {
         console.log('Not default');
         if (fishkaSet in fishkiLoaded && numLetter in fishkiLoaded[fishkaSet]) {
-            console.log('Fishka found');
             let fishka = _this.add.image(0, 0, fishkiLoaded[fishkaSet][numLetter]);
             fishka.displayWidth = FISHKA_AVAILABLE_SETS[fishkaSet] * 2;
             fishka.displayHeight = FISHKA_AVAILABLE_SETS[fishkaSet] * 2;
@@ -34,7 +29,7 @@ function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = D
             if (!(fishkaSet in fishkiLoaded)) {
                 loadFishkiSet(fishkaSet);
             } else {
-                console.log(fishkaSet, fishkiLoaded);
+                console.log(fishkaSet + " is NOT loaded yet");
             }
         }
     }

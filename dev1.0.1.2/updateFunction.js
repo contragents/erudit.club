@@ -27,7 +27,7 @@ function (time, delta) {
             for (var $fishkaNum = 0; $fishkaNum < newCells[15].length; $fishkaNum++)
                 if (newCells[15][$fishkaNum] !== undefined) {
                     let lotokXY = lotokFindSlotXY();
-                    container.push(getFishkaGlobal(newCells[15][$fishkaNum], lotokGetX(lotokXY[0], lotokXY[1]), lotokGetY(lotokXY[0], lotokXY[1]), this).setData('lotokX', lotokXY[0]).setData('lotokY', lotokXY[1]));
+                    container.push(getFishkaGlobal(newCells[15][$fishkaNum], lotokGetX(lotokXY[0], lotokXY[1]), lotokGetY(lotokXY[0], lotokXY[1]), this, true, userFishkaSet).setData('lotokX', lotokXY[0]).setData('lotokY', lotokXY[1]));
                 }
 
 

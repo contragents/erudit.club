@@ -111,6 +111,7 @@ function resetButtonFunction(ignoreBootBox = false) {
                 if ((container[k].getData('cellX') !== false) && (container[k].getData('cellY') !== false)) {
                     cells[container[k].getData('cellX')][container[k].getData('cellY')][0] = false;
                     cells[container[k].getData('cellX')][container[k].getData('cellY')][1] = false;
+                    cells[container[k].getData('cellX')][container[k].getData('cellY')][3] = DEFAULT_FISHKA_SET;
                 }
 
                 container[k].setData('cellX', false);
