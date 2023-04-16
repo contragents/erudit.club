@@ -83,10 +83,6 @@ function () {
 
 //    <?php include('create/fishkaDragEvents.js')?>
 
-//    <?php include('create/findPlaceFunction.js')?>
-
-//    <?php include('create/getButtonFunction.js')?>
-
 //    <?php include('create/getSVGButtonFunction.js')?>
 
 

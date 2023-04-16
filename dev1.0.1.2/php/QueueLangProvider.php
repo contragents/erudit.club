@@ -483,6 +483,9 @@ class Queue
 
     private function want4Players($User)
     {
+        // todo отключил 4ю очередь, чтобы меньше ждали
+        return false;
+
         if (isset($this->POST['players_count']) && ($this->POST['players_count'] == 4)) {
             return true;
         }

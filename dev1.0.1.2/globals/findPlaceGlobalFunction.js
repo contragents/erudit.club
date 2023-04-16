@@ -1,10 +1,9 @@
 //
 function findPlaceGlobal(gameObject, oldX, oldY, cellX, cellY) {
-    //console.log(cells[cellX][cellY],cellX,cellY,oldX,oldY);
-    if ((cells[cellX][cellY][0] === false) && (oldX == 1) && (oldY == 1))
+    if ((cells[cellX][cellY][0] === false) && (oldX == 1) && (oldY == 1)) {
         oldX = 1;
-    else {
-        var mk = false;
+    } else {
+        mk = false;
         var n = 15;
         minQad = 100000;
         for (var i = 0; i < n; i++)
@@ -32,12 +31,12 @@ function findPlaceGlobal(gameObject, oldX, oldY, cellX, cellY) {
         gameObject.setData('cellX', cellX);
         gameObject.setData('cellY', cellY);
         cells[cellX][cellY][0] = true;
+        cells[cellX][cellY][3] = userFishkaSet;
 
         if ((gameObject.getData('letter') >= '999') && (gameObject.x != oldX || gameObject.y != oldY) && !((oldX == 1) & (oldY == 1)))
             chooseLetterGlobal(gameObject);
         else {
             cells[cellX][cellY][1] = gameObject.getData('letter');
-            cells[cellX][cellY][3] = userFishkaSet;
         }
     } else if (fixedZvezdaPresent(cellX, cellY, gameObject.getData('letter'))) {
         var _this = window.game.scene.scenes[gameScene];
@@ -52,7 +51,7 @@ function findPlaceGlobal(gameObject, oldX, oldY, cellX, cellY) {
         gameObject.disableInteractive();
 
         cells[cellX][cellY][2] = gameObject.getData('letter');
-        cells[cellX][cellY][3] = userFishkaSet;
+        //cells[cellX][cellY][3] = userFishkaSet;
 
         gameObject.x = stepX + (cellX + 1) * yacheikaWidth + correctionX;
         gameObject.y = stepY + (cellY + 1) * yacheikaWidth + correctionY;
@@ -76,15 +75,7 @@ function findPlaceGlobal(gameObject, oldX, oldY, cellX, cellY) {
         gameObject.setData('cellY', cellY);
         cells[cellX][cellY][0] = true;
         cells[cellX][cellY][1] = gameObject.getData('letter');
-        cells[cellX][cellY][3] = userFishkaSet;
     }
-    /*for (let k in container) {
-        console.log(container[k].data.list);
-        if (container[k].getData('cellX') !== false)
-            console.log(cells[container[k].getData('cellX')][container[k].getData('cellY')]);
-    }
-    console.log('!');
-    */
 }
 
 

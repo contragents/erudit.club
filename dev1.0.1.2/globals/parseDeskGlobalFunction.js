@@ -20,7 +20,7 @@ function parseDeskGlobal(newDesc) {
     for (var i = 0; i <= 14; i++)
         for (var j = 0; j <= 14; j++)
             if (cells[i][j][1] !== false) {
-                var fixFishka = getFishkaGlobal(cells[i][j][1], 1, 1, this.game.scene.scenes[gameScene], false, cells[i][j][3]).disableInteractive();
+                var fixFishka = getFishkaGlobal(cells[i][j][1], 1, 1, this.game.scene.scenes[gameScene], false, cells[i][j][3] ?? userFishkaSet).disableInteractive();
                 findPlaceGlobal(fixFishka, 1, 1, i, j);
                 fixFishka.setData('cellX', i);
                 fixFishka.setData('cellY', j);
