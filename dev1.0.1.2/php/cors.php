@@ -10,6 +10,9 @@ if( isset($_SERVER['HTTP_ORIGIN']) &&  $_SERVER['HTTP_ORIGIN']!='' ) {
     header('Access-Control-Allow-Credentials: true');
 }
 
-
-if (!isset($_COOKIE['erudit_user_session_ID'])) 
-    exit(0);
+if (!isset($_COOKIE['erudit_user_session_ID'])) {
+    include_once 'CookieLangProvider.php';
+    $_COOKIE = Cookie::setGetCook();
+    print json_encode(['gameState' => 'cookieTest', 'cookie' => $_COOKIE[Cookie::COOKIE_NAME] ?? '']);
+    exit();
+}

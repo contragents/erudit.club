@@ -105,7 +105,7 @@ class Ru
                 $numZvezd--;
 
         if ((count($zvezdyTemporary) - $numZvezd) < 0)
-            return false;
+            return [];
 
         return $zvezdyTemporary;
     }

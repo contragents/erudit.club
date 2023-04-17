@@ -81,6 +81,7 @@ class Game
 
     public function __construct($server_name = '')
     {
+        /*
         spl_autoload_register(
             function ($class_name) {
                 $Exploded_class = explode('\\', $class_name);
@@ -102,6 +103,7 @@ class Game
             },
             E_ALL & ~E_NOTICE
         );
+        */
 
         $this->serverName = $server_name;
         $this->p = Cache::getInstance();
@@ -137,7 +139,7 @@ class Game
                     Cache::del(self::CHECK_STATUS_RESULTS_KEY . $this->User);
                 }
 
-                if (($_GET['queryNumber'] ?? 1) >= 10 && !$this->isUserInQueue()) {
+                if (($_GET['queryNumber'] ?? 1) >= 10 && !$this->isUserInQueue() && !$this->isUserInCabinet()) {
                     print $this->makeResponse(
                         ['gameState' => 'noGame', 'comments' => 'Игра закончена. Начните новую игру!']
                     );
@@ -1635,7 +1637,7 @@ LIMIT 40";
         //Сохранили статус игры
 
         print json_encode(
-            array_merge($ochkiZaHod ? $cells : $saveDesk, [$this->gameStatus['users'][$this->numUser]['fishki']])
+            array_merge($ochkiZaHod ? ($cells ?: []) : ($saveDesk ?: []), [$this->gameStatus['users'][$this->numUser]['fishki']])
         );
         //Сделать через отправку статуса
 
@@ -2448,6 +2450,33 @@ LIMIT 40";
     {
         foreach (Queue::QUEUES as $queue) {
             if (Cache::hget($queue, $this->User)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function isUserInCabinet()
+    {
+        $cabinetKeys = [
+            'oldKey',
+            'MAX_FILE_SIZE',
+            'url',
+            'keyForID',
+            'key',
+            'name',
+            'players_count',
+            'ochki_num',
+            'turn_time',
+            'from_rating',
+            'gameState',
+            '12',
+            12
+        ];
+
+        foreach ($cabinetKeys as $key) {
+            if (isset($_REQUEST[$key])) {
                 return true;
             }
         }

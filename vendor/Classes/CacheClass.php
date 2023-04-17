@@ -17,7 +17,6 @@ class Cache
         try {
             $this->redis->pconnect(Config::$config['cache']['HOST'], Config::$config['cache']['PORT'], 10);
         } catch (Exception $e) {
-            mp(Config::$config['cache']['HOST'] . ":" . Config::$config['cache']['PORT'], "Couldn't reconnect to Master", __METHOD__);
             $this->redis->connect(Config::$config['cache']['HOST'], Config::$config['cache']['PORT'], 10);
         }
     }
