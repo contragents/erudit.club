@@ -203,7 +203,7 @@ class Ru
 
         foreach ($fishki as $nn => $fishka)
             if ($fishka[3] !== false) {
-                foreach ($zvezdy as $num => $zvezda)
+                foreach ($zvezdy ?: [] as $num => $zvezda)
                     if ($zvezda[2] === $fishka[3]) {
                         $cells[$zvezda[0]][$zvezda[1]][2] = false;
                         $cells[$zvezda[0]][$zvezda[1]][1] = $fishka[3];
@@ -214,7 +214,7 @@ class Ru
 
         foreach ($bad_fishki as $nn => $bfishka)
             if ($bfishka[3] !== false)
-                foreach ($zvezdy as $num => $zvezda)
+                foreach ($zvezdy ?: [] as $num => $zvezda)
                     if ($zvezda[2] === $bfishka[3]) {
                         $cells[$zvezda[0]][$zvezda[1]][2] = false;
                         unset($zvezda[$num]);

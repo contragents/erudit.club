@@ -1087,7 +1087,7 @@ LIMIT 40";
                 isset($userCookie['userID']) ? self::hash_str_2_int($userCookie['userID']) : false
             );
 
-            return count($ratings) ? $ratings[0] : false;
+            return count($ratings ?: []) ? $ratings[0] : false;
         }
 
         if (!($ratings[$userCookie] = Cache::get('erudit.rating_cache_' . $userCookie))) {
@@ -1429,6 +1429,7 @@ LIMIT 40";
 
             return $this->checkGameStatus();
         }
+
         try {
             $desk = Cache::get('erudit.current_game_' . $this->currentGame);
             // Текущая доска
@@ -1464,7 +1465,7 @@ LIMIT 40";
             $this->destruct();
             //Сохранили статус игры
 
-            return json_encode(array_merge($saveDesk, [$this->gameStatus['users'][$this->numUser]['fishki']]));
+            return json_encode(array_merge($saveDesk ?: [], [$this->gameStatus['users'][$this->numUser]['fishki']]));
             //Сделать через отправку статуса
         }
 

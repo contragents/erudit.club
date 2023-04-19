@@ -79,7 +79,7 @@ function () {
     this.load.atlas('megaset', 'img/letters.png', '//xn--d1aiwkc2d.club/img/letters.json');
     this.load.atlas('digits', 'img/letters.png', '//xn--d1aiwkc2d.club/img/nums.json');
     this.load.atlas('megaset_english', '//xn--d1aiwkc2d.club/img/letters_english.png', '//xn--d1aiwkc2d.club/img/letters_english.json');
-    this.load.image('back', '//xn--d1aiwkc2d.club/img/background.jpg');
+    this.load.image('back', '//xn--d1aiwkc2d.club/img/background_test.jpg');
 
     for (var k in buttons)
         if ('modes' in buttons[k])
