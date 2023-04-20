@@ -1,6 +1,6 @@
 <?php
 //ini_set("display_errors", 1); error_reporting(E_ALL);
-
+const PAGE_HIDDEN_SLEEP_TIME = 10;
 const SCRIPTS = [
     'status_checker' => 'statusChecker',
     'turn_submitter' => 'turnSubmitter',
@@ -30,6 +30,10 @@ if (function_exists(SCRIPTS[$scriptName])) {
 
 function statusChecker()
 {
+    if ($_GET['page_hidden'] ?? false === 'true') {
+        sleep(PAGE_HIDDEN_SLEEP_TIME);
+    }
+
     print (new Erudit\Game())->checkGameStatus();
 }
 

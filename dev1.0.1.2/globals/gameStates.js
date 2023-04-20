@@ -625,7 +625,7 @@ function commonCallback(data) {
                         }
                     },
                     callback: function (result) {
-                        if(!result) {
+                        if (!result) {
                             newGameButtonFunction(true);
                         }
                     }
@@ -798,7 +798,7 @@ function commonCallback(data) {
 
     responseData = data;
 
-    if (pageActive == 'hidden') {
+    if (pageActive == 'hidden' && gameState != 'chooseGame') {
         fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID == false) ? '0' : uniqID)
             .then((data) => {
                 commonCallback(data);
