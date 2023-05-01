@@ -6,26 +6,29 @@ function findPlaceGlobal(gameObject, oldX, oldY, cellX, cellY) {
         mk = false;
         var n = 15;
         minQad = 100000;
-        for (var i = 0; i < n; i++)
-            for (var j = 0; j < n; j++)
-                if (cells[i][j][0] != false && ((k = containerFishkaPresent(i, j)) !== false) && ((((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2) < minQad)) {
-                    mk = k;
-                    minQad = ((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2;
-                    cellX = i;
-                    cellY = j;
-                } else if (cells[i][j][0] != false && cells[i][j][2] === false && fixedZvezdaPresent(i, j, gameObject.getData('letter')) && ((((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2) < minQad)) {
-                    minQad = ((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2;
-                    cellX = i;
-                    cellY = j;
-                } else if (cells[i][j][0] == false && ((((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2) < minQad)) {
-                    minQad = ((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2;
-                    cellX = i;
-                    cellY = j;
-                }
+        for (var i = 0; i < n; i++) {
+            for (var j = 0; j < n; j++) {
+                k = containerFishkaPresent(i, j);
 
+                if (cells[i][j][0] !== false && (k !== false) && ((((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2) < minQad)) {
+                    mk = k;
+                    cellX = i;
+                    cellY = j;
+                    minQad = ((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2;
+                } else if (cells[i][j][0] !== false && cells[i][j][2] === false && fixedZvezdaPresent(i, j, gameObject.getData('letter')) && ((((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2) < minQad)) {
+                    cellX = i;
+                    cellY = j;
+                    minQad = ((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2;
+                } else if (cells[i][j][0] === false && ((((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2) < minQad)) {
+                    cellX = i;
+                    cellY = j;
+                    minQad = ((i + 1) * yacheikaWidth + stepX + correctionX - oldX) ** 2 + ((j + 1) * yacheikaWidth + stepY + correctionY - oldY) ** 2;
+                }
+            }
+        }
     }
 
-    if (cells[cellX][cellY][0] == false) {
+    if (cells[cellX][cellY][0] === false) {
         gameObject.x = stepX + (cellX + 1) * yacheikaWidth + correctionX;
         gameObject.y = stepY + (cellY + 1) * yacheikaWidth + correctionY;
         gameObject.setData('cellX', cellX);
@@ -33,7 +36,7 @@ function findPlaceGlobal(gameObject, oldX, oldY, cellX, cellY) {
         cells[cellX][cellY][0] = true;
         cells[cellX][cellY][3] = userFishkaSet;
 
-        if ((gameObject.getData('letter') >= '999') && (gameObject.x != oldX || gameObject.y != oldY) && !((oldX == 1) & (oldY == 1)))
+        if ((gameObject.getData('letter') >= '999') && (gameObject.x !== oldX || gameObject.y !== oldY) && !((oldX === 1) && (oldY === 1)))
             chooseLetterGlobal(gameObject);
         else {
             cells[cellX][cellY][1] = gameObject.getData('letter');
@@ -57,7 +60,7 @@ function findPlaceGlobal(gameObject, oldX, oldY, cellX, cellY) {
         gameObject.y = stepY + (cellY + 1) * yacheikaWidth + correctionY;
         gameObject.setData('cellXY', cellX + '-' + cellY);
 
-    } else if ((mk !== false) && (container[mk].getData('cellX') == cellX) && (container[mk].getData('cellY') == cellY)) {
+    } else if ((mk !== false) && (container[mk].getData('cellX') === cellX) && (container[mk].getData('cellY') === cellY)) {
         if (gameObject.getData('oldCellX') !== false) {
             findPlaceGlobal(container[mk], 1, 1, gameObject.getData('oldCellX'), gameObject.getData('oldCellY'));
         } else {
@@ -69,27 +72,34 @@ function findPlaceGlobal(gameObject, oldX, oldY, cellX, cellY) {
             container[mk].x = lotokGetX(slotXY[0], slotXY[1]);
             container[mk].y = lotokGetY(slotXY[0], slotXY[1]);
         }
+
         gameObject.x = stepX + (cellX + 1) * yacheikaWidth + correctionX;
         gameObject.y = stepY + (cellY + 1) * yacheikaWidth + correctionY;
         gameObject.setData('cellX', cellX);
         gameObject.setData('cellY', cellY);
         cells[cellX][cellY][0] = true;
-        cells[cellX][cellY][1] = gameObject.getData('letter');
+
+        if ((gameObject.getData('letter') >= '999') && (gameObject.x !== oldX || gameObject.y !== oldY) && !((oldX === 1) && (oldY === 1)))
+            chooseLetterGlobal(gameObject);
+        else {
+            cells[cellX][cellY][1] = gameObject.getData('letter');
+        }
     }
 }
 
-
 function fixedZvezdaPresent(i, j, letter) {
     for (k in fixedContainer)
-        if ((fixedContainer[k].getData('cellX') == i) && (fixedContainer[k].getData('cellY') == j) && ((fixedContainer[k].getData('letter') - 1 - 999) === (letter)))
+        if ((fixedContainer[k].getData('cellX') === i) && (fixedContainer[k].getData('cellY') === j) && ((fixedContainer[k].getData('letter') - 1 - 999) === (letter)))
             return true;
+
     return false;
 }
 
 function containerFishkaPresent(i, j) {
-    for (var k in container)
-        if ((container[k].getData('cellX') == i) && (container[k].getData('cellY') == j))
+    for (let k in container)
+        if ((container[k].getData('cellX') === i) && (container[k].getData('cellY') === j))
             return k;
+
     return false;
 }
 

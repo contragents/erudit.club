@@ -45,7 +45,6 @@ this.input.on('dragend', function (pointer, gameObject) {
             let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
             let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
             findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
-
         }
 
     gameObject.depth = 1;
