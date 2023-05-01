@@ -123,7 +123,7 @@ window.onbeforeunload = function () {
         || gameState == 'otherTurn'
         || gameState == 'initGame'
         || gameState == 'initRatingGame') {
-        fetchGlobal('set_inactive.php', '', '');
+        fetchGlobal(SET_INACTIVE_SCRIPT, '', '');
         return "Вы в игре - уверены, что хотите выйти?";
     }
 };
@@ -182,7 +182,7 @@ function mergeTheIDs(oldKey, commonID) {
         return;
     }
 
-    fetchGlobal('merge_the_ids.php', '', 'oldKey=' + oldKey + '&commonID=' + commonID)
+    fetchGlobal(MERGE_IDS_SCRIPT, '', 'oldKey=' + oldKey + '&commonID=' + commonID)
         .then((resp) => {
             console.log(resp['result']);
             showCabinetActionResult(resp);
@@ -225,7 +225,7 @@ function savePlayerName(name, commonID = '') {
         return;
     }
 
-    fetchGlobal('set_player_name.php', '', 'name=' + encodeURIComponent(name) + (commonID != '' ? '&commonID=' + commonID : ''))
+    fetchGlobal(SET_PLAYER_NAME_SCRIPT, '', 'name=' + encodeURIComponent(name) + (commonID != '' ? '&commonID=' + commonID : ''))
         .then((resp) => {
             console.log(resp['result']);
             if (resp['result'] == 'saved') {
@@ -244,13 +244,12 @@ function savePlayerAvatar(url, commonID) {
     if (!checkElement.checkValidity()) {
         /*
         <?php
-        //ini_set("display_errors", 1); error_reporting(E_ALL);
-            include_once 'php/PlayersLangProvider.php';
+            // include_once 'php/PlayersLangProvider.php';
         ?>
         */
         showCabinetActionResult({
             result: 'error',
-            message: 'Ошибка! Выберите файл-картинку размером не более <?= round(\Dadata\Players::MAX_UPLOAD_SIZE / 1024 / 1024, 2); ?>MB'
+            message: 'Ошибка! Выберите файл-картинку размером не более <?= round(Dadata\Players::MAX_UPLOAD_SIZE / 1024 / 1024, 2); ?>MB'
         });
 
         return false;
@@ -263,15 +262,13 @@ function savePlayerAvatar(url, commonID) {
         requestTimestamp = (new Date()).getTime();
     }
 
-    let script = 'avatar_upload.php';
-
     let URL = useLocalStorage
         ? (
             '//xn--d1aiwkc2d.club/<?=$dir?>/php/yowser/index.php'
             + '?cooki='
             + localStorage.erudit_user_session_ID
             + '&script='
-            + script
+            + AVATAR_UPLOAD_SCRIPT
             + '&queryNumber='
             + (queryNumber++)
             + '&lang=' + lang
@@ -279,7 +276,7 @@ function savePlayerAvatar(url, commonID) {
         )
         : (
             '//xn--d1aiwkc2d.club/<?=$dir?>/php/'
-            + script
+            + AVATAR_UPLOAD_SCRIPT
             + '?queryNumber=' + (queryNumber++)
             + '&lang=' + lang
             + (pageActive === 'hidden' ? '&page_hidden=true' : '')
@@ -294,7 +291,6 @@ function savePlayerAvatar(url, commonID) {
         contentType: false,
         processData: false,
         success: function (returndata) {
-            //alert(returndata);
             resp = JSON.parse(returndata);
 
             if (resp['result'] === 'saved') {
@@ -308,8 +304,9 @@ function savePlayerAvatar(url, commonID) {
     });
 
     return false;
+}
 
-    /*
+function savePlayerAvatarUrl(url, commonID) {
     if (url.trim() == '') {
         let resp = {result: 'error', message: 'Задано пустое значение'};
         showCabinetActionResult(resp);
@@ -317,15 +314,13 @@ function savePlayerAvatar(url, commonID) {
         return;
     }
 
-    fetchGlobal('set_player_avatar_url.php', '', 'avatar=' + encodeURIComponent(url) + '&commonID=' + commonID)
+    fetchGlobal(SET_AVATAR_SCRIPT, '', 'avatar=' + encodeURIComponent(url) + '&commonID=' + commonID)
         .then((resp) => {
             console.log(resp['result']);
             if (resp['result'] == 'saved')
                 $('#playersAvatar').html('<img src="' + url + '" width="100px" max-height = "100px"/>');
             showCabinetActionResult(resp);
         });
-        */
-
 }
 
 function initLotok() {

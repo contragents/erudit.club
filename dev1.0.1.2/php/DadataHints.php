@@ -2,8 +2,6 @@
 
 namespace Dadata;
 
-//ini_set("display_errors", 1); error_reporting(E_ALL);
-
 class Hints
 {
     private static $p;
@@ -506,6 +504,10 @@ class Hints
         }
 
         if (isset($_COOKIE['PRODUCT']) && $_COOKIE['PRODUCT'] == 'RocketWeb') {
+            return true;
+        }
+
+        if (strpos($_SERVER['HTTP_REFERER'] ?? '', 'app=1')) {
             return true;
         }
 

@@ -15,7 +15,7 @@ var gameStates = {
         1: 'waiting',
         refresh: 10000000,
         action: function (data) {
-            fetchGlobal('cookie_checker.php', '', '12=12')
+            fetchGlobal(COOKIE_CHECKER_SCRIPT, '', '12=12')
                 .then((data) => {
                     if ('gameState' in data) {
                         if (data.gameState == 'register') {
@@ -140,7 +140,7 @@ var gameStates = {
                         className: 'btn-outline-success',//''btn btn-success',
                         callback: function () {
                             setTimeout(function () {
-                                fetchGlobal('player_cabinet.php', '', 12)
+                                fetchGlobal(CABINET_SCRIPT, '', 12)
                                     .then((dataCabinet) => {
                                         if (dataCabinet == '')
                                             var responseText = 'Ошибка';
@@ -425,7 +425,7 @@ var gameStates = {
                         className: 'btn-primary',
                         callback: function () {
                             setTimeout(function () {
-                                fetchGlobal('invite_to_new_game.php', '', 12)
+                                fetchGlobal(INVITE_SCRIPT, '', 12)
                                     .then((dataInvite) => {
                                         if (dataInvite == '')
                                             var responseText = 'Запрос отклонен';
@@ -495,7 +495,7 @@ var gameStates = {
                         className: 'btn-primary',
                         callback: function () {
                             setTimeout(function () {
-                                fetchGlobal('invite_to_new_game.php', '', 12)
+                                fetchGlobal(INVITE_SCRIPT, '', 12)
                                     .then((dataInvite) => {
                                         if (dataInvite == '') {
                                             var responseText = 'Запрос отклонен';

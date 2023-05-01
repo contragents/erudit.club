@@ -6,8 +6,8 @@ set_time_limit($minutesToGo * 60 + 5);
 $start_script_time = date('U');
 $script_work_time = $minutesToGo * 60 - 5;
 
-include_once(__DIR__ . '/../CacheLangProvider.php');
-include_once(__DIR__ . '/../DBLangProvider.php');
+include_once(__DIR__ . '/../DadataCache.php');
+include_once(__DIR__ . '/../DadataDB.php');
 include_once(__DIR__ . '/../EruditGame.php');
 
 $red = \Dadata\Cache::getInstance();

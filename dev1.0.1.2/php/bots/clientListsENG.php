@@ -8,8 +8,8 @@ $script_work_time = $minutesToGo * 60 - 5;
 $secondsToBotRefresh = 10;
 //error_reporting(E_ALL & ~E_NOTICE); ini_set('display_errors', 0);
 
-include_once(__DIR__ . '/../CacheLangProvider.php');
-include_once(__DIR__ . '/../DBLangProvider.php');
+include_once(__DIR__ . '/../DadataCache.php');
+include_once(__DIR__ . '/../DadataDB.php');
 
 include(__DIR__ . '/findWordSlevaFunctionENG.php');
 include(__DIR__ . '/findWordSverhuFunctionENG.php');

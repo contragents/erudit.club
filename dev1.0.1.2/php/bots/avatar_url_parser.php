@@ -1,5 +1,5 @@
 <?php
-include_once(__DIR__ . '/../DBLangProvider.php');
+include_once(__DIR__ . '/../DadataDB.php');
 
 use \Dadata\DB;
 

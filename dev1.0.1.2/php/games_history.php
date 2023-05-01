@@ -5,7 +5,7 @@ if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] != '') {
     header('Access-Control-Allow-Credentials: true');
 }
 
-include_once(__DIR__ . '/DBLangProvider.php');
+include_once(__DIR__ . '/DadataDB.php');
 
 $playerIDSelect = "SELECT id from players where user_id IN (select user_id from players where common_id = {$_GET['word']})";
 $ids = \Dadata\DB::queryArray($playerIDSelect);

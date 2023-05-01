@@ -73,7 +73,7 @@ function newGameButtonFunction(ignoreDialog = false) {
             callback: function (result) {
                 if (result) {
                     requestToServerEnabled = true;
-                    fetchGlobal('new_game.php', '', 'gameState=' + gameState)
+                    fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState)
                         .then((data) => {
                             document.location.reload(true);
                         });
@@ -88,7 +88,7 @@ function newGameButtonFunction(ignoreDialog = false) {
 
         buttons['newGameButton']['svgObject'].bringToTop(buttons['newGameButton']['svgObject'].getByName('newGameButton' + 'Inactive'));
 
-        fetchGlobal('new_game.php', '', 'gameState=' + gameState)
+        fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState)
             .then((data) => {
                 document.location.reload(true);
                 setTimeout(function () {
@@ -377,7 +377,7 @@ function playersButtonFunction() {
     buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + 'Inactive'));
 
     setTimeout(function () {
-        fetchGlobal('players_ratings.php', '', orient)
+        fetchGlobal(PLAYER_RATING_SCRIPT, '', orient)
             .then((data) => {
 
                 canOpenDialog = false;

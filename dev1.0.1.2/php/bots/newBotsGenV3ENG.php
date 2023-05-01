@@ -4,7 +4,7 @@ define("BOTSNUM", 47);//число ников)
 
 //error_reporting(E_ALL & ~E_NOTICE); ini_set('display_errors', 0);
 
-include_once(__DIR__ . '/../CacheLangProvider.php');
+include_once(__DIR__ . '/../DadataCache.php');
 
 class BotGenV3ENG
 {

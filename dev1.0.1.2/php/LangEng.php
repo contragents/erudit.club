@@ -2,9 +2,7 @@
 
 namespace Lang;
 
-include_once(__DIR__ . '/DBLangProvider.php');
-
-use \Dadata\DB;
+include_once(__DIR__ . '/DadataDB.php');
 
 class Eng extends Ru
 {

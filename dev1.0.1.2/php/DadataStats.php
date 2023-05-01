@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Dadata;
-
 
 class Stats
 {
@@ -49,8 +47,9 @@ class Stats
             return;
         }
 
+        // Учитываем статистику только 1 раз для куки (1 раз за игру)
         if (self::incStat(self::COOKIE_KEY . $_COOKIE['erudit_user_session_ID'], self::TTLS['cookie']) > 1) {
-            return;//Учитываем статистику только 1 раз для куки (1 раз за игру)
+            return;
         }
 
         self::saveReferer();

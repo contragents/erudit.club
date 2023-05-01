@@ -10,14 +10,13 @@ use Dadata\Players;
 use Dadata\Prizes;
 use Dadata\Stats;
 
-//ini_set("display_errors", 1); error_reporting(E_ALL);
-
 class Game
 {
     const BAD_COMBINATIONS_HSET = 'bad_combinations';
 
     const ERROR_STATUS = 'error';
     const BOT_ERRORS_KEY = 'erudit_bot_errors';
+    const LOG_BOT_ERRORS_KEY = 'erudit_bot_log_errors';
     const MAX_ERRORS = 100;
 
     public static $configStatic;
@@ -81,31 +80,6 @@ class Game
 
     public function __construct($server_name = '')
     {
-        /*
-        spl_autoload_register(
-            function ($class_name) {
-                $Exploded_class = explode('\\', $class_name);
-                include $Exploded_class[count($Exploded_class) - 1] . 'LangProvider.php';
-            }
-        );
-
-        set_error_handler(
-            function ($err_severity, $err_msg, $err_file, $err_line, $err_context = []) {
-                \BadRequest::sendBadRequest(
-                    [
-                        'err_severity' => $err_severity,
-                        'err_msg' => $err_msg,
-                        'err_file' => $err_file,
-                        'err_line' => $err_line,
-                        'err_context' => $err_context
-                    ]
-                );
-            },
-            E_ALL & ~E_NOTICE
-        );
-        */
-
-        $this->serverName = $server_name;
         $this->p = Cache::getInstance();
 
 
@@ -508,15 +482,24 @@ p1.cookie='$cookie'
             'inputName' => 'MAX_FILE_SIZE',
             'value' => Players::MAX_UPLOAD_SIZE,
         ];
-        $message['form'][] = [
-            'prompt' => 'Загрузка Аватара',
-            'type' => 'file',
-            'inputName' => 'url',
-            'inputId' => 'player_avatar_file',
-            'onclick' => 'savePlayerAvatar',
-            'buttonCaption' => 'Отправить',
-            'required' => true,
-        ];
+        $message['form'][] = Hints::IsNotAndroidApp()
+            ? [
+                'prompt' => 'Загрузка Аватара',
+                'type' => 'file',
+                'inputName' => 'url',
+                'inputId' => 'player_avatar_file',
+                'onclick' => 'savePlayerAvatar',
+                'buttonCaption' => 'Отправить',
+                'required' => true,
+            ]
+            : [
+                'prompt' => 'URL аватара',
+                'inputName' => 'url',
+                'inputId' => 'player_avatar_url',
+                'onclick' => 'savePlayerAvatarUrl',
+                'buttonCaption' => 'Применить',
+                'placeholder' => 'https://'
+            ];
 
         $message['form'][] = [
             'prompt' => 'Ключ учетной записи',
@@ -1445,15 +1428,24 @@ LIMIT 40";
 
             $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus);
         } catch (\Throwable $e) {
-            \BadRequest::sendBadRequest(
+            \BadRequest::logBadRequest(
                 [
                     'message' => 'Ошибка обработки данных!',
                     'err_msg' => $e->getMessage(),
                     'err_file' => $e->getFile(),
                     'err_line' => $e->getLine(),
                     'err_context' => $e->getTrace(),
+                    'received_desk' => $cells,
+                    'game_desk' => $saveDesk
                 ]
             );
+
+            $this->addToLog(
+                ' - ошибка обработки хода (ход #' . $this->gameStatus['turnNumber'] . ')',
+                $this->numUser
+            );
+
+            return $this->checkGameStatus();
         }
 
         if ($new_fishki === false) {
@@ -1638,7 +1630,10 @@ LIMIT 40";
         //Сохранили статус игры
 
         print json_encode(
-            array_merge($ochkiZaHod ? ($cells ?: []) : ($saveDesk ?: []), [$this->gameStatus['users'][$this->numUser]['fishki']])
+            array_merge(
+                $ochkiZaHod ? ($cells ?: []) : ($saveDesk ?: []),
+                [$this->gameStatus['users'][$this->numUser]['fishki']]
+            )
         );
         //Сделать через отправку статуса
 

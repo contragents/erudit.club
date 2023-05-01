@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Как работает apcu
- * apcu_store('gvno','gov-no');
- * print apcu_fetch('gvno');
- */
 class Cache
 {
     public static $_instance = null;

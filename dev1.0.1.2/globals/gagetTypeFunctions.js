@@ -8,7 +8,7 @@ function isAndroidAppGlobal() {
         return true;
     }
 
-    return false;
+    return window.location.href.indexOf('app=1') > -1;
 }
 
 function isMobileDeviceGlobal() {

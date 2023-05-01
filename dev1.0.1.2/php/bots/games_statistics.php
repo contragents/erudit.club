@@ -1,23 +1,20 @@
 <?php
 
-include_once(__DIR__ . '/../CacheLangProvider.php');
-include_once(__DIR__ . '/../hash_str_2_int.php');
-include_once(__DIR__ . '/../DBLangProvider.php');
+include_once(__DIR__ . '/../autoload.php');
 
 use Dadata\DB;
 
-$red = \Dadata\Cache::getInstance();
 $minutesToGo = 20;
 
 $start_script_time = date('U');
 $script_work_time = $minutesToGo * 60 - 5;
 
 while ((date('U') - $start_script_time) < $script_work_time) {
-    if (!($Game = $red->redis->lpop('erudit.games_ended'))) {
+    if (!($Game = Cache::lpop('erudit.games_ended'))) {
         sleep(10);
         continue;
     }
-    $Game = unserialize($Game);
+
     if (!is_array($Game)) {
         continue;
     }
@@ -35,7 +32,7 @@ function saveGame(&$Game, &$results)
 {
     $INSERTGAME = "INSERT INTO games
 SET 
-id={$Game['gameNumber']}+300000,
+id = {$Game['gameNumber']} + 300000,
 game_data = compress('" . DB::escapeString(serialize($Game)) . "')";
 
     if (DB::queryInsert($INSERTGAME)) {
@@ -78,55 +75,46 @@ function saveGameStats(&$Game, &$results)
     DB::queryInsert($INSERTSTATS);
 
     if (!DB::insertID()) {
-        global $red;
-        $red->redis->rpush(
+        Cache::rpush(
             'erudit.games_statistics_failed',
-            serialize(
-                [
-                    'query' => $INSERTSTATS,
-                    'game' => $Game,
-                    'results' => $results
-                ]
-            )
+            [
+                'query' => $INSERTSTATS,
+                'game' => $Game,
+                'results' => $results
+            ]
         );
     }
 }
 
 function addDeltaRatingsToCache($player)
 {
-    global $red;
     global $Game;
 
-    $deltaArr = serialize(
-        [
-            'delta' => $player['deltaRating']
-            ,
-            'time' => $Game['turnBeginTime']
-            ,
-            'game_number' => $Game['gameNumber']
-        ]
-    );
+    $deltaArr = [
+        'delta' => $player['deltaRating'],
+        'time' => $Game['turnBeginTime'],
+        'game_number' => $Game['gameNumber']
+    ];
+
     $cacheTime = 7 * 24 * 60 * 60;
 
-    $red->redis->setex('erudit.delta_rating_' . $player['cookie'], $cacheTime, $deltaArr);
-    $red->redis->setex('erudit.delta_rating_' . $player['found_cookie'], $cacheTime, $deltaArr);
+    Cache::setex('erudit.delta_rating_' . $player['cookie'], $cacheTime, $deltaArr);
+    Cache::setex('erudit.delta_rating_' . $player['found_cookie'], $cacheTime, $deltaArr);
 
     if (isset($player['userID']) && $player['userID'] > 0) {
-        $red->redis->setex('erudit.delta_rating_' . $player['userID'], $cacheTime, $deltaArr);
-        $red->redis->setex('erudit.delta_rating_' . $player['userID'], $cacheTime, $deltaArr);
+        Cache::setex('erudit.delta_rating_' . $player['userID'], $cacheTime, $deltaArr);
+        Cache::setex('erudit.delta_rating_' . $player['userID'], $cacheTime, $deltaArr);
     }
 }
 
 function deleteRatingsFromCache($player)
 {
-    global $red;
-
-    $red->redis->del('erudit.rating_cache_' . $player['cookie']);
-    $red->redis->del('erudit.rating_cache_' . $player['found_cookie']);
+    Cache::del('erudit.rating_cache_' . $player['cookie']);
+    Cache::del('erudit.rating_cache_' . $player['found_cookie']);
 
     if (isset($player['userID']) && $player['userID'] > 0) {
-        $red->redis->del('erudit.rating_cache_' . $player['cookie'] . $player['userID']);
-        $red->redis->del('erudit.rating_cache_' . $player['found_cookie'] . $player['userID']);
+        Cache::del('erudit.rating_cache_' . $player['cookie'] . $player['userID']);
+        Cache::del('erudit.rating_cache_' . $player['found_cookie'] . $player['userID']);
     }
 }
 
@@ -168,7 +156,7 @@ function saveRatings(&$players)
             );
 
         DB::queryInsert($UPDATE);
-        //print $UPDATE;
+
         deleteRatingsFromCache($player);
         addDeltaRatingsToCache($player);
     }
@@ -191,9 +179,6 @@ function changeRatings(&$players)
 
             $players[$j]['deltaRating'] = $players[$j]['deltaRating'] ?? 0;
             $players[$j]['deltaRating'] += ($ratingBNew - $ratingB);
-            //print "Игрок {$i}: " . $ratingA . '->' . $ratingANew . "\n";
-
-            //print "Игрок {$j}: " . $ratingB . '->' . $ratingBNew . "\n";
         }
     }
 }
@@ -203,6 +188,7 @@ function addCookie(&$player)
     if (!is_array($player)) {
         return false;
     }
+
     $INSERTCOOKIE = "INSERT INTO players
                     SET
                     cookie='{$player['cookie']}',
@@ -215,13 +201,14 @@ function addCookie(&$player)
                     games_played={$player['games_played']}
                     ON DUPLICATE KEY
                     UPDATE
-                    " . (isset($player['userID']) ?
-            "user_id={$player['userID']},
-                    date_registered=UNIX_TIMESTAMP(),"
-            : "")
-        . "rating={$player['rating']},
-                    games_played={$player['games_played']}";
-    //print $INSERTCOOKIE;
+                    "
+        . (
+        isset($player['userID'])
+            ? "user_id={$player['userID']}, date_registered=UNIX_TIMESTAMP(),"
+            : ""
+        )
+        . "rating = {$player['rating']}, games_played = {$player['games_played']}";
+
     DB::queryInsert($INSERTCOOKIE);
 }
 
@@ -248,7 +235,7 @@ function getRatings(&$players, &$gameStatus)
                 $SELECTRATING_REGISTERED2 .
                 $player['userID'] .
                 $SELECTRATING_REGISTERED3;
-            //print $QUERY;
+
             $sel = DB::queryArray($QUERY)[0];
             if (!empty($sel['rating'])) {
                 $players[$num]['rating'] = $sel['rating'];
@@ -265,7 +252,7 @@ function getRatings(&$players, &$gameStatus)
                             cookie='{$players[$num]['found_cookie']}'
                             ";
                     DB::queryInsert($UPDATE);
-                    //print $UPDATE; sleep(5);
+
                     $players[$num]['user_id'] = $player['userID'];
                 }
 
@@ -283,7 +270,7 @@ function getRatings(&$players, &$gameStatus)
                             date_registered = UNIX_TIMESTAMP() 
                             ";
                 DB::queryInsert($INSERT);
-                //print $INSERT;
+
                 $players[$num]['rating'] = 1700;
                 $players[$num]['player_id'] = DB::insertID();
                 $players[$num]['user_id'] = $player['userID'];
@@ -293,7 +280,7 @@ function getRatings(&$players, &$gameStatus)
         } else {
             $players[$num]['user_id'] = hash_str_2_int($player['cookie']);
             $QUERY = $SELECTRATING . $player['cookie'] . "'";
-            //print $QUERY;
+
             $sel = DB::queryArray($QUERY)[0];
             if (!empty($sel['rating'])) {
                 $players[$num]['rating'] = $sel['rating'];
@@ -308,8 +295,9 @@ function getRatings(&$players, &$gameStatus)
                             rating_changed_date=CURRENT_TIMESTAMP(),
                             games_played = 1,
                             user_id = " . $players[$num]['user_id'];
+
                 DB::queryInsert($INSERT);
-                //print $INSERT;
+
                 $players[$num]['rating'] = 1700;
                 $players[$num]['player_id'] = DB::insertID();
                 $players[$num]['found_cookie'] = $player['cookie'];
@@ -321,6 +309,7 @@ function getRatings(&$players, &$gameStatus)
             if ($rating != 'new_player') {
                 $players[$num]['rating'] = $rating;
             }
+
             //Коррекция рейтинга по данным из Игры
             $players[$num]['common_id'] = $gameStatus['users'][$gameStatus[$player['cookie']]]['common_id'];
         }

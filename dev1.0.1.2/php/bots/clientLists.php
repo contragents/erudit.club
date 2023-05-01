@@ -12,8 +12,8 @@ $start_script_time = date('U');
 $script_work_time = $minutesToGo * 60 - 5;
 $secondsToBotRefresh = 10;
 
-include_once(__DIR__ . '/../CacheLangProvider.php');
-include_once(__DIR__ . '/../DBLangProvider.php');
+include_once(__DIR__ . '/../DadataCache.php');
+include_once(__DIR__ . '/../DadataDB.php');
 
 include(__DIR__ . '/findWordSlevaFunction.php');
 include(__DIR__ . '/findWordSverhuFunction.php');
