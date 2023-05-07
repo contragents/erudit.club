@@ -119,24 +119,29 @@ function () {
         //donate.y = ochki.y + ochki.height + 15 + 40 + 20 * scale;
     }
 
-    donate.setInteractive();
-    donate.on('pointerup', function () {
-        donate.disableInteractive();
-        copyDonateLinkDialog = bootbox.alert(
-            {
-                message: 'Ссылка на страницу донатов скопирована в буфер <br /><input size="36" type="text" name="donate" id="donate_id" value="' + donateLink + '" />',
-            }
-        );
+    if (isYandexAppGlobal()) {
+        donate.visible = false;
+    } else {
 
-        setTimeout(
-            function () {
-                copyDonateKey();
-                copyDonateLinkDialog.find(".bootbox-close-button").trigger("click");
-                donate.setInteractive();
-            }
-            , 2000
-        );
-    });
+        donate.setInteractive();
+        donate.on('pointerup', function () {
+            donate.disableInteractive();
+            copyDonateLinkDialog = bootbox.alert(
+                {
+                    message: 'Ссылка на страницу донатов скопирована в буфер <br /><input size="36" type="text" name="donate" id="donate_id" value="' + donateLink + '" />',
+                }
+            );
+
+            setTimeout(
+                function () {
+                    copyDonateKey();
+                    copyDonateLinkDialog.find(".bootbox-close-button").trigger("click");
+                    donate.setInteractive();
+                }
+                , 2000
+            );
+        });
+    }
 
 
 }

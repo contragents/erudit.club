@@ -219,7 +219,17 @@ function chatButtonFunction() {
 
 
     dialog = bootbox.dialog({
-        title: '</h5><h6>Поддержка и чат игроков в <a target="_blank" title="Вступить в группу" href="' + (gameWidth < gameHeight ? 'https://t.me/eruditclub' : 'https://web.telegram.org/#/im?p=@eruditclub') + '">Telegram</a> </h6><h5>Отправьте сообщение в игре',
+        title: '</h5>'
+            + (
+                !isYandexAppGlobal()
+                    ? (
+                        '<h6>Поддержка и чат игроков в <a target="_blank" title="Вступить в группу" href="'
+                        + (gameWidth < gameHeight ? 'https://t.me/eruditclub' : 'https://web.telegram.org/#/im?p=@eruditclub')
+                        + '">Telegram</a> </h6>'
+                    )
+                    : ''
+            )
+            + '<h5>Отправьте сообщение в игре',
         message: '<form onsubmit="return false" id="myChatForm">' + radioButtons + textInput + '</form>',
         locale: 'ru',
         size: 'large',
