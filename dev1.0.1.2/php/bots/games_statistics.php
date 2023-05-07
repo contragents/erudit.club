@@ -3,6 +3,7 @@
 include_once(__DIR__ . '/../autoload.php');
 
 use Dadata\DB;
+use Erudit\Game;
 
 $minutesToGo = 20;
 
@@ -10,7 +11,7 @@ $start_script_time = date('U');
 $script_work_time = $minutesToGo * 60 - 5;
 
 while ((date('U') - $start_script_time) < $script_work_time) {
-    if (!($Game = Cache::lpop('erudit.games_ended'))) {
+    if (!($Game = Cache::lpop(Game::GAMES_ENDED_KEY))) {
         sleep(10);
         continue;
     }
@@ -76,7 +77,7 @@ function saveGameStats(&$Game, &$results)
 
     if (!DB::insertID()) {
         Cache::rpush(
-            'erudit.games_statistics_failed',
+            Game::STATS_FAILED,
             [
                 'query' => $INSERTSTATS,
                 'game' => $Game,

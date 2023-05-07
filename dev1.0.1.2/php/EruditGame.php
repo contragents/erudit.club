@@ -9,6 +9,7 @@ use Dadata\Hints;
 use Dadata\Players;
 use Dadata\Prizes;
 use Dadata\Stats;
+use \ORM;
 
 class Game
 {
@@ -18,6 +19,8 @@ class Game
     const BOT_ERRORS_KEY = 'erudit_bot_errors';
     const LOG_BOT_ERRORS_KEY = 'erudit_bot_log_errors';
     const MAX_ERRORS = 100;
+    const GAMES_ENDED_KEY = 'erudit.games_ended';
+    const STATS_FAILED = 'erudit.games_statistics_failed';
 
     public static $configStatic;
     public $serverName;
@@ -391,13 +394,23 @@ p1.cookie='$cookie'
             }
 
             if ($createIfNotExist) {
+                // todo удалить запрос после тестирования модели+ОРМ
                 $cookieUpdateQuery = "UPDATE players
                 SET 
                     common_id = id
                 WHERE 
                     cookie = '$cookie'";
 
-                if (DB::queryInsert($cookieUpdateQuery)) {
+                if (\PlayerModel::setParamMass(
+                    'common_id',
+                    new ORM('id'),
+                    [
+                        'field_name' => 'cookie',
+                        'condition' => '=',
+                        'value' => $cookie,
+                        'raw' => false
+                    ]
+                )/*DB::queryInsert($cookieUpdateQuery)*/) {
                     $userCreateQuery = "INSERT
                     INTO 
                         users 
@@ -701,7 +714,7 @@ p1.cookie='$cookie'
     {
         if ($this->currentGame) {
             if (isset($this->gameStatus['results']['winner']) && !isset($this->gameStatus['isGameEndedSaved'])) {
-                Cache::rpush('erudit.games_ended', $this->gameStatus);
+                Cache::rpush(self::GAMES_ENDED_KEY, $this->gameStatus);
                 //Сохраняем результаты игры в список завершенных
                 $this->gameStatus['isGameEndedSaved'] = true;
             }
@@ -1618,7 +1631,7 @@ LIMIT 40";
                     'old_desk' => $saveDesk,
                     'new_desk' => $cells,
                     'saved_words' => $saveWords,
-                    'new_played_words' => $this->gameStatus['wordsAccepted'],
+                    'new_played_words' => $new_fishki['words'] ?? [],
                 ]
             );
         } else {
@@ -1636,25 +1649,16 @@ LIMIT 40";
             )
         );
         //Сделать через отправку статуса
-
     }
 
     private function logSlov($words)
     {
         $res = '<br />';
         foreach ($words as $word => $price) {
-            if (true)//( isset($_SERVER['HTTP_ORIGIN']) && ($_SERVER['HTTP_ORIGIN'] != 'https://xn--d1aiwkc2d.club') )
-            {
-                $res .= " <a href=\"#\" onclick=\"event.preventDefault(); openWindowGlobal('" . urlencode(
-                        $word
-                    ) . "').then((data1) => { var openWindow = window.open('about:blank', 'Слово','location=no');setTimeout(function () {openWindow.document.body.innerHTML = data1;} , 1000) });\">$word</a>-$price&nbsp;";
-            } else {
-                $res .= " <a href=\"https://gufo.me/search?term=" . urlencode(
-                        $word
-                    ) . "\" target=\"_blank\">$word</a>-$price&nbsp;";
-            }
+            $res .= " <a href=\"#\" onclick=\"event.preventDefault(); openWindowGlobal('" . urlencode($word)
+                . "').then((data1) => { var openWindow = window.open('about:blank', 'Слово','location=no');setTimeout(function () {openWindow.document.body.innerHTML = data1;} , 1000) });\">$word</a>-$price&nbsp;";
         }
-        //gufo.me нахуй
+
         return $res;
     }
 

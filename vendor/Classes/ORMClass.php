@@ -2,6 +2,13 @@
     /** Класс ORM для работы с MariaDB */
 class ORM
 {
+    public $rawExpression;
+
+    public function __construct($expression)
+    {
+        $this->rawExpression = $expression;
+    }
+
     /**
      * Use ORM::set() as next constructor element
      * @param $tblName
@@ -13,18 +20,34 @@ class ORM
     }
 
     /**
-     * @param array $fieldsvals - ['field'=>,'value'=>,'raw'=>] or [['field'=>,'value'=>,'raw'=>],..]
+     * @param array $fieldsvals - ['field'=>,'value'=>,'raw'=>] or [['field'=>,'value'=>,'raw'=>],['field'=>,'value'=>,'raw'=>]..]
      * @return string
      */
     public static function set(array $fieldsvals)
     {
         if (!isset($fieldsvals[0])) {
-            return " SET {$fieldsvals['field']} = " . (isset($fieldsvals['raw']) ? $fieldsvals['value'] : "'{$fieldsvals['value']}'") . ' ';
+            return " SET {$fieldsvals['field']} = "
+                . (
+                $fieldsvals['value'] instanceof ORM
+                    ? $fieldsvals['value']->rawExpression
+                    : ($fieldsvals['raw'] ?? false
+                    ? $fieldsvals['value']
+                    : "'{$fieldsvals['value']}'")
+                )
+                . ' ';
         }
 
         $fields = [];
         foreach ($fieldsvals as $fv) {
-            $fields[] = " {$fv['field']} = " . (isset($fv['raw']) ? $fv['value'] : "'{$fv['value']}'") . ' ';
+            $fields[] = " {$fv['field']} = "
+                . (
+                $fv['value'] instanceof ORM
+                    ? $fv['value']->rawExpression
+                    : ($fv['raw'] ?? false
+                    ? $fv['value']
+                    : "'{$fv['value']}'")
+                )
+                . ' ';
         }
 
         return ' SET ' . implode(',', $fields);
