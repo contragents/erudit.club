@@ -134,6 +134,11 @@ class ORM
         return " INNER JOIN $tableName ";
     }
 
+    public static function leftJoin($tableName): string
+    {
+        return " LEFT JOIN $tableName ";
+    }
+
     public static function on($fieldName, $cond, $value, $isRaw = false)
     {
         return " ON ($fieldName $cond " . ($isRaw ? $value : "'$value'") . ') ';

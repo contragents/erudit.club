@@ -2,7 +2,7 @@
 
 namespace Erudit;
 
-use Dadata\Cache;
+use \Cache;
 use Dadata\ComplainModel;
 use Dadata\DB;
 use Dadata\Hints;
@@ -10,6 +10,8 @@ use Dadata\Players;
 use Dadata\Prizes;
 use Dadata\Stats;
 use \ORM;
+use PlayerModel;
+use UserModel;
 
 class Game
 {
@@ -377,6 +379,7 @@ class Game
             return $commonID;
         }
 
+        // todo delete after model
         $findIDQuery = "SELECT p1.common_id AS cid1, p2.common_id AS cid2 
 FROM players p1
 LEFT JOIN players p2
@@ -386,6 +389,13 @@ p2.common_id IS NOT NULL
 WHERE 
 p1.cookie='$cookie'
         LIMIT 1";
+
+        $findIDQuery = ORM::select(['p1.common_id AS cid1', 'p2.common_id AS cid2'], PlayerModel::TABLE_NAME . ' p1')
+            . ORM::leftJoin(PlayerModel::TABLE_NAME . ' p1')
+            . ORM::on('p1.user_id', '=', 'p2.user_id', true)
+            . ORM::andWhere('p2.common_id', 'IS', 'NOT NULL', true)
+            . ORM::where('p1.cookie', '=', $cookie)
+            . ORM::limit(1);
 
         $userIDArr = DB::queryArray($findIDQuery);
         if ($userIDArr) {
@@ -401,7 +411,7 @@ p1.cookie='$cookie'
                 WHERE 
                     cookie = '$cookie'";
 
-                if (\PlayerModel::setParamMass(
+                if (PlayerModel::setParamMass(
                     'common_id',
                     new ORM('id'),
                     [
@@ -410,19 +420,31 @@ p1.cookie='$cookie'
                         'value' => $cookie,
                         'raw' => false
                     ]
-                )/*DB::queryInsert($cookieUpdateQuery)*/) {
+                )/* todo remove after model DB::queryInsert($cookieUpdateQuery)*/) {
+                    // todo Убрать запрос после теста модели
                     $userCreateQuery = "INSERT
                     INTO 
                         users 
                     SET 
                         id = (SELECT common_id FROM players WHERE cookie = '$cookie' LIMIT 1)";
 
-                    if (DB::queryInsert($userCreateQuery)) {
+                    if (UserModel::add(
+                        [
+                            'id' => new ORM(
+                                '('
+                                . ORM::select(['common_id'], PlayerModel::TABLE_NAME)
+                                . ORM::where('cookie', '=', $cookie)
+                                . ORM::limit(1)
+                                . ')'
+                            )
+                        ]
+                    ) /* todo remove after model DB::queryInsert($userCreateQuery)*/) {
                         return $this->getPlayerID($cookie);
                     }
                 }
             }
         } elseif ($createIfNotExist) {
+            // todo remove after model
             $cookieInsertQuery = "INSERT 
                 INTO 
                     players
@@ -430,7 +452,10 @@ p1.cookie='$cookie'
                     cookie = '$cookie',
                     user_id = conv(substring(md5('$cookie'),1,16),16,10)";
 
-            if (DB::queryInsert($cookieInsertQuery)) {
+            if (PlayerModel::add(
+                ['cookie' => $cookie, 'user_id' => new ORM("conv(substring(md5('$cookie'),1,16),16,10)")]
+            )
+                /* todo remove after model DB::queryInsert($cookieInsertQuery)*/) {
                 return $this->getPlayerID($cookie, 'createCommonID');
             }
         }
@@ -904,18 +929,25 @@ LIMIT 40";
     private function getCommonID($cookie = false, $userID = false)
     {
         if ($cookie) {
-            $commonIDQuery = "SELECT common_id FROM players WHERE cookie = '$cookie' LIMIT 1";
-            if ($res = DB::queryValue($commonIDQuery)) {
+            // todo remove after model
+            //$commonIDQuery = "SELECT common_id FROM players WHERE cookie = '$cookie' LIMIT 1";
+            //$res = DB::queryValue($commonIDQuery);
+            $res = PlayerModel::getCommonIdFromCookie($cookie);
+            if ($res) {
                 return $res;
             }
         }
 
         if ($userID) {
-            $commonIDQuery = "SELECT common_id FROM players 
+            // todo remove after model
+            /*$commonIDQuery = "SELECT common_id FROM players
                                 WHERE user_id = $userID
                                 AND common_id IS NOT NULL 
-                                LIMIT 1";
-            if ($res = DB::queryValue($commonIDQuery)) {
+                                LIMIT 1";*/
+            //$res = DB::queryValue($commonIDQuery);
+
+            $res=PlayerModel::getCommonIdFromUserId($userID);
+            if ($res) {
                 return $res;
             }
         }
@@ -1360,8 +1392,7 @@ LIMIT 40";
 
             if (
                 (
-                    $this->p->redis
-                        ->hincrby('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1)
+                    Cache::hincrby('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1)
                     ==
                     1
                 )
@@ -2250,7 +2281,7 @@ LIMIT 40";
             //Вернули статус начатой игры без обновления статусов в кеше
         }
 
-        return (new Queue($this->User, $this, $this->p, $_POST))->doSomethingWithThisStuff(
+        return (new Queue($this->User, $this, $_POST))->doSomethingWithThisStuff(
             (isset($_GET['lang']) && $_GET['lang'] == 'EN') ? $_GET['lang'] : ''
         );
     }
@@ -2260,12 +2291,11 @@ LIMIT 40";
         $gameSubState = $this->gameStatus['invite'];
 
         if ($this->gameStatus['invite'] == 'newGameStarting') {
-            //ini_set("display_errors", 1); error_reporting(E_ALL);
             $gameSubState .= rand(1, 100);
             $arr['gameSubState'] = $gameSubState;
             $arr['inviteStatus'] = 'newGameStarting';
 
-            (new Queue($this->User, $this, $this->p, ['lang' => ($this->gameStatus['lang'] == 'EN' ? 'EN' : '')]))
+            (new Queue($this->User, $this, ['lang' => ($this->gameStatus['lang'] == 'EN' ? 'EN' : '')]))
                 ->storePlayersToQueue($this->User, 'invite');
 
             $this->exitGame($this->numUser);

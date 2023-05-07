@@ -9,12 +9,18 @@ class BaseModel
     const UPDATED_AT_FIELD = 'updated_at';
     const CURRENT_TIMESTAMP = 'CURRENT_TIMESTAMP';
 
-    public static function add(array $fields)
+    public static function add(array $fieldsVals)
     {
-        $query = ORM::insert(static::TABLE_NAME)
-            . ORM::insertFields(array_keys($fields))
-            . ORM::rawValues(array_map(fn($value) => "'" . DB::escapeString($value) . "'", $fields))
-            . ORM::ignore();
+        $query = ORM::insert(static::TABLE_NAME, 'IGNORE')
+            . ORM::insertFields(array_keys($fieldsVals))
+            . ORM::rawValues(
+                array_map(
+                    fn($value) => $value instanceof ORM
+                        ? $value->rawExpression
+                        : ("'" . DB::escapeString($value) . "'"),
+                    $fieldsVals
+                )
+            );
 
         if (DB::queryInsert($query)) {
             return DB::insertID();
@@ -45,12 +51,12 @@ class BaseModel
 
     /**
      * Sets field value for all table
-     * @param $field
-     * @param $value
+     * @param string $field
+     * @param mixed $value raw value or ORM Expression
      * @param array $where = []
      * @return false|int
      */
-    public static function setParamMass($field, $value, array $where = [])
+    public static function setParamMass(string $field, $value, array $where = [])
     {
         if (is_array($field) && is_array($value)) {
             $setValues = array_map(

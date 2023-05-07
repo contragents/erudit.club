@@ -40,9 +40,9 @@ game_data = compress('" . DB::escapeString(serialize($Game)) . "')";
         foreach ($Game['users'] as $num => $player) {
             $common_id = $player['common_id'];
             $user_id = isset($player['userID'])
-                ? hash_str_2_int($player['userID'])
+                ? Game::hash_str_2_int($player['userID'])
                 : 0;
-            $intCookie = hash_str_2_int($player['ID']);
+            $intCookie = Game::hash_str_2_int($player['ID']);
 
             $INSERTPLAYER = "INSERT INTO game_players
 SET 
@@ -141,7 +141,7 @@ function saveRatings(&$players)
                         , user_id = " .
             ($player['userID']
                 ? $player['userID']
-                : hash_str_2_int($player['found_cookie'])) .
+                : Game::hash_str_2_int($player['found_cookie'])) .
             " WHERE 
                 cookie = '{$player['cookie']}'
                 OR
@@ -195,7 +195,7 @@ function addCookie(&$player)
                     cookie='{$player['cookie']}',
                     user_id = " . ($player['userID']
             ? $player['userID']
-            : hash_str_2_int($player['cookie'])) . ",
+            : Game::hash_str_2_int($player['cookie'])) . ",
                     date_registered=UNIX_TIMESTAMP(),
                     first_played = UNIX_TIMESTAMP(),
                     rating={$player['rating']},
@@ -279,7 +279,7 @@ function getRatings(&$players, &$gameStatus)
                 $players[$num]['games_played'] = 1;
             }
         } else {
-            $players[$num]['user_id'] = hash_str_2_int($player['cookie']);
+            $players[$num]['user_id'] = Game::hash_str_2_int($player['cookie']);
             $QUERY = $SELECTRATING . $player['cookie'] . "'";
 
             $sel = DB::queryArray($QUERY)[0];
@@ -326,7 +326,7 @@ function getRanks(&$Game)
     $winner['score'] = $Game['users'][$Game[$winner['cookie']]]['score'];
     $winner['isActive'] = true;
     $winner['userID'] = isset($Game['users'][$Game[$winner['cookie']]]['userID'])
-        ? hash_str_2_int($Game['users'][$Game[$winner['cookie']]]['userID'])
+        ? Game::hash_str_2_int($Game['users'][$Game[$winner['cookie']]]['userID'])
         : false;
 
     $lostPlayers = [];
@@ -338,7 +338,7 @@ function getRanks(&$Game)
             ? true
             : false);
         $lostPlayers[$num]['userID'] = isset($Game['users'][$Game[$cookie]]['userID'])
-            ? hash_str_2_int($Game['users'][$Game[$cookie]]['userID'])
+            ? Game::hash_str_2_int($Game['users'][$Game[$cookie]]['userID'])
             : false;
     }
 
