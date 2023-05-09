@@ -1,5 +1,6 @@
 <?php
-    /** Класс ORM для работы с MariaDB */
+
+/** Класс ORM для работы с MariaDB */
 class ORM
 {
     public $rawExpression;
@@ -31,8 +32,8 @@ class ORM
                 $fieldsvals['value'] instanceof ORM
                     ? $fieldsvals['value']->rawExpression
                     : ($fieldsvals['raw'] ?? false
-                    ? $fieldsvals['value']
-                    : "'{$fieldsvals['value']}'")
+                        ? $fieldsvals['value']
+                        : "'{$fieldsvals['value']}'")
                 )
                 . ' ';
         }
@@ -44,8 +45,8 @@ class ORM
                 $fv['value'] instanceof ORM
                     ? $fv['value']->rawExpression
                     : ($fv['raw'] ?? false
-                    ? $fv['value']
-                    : "'{$fv['value']}'")
+                        ? $fv['value']
+                        : "'{$fv['value']}'")
                 )
                 . ' ';
         }
@@ -68,11 +69,13 @@ class ORM
         return " OR $odin ";
     }
 
-    public static function andGrBegin($odin = '') {
+    public static function andGrBegin($odin = '')
+    {
         return " AND ( $odin ";
     }
 
-    public static function grEnd() {
+    public static function grEnd()
+    {
         return " ) ";
     }
 
@@ -91,12 +94,15 @@ class ORM
         return " VALUES (" . implode(", ", $values) . ") ";
     }
 
-    public static function onDupRaw(array $fieldsVals, $conflictKeys=[])
+    public static function onDupRaw(array $fieldsVals, $conflictKeys = [])
     {
         if (is_array($fieldsVals[0])) {
-            $expressions = array_map(function ($expr) {
-                return '`' . $expr[0] . '`' . ' = ' . $expr[1];
-            }, $fieldsVals);
+            $expressions = array_map(
+                function ($expr) {
+                    return '`' . $expr[0] . '`' . ' = ' . $expr[1];
+                },
+                $fieldsVals
+            );
         } else {
             $expressions = ['`' . $fieldsVals[0] . '`' . ' = ' . $fieldsVals[1]];
         }
@@ -144,7 +150,13 @@ class ORM
         return " ON ($fieldName $cond " . ($isRaw ? $value : "'$value'") . ') ';
     }
 
-    public static function unixtime($value){
-        return "FROM_UNIXTIME({$value})";
+    public static function unixtime($value)
+    {
+        return " FROM_UNIXTIME({$value}) ";
+    }
+
+    public static function groupBy(array $conditions)
+    {
+        return ' GROUP BY ' . implode(', ', $conditions) . ' ';
     }
 }

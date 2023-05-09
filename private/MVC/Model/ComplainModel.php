@@ -1,7 +1,5 @@
 <?php
 
-namespace Dadata;
-
 class ComplainModel
 {
     const TABLE_NAME = 'complains';

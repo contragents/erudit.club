@@ -2,8 +2,9 @@
 
 namespace Erudit;
 
+use AvatarModel;
 use \Cache;
-use Dadata\ComplainModel;
+use ComplainModel;
 use Dadata\DB;
 use Dadata\Hints;
 use Dadata\Players;
@@ -23,6 +24,11 @@ class Game
     const MAX_ERRORS = 100;
     const GAMES_ENDED_KEY = 'erudit.games_ended';
     const STATS_FAILED = 'erudit.games_statistics_failed';
+    const NUM_RATING_PLAYERS_KEY = 'erudit.num_rating_players';
+    const GET_GAME_KEY = 'erudit.get_game_';
+
+    const OCHKI_VARIANTS = [200 => 0, 300 => 0];
+    const TIME_VARIANTS = [60 => 0, 90 => 0, 120 => 0];
 
     public static $configStatic;
     public $serverName;
@@ -102,7 +108,7 @@ class Game
 
         $this->User = $this->validateCookie($_COOKIE['erudit_user_session_ID']);
 
-        $this->currentGame = Cache::get('erudit.get_game_' . $this->User);
+        $this->currentGame = Cache::get(self::GET_GAME_KEY . $this->User);
 
         if (!$this->currentGame) {
             $this->currentGame = false;
@@ -206,7 +212,7 @@ class Game
 
         //Далее логика, которая возможно пригодится в будущем для тонкой настройки
 
-        if ($this->currentGame = Cache::get('erudit.get_game_' . $incomingCookie)) {
+        if ($this->currentGame = Cache::get(self::GET_GAME_KEY . $incomingCookie)) {
             return $incomingCookie;
         }
 
@@ -217,15 +223,15 @@ class Game
                 $this->currentGame = false;
                 return $incomingCookie;
             } else {
-                Cache::setex('erudit.get_game_' . $sintCookie, $this->activityTimeout, $incomingCookie);
-                if (!$this->currentGame = Cache::get('erudit.get_game_' . $sintCookie)) {
+                Cache::setex(self::GET_GAME_KEY . $sintCookie, $this->activityTimeout, $incomingCookie);
+                if (!$this->currentGame = Cache::get(self::GET_GAME_KEY . $sintCookie)) {
                     $this->currentGame = false;
                 }
 
                 return $sintCookie;
             }
         } else {
-            Cache::setex('erudit.get_game_' . $sintCookie, $this->activityTimeout, $incomingCookie);
+            Cache::setex(self::GET_GAME_KEY . $sintCookie, $this->activityTimeout, $incomingCookie);
             $this->currentGame = false;
 
             return $incomingCookie;
@@ -280,14 +286,8 @@ class Game
             return $this->config['botNames'][substr($user['ID'], (strlen($user['ID']) == 7 ? -1 : -2))];
         }
 
-        $commonId = $this->getCommonID($user['ID']);
-        if (
-        $commonIDName = DB::queryValue(
-            "SELECT name 
-                    FROM users 
-                    WHERE id=$commonId 
-                    LIMIT 1"
-        )) {
+        $commonId = PlayerModel::getCommonID($user['ID']);
+        if ($commonId && ($commonIDName = UserModel::getNameByCommonId($commonId))) {
             return $commonIDName;
         }
 
@@ -297,14 +297,7 @@ class Game
             $idSource = $user['ID'];
         }
 
-        if (
-        $res = DB::queryValue(
-            "SELECT name FROM player_names 
-            WHERE
-            some_id=" . self::hash_str_2_int($idSource)
-            . " LIMIT 1"
-        )
-        ) {
+        if ($res = PlayerModel::getNameBySomeId($idSource)) {
             return $res;
         } else {
             $sintName = isset($user['userID'])
@@ -341,126 +334,13 @@ class Game
                 if ($this->gameStatus['lngClass']::$bukvy[$letterNumber][3] <> $soglas) {
                     $letterName .= $this->gameStatus['lngClass']::$bukvy[$letterNumber][0];
                     $soglas = $this->gameStatus['lngClass']::$bukvy[$letterNumber][3];
+
                     continue;
                 }
             }
 
             return mb_strtoupper(mb_substr($letterName, 0, 1)) . mb_substr($letterName, 1);
         }
-    }
-
-    public function addUserAvatarUrl($url, $commonID)
-    {
-        if (!preg_match('/^https?:\/\//', $url)) {
-            return json_encode(
-                [
-                    'result' => 'error',
-                    'message' => 'Неверный формат URL! <br />Должно начинаться с <strong>http(s)://</strong>'
-                ]
-            );
-        }
-
-        $avatarUpdateQuery = "UPDATE users
-                SET 
-                    avatar_url = '" . DB::escapeString($url) . "'
-                WHERE 
-                    id = $commonID";
-
-        if (DB::queryInsert($avatarUpdateQuery)) {
-            return json_encode(['result' => 'saved', 'message' => 'Файл сохранен']);
-        } else {
-            return json_encode(['result' => 'saved', 'message' => 'Файл перезаписан']);
-        }
-    }
-
-    private function getPlayerID($cookie, $createIfNotExist = false)
-    {
-        if ($commonID = $this->getCommonID($cookie)) {
-            return $commonID;
-        }
-
-        // todo delete after model
-        $findIDQuery = "SELECT p1.common_id AS cid1, p2.common_id AS cid2 
-FROM players p1
-LEFT JOIN players p2
-ON p1.user_id = p2.user_id
-AND
-p2.common_id IS NOT NULL
-WHERE 
-p1.cookie='$cookie'
-        LIMIT 1";
-
-        $findIDQuery = ORM::select(['p1.common_id AS cid1', 'p2.common_id AS cid2'], PlayerModel::TABLE_NAME . ' p1')
-            . ORM::leftJoin(PlayerModel::TABLE_NAME . ' p1')
-            . ORM::on('p1.user_id', '=', 'p2.user_id', true)
-            . ORM::andWhere('p2.common_id', 'IS', 'NOT NULL', true)
-            . ORM::where('p1.cookie', '=', $cookie)
-            . ORM::limit(1);
-
-        $userIDArr = DB::queryArray($findIDQuery);
-        if ($userIDArr) {
-            if ($userIDArr[0]['cid2']) {
-                return $userIDArr[0]['cid2'];
-            }
-
-            if ($createIfNotExist) {
-                // todo удалить запрос после тестирования модели+ОРМ
-                $cookieUpdateQuery = "UPDATE players
-                SET 
-                    common_id = id
-                WHERE 
-                    cookie = '$cookie'";
-
-                if (PlayerModel::setParamMass(
-                    'common_id',
-                    new ORM('id'),
-                    [
-                        'field_name' => 'cookie',
-                        'condition' => '=',
-                        'value' => $cookie,
-                        'raw' => false
-                    ]
-                )/* todo remove after model DB::queryInsert($cookieUpdateQuery)*/) {
-                    // todo Убрать запрос после теста модели
-                    $userCreateQuery = "INSERT
-                    INTO 
-                        users 
-                    SET 
-                        id = (SELECT common_id FROM players WHERE cookie = '$cookie' LIMIT 1)";
-
-                    if (UserModel::add(
-                        [
-                            'id' => new ORM(
-                                '('
-                                . ORM::select(['common_id'], PlayerModel::TABLE_NAME)
-                                . ORM::where('cookie', '=', $cookie)
-                                . ORM::limit(1)
-                                . ')'
-                            )
-                        ]
-                    ) /* todo remove after model DB::queryInsert($userCreateQuery)*/) {
-                        return $this->getPlayerID($cookie);
-                    }
-                }
-            }
-        } elseif ($createIfNotExist) {
-            // todo remove after model
-            $cookieInsertQuery = "INSERT 
-                INTO 
-                    players
-                SET 
-                    cookie = '$cookie',
-                    user_id = conv(substring(md5('$cookie'),1,16),16,10)";
-
-            if (PlayerModel::add(
-                ['cookie' => $cookie, 'user_id' => new ORM("conv(substring(md5('$cookie'),1,16),16,10)")]
-            )
-                /* todo remove after model DB::queryInsert($cookieInsertQuery)*/) {
-                return $this->getPlayerID($cookie, 'createCommonID');
-            }
-        }
-
-        return false;
     }
 
     public function inviteNewGame()
@@ -485,21 +365,23 @@ p1.cookie='$cookie'
     public function playerCabinetInfo()
     {
         $message = [];
-        $playerID = $this->getPlayerID($this->User, 'createIfNotExist');
+        $playerID = PlayerModel::getPlayerID($this->User, true);
 
-        $getaDataFromUsersQuery = "SELECT * FROM users WHERE id = $playerID";
+        $userData = UserModel::getOne($playerID);
 
-        $userData = DB::queryArray($getaDataFromUsersQuery);
-        $message['url'] = $userData[0]['avatar_url'];
+        // todo remove after model test
+        //"SELECT * FROM users WHERE id = $playerID";
+        //$userData = DB::queryArray($getaDataFromUsersQuery);
+        $message['url'] = $userData['avatar_url'];
         if (!$message['url']) {
-            $message['url'] = $this->getDefaultAvatar($playerID);
+            $message['url'] = AvatarModel::getDefaultAvatar($playerID);
             $message['img_title'] = "Используется аватар по умолчанию";
         } else {
             $message['img_title'] = "Аватар по предоставленной ссылке";
         }
-        $message['name'] = $userData[0]['name'];
+        $message['name'] = $userData['name'];
         $message['common_id'] = $playerID;
-        $message['text'] = '';//"<span style=\"float:right;\">Параметры для редактирования ($playerID)</span>";
+        $message['text'] = '';
         $message['form'][] = [
             'prompt' => "Никнейм (id: $playerID)",
             'inputName' => 'name',
@@ -561,16 +443,8 @@ p1.cookie='$cookie'
         return $this->makeResponse(['message' => json_encode($message)]);
     }
 
-    private function getDefaultAvatar($playerID)
-    {
-        $maxImgId = 34768;
-        $imgId = $playerID % $maxImgId;
-        return DB::queryValue("SELECT concat(site,mini_url) FROM avatar_urls WHERE site_img_id >= $imgId LIMIT 1");
-    }
-
     private function genKeyForCommonID($ID)
     {
-        //ini_set("display_errors", 1); error_reporting(E_ALL);
         $messageToEncrypt = $ID;
         $secretKey = 'eruditforever';//$this->config['secret_key'];
         $method = 'AES-128-CBC';//$this->config['encrypt_method'];
@@ -586,8 +460,8 @@ p1.cookie='$cookie'
 
     public function mergeTheIDs($encryptedMessage, $commonID)
     {
-        $secretKey = 'eruditforever';//$this->config['secret_key'];
-        $method = 'AES-128-CBC';//$this->config['encrypt_method'];
+        $secretKey = 'eruditforever';
+        $method = 'AES-128-CBC';
         $iv = base64_decode('x/bazHpEqMpxpLfVWD9dhA==');
         $decrypted_message = openssl_decrypt($encryptedMessage, $method, $secretKey, 0, $iv);
 
@@ -600,13 +474,22 @@ p1.cookie='$cookie'
             );
         }
 
-        $commonIDSearchQuery = "SELECT id
+        // todo delete after model
+        /*$commonIDSearchQuery = "SELECT id
         FROM
         users
         WHERE
-        id = $decrypted_message;";
+        id = $decrypted_message;";*/
 
-        $oldCommonID = DB::queryValue($commonIDSearchQuery);
+        $oldCommonID = UserModel::getCustom(
+                'id',
+                '=',
+                $decrypted_message,
+                false,
+                false,
+                ['id']
+            )[0]['id'] ?? false;
+        // todo delete after model DB::queryValue($commonIDSearchQuery);
 
         if ($oldCommonID === false) {
             return json_encode(
@@ -617,14 +500,26 @@ p1.cookie='$cookie'
             );
         }
 
-        $mergeIDsQuery = "UPDATE
+        // todo delete after model
+        /*$mergeIDsQuery = "UPDATE
         players
         SET
         common_id = $oldCommonID
         WHERE
-        common_id = $commonID;";
+        common_id = $commonID;";*/
 
-        if (DB::queryInsert($mergeIDsQuery)) {
+        if (PlayerModel::setParamMass(
+            'common_id',
+            $oldCommonID,
+            [
+                'field_name' => 'common_id',
+                'condition' => '=',
+                'value' => $commonID,
+                'raw' => true
+            ]
+        )
+            /* todo delete after model DB::queryInsert($mergeIDsQuery)*/
+        ) {
             return json_encode(
                 [
                     'result' => 'save',
@@ -644,7 +539,7 @@ p1.cookie='$cookie'
     public function playersInfo()
     {
         $ratings = $this->getRatings();
-        $message = include('tpl/ratingsTableHeader.php');
+        $message = include(__DIR__ . '/tpl/ratingsTableHeader.php');
         if (!isset($this->gameStatus['users'])) {
             return $this->makeResponse(['message' => "Игра не начата"]);
         }
@@ -672,11 +567,12 @@ p1.cookie='$cookie'
                 $rating['inactive_percent'] = 'N/A';
                 $rating['top'] = '';
             }
+
             $rating['playerName'] = $this->getPlayerName($user);
-            $rating['playerAvatarUrl'] = $this->getAvatarUrl($user);
+            $rating['playerAvatarUrl'] = $this->getAvatarUrl($user['ID']);
             $rating['isActive'] = (!isset($user['lastActiveTime']) || !$user['isActive']) ? false : true;
 
-            $message .= include('tpl/ratingsTableRow.php');
+            $message .= include(__DIR__ . '/tpl/ratingsTableRow.php');
 
             $recImgs = '';
             $records = Prizes::playerCurrentRecords($user['ID'], $rating['playerName']);
@@ -700,31 +596,27 @@ p1.cookie='$cookie'
             }
 
             if ($user['ID'] == $this->User) {
-                $message .= include('tpl/ratingsTableNicknameFormRow.php');
+                $message .= include(__DIR__ . '/tpl/ratingsTableNicknameFormRow.php');
             }
 
             if ($recordsShown) {
-                $message .= include('tpl/ratingsTablePrizesRow.php');
+                $message .= include(__DIR__ . '/tpl/ratingsTablePrizesRow.php');
             }
         }
-        $message .= include('tpl/ratingsTableFooter.php');
+        $message .= include(__DIR__ . '/tpl/ratingsTableFooter.php');
 
         return $this->makeResponse(['message' => $message]);
     }
 
-    public function getAvatarUrl(&$user)
+    public function getAvatarUrl($cookie)
     {
-        $commonID = $this->getCommonID($user['ID']);
+        $commonID = PlayerModel::getCommonID($cookie);
+
         if ($commonID) {
-            $avatarUrl = DB::queryValue("SELECT avatar_url FROM users WHERE id = $commonID");
-            if ($avatarUrl) {
-                return $avatarUrl;
-            } else {
-                return $this->getDefaultAvatar($commonID);
-            }
+            return Players::getAvatarUrl($commonID);
         }
 
-        return '';//Тут добавить стандартный аватар из коллекции какойнибудь
+        return ''; // Тут добавить стандартный аватар из коллекции какойнибудь
     }
 
     public function __destruct()
@@ -732,7 +624,6 @@ p1.cookie='$cookie'
         if ($this->isStateLocked) {
             $this->unlock();
         }
-        return;
     }
 
     private function destruct()
@@ -774,10 +665,10 @@ p1.cookie='$cookie'
 
         $isSendSuccess = false;
         if (ComplainModel::add(
-            $this->getCommonID($this->User)
-                ?: $this->getPlayerID($this->User, true),
-            $this->getCommonID($this->gameStatus['users'][$toUser]['ID'])
-                ?: $this->getPlayerID($this->gameStatus['users'][$toUser]['ID'], true),
+            PlayerModel::getCommonID($this->User)
+                ?: PlayerModel::getPlayerID($this->User, true),
+            PlayerModel::getCommonID($this->gameStatus['users'][$toUser]['ID'])
+                ?: PlayerModel::getPlayerID($this->gameStatus['users'][$toUser]['ID'], true),
             $this->gameStatus['chatLog'] ?? []
         )) {
             $respMessage = '<span style="align-content: center;"><strong>Ваше обращение принято и будет рассмотрено модератором<br /><br /> В случае подтверждения к игроку будут применены санкции</strong></span>';
@@ -875,63 +766,9 @@ p1.cookie='$cookie'
         }
     }
 
-    public function getTopTable()
-    {
-        if (($topTableratings = Cache::get('erudit.rating_top_table_' . $this->gameStatus['lngClass']))) {
-            return $topTableratings;
-        }
-
-        $getTopTableQuery = "SELECT
-CASE 
-    WHEN pn.name IS NULL THEN SUBSTRING(MAX(cookie),1,6)
-    ELSE pn.name
-END AS name,
-MAX(cookie) as cookie,
-user_id,
-MAX(rating) as rating,
-MAX(games_played) as games_played,
-CASE 
-    WHEN MAX(win_percent) IS NULL THEN 0 
-    ELSE MAX(win_percent) 
-END as win_percent,
-avg(inactive_percent) as inactive_percent,
-(
-SELECT
-    CASE 
-        WHEN SUM(num) IS NULL THEN 1 
-        ELSE SUM(num)+1 
-    END
-FROM
-    (SELECT 1 as num 
-        FROM players
-            WHERE rating>ps.rating 
-            GROUP BY rating 
-    ) dd
-) as top
-FROM players ps
-LEFT JOIN player_names pn
-ON some_id = user_id
-WHERE rating >= 1800
-GROUP BY user_id
-ORDER BY top 
-LIMIT 40";
-
-        $topTableratings = DB::queryArray(getTopTableQuery);
-        Cache::setex(
-            'erudit.rating_top_table_' . $this->gameStatus['lngClass'],
-            round($this->cacheTimeout / 15),
-            $topTableratings
-        );
-
-        return $topTableratings;
-    }
-
     private function getCommonID($cookie = false, $userID = false)
     {
         if ($cookie) {
-            // todo remove after model
-            //$commonIDQuery = "SELECT common_id FROM players WHERE cookie = '$cookie' LIMIT 1";
-            //$res = DB::queryValue($commonIDQuery);
             $res = PlayerModel::getCommonIdFromCookie($cookie);
             if ($res) {
                 return $res;
@@ -939,14 +776,7 @@ LIMIT 40";
         }
 
         if ($userID) {
-            // todo remove after model
-            /*$commonIDQuery = "SELECT common_id FROM players
-                                WHERE user_id = $userID
-                                AND common_id IS NOT NULL 
-                                LIMIT 1";*/
-            //$res = DB::queryValue($commonIDQuery);
-
-            $res=PlayerModel::getCommonIdFromUserId($userID);
+            $res = PlayerModel::getCommonIdFromUserId($userID);
             if ($res) {
                 return $res;
             }
@@ -975,67 +805,22 @@ LIMIT 40";
     {
         $cacheValues = [];
 
-        $ratingQuery = 'SELECT 
-        max(cookie) as cookie, 
-        max(rating) as rating, 
-        max(games_played) as games_played, 
-        case when max(win_percent) is null then 0 else max(win_percent) END as win_percent,
-        avg(inactive_percent) as inactive_percent,
-        case 
-        when max(rating)>=1700 
-        then (
-        select 
-        case when sum(num) IS NULL THEN 1 ELSE sum(num)+1 END
-        from 
-        (select 1 as num from players where rating>ps.rating group by user_id, rating) dd
-        ) 
-        else \'Не в ТОПе\' 
-        end as top
-        FROM players ps
-        WHERE FALSE ';
-
-        if ($commonID) {
-            $ratingQuery .= " OR user_id in (
-                SELECT user_id FROM players WHERE common_id = $commonID
-                AND user_id != 15284527576400310462
-            ) ";
-            $cacheValues[] = $commonID;
-        }
-
-        if ($cookie) {
-            $ratingQuery .= " OR cookie = '$cookie' ";
-            $cacheValues[] = $cookie;
-        }
-
-        if ($userID) {
-            $ratingQuery .= " OR user_id = $userID ";
-            $cacheValues[] = $userID;
-        }
-
-        $ratingQuery .= '  GROUP BY gruping LIMIT 1';
-        //print $ratingQuery;
-        if (!($ratingInfo = DB::queryArray($ratingQuery))) {
+        if (!($ratingInfo = PlayerModel::getRating($commonID, $cookie, $userID))) {
             return false;
         }
 
         if ($ratingInfo[0]['rating'] >= 1700) {
-            $topQuery = "select 
-                    case when sum(num) IS NULL THEN 1 ELSE sum(num)+1 END as top
-                    from 
-                    (select 1 as num from players where rating>{$ratingInfo[0]['rating']} group by user_id, rating) dd
-            ";
-            $top = DB::queryValue($topQuery);
-            $ratingInfo[0]['top'] = $top;
-            //Коррекция для ТОП
+            // Коррекция для ТОП
+            $ratingInfo[0]['top'] = PlayerModel::getTop($ratingInfo[0]['rating']);
         }
 
-        foreach ($cacheValues as $value) {
-            Cache::setex(
-                'erudit.rating_cache_' . $value,
-                round($this->cacheTimeout / 15),
-                $ratingInfo
-            );
-        }
+        $cacheValues = array_merge(
+            $commonID ? [$commonID] : [],
+            $cookie ? [$cookie] : [],
+            $userID ? [$userID] : []
+        );
+
+        PlayerModel::saveRatingToCache($cacheValues, $ratingInfo);
 
         return $ratingInfo;
     }
@@ -1068,7 +853,7 @@ LIMIT 40";
         }
 
         if (!$userCookie) {
-            if (!($ratings[$this->User] = Cache::get('erudit.rating_cache_' . $this->User))) {
+            if (!($ratings[$this->User] = PlayerModel::getRatingFromCache($this->User))) {
                 $ratings[$this->User] = $this->getRatingWithCommonID(
                     $this->getCommonID(
                         $this->User,
@@ -1103,9 +888,7 @@ LIMIT 40";
             }
 
             return $this->normalizeRatings($ratings);
-        }
-
-        if (is_array($userCookie)) {
+        } else {
             $ratings = $this->getRatingWithCommonID(
                 $this->getCommonID(
                     $userCookie['cookie'],
@@ -1117,31 +900,6 @@ LIMIT 40";
 
             return count($ratings ?: []) ? $ratings[0] : false;
         }
-
-        if (!($ratings[$userCookie] = Cache::get('erudit.rating_cache_' . $userCookie))) {
-            $ratings[$userCookie] = $this->getRatingWithCommonID(
-                $this->getCommonID(
-                    $userCookie
-                ),
-                $userCookie,
-                false
-            );
-        }
-
-        if ($userCookie && !$ratings[$userCookie]) {
-            $ratings[$userCookie] = [
-                0 => [
-                    'cookie' => $userCookie,
-                    'rating' => 1700,
-                    'games_played' => 0,
-                    'win_percent' => 0,
-                    'inactive_percent' => 'N/A',
-                    'top' => 'Не в ТОПе'
-                ]
-            ];
-        }
-
-        return $this->normalizeRatings($ratings);
     }
 
     private function statusComments_startGame()
@@ -1224,7 +982,6 @@ LIMIT 40";
 
     public function changeFishki($fishkiToChange)
     {
-        //print_r($fishkiToChange); exit();
         if ($this->getUserStatus() != 'myTurn') {
             return $this->checkGameStatus();
         }
@@ -1234,12 +991,10 @@ LIMIT 40";
 
             foreach ($fishkiToChange as $newFishka => $on) {
                 $fishkaCode = explode('_', $newFishka);
-                //print_r($fishkaCode); exit();
                 $fishkaCode = $fishkaCode[2];
 
                 foreach ($this->gameStatus['users'][$this->numUser]['fishki'] as $num => $code) {
                     if ($fishkaCode == $code) {
-                        //print_r($fishkaCode); exit();
                         unset($this->gameStatus['users'][$this->numUser]['fishki'][$num]);
 
                         array_push($this->gameStatus['bankFishki'], $fishkaCode);
@@ -1261,6 +1016,7 @@ LIMIT 40";
         }
         $this->gameStatus['users'][$this->numUser]['lostTurns']++;
         //Увеличили число пропущенных подряд ходов
+
         if ($this->gameStatus['users'][$this->numUser]['lostTurns'] >= 3) {
             $this->storeGameResults($this->lost3TurnsWinner($this->numUser));
         } else {
@@ -1284,7 +1040,7 @@ LIMIT 40";
         }
 
         $this->gameStatus['results'] = $results;
-        //Новая версия
+        // Новая версия
 
         foreach ($this->gameStatus['users'] as $num => $user) {
             $this->updateUserStatus('gameResults', $user['ID']);
@@ -1314,7 +1070,7 @@ LIMIT 40";
         if ($user == false) {
             $user = $this->User;
         }
-        //print_r($user);
+
         if (isset($this->gameStatus[$user])) {
             $this->gameStatus['users'][$this->gameStatus[$user]]['status'] = $newStatus;
             //Обновили статус по новой версии
@@ -1391,15 +1147,9 @@ LIMIT 40";
             ) ?: 0;
 
             if (
-                (
-                    Cache::hincrby('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1)
-                    ==
-                    1
-                )
+                Cache::hincrby('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1) === 1
                 ||
-                (
-                    (date('U') - $lockTime) > $this->turnDeltaTime
-                )
+                (date('U') - $lockTime) > $this->turnDeltaTime
             ) {
                 // Обновляем время блокировки
                 Cache::hset(
@@ -1419,6 +1169,7 @@ LIMIT 40";
 
             usleep(100000);
         }
+
         //Ждали слишком долго - возвращаем десинхрон
         return false;
     }
@@ -1714,12 +1465,13 @@ LIMIT 40";
                 $numActive++;
             }
         }
+
         return $numActive;
     }
 
     private function onlinePlayers()
     {
-        if (!($rangedOnlinePlayers = Cache::get('erudit.num_rating_players'))) {
+        if (!($rangedOnlinePlayers = Cache::get(self::NUM_RATING_PLAYERS_KEY))) {
             $lastGame = Cache::get('erudit.num_games');
             $players = [];
             for ($i = $lastGame; $i > ($lastGame - 50); $i--) {
@@ -1736,7 +1488,19 @@ LIMIT 40";
                     }
                 }
             }
-            $rangedOnlinePlayers = [1900 => 0, 2000 => 0, 2100 => 0, 2200 => 0, 2300 => 0, 2400 => 0];
+
+            $rangedOnlinePlayers = [
+                1900 => 0,
+                2000 => 0,
+                2100 => 0,
+                2200 => 0,
+                2300 => 0,
+                2400 => 0,
+                2500 => 0,
+                2600 => 0,
+                2700 => 0
+            ];
+
             foreach ($players as $num => $player) {
                 if (($rating = $this->getRatings($player))) {
                     $players[$num]['rating'] = $rating;
@@ -1772,14 +1536,14 @@ LIMIT 40";
             }
 
             Cache::setex(
-                'erudit.num_rating_players',
+                self::NUM_RATING_PLAYERS_KEY,
                 $this->ratingsCacheTimeout,
                 $rangedOnlinePlayers
             );
         }
 
         if ($rangedOnlinePlayers[1900]) {
-            $cnt = Cache::hlen('erudit.rating_waiters');
+            $cnt = Cache::hlen(Queue::QUEUES['erudit.rating_waiters']);
             if ($cnt < ($rangedOnlinePlayers[1900] / 2)) {
                 $thisUserRating = $this->getRatings(['cookie' => $this->User, 'userID' => false]);
                 if (($thisUserRating !== false) && ($thisUserRating['rating'] > 1750)) {
@@ -1795,11 +1559,11 @@ LIMIT 40";
 
     private function isUserInInviteQueue()
     {
-        if (Cache::hget("erudit.inviteplayers_waiters", $this->User)) {
+        if (Cache::hget(Queue::QUEUES['erudit.inviteplayers_waiters'], $this->User)) {
             return true;
         }
 
-        if (Cache::hget("erudit.inviteENplayers_waiters", $this->User)) {
+        if (Cache::hget(Queue::QUEUES['erudit.inviteENplayers_waiters'], $this->User)) {
             return true;
         }
 
@@ -1818,7 +1582,6 @@ LIMIT 40";
             }
         }
 
-
         if ($this->activeGameUsers() == 1) {
             if (!isset($this->gameStatus['results'])) {
                 $this->storeGameResults($this->User);
@@ -1828,7 +1591,6 @@ LIMIT 40";
                 $this->addToLog('остался в игре один! Начните новую игру', $this->numUser);
             }
         }
-
 
         if ($this->getUserStatus() == 'gameResults') {
             if (!(($desk = Cache::get(
@@ -1858,7 +1620,6 @@ LIMIT 40";
                 }
             }
         }
-
 
         //Поставим коррекцию времени начала хода для учета периодичности запросов пользователей
         if (
@@ -2060,7 +1821,7 @@ LIMIT 40";
             $numuser = $this->numUser;
         }
 
-        Cache::del('erudit.get_game_' . $this->gameStatus['users'][$numuser]['ID']);
+        Cache::del(self::GET_GAME_KEY . $this->gameStatus['users'][$numuser]['ID']);
         //Удалили указатель на текущую игру для пользователя
 
         $this->gameStatus['users'][$numuser]['isActive'] = false;
@@ -2085,7 +1846,7 @@ LIMIT 40";
             Cache::hdel($queue, $this->User);
         }
 
-        Cache::del('erudit.get_game_' . $this->User);
+        Cache::del(self::GET_GAME_KEY . $this->User);
         //Удалили указатель на текущую игру для пользователя
 
         if ($this->currentGame && ($_POST['gameState'] == 'initGame')) {
@@ -2102,7 +1863,7 @@ LIMIT 40";
         return $this->makeResponse(['gameState' => 'chooseGame', 'gameSubState' => 'choosing']);
     }
 
-    private function makeWishWinscore()
+    private function makeWishWinscore(): int
     {
         $korzinaGolosov = [];
         foreach ($this->gameStatus['users'] as $user) {
@@ -2116,10 +1877,9 @@ LIMIT 40";
         }
 
         $srednee = array_sum($korzinaGolosov) / count($korzinaGolosov);
+        $variants = [];
 
-        $variants = [200 => 0, 300 => 0];
-
-        foreach ($variants as $ochki => $delta) {
+        foreach (self::OCHKI_VARIANTS as $ochki => $delta) {
             $variants[$ochki] = abs($srednee - rand($ochki - 30, $ochki + 10));
         }
 
@@ -2129,9 +1889,11 @@ LIMIT 40";
             return $ochki;
         }
         //Голосование проведено
+
+        return 300;
     }
 
-    private function makeWishTime()
+    private function makeWishTime(): int
     {
         $korzinaGolosov = [];
         foreach ($this->gameStatus['users'] as $user) {
@@ -2146,19 +1908,20 @@ LIMIT 40";
 
         $srednee = array_sum($korzinaGolosov) / count($korzinaGolosov);
 
-        $variants = [60 => 0, 90 => 0, 120 => 0];
+        $variants = [];
 
-        foreach ($variants as $vremya => $delta) {
+        foreach (self::TIME_VARIANTS as $vremya => $delta) {
             $variants[$vremya] = abs($srednee - $vremya);
         }
 
         asort($variants);
-        //print_r($variants);
 
         foreach ($variants as $vremya => $delta) {
             return $vremya;
         }
         //Голосование проведено
+
+        return 90;
     }
 
     public function gameStarted($statusUpdateNeeded = false)
@@ -2175,8 +1938,7 @@ LIMIT 40";
             $this->gameStatus['firstTurnUser'] = $firstTurnUser;
             $this->gameStatus['bankFishki'] = $this->gameStatus['lngClass']::generateBankFishki();
             $this->gameStatus['wordsAccepted'] = [];
-            $this->gameStatus['winScore'] = $this->makeWishWinscore(
-            );//$this->winScore;//300;//( (rand(1,12) % 2) ? 200 : 300);
+            $this->gameStatus['winScore'] = $this->makeWishWinscore();
             $this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] = false;
             $this->updateUserStatus('myTurn', $this->currentGameUsers[$firstTurnUser]);
             //Назначили ход случайному юзеру
@@ -2199,7 +1961,7 @@ LIMIT 40";
 
                 $userRating = $this->getRatings($user['ID']);
                 $this->gameStatus['users'][$num]['rating'] = $userRating ? $userRating[0]['rating'] : 'new_player';
-                $this->gameStatus['users'][$num]['common_id'] = $this->getPlayerID($user['ID'], 'createCommonID');
+                $this->gameStatus['users'][$num]['common_id'] = PlayerModel::getPlayerID($user['ID'], true);
                 //Прописали рейтинг и common_id игрока в статусе игры - только для games_statistic.php
             }
             $this->addToLog(
@@ -2214,64 +1976,6 @@ LIMIT 40";
                 'usersInfo' => $this->currentGameUsers,//хз зачем этот ключ - нигде не используется
             ]
         );
-    }
-
-    private function userLastActivity($user = false)
-    {
-        $lastAct = Cache::get('erudit.user_' . ($user ? $user : $this->User) . '_last_activity');
-        if (!$lastAct) {
-            return false;
-        }
-        //Если кеш сгорел, возвращаем неактивность
-
-        if ((date('U') - $lastAct) > $this->activityTimeout) {
-            return false;
-        }
-        //Если неактивен долго, возвращаем неактивность
-
-        return true;
-    }
-
-
-    private function addToGame($waiting_game, $timeWaiting = false)
-    {
-        $time = date('U') - ($timeWaiting ? $timeWaiting : 0);
-        $waiting_game = array_merge(
-            $waiting_game,
-            [
-                $this->User => [
-                    'time' => $time,
-                    'options' => (isset($_POST['ochki_num']) ? $_POST : false)
-                ]
-            ]
-        );
-        Cache::rpush('erudit.games_waiting_v2', $waiting_game);
-        //Поместили список игроков в начало очереди
-        $this->gamePlayersWaiting = count($waiting_game);
-        $this->updateUserStatus('initGame');
-        if ($timeWaiting) {
-            return $this->makeResponse(
-                [
-                    'gameState' => 'initGame',
-                    'gameSubState' => $this->gamePlayersWaiting,
-                    'timeWaiting' => $timeWaiting,
-                    'gameWaitLimit' => $this->gameWaitLimit
-                ]
-            );
-        } else {
-            return $this->makeResponse(
-                [
-                    'gameState' => 'initGame',
-                    'gameSubState' => $this->gamePlayersWaiting,
-                    'gameWaitLimit' => $this->gameWaitLimit
-                ]
-            );
-        }
-    }
-
-    private function cleanUp($User, $queue)
-    {
-        Cache::hdel('erudit.' . $queue . 'players_waiters', $User);
     }
 
     public function startGame()
@@ -2355,7 +2059,6 @@ LIMIT 40";
                 }
             }
 
-            //if ($this->gameStatus['turnNumber'] >= 0)
             if (isset($this->gameStatus['activeUser'])) {
                 $userNames_arr[$this->numUser] = $this->gameStatus['users'][$this->numUser]['username'];
                 $score_arr[$this->numUser] = $this->gameStatus['users'][$this->numUser]['score'];

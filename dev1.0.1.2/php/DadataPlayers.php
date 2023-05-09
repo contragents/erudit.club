@@ -2,8 +2,12 @@
 
 namespace Dadata;
 
+use AvatarModel;
 use Erudit\Game;
 use Lang\Ru;
+use ORM;
+use PlayerModel;
+use UserModel;
 
 class Players
 {
@@ -23,6 +27,7 @@ class Players
 
     public static function getTopPlayer($numTop = 1): array
     {
+        // todo remove after ORM query tested
         $topQuery = "SELECT
 	max( rating ) AS rating,
 	max( rating_changed_date ) AS updated_at,
@@ -40,6 +45,29 @@ ORDER BY
 	max( rating ) DESC 
 	LIMIT $numTop";
 
+        $topQuery = ORM::select(
+                [
+                    'max( rating ) AS rating',
+                    'max( rating_changed_date ) AS updated_at',
+                    'common_id',
+                    'max( user_id ) AS user_id',
+                    'max( users.`name` ) AS name',
+                    'max( users.avatar_url ) AS avatar_url'
+                ],
+                '('
+                . ORM::select(['*'], PlayerModel::TABLE_NAME)
+                . ORM::where('common_id', '>', '0', true)
+                . ORM::orderBy('rating', false)
+                . ORM::limit($numTop * 10)
+                . ') AS p1 '
+            )
+            . ORM::leftJoin(PlayerModel::PLAYER_NAMES_TABLE_NAME)
+            . ORM::on('some_id', '=', 'p1.user_id', true)
+            . ORM::leftJoin(UserModel::TABLE_NAME)
+            . ORM::on(UserModel::TABLE_NAME.'.id', '=', 'p1.common_id', true)
+            . ORM::groupBy(['common_id'])
+            . ORM::orderBy('max( rating )', false)
+            . ORM::limit($numTop);
         $res = DB::queryArray($topQuery);
 
         return array_map(
@@ -106,13 +134,7 @@ ORDER BY
             );
         }
 
-        $avatarUpdateQuery = "UPDATE users
-                SET 
-                    avatar_url = '" . DB::escapeString($url) . "'
-                WHERE 
-                    id = $commonID";
-
-        if (DB::queryInsert($avatarUpdateQuery)) {
+        if (UserModel::updateUrl($commonID, $url)) {
             return json_encode(['result' => 'saved', 'url' => $url]);
         } else {
             return json_encode(['result' => 'saved', 'message' => 'Файл перезаписан', 'url' => $url]);
@@ -123,7 +145,17 @@ ORDER BY
     static function getCommonIDByCookie(
         $cookie
     ) {
-        $commonIDQuery = "SELECT CASE WHEN common_id IS NULL THEN id ELSE common_id END FROM players WHERE cookie = '$cookie' LIMIT 1";
+        // todo remove after ORM tested
+        //$commonIDQuery = "SELECT CASE WHEN common_id IS NULL THEN id ELSE common_id END FROM players WHERE cookie = '$cookie' LIMIT 1";
+
+        // todo merge with PlayerModel
+        $commonIDQuery = ORM::select(
+                ['CASE WHEN common_id IS NULL THEN id ELSE common_id END as common_id'],
+                PlayerModel::TABLE_NAME
+            )
+            . ORM::where('cookie', '=', $cookie)
+            . ORM::limit(1);
+
         if ($res = DB::queryValue($commonIDQuery)) {
             return $res;
         } else {
@@ -147,12 +179,12 @@ ORDER BY
     static function getAvatarUrl(
         int $commonID
     ) {
-        $avatarUrl = DB::queryValue("SELECT avatar_url FROM users WHERE id = $commonID");
+        $avatarUrl = UserModel::getOne($commonID)['avatar_url'] ?? false;
 
-        if ($avatarUrl) {
+        if (!empty($avatarUrl)) {
             return $avatarUrl;
         } else {
-            return self::getDefaultAvatar($commonID);
+            return AvatarModel::getDefaultAvatar($commonID);
         }
     }
 

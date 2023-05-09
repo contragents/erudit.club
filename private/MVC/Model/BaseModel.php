@@ -80,7 +80,7 @@ class BaseModel
             . (
             empty($where)
                 ? ''
-                : ORM::where($where['field_name'], $where['condition'], $where['value'], $where['raw'])
+                : ORM::where($where['field_name'], $where['condition'], $where['value'], $where['raw'] ?? false)
             )
         );
     }

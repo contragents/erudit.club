@@ -13,7 +13,7 @@ $players = [];
 foreach ($gameData['users'] as $num => $player) {
     $players[$num] = $player;
     $players[$num]['nickName'] = $instance->getPlayerName($player);
-    $players[$num]['avatarUrl'] = $instance->getAvatarUrl($player);
+    $players[$num]['avatarUrl'] = $instance->getAvatarUrl($player['ID']);
 }
 print "Играют " . implode('&nbsp;vs&nbsp;', array_map(function ($player) {
         return $player['nickName']

@@ -7,14 +7,14 @@ use Cache;
 class Queue
 {
     const QUEUES = [
-        'erudit.rating_waiters',
-        'erudit.ratingEN_waiters',
-        'erudit.2players_waiters',
-        'erudit.2ENplayers_waiters',
-        'erudit.4players_waiters',
-        'erudit.4ENplayers_waiters',
-        'erudit.inviteplayers_waiters',
-        'erudit.inviteENplayers_waiters'
+        'erudit.rating_waiters' => 'erudit.rating_waiters',
+        'erudit.ratingEN_waiters' => 'erudit.ratingEN_waiters',
+        'erudit.2players_waiters' => 'erudit.2players_waiters',
+        'erudit.2ENplayers_waiters' => 'erudit.2ENplayers_waiters',
+        'erudit.4players_waiters' => 'erudit.4players_waiters',
+        'erudit.4ENplayers_waiters' => 'erudit.4ENplayers_waiters',
+        'erudit.inviteplayers_waiters' => 'erudit.inviteplayers_waiters',
+        'erudit.inviteENplayers_waiters' => 'erudit.inviteENplayers_waiters',
     ];
 
     const QUEUE_NUMS = [
@@ -561,8 +561,7 @@ class Queue
         // Прописываем текущему юзеру - добавление в игру,  номер игры, удаляем из очереди ждунов
         $game_users[] = ['userCookie' => $User, 'options' => $options];
         Cache::hdel("erudit.{$numPlayers}{$this->lang}players_waiters", $User);
-        Cache::setex('erudit.get_game_' . $User, $this->caller->cacheTimeout, $this->caller->currentGame);
-
+        Cache::setex(Game::GET_GAME_KEY . $User, $this->caller->cacheTimeout, $this->caller->currentGame);
 
         $this->caller->currentGameUsers[] = $User;
         $numUsers = 1;
@@ -574,7 +573,7 @@ class Queue
             //Прописываем юзерам - удаление из очереди и номер игры
             Cache::hdel("erudit.{$numPlayers}{$this->lang}players_waiters", $player);
             Cache::setex(
-                'erudit.get_game_' . $player,
+                Game::GET_GAME_KEY . $player,
                 $this->caller->cacheTimeout,
                 $this->caller->currentGame
             );
