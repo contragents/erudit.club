@@ -45,6 +45,8 @@ const CABINET_SCRIPT = 'player_cabinet.php';
 const INVITE_SCRIPT = 'invite_to_new_game.php';
 const AVATAR_UPLOAD_SCRIPT = 'avatar_upload.php';
 const SET_AVATAR_SCRIPT = 'set_player_avatar_url.php';
+const HOR = 'horizontal';
+const VERT = 'vertical';
 
 const BAD_REQUEST = 400;
 const PAGE_NOT_FOUND = 404;
@@ -87,7 +89,7 @@ var buttonHeightKoef = 1;
 var fishkaScale = 1;
 
 if (windowInnerWidth > windowInnerHeight) {
-    var screenOrient = 'horizontal';
+    var screenOrient = HOR;
     var gameWidth = standardHorizontalWidth;
     var gameHeight = standardHorizontalHeight;
     var knopkiWidth = gameWidth - gameHeight;
@@ -102,7 +104,7 @@ if (windowInnerWidth > windowInnerHeight) {
     var backX = (gameWidth - 2000) * Math.random();
 
 } else {
-    var screenOrient = 'vertical';
+    var screenOrient = VERT;
     //alert(window.outerHeight + ' ' + window.screen.availHeight + ' ' + screen.height + "\n" + window.outerWidth + ' ' + window.screen.availWidth + ' ' + screen.width);
     if (isYandexAppGlobal()) {
         propKoef = window.outerHeight / window.outerWidth;

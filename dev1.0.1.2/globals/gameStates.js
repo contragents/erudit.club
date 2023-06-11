@@ -96,42 +96,64 @@ var gameStates = {
                 if (!(1900 in data['players']) || (data['players'][1900] == 0)) {
                     title = noRatingPlayers;
                 }
-                onlinePlayers = '<br /><br />Искать игроков с рейтингом:<br />';
-                onlinePlayers += '<div title="' + title + '" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_0" name="from_rating" value="0" checked> <label style="cursor: pointer;" class="form-check-label" for="from_0">Любой</label></div>';
+                let colPlayers = screenOrient === HOR ? "col-3" : "col-4";
+
+                onlinePlayers = '<br /><br /><strong>Искать игроков с рейтингом:</strong><br />';
+                onlinePlayers += '<div class="form-row">';
+                onlinePlayers += '<div title="' + title + '" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_0" name="from_rating" value="0" checked> <label style="cursor: pointer;" class="form-check-label" for="from_0">Любой</label></div>';
                 if ((1900 in data['players']) && (data['players'][1900] > 0))
                     onlinePlayers += '<div title="' + data['players'][1900] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_1900" name="from_rating" value="1900" ' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_1900">ОТ 1900 (' + data['players'][1900] + ' онлайн)</label></div>';
-                if ((2000 in data['players']) && (data['players'][2000] > 0))
-                    onlinePlayers += '<div title="' + data['players'][2000] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2000" name="from_rating" value="2000"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2000">ОТ 2000 (' + data['players'][2000] + ')</label></div>';
-                if ((2100 in data['players']) && (data['players'][2100] > 0))
-                    onlinePlayers += '<div title="' + data['players'][2100] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2100" name="from_rating" value="2100"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2100">ОТ 2100 (' + data['players'][2100] + ')</label></div>';
-                if ((2200 in data['players']) && (data['players'][2200] > 0))
-                    onlinePlayers += '<div title="' + data['players'][2200] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2200" name="from_rating" value="2200"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2200">ОТ 2200 (' + data['players'][2200] + ')</label></div>';
-                if ((2300 in data['players']) && (data['players'][2300] > 0))
-                    onlinePlayers += '<div title="' + data['players'][2300] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2300" name="from_rating" value="2300"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2300">ОТ 2300 (' + data['players'][2300] + ')</label></div>';
-                if ((2400 in data['players']) && (data['players'][2400] > 0))
-                    onlinePlayers += '<div title="' + data['players'][2400] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2400" name="from_rating" value="2400"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2400">ОТ 2400 (' + data['players'][2400] + ')</label></div>';
-                if ((2500 in data['players']) && (data['players'][2500] > 0))
-                    onlinePlayers += '<div title="' + data['players'][2500] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2500" name="from_rating" value="2500"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2500">ОТ 2500 (' + data['players'][2500] + ')</label></div>';
-                if ((2600 in data['players']) && (data['players'][2600] > 0))
-                    onlinePlayers += '<div title="' + data['players'][2600] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2600" name="from_rating" value="2600"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2600">ОТ 2600 (' + data['players'][2600] + ')</label></div>';
-                if ((2700 in data['players']) && (data['players'][2700] > 0))
-                    onlinePlayers += '<div title="' + data['players'][2700] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2700" name="from_rating" value="2700"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2700">ОТ 2700 (' + data['players'][2700] + ')</label></div>';
+                onlinePlayers += '</div>';
+
+                if ((2000 in data['players']) && (data['players'][2000] > 0)) {
+                    onlinePlayers += '<div class="form-row">';
+                    onlinePlayers += '<div title="' + data['players'][2000] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2000" name="from_rating" value="2000"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2000">ОТ 2000 (' + data['players'][2000] + ')</label></div>';
+
+                    if ((2100 in data['players']) && (data['players'][2100] > 0))
+                        onlinePlayers += '<div title="' + data['players'][2100] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2100" name="from_rating" value="2100"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2100">ОТ 2100 (' + data['players'][2100] + ')</label></div>';
+                    onlinePlayers += '</div>';
+                }
+
+                if ((2200 in data['players']) && (data['players'][2200] > 0)) {
+                    onlinePlayers += '<div class="form-row">';
+                    onlinePlayers += '<div title="' + data['players'][2200] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2200" name="from_rating" value="2200"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2200">ОТ 2200 (' + data['players'][2200] + ')</label></div>';
+                    if ((2300 in data['players']) && (data['players'][2300] > 0))
+                        onlinePlayers += '<div title="' + data['players'][2300] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2300" name="from_rating" value="2300"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2300">ОТ 2300 (' + data['players'][2300] + ')</label></div>';
+                    onlinePlayers += '</div>';
+                }
+
+                if ((2400 in data['players']) && (data['players'][2400] > 0)) {
+                    onlinePlayers += '<div class="form-row">';
+                    onlinePlayers += '<div title="' + data['players'][2400] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2400" name="from_rating" value="2400"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2400">ОТ 2400 (' + data['players'][2400] + ')</label></div>';
+                    if ((2500 in data['players']) && (data['players'][2500] > 0))
+                        onlinePlayers += '<div title="' + data['players'][2500] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2500" name="from_rating" value="2500"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2500">ОТ 2500 (' + data['players'][2500] + ')</label></div>';
+                    onlinePlayers += '</div>';
+                }
+
+                if ((2600 in data['players']) && (data['players'][2600] > 0)) {
+                    onlinePlayers += '<div class="form-row">';
+                    onlinePlayers += '<div title="' + data['players'][2600] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2600" name="from_rating" value="2600"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2600">ОТ 2600 (' + data['players'][2600] + ')</label></div>';
+                    if ((2700 in data['players']) && (data['players'][2700] > 0))
+                        onlinePlayers += '<div title="' + data['players'][2700] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2700" name="from_rating" value="2700"' + chooseDisabled + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2700">ОТ 2700 (' + data['players'][2700] + ')</label></div>';
+                    onlinePlayers += '</div>';
+                }
             }
 
-            let radioButtons = '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly">Только два игрока</label></div>';
-            radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore">До четырех игроков</label></div>';
+            let radioButtons = '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly">Только два игрока</label></div>';
+            radioButtons += '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore">До четырех игроков</label></div>';
 
-            let wish = '<br /><br /><h6>Желательно:</h6>';
+            let wish = ''; //'<br /><br /><h6>Желательно:</h6>';
+            let colOchki = screenOrient === HOR ? "col-5" : "col-6";
 
-            let radioOchki = '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="dvesti" name="ochki_num" value="200" checked> <label class="form-check-label" for="dvesti">Игра до 200 очков</label></div>';
+            let radioOchki = '<br /><div class="' + colOchki + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="dvesti" name="ochki_num" value="200" checked> <label class="form-check-label" for="dvesti">Игра до 200 очков</label></div>';
             radioOchki += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="trista" name="ochki_num" value="300"> <label class="form-check-label" for="trista">Игра до 300 очков</label></div>';
 
-            let wishTime = '<br /><br />Время на ход:<br />';
+            let wishTime = '<br /><br />'; //'<br /><br />Время на ход:<br />';
 
-            let radioTime = '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="dve" name="turn_time" value="120" checked> <label class="form-check-label" for="dve">2 минуты на ход</label></div>';
+            let radioTime = '<div class="' + colOchki + '  form-check form-check-inline"><input class="form-check-input" type="radio" id="dve" name="turn_time" value="120" checked> <label class="form-check-label" for="dve">2 минуты на ход</label></div>';
             radioTime += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="odna" name="turn_time" value="60"> <label class="form-check-label" for="odna">1 минута на ход</label></div>';
 
-            let formHead = '<h5>Выберите параметры игры</h5>';
+            let formHead = '<h5>Параметры игры (будут учтены при подборе)</h5>';
             let gameform = formHead + '<form onsubmit="return false" id="myGameForm">' + radioButtons + wish + radioOchki + wishTime + radioTime + onlinePlayers + '</form>';
 
             dialog = bootbox.dialog({
