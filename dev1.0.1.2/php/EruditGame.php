@@ -803,8 +803,6 @@ class Game
 
     private function getRatingWithCommonID($commonID = false, $cookie = false, $userID = false)
     {
-        $cacheValues = [];
-
         if (!($ratingInfo = PlayerModel::getRating($commonID, $cookie, $userID))) {
             return false;
         }

@@ -120,12 +120,6 @@ class PlayerModel extends BaseModel
 
     public static function getCommonIdFromUserId($userId)
     {
-        // todo remove after model
-        /*$commonIDQuery = "SELECT common_id FROM players
-                                WHERE user_id = $userId
-                                AND common_id IS NOT NULL 
-                                LIMIT 1";*/
-
         $commonIDQuery = ORM::select(['common_id'], self::TABLE_NAME)
             . ORM::where('user_id', '=', $userId, true)
             . ORM::andWhere('common_id', 'IS', 'NOT NULL', true)
@@ -136,12 +130,21 @@ class PlayerModel extends BaseModel
 
     public static function getRating($commonID = false, $cookie = false, $userID = false)
     {
+        // todo переделать на ОРМ
         $ratingQuery = self::getRatingBaseQuery()
             . ($commonID
-                ? " OR user_id in (
-                SELECT user_id FROM players WHERE common_id = $commonID
-                AND user_id != 15284527576400310462
-            ) "
+                ? (' OR ( true'
+                    . ORM::andWhere(
+                        'user_id',
+                        'in',
+                        '('
+                        . ORM::select(['user_id'], self::TABLE_NAME)
+                        . ORM::where('common_id', '=', $commonID, true)
+                        . ORM::andWhere('user_id', '!=', new ORM('15284527576400310462'), true)
+                        . ')',
+                        true
+                    )
+                    . ')')
                 : '')
             . ($cookie
                 ? " OR cookie = '$cookie' "
@@ -149,13 +152,34 @@ class PlayerModel extends BaseModel
             . ($userID
                 ? " OR user_id = $userID "
                 : '')
-            . '  GROUP BY gruping LIMIT 1';
+            . ORM::groupBy(['gruping'])
+            . ORM::limit(1);
 
         return DB::queryArray($ratingQuery);
     }
 
     private static function getRatingBaseQuery(): string
     {
+        return
+            ORM::select(
+                [
+                    'max(cookie) as cookie',
+                    'max(rating) as rating',
+                    'max(games_played) as games_played',
+                    'case when max(win_percent) is null then 0 else max(win_percent) END as win_percent',
+                    'avg(inactive_percent) as inactive_percent',
+                    'case when max(rating) >= 1700 then('
+                    . ORM::select(
+                        ['case when sum(num) IS null THEN 1 else sum(num) + 1 END'],
+                        '(select 1 as num from players where rating > ps . rating group by user_id, rating) dd'
+                    )
+                    . ') else \'Не в ТОПе\' END as top'
+                ],
+                self::TABLE_NAME . ' ps'
+            )
+            . ORM::where('false', '', '', true);
+
+        // todo убрать после ОРМ
         return 'SELECT 
         max(cookie) as cookie, 
         max(rating) as rating, 

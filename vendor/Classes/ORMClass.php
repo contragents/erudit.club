@@ -56,12 +56,12 @@ class ORM
 
     public static function where($fieldName, $cond, $value, $isRaw = false)
     {
-        return " WHERE ($fieldName $cond " . ($isRaw ? $value : "'$value'") . ') ';
+        return " WHERE ($fieldName $cond " . ($value instanceof ORM ? $value->rawExpression : ($isRaw ? $value : "'$value'")) . ') ';
     }
 
     public static function andWhere($fieldName, $cond, $value, $isRaw = false)
     {
-        return " AND ($fieldName $cond " . ($isRaw ? $value : "'$value'") . ') ';
+        return " AND ($fieldName $cond " . ($value instanceof ORM ? $value->rawExpression : ($isRaw ? $value : "'$value'")) . ') ';
     }
 
     public static function orBegin($odin = '')
