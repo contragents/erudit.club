@@ -19,13 +19,17 @@ class ComplainModel
             return false;
         }
 
-        return DB::queryInsert(
+        if (DB::queryInsert(
             "INSERT INTO " . self::TABLE_NAME . " "
             . "SET "
             . "from_common_id = $fromCommonId, "
             . "to_common_id = $toCommonId, "
             . "date_uniq = '" . date('Y-m-d') . "', "
             . "chat_log = compress('" . DB::escapeString(serialize($chatLog)) . "') "
-        ) ? true : false;
+        )) {
+            return BanModel::ban($toCommonId, $fromCommonId);
+        } else {
+            return false;
+        }
     }
 }

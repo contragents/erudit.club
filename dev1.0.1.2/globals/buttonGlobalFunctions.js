@@ -287,7 +287,7 @@ function chatButtonFunction() {
             },
             complain: {
                 label: 'Пожаловаться',
-                className: 'btn-danger',
+                className: 'ml-3 btn-danger',
                 callback: function () {
 
                     fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())

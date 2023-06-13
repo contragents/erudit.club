@@ -3,6 +3,7 @@
 namespace Erudit;
 
 use AvatarModel;
+use BanModel;
 use \Cache;
 use ComplainModel;
 use Dadata\DB;
@@ -713,12 +714,35 @@ class Game
 
     public function addToChat($message, $toNumUser = 'all', $needConfirm = true)
     {
+        $commonIdFrom = PlayerModel::getCommonID($this->User);
+
+        $bannedTill = BanModel::isBannedTotal($commonIdFrom ?: 0);
+        if ($bannedTill) {
+            if ($needConfirm) {
+                return $this->makeResponse(
+                    [
+                        'message' => 'Сообщение НЕ отправлено - БАН до ' . date('d.m.Y', $bannedTill),
+                        'gameState' => 'addToChat'
+                    ]
+                );
+            } else {
+                return true;
+            }
+        }
+
+        $bannedBy = BanModel::bannedBy($commonIdFrom ?: 0);
+
         $this->gameStatus['chatLog'][] = [$this->numUser, $toNumUser, $message];
+        if ($toNumUser !== 'all' && $toNumUser !== 'adv') {
+            {
+            }
+        }
+
         if ($toNumUser == 'all') {
             foreach ($this->gameStatus['users'] as $num => $User) {
                 if ($num == $this->numUser) {
                     $this->gameStatus['users'][$num]['chatStack'][] = ['Вы', 'всем: ' . $message];
-                } else {
+                } elseif (!isset($bannedBy[PlayerModel::getCommonID($User['ID']) ?: 0])) {
                     $this->gameStatus['users'][$num]['chatStack'][] = [
                         "От Игрока" . ($this->numUser + 1) . " (всем):",
                         $message
@@ -731,7 +755,7 @@ class Game
                     $this->gameStatus['users'][$num]['chatStack'][] = ["Новости:", $message];
                 }
             }
-        } else {
+        } elseif (!isset($bannedBy[PlayerModel::getCommonID($this->gameStatus['users'][$toNumUser]['ID']) ?: 0])) {
             $this->gameStatus['users'][$toNumUser]['chatStack'][] = [
                 "От Игрока" . ($this->numUser + 1) . ":",
                 $message
@@ -740,6 +764,10 @@ class Game
                 'Вы',
                 'Игроку' . ($toNumUser + 1) . ': ' . $message
             ];
+        } elseif ($needConfirm) {
+            return $this->makeResponse(
+                ['message' => 'Сообщение НЕ отправлено - БАН от Игрока' . ($toNumUser + 1), 'gameState' => 'addToChat']
+            );
         }
 
         if ($needConfirm) {
