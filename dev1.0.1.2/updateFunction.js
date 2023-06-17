@@ -41,14 +41,15 @@ function (time, delta) {
             (flor > lastQueryTime)
             && ((flor % gameStates[gameState]['refresh']) === 0)
         )
-        || (queryNumber == 1)
+        || (queryNumber === 1)
     ) {
-        lastQueryTime = flor;//Math.floor(time/1000);
-
-        fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID == false) ? '0' : uniqID)
-            .then((data) => {
-                commonCallback(data);
-            });
+        if (requestToServerEnabled) {
+            lastQueryTime = flor;
+            fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID === false) ? '0' : uniqID)
+                .then((data) => {
+                    commonCallback(data);
+                });
+        }
     }
 
     if (ochki_arr !== false)

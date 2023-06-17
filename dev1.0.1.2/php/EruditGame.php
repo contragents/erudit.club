@@ -95,7 +95,7 @@ class Game
         $this->p = Cache::getInstance();
 
 
-        $this->config = include("{$_SERVER['DOCUMENT_ROOT']}/configs/conf.php");//('../../configs/conf.php');
+        $this->config = include("../../configs/conf.php");//('../../configs/conf.php');
         self::$configStatic = $this->config;
         $this->turnTime = $this->config['turnTime'];
         $this->winScore = $this->config['winScore'];
@@ -198,9 +198,7 @@ class Game
     {
         if (strpos($incomingCookie, 'bot') !== false) {
             return $incomingCookie;
-        } /*if (isset($_SERVER['HTTP_USER_AGENT']) && ((stripos($_SERVER['HTTP_USER_AGENT'], 'yabrowser') !== false) || (stripos($_SERVER['HTTP_USER_AGENT'], 'yowser') !== false)))
-            return ($sintCookie = (md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'])));
-        */
+        }
 
         elseif (!isset($_SERVER['HTTP_COOKIE'])) {
             return ($sintCookie = (md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'])));
@@ -1156,7 +1154,7 @@ class Game
         return json_encode($result);
     }
 
-    public function lockTry()
+    public function lockTry(): bool
     {
         if ($this->isStateLocked) {
             return true;

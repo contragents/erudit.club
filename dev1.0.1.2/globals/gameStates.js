@@ -594,6 +594,10 @@ function commonCallback(data) {
         return;
     }
 
+    if ('query_number' in data && data['query_number'] != (queryNumber - 1)) {
+        return;
+    }
+
     gameOldState = gameState;
     gameOldSubState = gameSubState;
 
@@ -827,7 +831,7 @@ function commonCallback(data) {
     responseData = data;
 
     if (pageActive == 'hidden' && gameState != 'chooseGame') {
-        fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID == false) ? '0' : uniqID)
+        fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID === false) ? '0' : uniqID)
             .then((data) => {
                 commonCallback(data);
             });

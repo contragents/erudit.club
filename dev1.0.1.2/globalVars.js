@@ -57,6 +57,9 @@ var automaticDialogClosed = false;
 
 var requestToServerEnabled = true;
 var requestToServerEnabledTimeout = false;
+var isSubmitResponseAwaining = false;
+const GENERAL_REQUEST_TIMEOUT = 500;
+const SUBMIT_REQUEST_TIMEOUT = 1000;
 
 var reloadInervalNumber = false;
 

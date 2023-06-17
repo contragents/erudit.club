@@ -10,8 +10,20 @@ async function fetchGlobal(script, param_name, param_data) {
         return {message: "Ошибка связи с сервером. Пожалуйста, повторите", http_status: BAD_REQUEST, status: "error"};
     }
 
+    if (script === SUBMIT_SCRIPT) {
+        isSubmitResponseAwaining = true;
+    }
+
     requestToServerEnabled = false;
-    requestToServerEnabledTimeout = setTimeout(function() {requestToServerEnabled = true;}, 500)
+    requestToServerEnabledTimeout = setTimeout(
+        function () {
+            requestToServerEnabled = true;
+            isSubmitResponseAwaining = false;
+        },
+        isSubmitResponseAwaining
+            ? 1000
+            : 500
+    )
 
     if (pageActive != 'hidden') {
         requestSended = true;
