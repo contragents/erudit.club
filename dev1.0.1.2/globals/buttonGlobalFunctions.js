@@ -189,8 +189,8 @@ function chatButtonFunction() {
 
     canOpenDialog = false;
     canCloseDialog = false;
-
-    let message = '<ul style="margin-left:-30px;margin-right:-5px;">';
+    let msgSpan = '<span id="msg_span">';
+    let message = '<ul style="margin-left:-30px;margin-right:-5px;">' + msgSpan + '</span>';
     let i = 0;
     for (k in chatLog) {
         if (i >= 10) break;
@@ -198,8 +198,13 @@ function chatButtonFunction() {
         i++;
     }
 
-    if (i == 0)
-        message = message + 'Сообщений пока нет';
+
+    let noMsgSpan = '<span id="no_msg_span">';
+    if (i == 0) {
+        message += noMsgSpan + 'Сообщений пока нет' + '</span>';
+    } else {
+        message += noMsgSpan + '</span>';
+    }
     message = message + '</ul>';
     let radioButtons = message + '';
 
@@ -254,8 +259,16 @@ function chatButtonFunction() {
                             .then((data) => {
                                 if (data == '')
                                     var responseText = 'Ошибка';
-                                else
+                                else {
                                     var responseText = data['message'];
+
+                                    if (data['message'] === 'Сообщение отправлено') {
+                                        $('#no_msg_span').html('');
+                                        $('#msg_span').html('<li>' + $('#chattext').val() + '</li>' + $('#msg_span').html());
+                                    }
+
+                                    $('#chattext').val('');
+                                }
                                 dialog2 = bootbox.alert({
                                     message: responseText,
                                     size: 'small'

@@ -1825,7 +1825,7 @@ class Game
 
         $this->gameStatus['turnNumber']++;
 
-        $this->adv2Chat();//Показ рекламы в чате
+        //$this->adv2Chat();//Показ рекламы в чате
 
         $this->gameStatus['turnBeginTime'] = date('U');
         $this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] = false;
