@@ -57,7 +57,7 @@ class PlayerModel extends BaseModel
             if (self::add(
                 ['cookie' => $cookie, 'user_id' => new ORM("conv(substring(md5('$cookie'),1,16),16,10)")]
             )) {
-                return self::getPlayerID($cookie, true);
+                return self::getPlayerID($cookie, false);
             }
         }
 
@@ -81,13 +81,18 @@ class PlayerModel extends BaseModel
     public static function getCrossingCommonIdByCookie($cookie)
     {
         $findIDQuery = ORM::select(['p1.common_id AS cid1', 'p2.common_id AS cid2'], PlayerModel::TABLE_NAME . ' p1')
-            . ORM::leftJoin(PlayerModel::TABLE_NAME . ' p1')
+            . ORM::leftJoin(PlayerModel::TABLE_NAME . ' p2')
             . ORM::on('p1.user_id', '=', 'p2.user_id', true)
             . ORM::andWhere('p2.common_id', 'IS', 'NOT NULL', true)
             . ORM::where('p1.cookie', '=', $cookie)
             . ORM::limit(1);
 
-        return (DB::queryArray($findIDQuery)[0]['cid2'] ?? self::COOKIE_NOT_LINKED_STATUS) ?: false;
+        $result = DB::queryArray($findIDQuery);
+        if (isset($result[0])) {
+            return $result[0]['cid2'] ?: false;
+        } else {
+            return self::COOKIE_NOT_LINKED_STATUS;
+        }
     }
 
     public static function getCommonID($cookie = false, $userID = false)

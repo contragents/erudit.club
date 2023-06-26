@@ -198,9 +198,7 @@ class Game
     {
         if (strpos($incomingCookie, 'bot') !== false) {
             return $incomingCookie;
-        }
-
-        elseif (!isset($_SERVER['HTTP_COOKIE'])) {
+        } elseif (!isset($_SERVER['HTTP_COOKIE'])) {
             return ($sintCookie = (md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'])));
         } elseif (stristr($_SERVER['HTTP_COOKIE'], 'erudit_user_session_ID') === false) {
             return ($sintCookie = (md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'])));
@@ -285,7 +283,7 @@ class Game
             return $this->config['botNames'][substr($user['ID'], (strlen($user['ID']) == 7 ? -1 : -2))];
         }
 
-        $commonId = PlayerModel::getCommonID($user['ID']);
+        $commonId = PlayerModel::getPlayerID($user['ID'], true);//PlayerModel::getCommonID($user['ID']);
         if ($commonId && ($commonIDName = UserModel::getNameByCommonId($commonId))) {
             return $commonIDName;
         }
@@ -609,7 +607,7 @@ class Game
 
     public function getAvatarUrl($cookie)
     {
-        $commonID = PlayerModel::getCommonID($cookie);
+        $commonID = PlayerModel::getPlayerID($cookie, true);//PlayerModel::getCommonID($cookie);
 
         if ($commonID) {
             return Players::getAvatarUrl($commonID);
@@ -664,10 +662,8 @@ class Game
 
         $isSendSuccess = false;
         if (ComplainModel::add(
-            PlayerModel::getCommonID($this->User)
-                ?: PlayerModel::getPlayerID($this->User, true),
-            PlayerModel::getCommonID($this->gameStatus['users'][$toUser]['ID'])
-                ?: PlayerModel::getPlayerID($this->gameStatus['users'][$toUser]['ID'], true),
+            PlayerModel::getPlayerID($this->User, true),
+            PlayerModel::getPlayerID($this->gameStatus['users'][$toUser]['ID'], true),
             $this->gameStatus['chatLog'] ?? []
         )) {
             $respMessage = '<span style="align-content: center;"><strong>Ваше обращение принято и будет рассмотрено модератором<br /><br /> В случае подтверждения к игроку будут применены санкции</strong></span>';
@@ -712,7 +708,7 @@ class Game
 
     public function addToChat($message, $toNumUser = 'all', $needConfirm = true)
     {
-        $commonIdFrom = PlayerModel::getCommonID($this->User);
+        $commonIdFrom = PlayerModel::getPlayerID($this->User, true);//PlayerModel::getCommonID($this->User);
 
         $bannedTill = BanModel::isBannedTotal($commonIdFrom ?: 0);
         if ($bannedTill) {
@@ -795,7 +791,7 @@ class Game
     private function getCommonID($cookie = false, $userID = false)
     {
         if ($cookie) {
-            $res = PlayerModel::getCommonIdFromCookie($cookie);
+            $res = PlayerModel::getPlayerID($cookie, true);
             if ($res) {
                 return $res;
             }
