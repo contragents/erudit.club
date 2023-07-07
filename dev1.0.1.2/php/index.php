@@ -176,6 +176,14 @@ substring(comment,1,0) COLLATE utf8_general_ci as content_perevod
 FROM
 dict_cambrige
 WHERE 
+slovo = '" . urldecode($_GET['word']) . "'
+UNION
+SELECT
+comment COLLATE utf8_general_ci as content,
+substring(comment,1,0) COLLATE utf8_general_ci as content_perevod
+FROM
+dict
+WHERE 
 slovo = '" . urldecode($_GET['word']) . "';";
 
     $res = DB::queryArray($CONTENT_SELECT);
