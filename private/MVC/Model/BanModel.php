@@ -5,8 +5,8 @@ class BanModel extends BaseModel
     const TABLE_NAME = 'ban';
 
     const BAN_TOTAL_COMPLAINT_COUNT = 5; // 5 жалоб до полного бана
-    const BAN_PERSONAL_TTL = 60 * 60 * 24 * 30 * 365; // 1 год персональный бан
-    const BAN_TOTAL_TTL = self::BAN_PERSONAL_TTL * 5;
+    const BAN_PERSONAL_TTL = 60 * 60 * 24 * 365; // 1 год персональный бан
+    const BAN_TOTAL_TTL = self::BAN_PERSONAL_TTL;
 
     public static function ban(int $commonId, int $complainerId): bool
     {
@@ -46,7 +46,7 @@ class BanModel extends BaseModel
             [
                 'common_id' => $commonId,
                 'date_from' => time(),
-                'date_to' => time() + self::BAN_PERSONAL_TTL,
+                'date_to' => time() + self::BAN_TOTAL_TTL,
             ]
         );
     }
@@ -61,7 +61,7 @@ class BanModel extends BaseModel
         $res = DB::queryValue($totalBannedQuery);
 
         return $res
-            ? $res - time()
+            ? $res
             : 0;
     }
 
@@ -72,9 +72,9 @@ class BanModel extends BaseModel
             . ORM::andWhere('date_to', '>', time(), true)
             . ORM::groupBy(['complainer_id']);
 
-        $res = DB::queryValue($bannedQuery) ?: [];
+        $res = DB::queryArray($bannedQuery) ?: [];
 
-        $res = array_combine(array_column($res,'complainer_id'),array_column($res,'date_to'));
+        $res = array_combine(array_column($res, 'complainer_id'), array_column($res, 'date_to'));
 
         return $res;
     }

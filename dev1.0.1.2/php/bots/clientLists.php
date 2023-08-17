@@ -167,7 +167,7 @@ function sendResponse(&$data)
         ob_end_clean();
         return $resp;
     } else {
-        return changeFishki($data);
+        return changeFishkiBotENG($data);
     }
 }
 
@@ -250,6 +250,7 @@ function make_turn(&$desk, &$fishki, &$slovaPlayed)
             break;
         }
     }
+
     if (count($fishki1) == count($fishki)) {
         $fishki = $fishki1;
         return false;

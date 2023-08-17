@@ -95,7 +95,7 @@ class Game
         $this->p = Cache::getInstance();
 
 
-        $this->config = include("../../configs/conf.php");//('../../configs/conf.php');
+        $this->config = include(__DIR__ . "/../../configs/conf.php");
         self::$configStatic = $this->config;
         $this->turnTime = $this->config['turnTime'];
         $this->winScore = $this->config['winScore'];
@@ -708,66 +708,73 @@ class Game
 
     public function addToChat($message, $toNumUser = 'all', $needConfirm = true)
     {
-        $commonIdFrom = PlayerModel::getPlayerID($this->User, true);//PlayerModel::getCommonID($this->User);
+        try {
+            $commonIdFrom = PlayerModel::getPlayerID($this->User, true);//PlayerModel::getCommonID($this->User);
 
-        $bannedTill = BanModel::isBannedTotal($commonIdFrom ?: 0);
-        if ($bannedTill) {
-            if ($needConfirm) {
+            $bannedTill = BanModel::isBannedTotal($commonIdFrom ?: 0);
+            if ($bannedTill) {
+                if ($needConfirm) {
+                    return $this->makeResponse(
+                        [
+                            'message' => 'Сообщение НЕ отправлено - БАН до ' . date('d.m.Y', $bannedTill),
+                            'gameState' => 'addToChat'
+                        ]
+                    );
+                } else {
+                    return true;
+                }
+            }
+
+            $bannedBy = BanModel::bannedBy($commonIdFrom ?: 0);
+
+            $this->gameStatus['chatLog'][] = [$this->numUser, $toNumUser, $message];
+            if ($toNumUser !== 'all' && $toNumUser !== 'adv') {
+                {
+                }
+            }
+
+            if ($toNumUser == 'all') {
+                foreach ($this->gameStatus['users'] as $num => $User) {
+                    if ($num == $this->numUser) {
+                        $this->gameStatus['users'][$num]['chatStack'][] = ['Вы', 'всем: ' . $message];
+                    } elseif (!isset($bannedBy[PlayerModel::getCommonID($User['ID']) ?: 0])) {
+                        $this->gameStatus['users'][$num]['chatStack'][] = [
+                            "От Игрока" . ($this->numUser + 1) . " (всем):",
+                            $message
+                        ];
+                    }
+                }
+            } elseif ($toNumUser == 'adv') {
+                foreach ($this->gameStatus['users'] as $num => $User) {
+                    if (!isset($User['userID'])) {
+                        $this->gameStatus['users'][$num]['chatStack'][] = ["Новости:", $message];
+                    }
+                }
+            } elseif (!isset($bannedBy[PlayerModel::getCommonID($this->gameStatus['users'][$toNumUser]['ID']) ?: 0])) {
+                $this->gameStatus['users'][$toNumUser]['chatStack'][] = [
+                    "От Игрока" . ($this->numUser + 1) . ":",
+                    $message
+                ];
+                $this->gameStatus['users'][$this->numUser]['chatStack'][] = [
+                    'Вы',
+                    'Игроку' . ((int)$toNumUser + 1) . ': ' . $message
+                ];
+            } elseif ($needConfirm) {
                 return $this->makeResponse(
                     [
-                        'message' => 'Сообщение НЕ отправлено - БАН до ' . date('d.m.Y', $bannedTill),
+                        'message' => '<strong>Сообщение НЕ отправлено - БАН от Игрока' . ((int)$toNumUser + 1).'</strong>',
                         'gameState' => 'addToChat'
                     ]
                 );
+            }
+
+            if ($needConfirm) {
+                return $this->makeResponse(['message' => 'Сообщение отправлено', 'gameState' => 'addToChat']);
             } else {
                 return true;
             }
-        }
-
-        $bannedBy = BanModel::bannedBy($commonIdFrom ?: 0);
-
-        $this->gameStatus['chatLog'][] = [$this->numUser, $toNumUser, $message];
-        if ($toNumUser !== 'all' && $toNumUser !== 'adv') {
-            {
-            }
-        }
-
-        if ($toNumUser == 'all') {
-            foreach ($this->gameStatus['users'] as $num => $User) {
-                if ($num == $this->numUser) {
-                    $this->gameStatus['users'][$num]['chatStack'][] = ['Вы', 'всем: ' . $message];
-                } elseif (!isset($bannedBy[PlayerModel::getCommonID($User['ID']) ?: 0])) {
-                    $this->gameStatus['users'][$num]['chatStack'][] = [
-                        "От Игрока" . ($this->numUser + 1) . " (всем):",
-                        $message
-                    ];
-                }
-            }
-        } elseif ($toNumUser == 'adv') {
-            foreach ($this->gameStatus['users'] as $num => $User) {
-                if (!isset($User['userID'])) {
-                    $this->gameStatus['users'][$num]['chatStack'][] = ["Новости:", $message];
-                }
-            }
-        } elseif (!isset($bannedBy[PlayerModel::getCommonID($this->gameStatus['users'][$toNumUser]['ID']) ?: 0])) {
-            $this->gameStatus['users'][$toNumUser]['chatStack'][] = [
-                "От Игрока" . ($this->numUser + 1) . ":",
-                $message
-            ];
-            $this->gameStatus['users'][$this->numUser]['chatStack'][] = [
-                'Вы',
-                'Игроку' . ($toNumUser + 1) . ': ' . $message
-            ];
-        } elseif ($needConfirm) {
-            return $this->makeResponse(
-                ['message' => 'Сообщение НЕ отправлено - БАН от Игрока' . ($toNumUser + 1), 'gameState' => 'addToChat']
-            );
-        }
-
-        if ($needConfirm) {
-            return $this->makeResponse(['message' => 'Сообщение отправлено', 'gameState' => 'addToChat']);
-        } else {
-            return true;
+        } catch(\Throwable $e) {
+            return $this->makeResponse(['message' => $e->__toString(), 'gameState' => 'addToChat']);
         }
     }
 
@@ -1192,6 +1199,10 @@ class Game
 
         //Ждали слишком долго - возвращаем десинхрон
         return false;
+    }
+
+    public function botUnlock(): void {
+        $this->unlock();
     }
 
     private function unlock()

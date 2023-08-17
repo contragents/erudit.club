@@ -1,4 +1,7 @@
 <?php
+
+use Lang\Eng;
+
 function findWordSverhu($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
 {
     if (!count($fishki)) return '';
@@ -11,8 +14,8 @@ function findWordSverhu($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientat
     $regexp = '';
     $lastLetter = '';
     $step = 1;
-    while ($desk[$x][$y + $step][0]) {
-        $lastLetter .= \Lang\Eng::$bukvy[($desk[$x][$y + $step][1] < 999 ? $desk[$x][$y + $step][1] : $desk[$x][$y + $step][1] - 999 - 1)][0];
+    while ($desk[$x][$y + $step][0] ?? false) {
+        $lastLetter .= Eng::$bukvy[($desk[$x][$y + $step][1] < 999 ? $desk[$x][$y + $step][1] : $desk[$x][$y + $step][1] - 999 - 1)][0];
         $maxWordLen++;
         $step++;
     }
@@ -41,13 +44,13 @@ function findWordSverhu($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientat
                 $lastLetterLen = ($lastLetter === '' ? 0 : mb_strlen($lastLetter, 'UTF-8'));
                 for ($k = 0; $k < $slovoNach; $k++) {
                     $cells[$x][$y - $k][0] = true;
-                    $cells[$x][$y - $k][1] = \Lang\Eng::getLetterCode($letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8'));
+                    $cells[$x][$y - $k][1] = Eng::getLetterCode($letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8'));
                     if (isset($lettersZvezd[$letter]))
                         $cells[$x][$y - $k][2] = $lettersZvezd[$letter];//Указали на занятую звездочку
                 }
                 for ($k = $slovoNach + $lastLetterLen; $k < mb_strlen($row['slovo'], 'UTF-8'); $k++) {
                     $cells[$x][$y + $k - $slovoNach + 1][0] = true;
-                    $cells[$x][$y + $k - $slovoNach + 1][1] = \Lang\Eng::getLetterCode($letter = mb_substr($row['slovo'], $k, 1, 'UTF-8'));
+                    $cells[$x][$y + $k - $slovoNach + 1][1] = Eng::getLetterCode($letter = mb_substr($row['slovo'], $k, 1, 'UTF-8'));
                     if (isset($lettersZvezd[$letter]))
                         $cells[$x][$y + $k - $slovoNach + 1][2] = $lettersZvezd[$letter];//Указали на занятую звездочку
                 }
