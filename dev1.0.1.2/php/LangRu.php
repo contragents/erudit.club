@@ -2,9 +2,11 @@
 
 namespace Lang;
 
-include_once(__DIR__ . '/DadataDB.php');
+//include_once(__DIR__ . '/DadataDB.php');
 
-use \Dadata\DB;
+//use \Dadata\DB;
+
+use DB;
 
 class Ru
 {
@@ -96,7 +98,6 @@ class Ru
 
     public static function generateBankFishki()
     {
-        $num_bukvy = 0;
         $bankFishki = [];
         foreach (static::$bukvy as $code => $buk) {
             for ($i = 0; $i < $buk[2]; $i++) {
@@ -107,7 +108,7 @@ class Ru
         return $bankFishki;
     }
 
-    private static function deskZvezda($gameFishki, &$desk, &$cells)
+    private static function deskZvezda(&$desk, &$cells)
     {
         $zvezdy = [];
         for ($i = 0; $i <= 14; $i++) {
@@ -126,12 +127,13 @@ class Ru
                 }
             }
         }
+
         return $zvezdy;
     }
 
     private static function validateFishki($fishki, &$cells, $gameFishki, &$desk)
     {
-        $zvezdyTemporary = static::deskZvezda($gameFishki, $desk, $cells);
+        $zvezdyTemporary = static::deskZvezda($desk, $cells);
         $numZvezd = 0;
         foreach ($fishki as $fishka) {
             if ($fishka[2] > 999) {
@@ -301,13 +303,14 @@ class Ru
         foreach (static::$bukvy as $num => $bukva) {
             if ($bukva[0] == $letter) {
                 return $num;
-            } else {
-                if ($bukva[0] == mb_strtolower($letter)) {
+            } else { // Буква под звездочкой?
+                if ($bukva[0] == mb_strtolower($letter,'UTF-8') || stripos($letter, $bukva[0]) !== false) {
                     return $num + 999 + 1;
                 }
             }
-        } //Буква под звездочкой
+        }
 
+        return;
     }
 
     private static function wordPrice($word, $i, $j, $orientation = 'hor')
@@ -381,8 +384,7 @@ class Ru
         //$j - строки, $i - столбцы
         for ($j = 0; $j <= 14; $j++) {
             for ($i = 0; $i <= 14; $i++) {
-
-                if($desk[$i][$j][0] && !$cells[$i][$j][0]) {
+                if ($desk[$i][$j][0] && !$cells[$i][$j][0]) {
                     return false;
                 }
 
