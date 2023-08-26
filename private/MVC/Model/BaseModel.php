@@ -148,6 +148,109 @@ class BaseModel
 
     /**
      * Получаем все записи ИЗ БД по условию и обновляем КЭШ
+     * @param string|array $field
+     * @param string|array $condition
+     * @param $value
+     * @param bool $isRaw
+     * @param bool $noResult Признак ненужности результата - только обновить кэш моделей
+     * @param array $fields
+     * @return array
+     */
+    public static function getCustomComplex(
+        $field,
+        $condition,
+        $value,
+        bool $isRaw = false,
+        bool $noResult = false,
+        array $fields = []
+    ): array {
+        $query = ORM::select($fields ?: ['*'], static::TABLE_NAME);
+        // todo сделать 'IN' по чанкам
+        // Обрабатываем массивы полей-условий-значений
+        if (is_array($field) || is_array($condition) || is_array($value)) {
+            if (!is_array($field) || !is_array($condition) || !is_array($value)) {
+                mp(
+                    ['field' => $field, 'condition' => $condition, 'value' => $value],
+                    'Error in types of field-condition-value',
+                    __METHOD__
+                );
+
+                return [];
+            }
+
+            if (count($field) != count($condition) || count($field) != count($value) || count($field) == 0) {
+                mp(
+                    ['field' => $field, 'condition' => $condition, 'value' => $value],
+                    'Error in count of field-condition-value',
+                    __METHOD__
+                );
+
+                return [];
+            }
+
+            $iteration = false;
+            foreach ($field as $num => $fld) {
+                if ($condition[$num] == self::CONDITIONS['in']) {
+                    if (
+                        !is_array($value[$num])
+                        ||
+                        (count($value[$num]) > TeaserModel::TEASERS_IN_CHUNK) // todo разбить по чанкам
+                        ||
+                        empty($value[$num])
+                    ) {
+                        mp([$num => $value[$num]], "VALUE $num for IN is WRONG!!!", __METHOD__);
+
+                        return [];
+                    }
+
+                    $query .= $iteration
+                        ? ORM::andWhereIn($fld, $value[$num])
+                        : ORM::whereIn($fld, $value[$num]);
+                } else {
+                    if (!in_array($condition[$num], self::CONDITIONS)) {
+                        mp($condition[$num], "CONDITION $num is WRONG!!!", __METHOD__);
+
+                        return [];
+                    }
+
+                    $query .= $iteration
+                        ? ORM::andWhere($fld, $condition[$num], $value[$num], $isRaw)
+                        : ORM::where($fld, $condition[$num], $value[$num], $isRaw);
+                }
+
+                $iteration = true;
+            }
+        } else {
+            if ($condition == self::CONDITIONS['in']) {
+                if (
+                    !is_array($value)
+                    ||
+                    (count($value) > TeaserModel::TEASERS_IN_CHUNK)
+                    ||
+                    empty($value)
+                ) {
+                    mp($value, 'VALUE is WRONG!!!', __METHOD__);
+
+                    return [];
+                }
+
+                $query .= ORM::whereIn($field, $value);
+            } else {
+                if (!in_array($condition, self::CONDITIONS)) {
+                    mp($condition, 'CONDITION is WRONG!!!', __METHOD__);
+
+                    return [];
+                }
+                $query .= ORM::where($field, $condition, $value, $isRaw);
+            }
+        }
+
+        return DB::queryArray($query) ?: [];
+    }
+
+
+    /**
+     * Получаем все записи ИЗ БД по условию и обновляем КЭШ
      * @param string $field
      * @param string $condition
      * @param $value

@@ -1,4 +1,5 @@
 <?php
+
 include_once(__DIR__ . '/../autoload.php');
 
 use Erudit\Game;
@@ -23,10 +24,14 @@ while ((date('U') - $start_script_time) < $script_work_time) {
     }
 }
 
-// Чистим лог ошибок сохранения статистики игры
+print 'Чистим лог ошибок сохранения статистики игры' . PHP_EOL;
 Cache::del(Game::STATS_FAILED);
 
-// Чистим лог ходов на 0 очков
+print 'Чистим лог ходов на 0 очков' . PHP_EOL;
 Cache::del(Game::BAD_COMBINATIONS_HSET);
+ini_set("display_errors", 1);
+error_reporting(E_ALL);
+print 'Уменьшаем рейтинг игрокам, которые не играли сутки' . PHP_EOL;
+PlayerModel::decreaseRatings();
 
 exit();

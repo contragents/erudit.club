@@ -11,6 +11,7 @@ use Dadata\Hints;
 use Dadata\Players;
 use Dadata\Prizes;
 use Dadata\Stats;
+use Lang\Ru;
 use \ORM;
 use PlayerModel;
 use UserModel;
@@ -277,6 +278,11 @@ class Game
         }
     }
 
+    /**
+     * @param array $user
+     * @return false|mixed|string
+     * @var Ru $this->gameStatus['lngClass']
+     */
     public function getPlayerName(array $user)
     {
         if (strpos($user['ID'], 'bot') !== false) {
@@ -486,7 +492,6 @@ class Game
                 false,
                 ['id']
             )[0]['id'] ?? false;
-        // todo delete after model DB::queryValue($commonIDSearchQuery);
 
         if ($oldCommonID === false) {
             return json_encode(
@@ -496,14 +501,6 @@ class Game
                 ]
             );
         }
-
-        // todo delete after model
-        /*$mergeIDsQuery = "UPDATE
-        players
-        SET
-        common_id = $oldCommonID
-        WHERE
-        common_id = $commonID;";*/
 
         if (PlayerModel::setParamMass(
             'common_id',
@@ -762,7 +759,7 @@ class Game
             } elseif ($needConfirm) {
                 return $this->makeResponse(
                     [
-                        'message' => '<strong>Сообщение НЕ отправлено - БАН от Игрока' . ((int)$toNumUser + 1).'</strong>',
+                        'message' => '<strong>Сообщение НЕ отправлено - БАН от Игрока' . ((int)$toNumUser + 1) . '</strong>',
                         'gameState' => 'addToChat'
                     ]
                 );
@@ -773,7 +770,7 @@ class Game
             } else {
                 return true;
             }
-        } catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             return $this->makeResponse(['message' => $e->__toString(), 'gameState' => 'addToChat']);
         }
     }
@@ -788,7 +785,7 @@ class Game
 
     public function getDeltaRating($key)
     {
-        if ($delta = Cache::get('erudit.delta_rating_' . $key)) {
+        if ($delta = Cache::get(PlayerModel::DELTA_RATING_KEY_PREFIX . $key)) {
             return $delta;
         } else {
             return false;
@@ -1201,7 +1198,8 @@ class Game
         return false;
     }
 
-    public function botUnlock(): void {
+    public function botUnlock(): void
+    {
         $this->unlock();
     }
 
@@ -1394,7 +1392,7 @@ class Game
             } elseif (count($this->gameStatus['users'][$this->numUser]['fishki']) === 0) {
                 $this->addToLog('закончились фишки - конец игры!', $this->numUser);
                 $this->storeGameResults($this->endOfFishki());
-            } //Обнаружен выигравший
+            } // Обнаружен выигравший
             elseif ($ochkiZaHod > 0) {
                 $this->gameStatus['users'][$this->numUser]['lostTurns'] = 0;
                 $this->nextTurn();
@@ -1791,15 +1789,15 @@ class Game
     private function nextTurn()
     {
         foreach ($this->gameStatus['users'] as $numUser => $user) {
+            // Дали всем игрокам статус - другойХодит
             $this->updateUserStatus('otherTurn', $user['ID']);
-            //Дали всем игрокам статус - другойХодит
+
             if (
                 ($this->gameStatus['turnNumber'] > $this->activeGameUsers())
                 &&
                 !isset($this->gameStatus['users'][$numUser]['lastActiveTime'])
                 &&
-                $this->gameStatus['turnNumber'] > ($this->gameStatus['users'][$numUser]['inactiveTurn'] + $this->activeGameUsers(
-                    ))
+                $this->gameStatus['turnNumber'] > ($this->gameStatus['users'][$numUser]['inactiveTurn'] + $this->activeGameUsers())
             ) {
                 $this->exitGame($numUser, false);
             }
@@ -1832,7 +1830,7 @@ class Game
 
         $this->gameStatus['turnNumber']++;
 
-        //$this->adv2Chat();//Показ рекламы в чате
+        //$this->adv2Chat(); // Показ рекламы в чате
 
         $this->gameStatus['turnBeginTime'] = date('U');
         $this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] = false;

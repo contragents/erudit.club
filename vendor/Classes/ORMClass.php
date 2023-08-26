@@ -159,4 +159,9 @@ class ORM
     {
         return ' GROUP BY ' . implode(', ', $conditions) . ' ';
     }
+
+    public static function orWhere(string $field, string $condition, $value, bool $isRaw = false): string
+    {
+        return " OR $field $condition " . ($isRaw ? $value : "'$value'") . ' ';
+    }
 }

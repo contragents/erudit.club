@@ -66,42 +66,11 @@ Config::checkDebugFlag();
  * @param string $class
  * @param bool $ignoreCli
  */
-function mp($data, string $comment = '', string $class = 'NA', $ignoreCli = false): void
+function mp($data, string $comment = '', string $class = 'NA'): void
 {
-    /** todo restore on prod when time come
-     * if (Config::$config['env'] !== Config::DEV) {
-     * return;
-     * }
-     */
-
-    if (Config::isDebug() && !empty(Config::LOGGING_METHODS[$class])) {
-        Cache::hset(
-            Config::$config['debug_info']['debug_key'],
-            microtime(true),
-            ['data' => $data, 'comment' => $comment, 'method' => $class]
-        );
-    }
-
-    if (!isset($_REQUEST['cli_mode']) || $ignoreCli) {
-        Cache::setex(
-            Tracker::combineKeys([LOG_KEY, $class, date('c'), microtime(true)]),
+    Cache::setex(
+            implode('_',[LOG_KEY, $class, date('c'), microtime(true)]),
             LOG_TTL,
             ['data' => $data, 'comment' => $comment, 'class' => $class]
         );
-
-        if (!$ignoreCli) {
-            return;
-        }
-    }
-
-    $repeatChar = array_rand(['!' => '!', '#' => '#', '+' => '+']);
-    print "\n" . $comment . str_repeat($repeatChar, 10) . "\n";
-
-    if (is_array($data)) {
-        print_r($data);
-    } else {
-        print $data;
-    }
-
-    print "\n" . str_repeat($repeatChar, 10) . "\n";
 }

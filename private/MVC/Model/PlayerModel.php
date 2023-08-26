@@ -10,6 +10,8 @@ class PlayerModel extends BaseModel
     const RATING_CACHE_PREFIX = 'erudit.rating_cache_';
 
     const COOKIE_NOT_LINKED_STATUS = 'not_linked';
+    const DELTA_RATING_KEY_PREFIX = 'erudit.delta_rating_';
+    const RATING_CACHE_TTL = 7 * 24 * 60 * 60;
 
     public static function getPlayerID(string $cookie, bool $createIfNotExist = false)
     {
@@ -183,26 +185,6 @@ class PlayerModel extends BaseModel
                 self::TABLE_NAME . ' ps'
             )
             . ORM::where('false', '', '', true);
-
-        // todo убрать после ОРМ
-        return 'SELECT 
-        max(cookie) as cookie, 
-        max(rating) as rating, 
-        max(games_played) as games_played, 
-        case when max(win_percent) is null then 0 else max(win_percent) END as win_percent,
-        avg(inactive_percent) as inactive_percent,
-        case 
-        when max(rating)>=1700 
-        then (
-        select 
-        case when sum(num) IS NULL THEN 1 ELSE sum(num)+1 END
-        from 
-        (select 1 as num from players where rating>ps.rating group by user_id, rating) dd
-        ) 
-        else \'Не в ТОПе\' 
-        end as top
-        FROM players ps
-        WHERE FALSE ';
     }
 
     public static function getTop($rating)
@@ -229,6 +211,46 @@ class PlayerModel extends BaseModel
                 round(Game::$configStatic['cacheTimeout'] / 15),
                 $ratingInfo
             );
+        }
+    }
+
+    private static function cacheDeltaRating(string $cookie = null, $userID, array $deltaArr)
+    {
+        if ($cookie) {
+            Cache::setex(self::DELTA_RATING_KEY_PREFIX . $cookie, self::RATING_CACHE_TTL, $deltaArr);
+        }
+
+
+        if (($userID ?? 0 > 0)) {
+            Cache::setex(self::DELTA_RATING_KEY_PREFIX . $userID, self::RATING_CACHE_TTL, $deltaArr);
+        }
+    }
+
+    public
+    static function decreaseRatings()
+    {
+        $notPlayedPlayers = self::getCustomComplex(
+            ['UNIX_TIMESTAMP() - UNIX_TIMESTAMP(rating_changed_date)', 'rating'],
+            ['>', '>'],
+            [24 * 60 * 60, 2300],
+            true,
+            false,
+            ['user_id', 'cookie']
+        );
+
+        foreach ($notPlayedPlayers as $player) {
+            $ratingDecreaseQuery = ORM::update(self::TABLE_NAME)
+                . ORM::set(['field' => 'rating', 'value' => 'rating-1', 'raw' => true])
+                . ORM::where('cookie', '=', $player['cookie'])
+                . (
+                    $player['user_id'] ?? 0 > 0
+                        ? ORM::orWhere('user_id', '=', $player['user_id'], true)
+                        : ''
+                );
+
+            if (DB::queryInsert($ratingDecreaseQuery)) {
+                self::cacheDeltaRating($player['cookie'], $player['user_id'], ['delta' => -1,]);
+            }
         }
     }
 }

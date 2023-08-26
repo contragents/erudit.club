@@ -1,4 +1,11 @@
 <?php
+
+/**
+ * @var array $deltaRating
+ * @var array $user
+ * @var array $rating
+ */
+
 if (isset($_POST['vertical'])) {
     $vertical = true;
 } else {
@@ -6,9 +13,7 @@ if (isset($_POST['vertical'])) {
 }
 $top = $rating['top'];
 $marginTop = '';
-/*if (is_numeric($top) && $top <= 10) {
-    $marginTop = ' margin-top:86px;';
-}*/
+
 return "<tr style='border-top:1px solid black !important;'>
       <th scope=\"row\">"
     . "<div style='margin-right: 0px; " . ($vertical === true ? '' : 'display: inline;') . "'>"
