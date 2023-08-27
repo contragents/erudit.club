@@ -4,22 +4,19 @@ use Lang\Eng;
 
 class BotEng
 {
-    private static int $minutesToGo = 5;
-    private static $langClass = Eng::class;
-    private static $lang = 'EN';
-    /**
-     * @var false|float|int|mixed|string
-     */
-    private static $thinkEndTime;
+    const MINUTES_TO_GO = 5;
+    public static $langClass = Eng::class;
+    public static $lang = 'EN';
+    public static $thinkEndTime;
 
     const BOT_GAMES = 'erudit.botEN_games';
 
     public static function Run()
     {
         $_SERVER['DOCUMENT_ROOT'] = '/var/www/erudit.club';
-        set_time_limit(static::$minutesToGo * 60 + 25);
+        set_time_limit(self::MINUTES_TO_GO * 60 + 25);
         $start_script_time = date('U');
-        $script_work_time = static::$minutesToGo * 60 - 5;
+        $script_work_time = self::MINUTES_TO_GO * 60 - 5;
         $secondsToBotRefresh = 10;
 
         $red = Cache::getInstance();
@@ -42,7 +39,7 @@ class BotEng
                 ob_end_clean();
 
                 $resp = json_decode($resp, true);
-                print_r($resp); //sleep(4);
+                //print_r($resp); //sleep(4);
 
                 if (($resp['gameState'] == 'gameResults') || ($resp['gameState'] == 'initGame')) {
                     ob_start();
@@ -98,10 +95,10 @@ class BotEng
                             $secondsToThink = $resp['minutesLeft'] * 60 + $resp['secondsLeft'];
                             $thinkStartTime = date('U');
                             self::$thinkEndTime = $thinkStartTime + $secondsToThink;
+                            print self::$thinkEndTime;
                             $botsTurns[$Bot] = $resp['gameSubState'];
 
                             $turn_submit = self::sendResponse($resp);
-                            $turn_submit = json_decode($turn_submit, true);
                         }
                     }
                 }
@@ -128,7 +125,7 @@ class BotEng
     }
 
 
-    private static function changeFishkiBot(&$data)
+    public static function changeFishkiBot(&$data)
     {
         $kf = 1;
 
@@ -144,7 +141,7 @@ class BotEng
         return $resp;
     }
 
-    private static function sendResponse(&$data)
+    public static function sendResponse(&$data)
     {
         if (isset($data['desk'])) {
             $_POST['cells'] = $data['desk'];
@@ -152,6 +149,7 @@ class BotEng
             $obj->botUnlock(); // разблокировали состояние игры
         } else {
             $_POST['cells'] = static::$langClass::init_desk();
+            print_r($_POST['cells']); sleep(2);
             $slovaPlayed = [];
         }
 
@@ -176,10 +174,10 @@ class BotEng
     }
 
 
-    private static function makeTurn(&$desk, &$fishki, &$slovaPlayed): bool
+    public static function makeTurn(&$desk, &$fishki, &$slovaPlayed): bool
     {
         // error_reporting(E_ALL & ~E_NOTICE);  ini_set('display_errors', 0);
-        @ob_end_clean();
+        //@ob_end_clean();
         $fishki1 = $fishki;
         $word = '';
         /* Не забирать звезды с поля
@@ -200,12 +198,15 @@ class BotEng
         //Собрали звезды с поля
         */
 
+        print '$k - cycle;';
         for ($k = 0; $k < 2; $k++) {// 2 прохода
             //$j - строки, $i - столбцы
+            print 'j,i cycle; ';
             for ($j = 0; $j <= 14; $j++) {
                 for ($i = 0; $i <= 14; $i++) {
                     if (($i == 7) && ($j == 7) && !$desk[$i][$j][0]) {
                         if (date('U') < self::$thinkEndTime) {
+                            print 'sleva;';
                             self::findWordSleva($i, $j, $desk, $fishki, $slovaPlayed);
                         }
                     }
@@ -214,6 +215,7 @@ class BotEng
                         //print $i.$j.$desk[$i+1][$j][1];
                         $ff = '';//для временного отключения поиска слов вниз
                         if (date('U') < self::$thinkEndTime) {
+                            print 'vniz';
                             self::findWordVniz($i, $j, $desk, $fishki, $slovaPlayed);
                         }
                         //Ищем слова по вертикали (пока) начинающиеся на $j-1...
@@ -222,6 +224,7 @@ class BotEng
                     if (!$desk[$i][$j][0] && ($desk[$i + 1][$j][0] ?? false)) {
                         $ff = '';//для временного отключения поиска слов слева
                         if (date('U') < self::$thinkEndTime) {
+                            print 'sleva;';
                             self::findWordSleva($i, $j, $desk, $fishki, $slovaPlayed);
                         }
                         //Ищем слова по горизонтали (пока) заканчивающиеся на $i+1...
@@ -230,6 +233,7 @@ class BotEng
                     if (!$desk[$i][$j][0] && (isset($desk[$i][$j + 1]) && $desk[$i][$j + 1][0])) {
                         $ff = '';//для временного отключения поиска слов сверху
                         if (date('U') < self::$thinkEndTime) {
+                            print 'sverhu;';
                             self::findWordSverhu($i, $j, $desk, $fishki, $slovaPlayed);
                         }
                         //Ищем слова по вертикали (пока) заканчивающиеся на $j+1...
@@ -238,6 +242,7 @@ class BotEng
                     if (!$desk[$i][$j][0] && ($desk[$i - 1][$j][0] ?? false)) {
                         $ff = '';//для временного отключения поиска слов справа
                         if (date('U') < self::$thinkEndTime) {
+                            print 'sprava;';
                             self::findWordSprava($i, $j, $desk, $fishki, $slovaPlayed);
                         }
                         //Ищем слова по горизонтали (пока) заканчивающиеся на $i+1...
@@ -249,6 +254,7 @@ class BotEng
             if (count($fishki) && (count($fishki1) != count($fishki))) {
                 continue;//На следующий круг
             } else {
+                print 'go out from k cycle;';
                 break;
             }
         }
@@ -262,7 +268,7 @@ class BotEng
     }
 
 
-    private static function printr(&$cells)
+    public static function printr(&$cells)
     {
         for ($j = 0; $j <= 14; $j++) {
             for ($i = 0; $i <= 14; $i++) {
@@ -279,7 +285,7 @@ class BotEng
         //sleep(1);
     }
 
-    private static function findWordSleva($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
+    public static function findWordSleva($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
     {
         if (!count($fishki)) {
             return '';
@@ -328,8 +334,8 @@ class BotEng
             $maxWordLen = $maxWordLen - $maxRightAfterLen - $maxLen + count($fishki);
         */
 
-        $zapros .= "$\") AND NOT deleted = 1 AND slovo != '$lastLetter' AND length<=$maxWordLen AND lng = 2 ORDER BY length ASC";
-        //print $zapros . 'SLEVA'; //sleep (5);
+        $zapros .= "$\") AND NOT deleted = 1 AND slovo != '$lastLetter' AND length<=$maxWordLen ORDER BY length ASC";
+        print $zapros . 'SLEVA'; //sleep (5);
 
         if ($res = DB::queryArray($zapros)) {
             foreach ($res as $row) {
@@ -377,7 +383,7 @@ class BotEng
         return '';
     }
 
-    private static function findWordSverhu($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
+    public static function findWordSverhu($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
     {
         if (!count($fishki)) {
             return '';
@@ -418,8 +424,8 @@ class BotEng
             $maxWordLen = 7;
         }//так работает индекс
 
-        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen AND lng = 2 ORDER BY length ASC";;
-        //print $zapros . 'SVERHU'; //sleep (5);
+        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen ORDER BY length ASC";;
+        print $zapros . 'SVERHU'; //sleep (5);
 
         if ($res = DB::queryArray($zapros)) {
             foreach ($res as $row) {
@@ -461,7 +467,7 @@ class BotEng
         return '';
     }
 
-    private static function findWordSprava($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
+    public static function findWordSprava($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
     {
         if (!count($fishki)) {
             return '';
@@ -501,9 +507,9 @@ class BotEng
         }//так работает индекс
 
         $zapros = "select slovo from dict where (slovo REGEXP \"^$zapros{$lastLetter}[$regexp]{0,$maxLen}";
-        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen AND lng = 2 ORDER BY length ASC";
+        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen ORDER BY length ASC";
 
-        //print $zapros . 'SPRAVA';
+        print $zapros . 'SPRAVA';
         $xLastLetter = $x - mb_strlen($lastLetter, 'UTF-8');
         if ($res = DB::queryArray($zapros)) {
             foreach ($res as $row) {
@@ -550,7 +556,7 @@ class BotEng
         return '';
     }
 
-    private static function findWordVniz($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
+    public static function findWordVniz($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
     {
         if (!count($fishki)) {
             return '';
@@ -585,9 +591,9 @@ class BotEng
         }//так работает индекс
 
         $zapros = "select slovo from dict where (slovo REGEXP \"^$zapros{$lastLetter}[$regexp]{0,$maxLen}";
-        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen AND lng = 2 ORDER BY length ASC";;
+        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen ORDER BY length ASC";;
 
-        //print $zapros . 'VNIZ';
+        print $zapros . 'VNIZ';
         $yLastLetter = $y - mb_strlen($lastLetter, 'UTF-8');
         if ($res = DB::queryArray($zapros)) {
             foreach ($res as $row) {
@@ -629,7 +635,7 @@ class BotEng
         return '';
     }
 
-    private static function makeRegexp($fishki)
+    public static function makeRegexp($fishki)
     {
         $regexp = '';
         $numZvezd = 0;
@@ -644,7 +650,7 @@ class BotEng
         return $regexp;
     }
 
-    private static function zvezdaRegexp($numZvezd)
+    public static function zvezdaRegexp($numZvezd)
     {
         if ($numZvezd <= 1) {
             return 'qzjxk';
@@ -653,7 +659,7 @@ class BotEng
         }
     }
 
-    private static function checkWordFishki(&$fishki, &$word, $lastLetter, &$lettersZvezd = [])
+    public static function checkWordFishki(&$fishki, &$word, $lastLetter, &$lettersZvezd = [])
     {
         $fishki1 = $fishki;
         $word = mb_strtolower($word, 'UTF-8');
@@ -728,7 +734,7 @@ class BotEng
         return true;
     }
 
-    private static function maxToLeft($x, $y, $countFishki, &$desk)
+    public static function maxToLeft($x, $y, $countFishki, &$desk)
     {
         $max = 0;
         //if ($x == 0) return 1;
@@ -749,7 +755,7 @@ class BotEng
         return ($max > $countFishki ? $countFishki : $max);
     }
 
-    private static function maxToUp($x, $y, $countFishki, &$desk)
+    public static function maxToUp($x, $y, $countFishki, &$desk)
     {
         //if ( $y == 0 ) return 1;
         $max = 0;
@@ -771,7 +777,7 @@ class BotEng
         return ($max > $countFishki ? $countFishki : $max);
     }
 
-    private static function maxToRight($x, $y, $countFishki, &$desk)
+    public static function maxToRight($x, $y, $countFishki, &$desk)
     {
         //if ($x == 14) return 1;
         $max = 0;
@@ -794,7 +800,7 @@ class BotEng
         return ($max > $countFishki ? $countFishki : $max);
     }
 
-    private static function maxToDown($x, $y, $countFishki, &$desk)
+    public static function maxToDown($x, $y, $countFishki, &$desk)
     {
         $max = 0;
 

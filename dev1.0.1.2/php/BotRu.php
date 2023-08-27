@@ -4,7 +4,6 @@ use Lang\Ru;
 
 class BotRu extends BotEng
 {
-    const BOTSNUM = 47;
     public static $langClass = Ru::class;
     public static $lang = 'RU';
 
