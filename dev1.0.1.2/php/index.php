@@ -9,7 +9,7 @@ if (!isset($scriptName)) {
     throw new BadRequest('Wrong query');
 }
 
-require_once 'autoload.php';
+require_once __DIR__ . '/autoload.php';
 include_once 'cors.php';
 require_once 'index_functions.php';
 
