@@ -4,7 +4,7 @@ class DB
 {
     private static $_instance = null;
 
-    public static $DBConnect = false;
+    public static ?mysqli $DBConnect = null;
 
     private function __construct()
     {
@@ -12,7 +12,7 @@ class DB
     }
 
     public static function transactionRollback(){
-        if (self::$DBConnect === false) {
+        if (self::$DBConnect === null) {
             return false;
         } else {
             return mysqli_rollback(self::$DBConnect);
@@ -20,7 +20,7 @@ class DB
     }
 
     public static function transactionCommit() {
-        if (self::$DBConnect === false) {
+        if (self::$DBConnect === null) {
             return false;
         } else {
             return mysqli_commit(self::$DBConnect);
@@ -28,7 +28,7 @@ class DB
     }
 
     public static function transactionStart(): bool {
-        if (self::$DBConnect === false) {
+        if (self::$DBConnect === null) {
             self::connect();
         }
 
@@ -59,7 +59,7 @@ class DB
 
     public static function escapeString($str)
     {
-        if (self::$DBConnect === false)
+        if (self::$DBConnect === null)
             self::connect();
 
         return mysqli_real_escape_string(self::$DBConnect, $str);
@@ -71,7 +71,7 @@ class DB
      */
     public static function queryInsert($mysqlQuery)
     {
-        if (self::$DBConnect === false)
+        if (self::$DBConnect === null)
             self::connect();
 
         $res = mysqli_query(self::$DBConnect, $mysqlQuery);
@@ -87,7 +87,7 @@ class DB
 
     public static function queryArray($mysqlQuery)
     {
-        if (self::$DBConnect === false)
+        if (self::$DBConnect === null)
             self::connect();
 
         if ($res = mysqli_query(self::$DBConnect, $mysqlQuery)) {
@@ -107,7 +107,7 @@ class DB
      */
     public static function queryValue($mysqlQuery)
     {
-        if (self::$DBConnect === false)
+        if (self::$DBConnect === null)
             self::connect();
 
         if ($res = mysqli_query(self::$DBConnect, $mysqlQuery)) {
@@ -125,7 +125,7 @@ class DB
 
     public static function status()
     {
-        if (self::$DBConnect === false)
+        if (self::$DBConnect === null)
             return 'Not connected';
         else
             return mysqli_stat(self::$DBConnect);

@@ -144,12 +144,11 @@ class BotEng
     public static function sendResponse(&$data)
     {
         if (isset($data['desk'])) {
-            $_POST['cells'] = $data['desk'];
+            $_POST['cells'] = $data['desk']; // $_POST['cells'] - готовим доску на отправку
             $slovaPlayed = ($obj = new Erudit\Game())->gameWordsPlayed();
             $obj->botUnlock(); // разблокировали состояние игры
         } else {
             $_POST['cells'] = static::$langClass::init_desk();
-            print_r($_POST['cells']); sleep(2);
             $slovaPlayed = [];
         }
 
@@ -173,13 +172,17 @@ class BotEng
         }
     }
 
-
-    public static function makeTurn(&$desk, &$fishki, &$slovaPlayed): bool
+    /**
+     * @param array $desk - Поле для редактирования и отправки на сервер
+     * @param array $fishki - фишки игрока
+     * @param array $slovaPlayed - массив уже сыгранных слов
+     * @return bool
+     */
+    public static function makeTurn(array &$desk, array &$fishki, array &$slovaPlayed): bool
     {
-        // error_reporting(E_ALL & ~E_NOTICE);  ini_set('display_errors', 0);
-        //@ob_end_clean();
         $fishki1 = $fishki;
         $word = '';
+
         /* Не забирать звезды с поля
         for ($j = 0; $j <= 14; $j++) {
             for ($i = 0; $i <= 14; $i++) {
@@ -303,7 +306,7 @@ class BotEng
             return '';
         }
         //Не анализируем вертикальные примыкающие буквы
-        $regexp = '';
+
         $lastLetter = '';
         $step = 1;
         while ($desk[$x + $step][$y][0]) {
@@ -342,7 +345,8 @@ class BotEng
                 if (!isset($slovaPlayed[$row['slovo'] = mb_strtolower($row['slovo'], 'UTF-8')])
                     &&
                     self::checkWordFishki($fishki, $row['slovo'], $lastLetter, $lettersZvezd)) {
-                    $cells = $desk;
+                    $cells = $desk; // создали временную копию доски для попытки составить слово
+
                     $slovoNach = ($lastLetter === '' ? 0 : mb_strpos($row['slovo'], $lastLetter, 0, 'UTF-8'));
                     $lastLetterLen = ($lastLetter === '' ? 0 : mb_strlen($lastLetter, 'UTF-8'));
                     for ($k = 0; $k < $slovoNach; $k++) {
@@ -350,9 +354,14 @@ class BotEng
                         $cells[$x - $k][$y][1] = static::$langClass::getLetterCode(
                             $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
                         );
+
                         if (isset($lettersZvezd[$letter])) {
-                            $cells[$x - $k][$y][2] = $lettersZvezd[$letter];
-                        }//Указали на занятую звездочку
+                            // Указали на занятую звездочку
+                            $cells[$x - $k][$y][2] = $lettersZvezd[$letter]['code'];
+                            if (--$lettersZvezd[$letter]['count'] == 0) {
+                                unset($lettersZvezd[$letter]);
+                            }
+                        }
                     }
 
                     if (($x == 7) && ($y == 7)) {
@@ -366,16 +375,21 @@ class BotEng
                         $cells[$x + $k - $slovoNach + 1 + $delta][$y][1] = static::$langClass::getLetterCode(
                             $letter = mb_substr($row['slovo'], $k, 1, 'UTF-8')
                         );
+
                         if (isset($lettersZvezd[$letter])) {
-                            $cells[$x + $k - $slovoNach + 1 + $delta][$y][2] = $lettersZvezd[$letter];
-                        } // Указали на занятую звездочку
+                            // Указали на занятую звездочку
+                            $cells[$x + $k - $slovoNach + 1 + $delta][$y][2] = $lettersZvezd[$letter]['code'];
+                            if (--$lettersZvezd[$letter]['count'] == 0) {
+                                unset($lettersZvezd[$letter]);
+                            }
+                        }
                     }
+
                     self::printr($cells);
-                    //sleep(2);
+
                     $desk = $cells;
 
                     return true;
-                    //return ['word'=>$row['slovo'],'lastLettersNum'=>mb_strlen($lastLetter,'UTF-8')];
                 }
             }
         }
@@ -388,6 +402,7 @@ class BotEng
         if (!count($fishki)) {
             return '';
         }
+
         //пробуем вверх от xy
         $maxLen = self::maxToUp($x, $y, count($fishki), $desk);
         $maxWordLen = $maxLen;
@@ -443,18 +458,29 @@ class BotEng
                         $cells[$x][$y - $k][1] = static::$langClass::getLetterCode(
                             $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
                         );
+
                         if (isset($lettersZvezd[$letter])) {
-                            $cells[$x][$y - $k][2] = $lettersZvezd[$letter];
-                        }//Указали на занятую звездочку
+                            // Указали на занятую звездочку
+                            $cells[$x][$y - $k][2] = $lettersZvezd[$letter]['code'];
+                            if (--$lettersZvezd[$letter]['count'] == 0) {
+                                unset($lettersZvezd[$letter]);
+                            }
+                        }
                     }
+
                     for ($k = $slovoNach + $lastLetterLen; $k < mb_strlen($row['slovo'], 'UTF-8'); $k++) {
                         $cells[$x][$y + $k - $slovoNach + 1][0] = true;
                         $cells[$x][$y + $k - $slovoNach + 1][1] = static::$langClass::getLetterCode(
                             $letter = mb_substr($row['slovo'], $k, 1, 'UTF-8')
                         );
+
                         if (isset($lettersZvezd[$letter])) {
-                            $cells[$x][$y + $k - $slovoNach + 1][2] = $lettersZvezd[$letter];
-                        }//Указали на занятую звездочку
+                            // Указали на занятую звездочку
+                            $cells[$x][$y + $k - $slovoNach + 1][2] = $lettersZvezd[$letter]['code'];
+                            if (--$lettersZvezd[$letter]['count'] == 0) {
+                                unset($lettersZvezd[$letter]);
+                            }
+                        }
                     }
                     self::printr($cells);
                     $desk = $cells;
@@ -532,23 +558,35 @@ class BotEng
                         $cells[$xLastLetter - $k - 1][$y][1] = static::$langClass::getLetterCode(
                             $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
                         );
+
                         if (isset($lettersZvezd[$letter])) {
-                            $cells[$xLastLetter - $k - 1][$y][2] = $lettersZvezd[$letter];
-                        }//Указали на занятую звездочку
+                            // Указали на занятую звездочку
+                            $cells[$xLastLetter - $k - 1][$y][2] = $lettersZvezd[$letter]['code'];
+                            if (--$lettersZvezd[$letter]['count'] == 0) {
+                                unset($lettersZvezd[$letter]);
+                            }
+                        }
                     }
                     for ($k = 0; $k <= mb_strlen($row['slovo'], 'UTF-8') - $slovoNach - $lastLetterLen - 1; $k++) {
                         $cells[$x + $k][$y][0] = true;
                         $cells[$x + $k][$y][1] = static::$langClass::getLetterCode(
                             $letter = mb_substr($row['slovo'], $slovoNach + $lastLetterLen + $k, 1, 'UTF-8')
                         );
+
                         if (isset($lettersZvezd[$letter])) {
-                            $cells[$x + $k][$y][2] = $lettersZvezd[$letter];
-                        }//Указали на занятую звездочку
+                            // Указали на занятую звездочку
+                            $cells[$x + $k][$y][2] = $lettersZvezd[$letter]['code'];
+                            if (--$lettersZvezd[$letter]['count'] == 0) {
+                                unset($lettersZvezd[$letter]);
+                            }
+                        }
                     }
+
                     self::printr($cells);
+
                     $desk = $cells;
+
                     return true;
-                    //return ['word'=>$row['slovo'],'lastLettersNum'=>mb_strlen($lastLetter,'UTF-8')];
                 }
             }
         }
@@ -561,6 +599,7 @@ class BotEng
         if (!count($fishki)) {
             return '';
         }
+
         //пробуем вниз от xy
         $maxLen = self::maxToDown($x, $y, count($fishki), $desk);
         $maxWordLen = $maxLen;
@@ -569,7 +608,7 @@ class BotEng
             return '';
         }
         //Не анализируем вертикальные примыкающие буквы
-        $regexp = '';
+
         $lastLetter = '';
         $step = 1;
         while ($desk[$x][$y - $step][0]) {
@@ -577,7 +616,7 @@ class BotEng
             $maxWordLen++;
             $step++;
         }
-        //print '-' . $x . '-' . $y . '-' . $lastLetter . '-';
+
         $regexp = self::makeRegexp($fishki);
         $zapros = '';
 
@@ -611,23 +650,36 @@ class BotEng
                         $cells[$x][$yLastLetter - $k - 1][1] = static::$langClass::getLetterCode(
                             $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
                         );
+
                         if (isset($lettersZvezd[$letter])) {
-                            $cells[$x][$yLastLetter - $k - 1][2] = $lettersZvezd[$letter];
-                        }//Указали на занятую звездочку
+                            // Указали на занятую звездочку
+                            $cells[$x][$yLastLetter - $k - 1][2] = $lettersZvezd[$letter]['code'];
+                            if (--$lettersZvezd[$letter]['count'] == 0) {
+                                unset($lettersZvezd[$letter]);
+                            }
+                        }
                     }
+
                     for ($k = 0; $k <= mb_strlen($row['slovo'], 'UTF-8') - $slovoNach - $lastLetterLen - 1; $k++) {
                         $cells[$x][$y + $k][0] = true;
                         $cells[$x][$y + $k][1] = static::$langClass::getLetterCode(
                             $letter = mb_substr($row['slovo'], $slovoNach + $lastLetterLen + $k, 1, 'UTF-8')
                         );
+
                         if (isset($lettersZvezd[$letter])) {
-                            $cells[$x][$y + $k][2] = $lettersZvezd[$letter];
-                        }//Указали на занятую звездочку
+                            // Указали на занятую звездочку
+                            $cells[$x][$y + $k][2] = $lettersZvezd[$letter]['code'];
+                            if (--$lettersZvezd[$letter]['count'] == 0) {
+                                unset($lettersZvezd[$letter]);
+                            }
+                        }
                     }
+
                     self::printr($cells);
+
                     $desk = $cells;
+
                     return true;
-                    //return ['word'=>$row['slovo'],'lastLettersNum'=>mb_strlen($lastLetter,'UTF-8')];
                 }
             }
         }
@@ -698,7 +750,13 @@ class BotEng
                     if ($fishka >= 999) {
                         $lettersWord[$numLetter] = mb_strtoupper($letter, 'UTF-8');
                         if ($fishka > 999) {
-                            $lettersZvezd[$lettersWord[$numLetter]] = $fishka - 999 - 1; // У нас звезда под кодом буквы
+                            if (isset($lettersZvezd[$lettersWord[$numLetter]])) {
+                                $lettersZvezd[$lettersWord[$numLetter]]['count']++;
+                            } else {
+                                // У нас звезда под кодом буквы
+                                $lettersZvezd[$lettersWord[$numLetter]]['code'] = $fishka - 999 - 1; // У нас звезда под кодом буквы
+                                $lettersZvezd[$lettersWord[$numLetter]]['count'] = 1;
+                            }
                         }
                         unset($fishki1[$num]);
                         //Признак что буква со звездочкой
