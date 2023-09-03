@@ -5,7 +5,7 @@ use Lang\Ru;
 class BotRu extends BotEng
 {
     public static $langClass = Ru::class;
-    public static $lang = 'RU';
+    public static $lang = self::RU_LANG;
 
     const BOT_GAMES = 'erudit.bot_games';
 

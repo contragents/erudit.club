@@ -5,8 +5,10 @@ use Lang\Eng;
 class BotEng
 {
     const MINUTES_TO_GO = 5;
+    const ENG_LANG = 'EN';
+    const RU_LANG = 'RU';
     public static $langClass = Eng::class;
-    public static $lang = 'EN';
+    public static $lang = self::ENG_LANG;
     public static $thinkEndTime;
 
     const BOT_GAMES = 'erudit.botEN_games';
@@ -183,14 +185,14 @@ class BotEng
         $fishki1 = $fishki;
         $word = '';
 
-        /* Не забирать звезды с поля
+        // CLUB-270 забираем звезды с поля
         for ($j = 0; $j <= 14; $j++) {
             for ($i = 0; $i <= 14; $i++) {
                 if ($desk[$i][$j][0] && ($desk[$i][$j][1] > 999)) {
                     foreach ($fishki as $num => $fishka) {
                         if (($fishka + 999 + 1) === $desk[$i][$j][1]) {
                             $desk[$i][$j][2] = $fishka;
-                            $fishki[$num] = 999 + 1 + $fishka;//$desk[$i][$j][1];
+                            $fishki[$num] = $desk[$i][$j][1];
 
                             break;
                         }
@@ -198,8 +200,8 @@ class BotEng
                 }
             }
         }
-        //Собрали звезды с поля
-        */
+        // Собрали звезды с поля
+
 
         print '$k - cycle;';
         for ($k = 0; $k < 2; $k++) {// 2 прохода
