@@ -280,7 +280,7 @@ class BotEng
                 if (($i == $j) && !$cells[$i][$j][0]) {
                     print ($i % 10);
                 } elseif ($cells[$i][$j][0]) {
-                    print static::$langClass::$bukvy[$cells[$i][$j][1] < 999 ? $cells[$i][$j][1] : $cells[$i][$j][1] - 999 - 1][0];
+                    print static::$langClass::$bukvy[self::getFishkaCode($cells[$i][$j][1])][0];
                 } else {
                     print '.';
                 }
@@ -312,7 +312,7 @@ class BotEng
         $lastLetter = '';
         $step = 1;
         while ($desk[$x + $step][$y][0]) {
-            $lastLetter .= static::$langClass::$bukvy[($desk[$x + $step][$y][1] < 999 ? $desk[$x + $step][$y][1] : $desk[$x + $step][$y][1] - 999 - 1)][0];
+            $lastLetter .= static::$langClass::$bukvy[self::getFishkaCode($desk[$x + $step][$y][1])][0];
             $maxWordLen++;
             $step++;
         }
@@ -417,7 +417,7 @@ class BotEng
         $lastLetter = '';
         $step = 1;
         while ($desk[$x][$y + $step][0] ?? false) {
-            $lastLetter .= static::$langClass::$bukvy[($desk[$x][$y + $step][1] < 999 ? $desk[$x][$y + $step][1] : $desk[$x][$y + $step][1] - 999 - 1)][0];
+            $lastLetter .= static::$langClass::$bukvy[self::getFishkaCode($desk[$x][$y + $step][1])][0];
             $maxWordLen++;
             $step++;
         }
@@ -516,7 +516,7 @@ class BotEng
         $lastLetter = '';
         $step = 1;
         while ($desk[$x - $step][$y][0]) {
-            $lastLetter = static::$langClass::$bukvy[($desk[$x - $step][$y][1] < 999 ? $desk[$x - $step][$y][1] : $desk[$x - $step][$y][1] - 999 - 1)][0] . $lastLetter;
+            $lastLetter = static::$langClass::$bukvy[self::getFishkaCode($desk[$x - $step][$y][1])][0] . $lastLetter;
             $maxWordLen++;
             $step++;
         }
@@ -614,7 +614,7 @@ class BotEng
         $lastLetter = '';
         $step = 1;
         while ($desk[$x][$y - $step][0]) {
-            $lastLetter = static::$langClass::$bukvy[($desk[$x][$y - $step][1] < 999 ? $desk[$x][$y - $step][1] : $desk[$x][$y - $step][1] - 999 - 1)][0] . $lastLetter;
+            $lastLetter = static::$langClass::$bukvy[self::getFishkaCode($desk[$x][$y - $step][1])][0] . $lastLetter;
             $maxWordLen++;
             $step++;
         }
@@ -740,7 +740,7 @@ class BotEng
             if ($letter !== '') {
                 foreach ($fishki1 as $num => $fishka) {
                     print '!!!-' . $fishka . '-!!!';
-                    if ($letter == static::$langClass::$bukvy[($fishka < 999 ? $fishka : ($fishka - 999 - 1))][0]) {
+                    if ($letter == static::$langClass::$bukvy[self::getFishkaCode($fishka)][0]) {
                         unset($fishki1[$num]);
                         $letter = '';
                     }
@@ -881,6 +881,18 @@ class BotEng
         }
 
         return ($max > $countFishki ? $countFishki : $max);
+    }
+
+    /**
+     * Если фишка со звездочкой (>999), то возвращаем чистый код буквы - без зведочки
+     * @param int $code
+     * @return int
+     */
+    private static function getFishkaCode(int $code): int
+    {
+        return $code < 999
+            ? $code
+            : ($code - 999 - 1);
     }
 
 }
