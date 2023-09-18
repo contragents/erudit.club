@@ -292,6 +292,7 @@ function chatButtonFunction() {
             },
             cancel: {
                 label: 'Выход',
+                className: 'ml-5 btn-secondary btn-default bootbox-cancel',
                 callback: function () {
                     canOpenDialog = true;
                     canCloseDialog = true;
@@ -300,7 +301,7 @@ function chatButtonFunction() {
             },
             complain: {
                 label: 'Пожаловаться',
-                className: 'ml-3 btn-danger',
+                className: 'ml-5 btn-danger',
                 callback: function () {
 
                     fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
