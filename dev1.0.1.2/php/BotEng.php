@@ -1,6 +1,7 @@
 <?php
 
 use Lang\Eng;
+use Lang\Ru;
 
 class BotEng
 {
@@ -21,27 +22,21 @@ class BotEng
         $script_work_time = self::MINUTES_TO_GO * 60 - 5;
         $secondsToBotRefresh = 10;
 
-        $red = Cache::getInstance();
-
         $botsTurns = [];
         $botTimes = [];
         while ((date('U') - $start_script_time) < $script_work_time) {
-            if ($Bot = $red->redis->lpop(static::BOT_GAMES)) {
+            if ($Bot = Cache::lpop(static::BOT_GAMES)) {
                 $_COOKIE[Cookie::COOKIE_NAME] = $Bot;
 
                 $resp = ['gameState' => 1];
                 $zaprosNum = 3;
 
-
-                $_GET['queryNumber'] = $zaprosNum++;
+                $_GET['queryNumber'] = $zaprosNum;
                 $_GET['lang'] = static::$lang;
-                ob_start();
+
                 $resp = include __DIR__ . '/status_checker.php';
-                //$resp = json_decode(ob_get_contents(), true);
-                ob_end_clean();
 
                 $resp = json_decode($resp, true);
-                //print_r($resp); //sleep(4);
 
                 if (($resp['gameState'] == 'gameResults') || ($resp['gameState'] == 'initGame')) {
                     ob_start();
@@ -50,11 +45,11 @@ class BotEng
                     //Не будем анализировать ответы!)) - просто новая игра
                     unset($botsTurns[$Bot]);
                     unset($botTimes[$Bot]);
-                    $red->redis->hdel('erudit.bot_v3_list', $Bot);
+                    Cache::hdel('erudit.bot_v3_list', $Bot);
 
                     continue;
                 } else {
-                    $red->redis->rpush(static::BOT_GAMES, $Bot);
+                    Cache::rpush(static::BOT_GAMES, $Bot);
                     //Вернули бота в список игроков
 
                     print $resp['gameState'];
@@ -146,23 +141,22 @@ class BotEng
     public static function sendResponse(&$data)
     {
         if (isset($data['desk'])) {
-            $_POST['cells'] = $data['desk']; // $_POST['cells'] - готовим доску на отправку
-            $slovaPlayed = ($obj = new Erudit\Game())->gameWordsPlayed();
+            $cells = $data['desk']; // $_POST['cells'] - готовим доску на отправку
+            $obj = new Erudit\Game();
+            $slovaPlayed = $obj->gameWordsPlayed();
             $obj->botUnlock(); // разблокировали состояние игры
         } else {
-            $_POST['cells'] = static::$langClass::init_desk();
+            $cells = static::$langClass::init_desk();
             $slovaPlayed = [];
         }
 
         error_reporting(E_ALL & ~E_NOTICE);
         ini_set('display_errors', 0);
         try {
-            if (self::makeTurn($_POST['cells'], $data['fishki'], $slovaPlayed)) {
+            if (self::makeTurn($cells, $data['fishki'], $slovaPlayed)) {
                 print "++++++++++Submiting turn...........";
-                $_POST['cells'] = json_encode($_POST['cells']);
-                ob_start();
+                $_POST['cells'] = json_encode($cells);
                 $resp = include __DIR__ . '/turn_submitter.php';
-                ob_end_clean();
                 print $resp;
 
                 return $resp;
@@ -171,6 +165,12 @@ class BotEng
             }
         } catch (Throwable $e) {
             print $e->__toString();
+            LogModel::add(
+                [
+                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR,
+                    LogModel::MESSAGE_FIELD => $e->__toString()
+                ]
+            );
         }
     }
 
@@ -287,14 +287,18 @@ class BotEng
             }
             print "\n";
         }
-        //sleep(1);
     }
+
 
     public static function findWordSleva($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
     {
         if (!count($fishki)) {
             return '';
         }
+
+        /**
+         * @var Ru|Eng $bukvy
+         */
 
         //пробуем влево от xy
         $maxLen = self::maxToLeft($x, $y, count($fishki), $desk);
@@ -312,6 +316,7 @@ class BotEng
         $lastLetter = '';
         $step = 1;
         while ($desk[$x + $step][$y][0]) {
+            // Собираем коды последних букв слова
             $lastLetter .= static::$langClass::$bukvy[self::getFishkaCode($desk[$x + $step][$y][1])][0];
             $maxWordLen++;
             $step++;
@@ -333,8 +338,10 @@ class BotEng
 
         if ($maxWordLen > 7) {
             $maxWordLen = 7;
-        }//так работает индекс
-        /*Как идея ограничивать мах длину слова, но она будет почти всегда 8+
+        }
+        // так работает индекс
+        /*
+         * Как идея ограничивать мах длину слова, но она будет почти всегда 8+
         if ( ($maxWordLen - $maxRightAfterLen - $maxLen + count($fishki)) < $maxWordLen )
             $maxWordLen = $maxWordLen - $maxRightAfterLen - $maxLen + count($fishki);
         */
@@ -380,6 +387,7 @@ class BotEng
 
                         if (isset($lettersZvezd[$letter])) {
                             // Указали на занятую звездочку
+                            // todo 268 Не нужно отмечать [2] что атм звездочка - проверить
                             $cells[$x + $k - $slovoNach + 1 + $delta][$y][2] = $lettersZvezd[$letter]['code'];
                             if (--$lettersZvezd[$letter]['count'] == 0) {
                                 unset($lettersZvezd[$letter]);
@@ -409,11 +417,12 @@ class BotEng
         $maxLen = self::maxToUp($x, $y, count($fishki), $desk);
         $maxWordLen = $maxLen;
 
+        // Не анализируем, если есть горизонтальные примыкающие буквы
         if ($desk[$x + 1][$y][0] || $desk[$x - 1][$y][0]) {
             return '';
         }
-        //Не анализируем горизонтальные примыкающие буквы
-        $regexp = '';
+
+        // Собираем буквы, которые примыкают к слову снизу
         $lastLetter = '';
         $step = 1;
         while ($desk[$x][$y + $step][0] ?? false) {
@@ -421,18 +430,15 @@ class BotEng
             $maxWordLen++;
             $step++;
         }
-        //Собрали буквы, к которым примыкаем слово сверху
-
-        //print '-' . $x . '-' . $y . '-' . $lastLetter . '-';
 
         $regexp = self::makeRegexp($fishki);
         $zapros = "select slovo from dict where (slovo REGEXP \"^[$regexp]{0,$maxLen}$lastLetter";
-        if (($maxDownAfterLen = self::maxToDown(
-                $x,
-                $y + mb_strlen($lastLetter, 'UTF-8') + 1,
-                count($fishki),
-                $desk
-            )) || (($x == 7) && ($y == 7))) {
+        if ($maxDownAfterLen = self::maxToDown(
+            $x,
+            $y + mb_strlen($lastLetter, 'UTF-8') + 1,
+            count($fishki),
+            $desk
+        )) {
             $zapros .= "[$regexp]{0,$maxDownAfterLen}";
             $maxWordLen += $maxDownAfterLen;
         }
@@ -444,6 +450,11 @@ class BotEng
         $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen ORDER BY length ASC";;
         print $zapros . 'SVERHU'; //sleep (5);
 
+        // Длина фрагмента из фишек уже на поле
+        $lastLetterLen = ($lastLetter === '' ? 0 : mb_strlen($lastLetter, 'UTF-8'));
+        // Строка, с которой начинается примыкающая сверху часть слова
+        $yLastLetter = $y - $lastLetterLen;
+
         if ($res = DB::queryArray($zapros)) {
             foreach ($res as $row) {
                 if (!isset(
@@ -454,7 +465,8 @@ class BotEng
                     ) && self::checkWordFishki($fishki, $row['slovo'], $lastLetter, $lettersZvezd)) {
                     $cells = $desk;
                     $slovoNach = ($lastLetter === '' ? 0 : mb_strpos($row['slovo'], $lastLetter, 0, 'UTF-8'));
-                    $lastLetterLen = ($lastLetter === '' ? 0 : mb_strlen($lastLetter, 'UTF-8'));
+
+                    // Ставим фишки вверх от текущей позиции
                     for ($k = 0; $k < $slovoNach; $k++) {
                         $cells[$x][$y - $k][0] = true;
                         $cells[$x][$y - $k][1] = static::$langClass::getLetterCode(
@@ -470,6 +482,7 @@ class BotEng
                         }
                     }
 
+                    // Ставим фишки вниз от позиции ниже уже существующих фишек на поле
                     for ($k = $slovoNach + $lastLetterLen; $k < mb_strlen($row['slovo'], 'UTF-8'); $k++) {
                         $cells[$x][$y + $k - $slovoNach + 1][0] = true;
                         $cells[$x][$y + $k - $slovoNach + 1][1] = static::$langClass::getLetterCode(
@@ -484,7 +497,22 @@ class BotEng
                             }
                         }
                     }
-                    self::printr($cells);
+                    try {
+                        self::printr($cells);
+                    } catch (Throwable $e) {
+                        LogModel::add(
+                            [
+                                LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR,
+                                LogModel::MESSAGE_FIELD => json_encode(
+                                    [
+                                        'error' => $e->__toString(),
+                                        'cells' => $cells
+                                    ]
+                                )
+                            ]
+                        );
+                    }
+
                     $desk = $cells;
                     return true;
                     //return ['word'=>$row['slovo'],'lastLettersNum'=>mb_strlen($lastLetter,'UTF-8')];
@@ -606,14 +634,15 @@ class BotEng
         $maxLen = self::maxToDown($x, $y, count($fishki), $desk);
         $maxWordLen = $maxLen;
 
+        // Не анализируем, если есть горизонтальные примыкающие буквы
         if ($desk[$x + 1][$y][0] || $desk[$x - 1][$y][0]) {
             return '';
         }
-        //Не анализируем вертикальные примыкающие буквы
 
+        // Собираем буквы, которые примыкают к слову сверху
         $lastLetter = '';
         $step = 1;
-        while ($desk[$x][$y - $step][0]) {
+        while ($desk[$x][$y - $step][0] ?? false) {
             $lastLetter = static::$langClass::$bukvy[self::getFishkaCode($desk[$x][$y - $step][1])][0] . $lastLetter;
             $maxWordLen++;
             $step++;
@@ -622,7 +651,12 @@ class BotEng
         $regexp = self::makeRegexp($fishki);
         $zapros = '';
 
-        if ($maxUpBeforeLen = self::maxToUp($x, $y - mb_strlen($lastLetter, 'UTF-8') - 1, count($fishki), $desk)) {
+        if ($maxUpBeforeLen = self::maxToUp(
+            $x,
+            $y - mb_strlen($lastLetter, 'UTF-8') - 1,
+            count($fishki),
+            $desk
+        )) {
             $zapros = "[$regexp]{0,$maxUpBeforeLen}";
             $maxWordLen += $maxUpBeforeLen;
         }
@@ -635,7 +669,13 @@ class BotEng
         $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen ORDER BY length ASC";;
 
         print $zapros . 'VNIZ';
-        $yLastLetter = $y - mb_strlen($lastLetter, 'UTF-8');
+
+        // Длина фрагмента из фишек уже на поле
+        $lastLetterLen = mb_strlen($lastLetter, 'UTF-8');
+
+        // Строка, с которой начинается примыкающая сверху часть слова
+        $yLastLetter = $y - $lastLetterLen;
+
         if ($res = DB::queryArray($zapros)) {
             foreach ($res as $row) {
                 if (!isset(
@@ -645,8 +685,9 @@ class BotEng
                         )]
                     ) && self::checkWordFishki($fishki, $row['slovo'], $lastLetter, $lettersZvezd)) {
                     $cells = $desk;
-                    $slovoNach = mb_strpos($row['slovo'], $lastLetter, 0, 'UTF-8');
-                    $lastLetterLen = mb_strlen($lastLetter, 'UTF-8');
+                    $slovoNach = mb_strpos($row['slovo'], $lastLetter, 0, 'UTF-8') ?: 0;
+
+                    // Ставим фишки вверх от позиции выше уже существующих фишек на поле
                     for ($k = 0; $k < $slovoNach; $k++) {
                         $cells[$x][$yLastLetter - $k - 1][0] = true;
                         $cells[$x][$yLastLetter - $k - 1][1] = static::$langClass::getLetterCode(
@@ -662,6 +703,7 @@ class BotEng
                         }
                     }
 
+                    // Ставим фишки винз от текущей позиции
                     for ($k = 0; $k <= mb_strlen($row['slovo'], 'UTF-8') - $slovoNach - $lastLetterLen - 1; $k++) {
                         $cells[$x][$y + $k][0] = true;
                         $cells[$x][$y + $k][1] = static::$langClass::getLetterCode(
@@ -740,7 +782,7 @@ class BotEng
             if ($letter !== '') {
                 foreach ($fishki1 as $num => $fishka) {
                     print '!!!-' . $fishka . '-!!!';
-                    if ($letter == static::$langClass::$bukvy[self::getFishkaCode($fishka)][0]) {
+                    if ($letter === static::$langClass::$bukvy[self::getFishkaCode($fishka)][0]) {
                         unset($fishki1[$num]);
                         $letter = '';
                     }
@@ -760,6 +802,7 @@ class BotEng
                                 $lettersZvezd[$lettersWord[$numLetter]]['count'] = 1;
                             }
                         }
+
                         unset($fishki1[$num]);
                         //Признак что буква со звездочкой
                         $letter = '';
@@ -817,14 +860,13 @@ class BotEng
 
     public static function maxToUp($x, $y, $countFishki, &$desk)
     {
-        //if ( $y == 0 ) return 1;
         $max = 0;
 
         for (
             $j = $y;
             ($j >= 0)
             && (($j > 0) && ($desk[$x][$j - 1][0] == false))
-            && (!$desk[$x][$j][0])
+            && !$desk[$x][$j][0]
             && !($desk[$x + 1][$j][0] ?? true)
             && !($desk[$x - 1][$j][0] ?? true)
             && !($desk[$x - 1][$j - 1][0] ?? true)
@@ -867,14 +909,12 @@ class BotEng
         for (
             $j = $y;
             ($j <= 14)
-            && !($desk[$x][$j + 1][0] ?? true)
+            && !($desk[$x][$j + 1][0] ?? false) // $j==14 - точно нет буквы на 15й клетке
             && !$desk[$x][$j][0]
-            && !($desk[$x + 1][$j][0] ?? true)
-            && !($desk[$x - 1][$j][0] ?? true)
-            && !($desk[$x - 1][$j + 1][0] ?? true)
-            && !($desk[$x + 1][$j + 1][0] ?? true)
-            && !($desk[$x + 1][$j + 1][0] ?? true)
-            && !($desk[$x - 1][$j + 1][0] ?? true);
+            && ((($desk[$x + 1][$j][0] ?? true) === false) || $x === 14)
+            && ((($desk[$x - 1][$j][0] ?? true) === false) || $x === 0)
+            && ((($desk[$x - 1][$j + 1][0] ?? true) === false) && $x > 0 && $j < 14)
+            && ((($desk[$x + 1][$j + 1][0] ?? true) === false) && $x < 14 && $j < 14);
             $j++
         ) {
             $max++;
