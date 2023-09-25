@@ -395,7 +395,27 @@ class BotEng
                         }
                     }
 
-                    self::printr($cells);
+                    try {
+                        if (Ru::checkHasBadField($cells)) {
+                            throw new Exception('Bad $cells during ' . __METHOD__);
+                        }
+
+                        self::printr($cells);
+                    } catch (Throwable $e) {
+                        LogModel::add(
+                            [
+                                LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR,
+                                LogModel::MESSAGE_FIELD => json_encode(
+                                    [
+                                        'error' => $e->__toString(),
+                                        'cells' => $cells
+                                    ]
+                                )
+                            ]
+                        );
+
+                        continue;
+                    }
 
                     $desk = $cells;
 
@@ -497,7 +517,12 @@ class BotEng
                             }
                         }
                     }
+
                     try {
+                        if (Ru::checkHasBadField($cells)) {
+                            throw new Exception('Bad $cells during ' . __METHOD__);
+                        }
+
                         self::printr($cells);
                     } catch (Throwable $e) {
                         LogModel::add(
@@ -511,6 +536,8 @@ class BotEng
                                 )
                             ]
                         );
+
+                        continue;
                     }
 
                     $desk = $cells;
@@ -612,7 +639,27 @@ class BotEng
                         }
                     }
 
-                    self::printr($cells);
+                    try {
+                        if (Ru::checkHasBadField($cells)) {
+                            throw new Exception('Bad $cells during ' . __METHOD__);
+                        }
+
+                        self::printr($cells);
+                    } catch (Throwable $e) {
+                        LogModel::add(
+                            [
+                                LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR,
+                                LogModel::MESSAGE_FIELD => json_encode(
+                                    [
+                                        'error' => $e->__toString(),
+                                        'cells' => $cells
+                                    ]
+                                )
+                            ]
+                        );
+
+                        continue;
+                    }
 
                     $desk = $cells;
 
@@ -719,7 +766,27 @@ class BotEng
                         }
                     }
 
-                    self::printr($cells);
+                    try {
+                        if (Ru::checkHasBadField($cells)) {
+                            throw new Exception('Bad $cells during ' . __METHOD__);
+                        }
+
+                        self::printr($cells);
+                    } catch (Throwable $e) {
+                        LogModel::add(
+                            [
+                                LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR,
+                                LogModel::MESSAGE_FIELD => json_encode(
+                                    [
+                                        'error' => $e->__toString(),
+                                        'cells' => $cells
+                                    ]
+                                )
+                            ]
+                        );
+
+                        continue;
+                    }
 
                     $desk = $cells;
 
