@@ -50,7 +50,7 @@ function findPlaceGlobal(gameObject, oldX, oldY, cellX, cellY) {
         newLetter.setData('isTemporary', true);
         newLetter.setData('zvezdaFrom', gameObject.getData('letter'));
         container.push(newLetter);
-        placeToLotok(newLetter, 'temporary');
+        placeToLotok(newLetter);
         gameObject.disableInteractive();
 
         cells[cellX][cellY][2] = gameObject.getData('letter');

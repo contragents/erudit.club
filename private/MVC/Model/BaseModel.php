@@ -6,8 +6,21 @@ class BaseModel
     const TABLE_NAME = 'players';
     const AND_NOT_DELETED = ' AND is_deleted = 0 ';
 
+    const ID_FIELD = 'id';
+    const CREATED_AT_FIELD = 'created_at';
     const UPDATED_AT_FIELD = 'updated_at';
     const CURRENT_TIMESTAMP = 'CURRENT_TIMESTAMP';
+
+    const FIELDS = [self::ID_FIELD => self::TYPE_INT];
+
+    const TYPE_INT = 'int';
+    const TYPE_STRING = 'string';
+    const TYPE_DATE = 'timestamp';
+
+    public static function getFieldWithTable(string $field): string
+    {
+        return ' ' . static::TABLE_NAME . '.' . $field . ' ';
+    }
 
     public static function add(array $fieldsVals)
     {

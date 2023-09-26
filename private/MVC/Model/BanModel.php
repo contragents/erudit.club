@@ -5,8 +5,8 @@ class BanModel extends BaseModel
     const TABLE_NAME = 'ban';
 
     const BAN_TOTAL_COMPLAINT_COUNT = 5; // 5 жалоб до полного бана
-    const BAN_PERSONAL_TTL = 60 * 60 * 24 * 365; // 1 год персональный бан
-    const BAN_TOTAL_TTL = self::BAN_PERSONAL_TTL;
+    const BAN_PERSONAL_TTL = 60 * 60 * 24 * 14; // 2 недели персональный бан
+    const BAN_TOTAL_TTL = self::BAN_PERSONAL_TTL * 2;
 
     public static function ban(int $commonId, int $complainerId): bool
     {

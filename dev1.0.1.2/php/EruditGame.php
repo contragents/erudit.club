@@ -11,7 +11,9 @@ use Dadata\Hints;
 use Dadata\Players;
 use Dadata\Prizes;
 use Dadata\Stats;
+use Lang\Eng;
 use Lang\Ru;
+use LogModel;
 use \ORM;
 use PlayerModel;
 use UserModel;
@@ -281,7 +283,7 @@ class Game
     /**
      * @param array $user
      * @return false|mixed|string
-     * @var Ru $this->gameStatus['lngClass']
+     * @var Ru $this ->gameStatus['lngClass']
      */
     public function getPlayerName(array $user)
     {
@@ -1250,6 +1252,21 @@ class Game
             $cells = json_decode($_POST['cells'], true);
             // Присланная доска
 
+            if (Ru::checkHasBadField($cells)) {
+                LogModel::add(
+                    [
+                        LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR,
+                        LogModel::MESSAGE_FIELD => $_POST['cells']
+                    ]
+                );
+
+                // Прислана доска с ошибкой в поле - ничего не обрабатываем
+                return $this->checkGameStatus();
+            }
+
+            /**
+             * @method Ru|Eng submit()
+             */
             $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus);
         } catch (\Throwable $e) {
             \BadRequest::logBadRequest(
@@ -1269,6 +1286,18 @@ class Game
                 $this->numUser
             );
 
+            return $this->checkGameStatus();
+        }
+
+        if (Ru::checkHasBadField($cells)) {
+            LogModel::add(
+                [
+                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_RULANG_ERROR,
+                    LogModel::MESSAGE_FIELD => json_encode($cells)
+                ]
+            );
+
+            // После анализа присланной доски ошибка в поле - ничего не сохраняем
             return $this->checkGameStatus();
         }
 
@@ -1797,7 +1826,8 @@ class Game
                 &&
                 !isset($this->gameStatus['users'][$numUser]['lastActiveTime'])
                 &&
-                $this->gameStatus['turnNumber'] > ($this->gameStatus['users'][$numUser]['inactiveTurn'] + $this->activeGameUsers())
+                $this->gameStatus['turnNumber'] > ($this->gameStatus['users'][$numUser]['inactiveTurn'] + $this->activeGameUsers(
+                    ))
             ) {
                 $this->exitGame($numUser, false);
             }

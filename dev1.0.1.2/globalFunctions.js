@@ -374,11 +374,13 @@ function lotokFreeXY(X, Y) {
     lotokCells[Y][X] = false;
 }
 
-function placeToLotok(fishka, temporary = false) {
-    if (temporary == 'temporary')
+function placeToLotok(fishka) {
+    if (fishka.getData('isTemporary')) {
         var slotXY = lotokFindSlotReverseXY();
-    else
+    } else {
         var slotXY = lotokFindSlotXY();
+    }
+
     fishka.setData('cellX', false);
     fishka.setData('cellY', false);
     fishka.setData('lotokX', slotXY[0]);

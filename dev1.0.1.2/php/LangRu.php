@@ -304,7 +304,7 @@ class Ru
             if ($bukva[0] == $letter) {
                 return $num;
             } else { // Буква под звездочкой?
-                if ($bukva[0] == mb_strtolower($letter,'UTF-8') || stripos($letter, $bukva[0]) !== false) {
+                if ($bukva[0] == mb_strtolower($letter, 'UTF-8') || stripos($letter, $bukva[0]) !== false) {
                     return $num + 999 + 1;
                 }
             }
@@ -591,7 +591,38 @@ class Ru
         return true;
     }
 
+    /**
+     * @param array $cells
+     * @return bool
+     */
+    public static function checkHasBadField(array $cells): bool
+    {
+        foreach ($cells as $row) {
+            foreach ($row as $field) {
+                // ошибка, если признак буквы - true, но кода буквы нет
+                if ($field[0] === true && $field[1] === false) {
+                    return true;
+                } // ошибка, если признак буквы есть, но код буквы не найден в массивах букв Ру-Инг
+                elseif (
+                    $field[0] !== false
+                    &&
+                    !isset(Ru::$bukvy[$field[1]][1])
+                    &&
+                    !isset(Eng::$bukvy[$field[1]][1])
+                    &&
+                    !isset(Ru::$bukvy[$field[1] - 1 - 999][1])
+                    &&
+                    !isset(Eng::$bukvy[$field[1] - 1 - 999][1])
+                ) {
+                    return true;
+                } // ошибка, если признак буквы - фолс, но буква есть
+                elseif ($field[0] === false && $field[1] !== false) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
-//error_reporting(E_ALL);ini_set('display_errors', 1);
-//include 'EruditGame.php';
 

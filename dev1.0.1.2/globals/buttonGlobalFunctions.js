@@ -118,7 +118,6 @@ function resetButtonFunction(ignoreBootBox = false) {
                 container[k].setData('cellY', false);
                 container[k].setInteractive();
                 placeToLotok(container[k]);
-
             }
 
             if (container[k].getData('isTemporary') === true) {

@@ -7,7 +7,7 @@ this.input.on('dragstart', function (pointer, gameObject) {
         cells[cellX][cellY][0] = false;
         cells[cellX][cellY][1] = false;
         cells[cellX][cellY][2] = false;
-        cells[cellX][cellY][2] = DEFAULT_FISHKA_SET;
+        cells[cellX][cellY][3] = DEFAULT_FISHKA_SET;
 
         gameObject.setData('cellX', false);
         gameObject.setData('cellY', false);
