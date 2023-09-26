@@ -256,34 +256,37 @@ function chatButtonFunction() {
 
                         fetchGlobal(CHAT_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
                             .then((data) => {
-                                if (data == '')
-                                    var responseText = 'Ошибка';
-                                else {
-                                    var responseText = data['message'];
+                                    if (data == '')
+                                        var responseText = 'Ошибка';
+                                    else {
+                                        var responseText = data['message'];
 
-                                    if (data['message'] === 'Сообщение отправлено') {
-                                        $('#no_msg_span').html('');
-                                        $('#msg_span').html('<li>' + $('#chattext').val() + '</li>' + $('#msg_span').html());
+                                        if (data['message'] === 'Сообщение отправлено') {
+                                            $('#no_msg_span').html('');
+                                            $('#msg_span').html('<li>' + $('#chattext').val() + '</li>' + $('#msg_span').html());
+                                        }
+
+                                        $('#chattext').val('');
                                     }
 
-                                    $('#chattext').val('');
+                                    if (data['message'] !== 'Сообщение отправлено') {
+                                        dialog2 = bootbox.alert({
+                                            message: responseText,
+                                            size: 'small'
+                                        });
+                                        setTimeout(
+                                            function () {
+                                                dialog2.find(".bootbox-close-button").trigger("click");
+                                            }
+                                            , 2000
+                                        );
+                                    }
+
+                                    buttons['chatButton']['svgObject'].setInteractive();
+                                    buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Otjat'));
+                                    buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', false);
                                 }
-                                dialog2 = bootbox.alert({
-                                    message: responseText,
-                                    size: 'small'
-                                });
-                                setTimeout(
-                                    function () {
-                                        dialog2.find(".bootbox-close-button").trigger("click");
-                                    }
-                                    , 2000
-                                );
-                                buttons['chatButton']['svgObject'].setInteractive();
-                                buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Otjat'));
-                                buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', false);
-                            });
-
-                        //console.log('This was logged in the callback: ' + result+ $(".bootbox-body #myChatForm").serialize());
+                            );
                     }
 
                     return false;
