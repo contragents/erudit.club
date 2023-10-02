@@ -283,7 +283,7 @@ class Game
     /**
      * @param array $user
      * @return false|mixed|string
-     * @var Ru $this ->gameStatus['lngClass']
+     * @var Ru $bukvy
      */
     public function getPlayerName(array $user)
     {
@@ -451,16 +451,13 @@ class Game
     private function genKeyForCommonID($ID)
     {
         $messageToEncrypt = $ID;
-        $secretKey = 'eruditforever';//$this->config['secret_key'];
-        $method = 'AES-128-CBC';//$this->config['encrypt_method'];
+        $secretKey = 'eruditforever';
+        $method = 'AES-128-CBC';
         $ivLength = openssl_cipher_iv_length($method);
         $iv = base64_decode('x/bazHpEqMpxpLfVWD9dhA==');//openssl_random_pseudo_bytes($ivLength);//$this->config['iv'];
         $encrypted_message = openssl_encrypt($messageToEncrypt, $method, $secretKey, 0, $iv);
 
         return $encrypted_message;
-
-        $decrypted_message = openssl_decrypt($encrypted_message, $method, $secret_key, 0, $iv);
-        echo $decrypted_message;
     }
 
     public function mergeTheIDs($encryptedMessage, $commonID)

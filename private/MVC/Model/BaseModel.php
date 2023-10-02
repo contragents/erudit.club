@@ -9,6 +9,8 @@ class BaseModel
     const ID_FIELD = 'id';
     const CREATED_AT_FIELD = 'created_at';
     const UPDATED_AT_FIELD = 'updated_at';
+    const IS_DELETED_FIELD = 'is_deleted';
+
     const CURRENT_TIMESTAMP = 'CURRENT_TIMESTAMP';
 
     const FIELDS = [self::ID_FIELD => self::TYPE_INT];

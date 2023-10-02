@@ -3,6 +3,8 @@
 /** Класс ORM для работы с MariaDB */
 class ORM
 {
+    const COUNT = 'COUNT';
+    const MAX = 'MAX';
     public $rawExpression;
 
     public function __construct($expression)
@@ -163,5 +165,24 @@ class ORM
     public static function orWhere(string $field, string $condition, $value, bool $isRaw = false): string
     {
         return " OR $field $condition " . ($isRaw ? $value : "'$value'") . ' ';
+    }
+
+    /**
+     * @param string $function
+     * @param string $field
+     * @param string $as
+     * @return string
+     */
+    public static function agg(string $function, string $field, string $as = ''): string
+    {
+        return ' '
+            . $function
+            . '('
+            . $field
+            . ') '
+            . ($as
+                ? ($as . ' ')
+                : ''
+            );
     }
 }

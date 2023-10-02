@@ -13,6 +13,12 @@ class PlayerModel extends BaseModel
     const DELTA_RATING_KEY_PREFIX = 'erudit.delta_rating_';
     const RATING_CACHE_TTL = 7 * 24 * 60 * 60;
 
+    /**
+     * Определяет common_id по сложной схеме через связанные куки и ID от яндекса
+     * @param string $cookie
+     * @param bool $createIfNotExist
+     * @return array|false|string
+     */
     public static function getPlayerID(string $cookie, bool $createIfNotExist = false)
     {
         if ($commonID = self::getCommonID($cookie)) {

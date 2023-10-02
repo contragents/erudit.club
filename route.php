@@ -1,29 +1,25 @@
 <?php
 
-const ERUDIT_DOMAIN = 'xn--d1aiwkc2d.club';
-const CONTROLLER_SUFFIX = 'Controller';
-const DEFAULT_CONTROLLER = 'Moderation';
-const DEFAULT_ACTION = 'index';
+$path = parse_url($_SERVER['REQUEST_URI'])['path'];
+$pathParts = explode('/', $path);
+if (strpos($pathParts[1], 'ndex.php')) {
+    header('HTTP/1.0 403 Forbidden');
 
-// Проверяем контроллер в субдомене
-$subDomain = substr($_SERVER['HTTP_HOST'], 0, (strpos($_SERVER['HTTP_HOST'], ERUDIT_DOMAIN) ?: 1) - 1);
-//print '!!!!' . $subDomain; exit();
-$controller = ucfirst($subDomain);
-
-// Проверяем контроллер в ГЕТ-параметрах
-if (isset($_GET['module'])) {
-    $controller .= ucfirst($_GET['module']);
+    echo 'Доступ запрещен';
+    exit();
 }
 
-//Получаем имя класса контроллера
-$controller = ($controller ?: DEFAULT_CONTROLLER) . CONTROLLER_SUFFIX;
-
-try {
-    $response = (new $controller($_GET['action'] ?? DEFAULT_ACTION, $_REQUEST))->Run();
-    print $response;
-} catch (Throwable $exception) {
-    http_response_code(400);
-    print json_encode(['status' => 'error', 'message' => 'Script error', 'comments' => $exception]);
+if (count($pathParts) > 2) {
+    $controller = ucfirst($pathParts[2]) . 'Controller';
+    $action = $pathParts[3];
+    // print_r([$controller, $action]);
+    if (is_callable([$controller, $action . 'Action'])) {
+        $res = (new $controller($action, $_REQUEST))->Run();
+        print (is_array($res) ? json_encode($res,JSON_UNESCAPED_UNICODE) : $res);
+    } else {
+        header('HTTP/1.0 403 Forbidden');
+        echo 'Доступ запрещен';
+    }
 }
 
 exit();
