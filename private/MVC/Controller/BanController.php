@@ -2,10 +2,10 @@
 
 class BanController extends BaseController
 {
-    const USER_NOT_FOUND_ERROR = ['status' => 'error', 'message' => 'Пользователь не найден'];
-    const BANNED_USER_NOT_FOUND_ERROR = ['status' => 'error', 'message' => 'Бан пользователя не найден'];
+    const USER_NOT_FOUND_ERROR = ['result' => 'error', 'message' => 'Пользователь не найден'];
+    const BANNED_USER_NOT_FOUND_ERROR = ['result' => 'error', 'message' => 'Бан пользователя не найден'];
 
-    const SUCCESS = ['status' => 'success', 'message' => 'Игрок разблокирован'];
+    const SUCCESS = ['result' => 'success', 'message' => 'Игрок разблокирован'];
 
     public function Run()
     {

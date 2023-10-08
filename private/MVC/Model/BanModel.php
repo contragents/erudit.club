@@ -67,9 +67,7 @@ class BanModel extends BaseModel
 
         $res = DB::queryValue($totalBannedQuery);
 
-        return $res
-            ? $res
-            : 0;
+        return $res ?: 0;
     }
 
     public static function bannedBy(int $commonId): array
@@ -115,6 +113,26 @@ class BanModel extends BaseModel
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
             . ORM::andWhere(self::COMPLAINER_ID_FIELD, '=', $complainerId, true);
 
-        return DB::queryInsert($query) ? true : false;
+        if (DB::queryInsert($query)) {
+            if (self::countComplaints($commonId) < self::BAN_TOTAL_COMPLAINT_COUNT) {
+                self::deleteTotalBan($commonId);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static function deleteTotalBan(int $commonId): void
+    {
+        $removeTotalBanQuery = ORM::update(self::TABLE_NAME)
+            . ORM::set(['field' => self::IS_DELETED_FIELD, 'value' => 1])
+            . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
+            . ORM::andWhere(self::COMPLAINER_ID_FIELD, 'IS', 'NULL', true)
+            . ORM::andWhere(self::TS_TO_FIELD, '>', time(), true)
+            . ORM::andWhere(self::IS_DELETED_FIELD, '=', 0, true);
+
+        DB::queryInsert($removeTotalBanQuery);
     }
 }

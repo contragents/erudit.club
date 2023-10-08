@@ -217,6 +217,14 @@ function copyDonateKey() {
     console.log($('#donate_id').val());
 }
 
+function deleteBan(commonID) {
+    fetchGlobalMVC(DELETE_BAN_URL + commonID, '', 'commonID=' + commonID)
+        .then((resp) => {
+            console.log(resp['result']);
+            showCabinetActionResult(resp);
+        });
+}
+
 function savePlayerName(name, commonID = '') {
     if (name.trim() == '') {
         let resp = {result: 'error', message: 'Задано пустое значение'};

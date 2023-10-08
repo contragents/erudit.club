@@ -14,7 +14,6 @@ use Dadata\Stats;
 use Lang\Eng;
 use Lang\Ru;
 use LogModel;
-use \ORM;
 use PlayerModel;
 use UserModel;
 
@@ -319,6 +318,10 @@ class Game
                     $letterNumber = number_format(round(34 + $letterNumber * (59 - 34 + 1) / 30, 0), 0);
                 }
 
+                /**
+                 * @var Ru|Eng $bukvy
+                 */
+                
                 if ($this->gameStatus['lngClass']::$bukvy[$letterNumber][3] == false) { // нет ошибки - класс неизвестен
                     $letterNumber = 31; // меняем плохую букву на букву Я
                 }
@@ -536,6 +539,12 @@ class Game
         if (!isset($this->gameStatus['users'])) {
             return $this->makeResponse(['message' => "Игра не начата"]);
         }
+
+        $commonId = PlayerModel::getCommonID($this->User);
+        if ($commonId) {
+            $thisPlayerHasBanned = array_column(BanModel::hasBanned($commonId), BanModel::COMMON_ID_FIELD);
+        }
+
         foreach ($this->gameStatus['users'] as $num => $user) {
             if (isset($user['userID'])) {
                 if (!($deltaRating = $this->getDeltaRating(self::hash_str_2_int($user['userID'])))) {
@@ -564,6 +573,14 @@ class Game
             $rating['playerName'] = $this->getPlayerName($user);
             $rating['playerAvatarUrl'] = $this->getAvatarUrl($user['ID']);
             $rating['isActive'] = (!isset($user['lastActiveTime']) || !$user['isActive']) ? false : true;
+
+            $canDeleteBan = false;
+            if ($user != $this->User) {
+                $currentUserCommonId = PlayerModel::getCommonID($user['ID']);
+                if ($currentUserCommonId && !empty($thisPlayerHasBanned[$currentUserCommonId])) {
+                    $canDeleteBan = true;
+                }
+            }
 
             $message .= include(__DIR__ . '/tpl/ratingsTableRow.php');
 

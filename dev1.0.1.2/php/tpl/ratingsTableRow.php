@@ -4,6 +4,9 @@
  * @var array $deltaRating
  * @var array $user
  * @var array $rating
+ * @var bool $canDeleteBan
+ * @var int|false $currentUserCommonId
+ * @var int|false $commonId
  */
 
 if (isset($_POST['vertical'])) {
@@ -33,8 +36,13 @@ return "<tr style='border-top:1px solid black !important;'>
                 <img style=\"border-radius: 5px 5px 5px 5px; margin-left:20px;" . ($vertical === true ? '' : 'padding-top:0px;') . "\" alt=\"😰\" src=\"{$rating['playerAvatarUrl']}\" height=\"75px\" max-width=\"100px\" />
             </div>"
         : '')
-    . "</th>
-      <td class=\"text-center\"><strong>{$rating['rating']}</strong>"
+    . (
+    $canDeleteBan
+        ? "<button class=\"btn btn-success mt-2\" onclick='deleteBan($currentUserCommonId);return false;'>Снять Бан</button>"
+        : ''
+    )
+    . "</th>"
+    . "<td class=\"text-center\"><strong>{$rating['rating']}</strong>"
     . ($deltaRating !== false
         ? ($deltaRating['delta'] <= 0
             ? '&nbsp;<span title="Последнее изменение рейтинга" style="color:indianred">' . $deltaRating['delta'] . '</span>'
