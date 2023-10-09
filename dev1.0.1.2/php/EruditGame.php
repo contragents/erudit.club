@@ -321,7 +321,7 @@ class Game
                 /**
                  * @var Ru|Eng $bukvy
                  */
-                
+
                 if ($this->gameStatus['lngClass']::$bukvy[$letterNumber][3] == false) { // нет ошибки - класс неизвестен
                     $letterNumber = 31; // меняем плохую букву на букву Я
                 }
@@ -542,7 +542,7 @@ class Game
 
         $commonId = PlayerModel::getCommonID($this->User);
         if ($commonId) {
-            $thisPlayerHasBanned = array_column(BanModel::hasBanned($commonId), BanModel::COMMON_ID_FIELD);
+            $thisPlayerHasBanned = BanModel::hasBanned($commonId);
         }
 
         foreach ($this->gameStatus['users'] as $num => $user) {

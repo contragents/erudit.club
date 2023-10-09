@@ -15,6 +15,7 @@ class LogModel extends BaseModel
             self::MESSAGE_FIELD => self::TYPE_STRING
         ];
 
+    const CATEGORY_QUERY_RESULT_CHECK = 'query_result';
     const CATEGORY_BOT_ERROR = 'bot_error';
     const CATEGORY_RULANG_ERROR = 'lang_error';
     const CATEGORIES = [
