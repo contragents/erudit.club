@@ -182,7 +182,7 @@ function mergeTheIDs(oldKey, commonID) {
         return;
     }
 
-    fetchGlobal(MERGE_IDS_SCRIPT, '', 'oldKey=' + oldKey + '&commonID=' + commonID)
+    fetchGlobal(MERGE_IDS_SCRIPT, '', 'oldKey=' + btoa(oldKey) + '&commonID=' + commonID)
         .then((resp) => {
             console.log(resp['result']);
             showCabinetActionResult(resp);

@@ -514,7 +514,6 @@ class Game
                 'raw' => true
             ]
         )
-            /* todo delete after model DB::queryInsert($mergeIDsQuery)*/
         ) {
             return json_encode(
                 [
