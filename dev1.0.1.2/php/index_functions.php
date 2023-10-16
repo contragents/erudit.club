@@ -1,4 +1,5 @@
 <?php
+
 const PAGE_HIDDEN_SLEEP_TIME = 10;
 const SCRIPTS = [
     'status_checker' => 'statusChecker',
@@ -150,6 +151,11 @@ function setInactive()
 
 function word(): bool
 {
+    if (($_GET['ingame'] ?? '') !== 'yes' && !isAndroidApp()) {
+        $title = "Игра Эрудит.CLUB :: Словарь | " . $_GET['word'];
+        include(__DIR__ . '/../../tpl/main_header.php');
+        print "<h1>{$_GET['word']}</h1>";
+    }
     $CONTENT_SELECT = "SELECT 
 content COLLATE utf8_general_ci, 
 content_perevod COLLATE utf8_general_ci
@@ -210,4 +216,21 @@ slovo = '" . urldecode($_GET['word']) . "';";
     );
 
     return true;
+}
+
+function isAndroidApp(): bool
+{
+    if (isset($_COOKIE['DEVICE']) && $_COOKIE['DEVICE'] == 'Android') {
+        return true;
+    }
+
+    if (isset($_COOKIE['PRODUCT']) && $_COOKIE['PRODUCT'] == 'RocketWeb') {
+        return true;
+    }
+
+    if (strpos($_SERVER['HTTP_REFERER'] ?? '', 'app=1')) {
+        return true;
+    }
+
+    return false;
 }

@@ -1,8 +1,6 @@
-
-
 <?php
-if (isset($_GET['lng']) && $_GET['lng'] == 'EN') {
-$lng = '?lng=EN';
+if (isset($_GET['lang']) && $_GET['lang'] == 'EN') {
+$lng = '?lang=EN';
 $titleENG = 'на Английском ';
 $slovar = '<a href="https://dictionary.cambridge.org/ru/%D1%81%D0%BB%D0%BE%D0%B2%D0%B0%D1%80%D1%8C/">Кембриджскй Англо-Русский словарь</a>';
 $table = 'dict_cambrige';

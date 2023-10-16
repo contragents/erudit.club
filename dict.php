@@ -1,14 +1,18 @@
 <?php
-//ini_set("display_errors", 1); error_reporting(E_ALL);
+
+if (!empty($_GET['search'])) {
+    header("HTTP/1.1 301 Moved Permanently");
+    header("Location: https://xn--d1aiwkc2d.club/dict/".$_GET['search']);
+    header("Connection: close");
+}
+
 if ($_GET['word'] == '') {
-    include ('dict_2_letters.php');
+    include('dict_2_letters.php');
+
     exit();
 }
-$title = 'Игра Эрудит.CLUB Слова из '. ((isset($_GET['strlen']) && ($_GET['strlen']>2) ) ? $_GET['strlen'] : 'двух'). ' букв';
-include ('tpl/main_header.php');
-?>
-<h1><?=$_GET['word']?></h1>
-<?php
+
 include('yandex1.0.1.1/php/word.php');
-include ('tpl/main_footer.php');
+include('tpl/main_footer.php');
+
 exit();

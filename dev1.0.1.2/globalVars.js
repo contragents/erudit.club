@@ -1,12 +1,15 @@
 /*
 <?php
-if (isset($_GET['lang']) && $_GET['lang'] == 'en') {
+if (isset($_GET['lang']) && $_GET['lang'] == 'EN') {
+$lang='EN';
 ?>
 //*/
 var lang = 'EN';
+
 /*
 <?php
 } else {
+$lang='RU';
 ?>
 //*/
 var lang = 'RU';
@@ -209,7 +212,7 @@ var useLocalStorage = localStorage.erudit_user_session_ID ? true : false;
 
 var instruction = '';
 
-//<?php if (($lang ?? '') == 'EN') include('globals/instruction_eng.js'); else include('globals/instruction.js'); ?>
+//<?php if (strtoupper(($lang ?? '')) == 'EN') include('globals/instruction_eng.js'); else include('globals/instruction.js'); ?>
 
 //<?php include('globals/buttonSettingsGlobal.js')?>
 //<?php include('globals/gameStates.js')?>

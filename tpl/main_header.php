@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var string $title
+ */
+?>
 <!DOCTYPE html>
 <html lang="ru-RU">
 <head>
@@ -7,7 +12,6 @@
     <meta name="csrf-token" content="aGRURF9VS0gZMBwPEREqPSk9BhVuPAA.Ggc5ERY8Gw4NDTsLFGUZHg==">
 	<title><?=$title?></title>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/png">
-	<!--<link href="//contragents.ru/media/css/style.css" rel="stylesheet">-->
     </head>
 <body>
 <div class="page">
