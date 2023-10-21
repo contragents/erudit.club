@@ -601,8 +601,22 @@ function commonCallback(data) {
     gameOldState = gameState;
     gameOldSubState = gameSubState;
 
-    if (data['gameState'] == 'myTurn') {
-        snd.play();
+    if ('gameState' in data && gameState != data['gameState']) {
+        gameState = data['gameState'];
+    }
+
+    if (gameOldState != gameState) {
+        soundPlayed = false;
+    }
+
+    if (gameState == 'myTurn') {
+        if (pageActive == 'hidden') {
+            snd.play();
+            soundPlayed = true;
+        } else if (!soundPlayed) {
+            snd.play();
+            soundPlayed = true;
+        }
     }
 
     if ('lang' in data && data['lang'] != lang) {
@@ -618,9 +632,6 @@ function commonCallback(data) {
     if (myUserNum === false)
         if ('yourUserNum' in data)
             myUserNum = data['yourUserNum']
-
-    if (gameState != data['gameState'])
-        gameState = data['gameState'];
 
     if ('gameSubState' in data)
         gameSubState = data['gameSubState'];

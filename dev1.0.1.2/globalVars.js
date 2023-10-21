@@ -212,6 +212,8 @@ var useLocalStorage = localStorage.erudit_user_session_ID ? true : false;
 
 var instruction = '';
 
+var soundPlayed = false;
+
 //<?php if (strtoupper(($lang ?? '')) == 'EN') include('globals/instruction_eng.js'); else include('globals/instruction.js'); ?>
 
 //<?php include('globals/buttonSettingsGlobal.js')?>
