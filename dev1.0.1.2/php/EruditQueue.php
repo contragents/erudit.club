@@ -57,7 +57,7 @@ class Queue
         if ($this->checkInviteQueue()) {
             if ($this->inviteQueueFull()) {
                 if ($this->tryNewGameSemaphore()) {
-                    return $this->makeGame($this->User, 'invite');
+                    return $this->makeGame($this->User, self::QUEUE_NUMS['invite']);
                 }
             }
 
@@ -586,7 +586,8 @@ class Queue
             //Заполняем массив игроков
             $this->caller->currentGameUsers[] = $player;
 
-            if (($k = ++$numUsers) == 4) {
+            $numUsers++;
+            if ($numUsers == ($numPlayers == self::QUEUE_NUMS['invite'] ? 4 : $numPlayers)) {
                 break;
             }
         }
