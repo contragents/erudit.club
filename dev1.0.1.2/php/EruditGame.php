@@ -1319,6 +1319,8 @@ class Game
                 'не составил ни одного слова (ход #' . $this->gameStatus['turnNumber'] . ')',
                 $this->numUser
             );
+
+            $this->gameStatus['users'][$this->numUser]['lostTurns']++;
             $this->nextTurn();
             $this->destruct();
             //Сохранили статус игры
@@ -1820,6 +1822,7 @@ class Game
                 $userWinner = $num;
             }
         }
+
         $this->addToLog(
             'пропустил 3 хода! Победитель - ' . $this->gameStatus['users'][$userWinner]['username'] . ' со счетом ' . $this->gameStatus['users'][$userWinner]['score'],
             $numLostUser
