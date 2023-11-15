@@ -23,4 +23,25 @@ print "Играют " . implode('&nbsp;vs&nbsp;', array_map(function ($player) {
             . "<img src=\"{$player['avatarUrl']}\" style=\"max-width:100px;\" />";
     }, $players));
 print "<pre>" . print_r($gameData['gameLog'], true) . "</pre>";
-print "<pre>" . print_r($gameData, true) . "</pre>";
+print "<pre>" . print_r(delIds($gameData), true) . "</pre>";
+
+function delIds($game): array {
+    foreach($game['users'] as $num => $nothing) {
+        unset($game['users'][$num]['ID']);
+    }
+
+    foreach($game as $key=>$nothing) {
+        if (preg_match('/^[0-9a-fA-F]{32}$/', $key)) {
+            unset($game[$key]);
+        }
+    }
+
+    foreach($game['results']['lostUsers'] as $num => $nothing) {
+        $game['results']['lostUsers'][$num] = 'Проиграл';
+    }
+
+    // todo Подставить номер выигравшего
+    $game['results']['winner'] = 'Выиграл';
+
+    return $game;
+}
