@@ -1268,8 +1268,15 @@ class Game
             if (Ru::checkHasBadField($cells)) {
                 LogModel::add(
                     [
-                        LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR,
-                        LogModel::MESSAGE_FIELD => $_POST['cells']
+                        LogModel::CATEGORY_FIELD => LogModel::CATEGORY_SUBMIT_ERROR,
+                        LogModel::MESSAGE_FIELD => json_encode([
+                            'game_status' => $this->gameStatus,
+                            'User' => $this->User,
+                            'cells' => $cells,
+                            'desk' => $desk,
+                            ],
+                        JSON_UNESCAPED_UNICODE
+                        )
                     ]
                 );
 
@@ -1321,6 +1328,12 @@ class Game
             );
 
             $this->gameStatus['users'][$this->numUser]['lostTurns']++;
+            if ($this->gameStatus['users'][$this->numUser]['lostTurns'] >= 3) {
+                $this->storeGameResults($this->lost3TurnsWinner($this->numUser));
+
+                return $this->checkGameStatus();
+            }
+
             $this->nextTurn();
             $this->destruct();
             //Сохранили статус игры

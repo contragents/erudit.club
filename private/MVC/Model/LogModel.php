@@ -18,9 +18,11 @@ class LogModel extends BaseModel
     const CATEGORY_QUERY_RESULT_CHECK = 'query_result';
     const CATEGORY_BOT_ERROR = 'bot_error';
     const CATEGORY_RULANG_ERROR = 'lang_error';
+    const CATEGORY_SUBMIT_ERROR = 'submit_error';
     const CATEGORIES = [
         self::CATEGORY_BOT_ERROR,
         self::CATEGORY_RULANG_ERROR,
+        self::CATEGORY_SUBMIT_ERROR,
     ];
 
 }
