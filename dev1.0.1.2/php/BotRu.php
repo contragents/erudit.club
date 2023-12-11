@@ -9,6 +9,8 @@ class BotRu extends BotEng
 
     const BOT_GAMES = 'erudit.bot_games';
 
+    const LNG_ID = 1;
+
     public static function zvezdaRegexp($numZvezd)
     {
         if ($numZvezd <= 1) {

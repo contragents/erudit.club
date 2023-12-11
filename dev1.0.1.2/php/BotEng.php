@@ -11,6 +11,7 @@ class BotEng
     public static $langClass = Eng::class;
     public static $lang = self::ENG_LANG;
     public static $thinkEndTime;
+    const LNG_ID = 2;
 
     const BOT_GAMES = 'erudit.botEN_games';
 
@@ -289,8 +290,7 @@ class BotEng
         }
     }
 
-
-    public static function findWordSleva($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
+    public static function findWordSleva($x, $y, &$desk, &$fishki, array &$slovaPlayed)
     {
         if (!count($fishki)) {
             return '';
@@ -346,7 +346,8 @@ class BotEng
             $maxWordLen = $maxWordLen - $maxRightAfterLen - $maxLen + count($fishki);
         */
 
-        $zapros .= "$\") AND NOT deleted = 1 AND slovo != '$lastLetter' AND length<=$maxWordLen ORDER BY length ASC";
+        $andLng = 'AND lng=' . static::LNG_ID;
+        $zapros .= "$\") AND NOT deleted = 1 AND slovo != '$lastLetter' AND length<=$maxWordLen $andLng ORDER BY length ASC";
         print $zapros . 'SLEVA'; //sleep (5);
 
         if ($res = DB::queryArray($zapros)) {
@@ -467,7 +468,8 @@ class BotEng
             $maxWordLen = 7;
         }//так работает индекс
 
-        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen ORDER BY length ASC";;
+        $andLng = 'AND lng=' . static::LNG_ID;
+        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY length ASC";;
         print $zapros . 'SVERHU'; //sleep (5);
 
         // Длина фрагмента из фишек уже на поле
@@ -590,7 +592,8 @@ class BotEng
         }//так работает индекс
 
         $zapros = "select slovo from dict where (slovo REGEXP \"^$zapros{$lastLetter}[$regexp]{0,$maxLen}";
-        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen ORDER BY length ASC";
+        $andLng = 'AND lng=' . static::LNG_ID;
+        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY length ASC";
 
         print $zapros . 'SPRAVA';
         $xLastLetter = $x - mb_strlen($lastLetter, 'UTF-8');
@@ -713,7 +716,8 @@ class BotEng
         }//так работает индекс
 
         $zapros = "select slovo from dict where (slovo REGEXP \"^$zapros{$lastLetter}[$regexp]{0,$maxLen}";
-        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen ORDER BY length ASC";;
+        $andLng = 'AND lng=' . static::LNG_ID;
+        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY length ASC";;
 
         print $zapros . 'VNIZ';
 
