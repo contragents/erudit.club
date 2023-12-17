@@ -22,6 +22,8 @@ class Queue
     ];
 
     const MAX_INVITE_WAIT_TIME = 20;
+    const PREFERENCES_TTL = 30 * 24 * 60 * 60;
+    const PREFS_KEY = 'erudit.user_preference_';
 
     private $User;
     private $userTime;
@@ -40,8 +42,8 @@ class Queue
 
         if (isset($this->POST['ochki_num'])) {
             Cache::setex(
-                'erudit.user_preference_' . $this->User,
-                $caller->cacheTimeout,
+                self::PREFS_KEY . $this->User,
+                self::PREFERENCES_TTL,
                 $this->POST
             );
             //В начале игры сохраняем предпочтения игрока для игры по приглашению
@@ -542,7 +544,7 @@ class Queue
         $game_users = [];
         $this->caller->currentGameUsers = [];
         $waitingPlayers = Cache::hgetall("erudit.{$numPlayers}{$this->lang}players_waiters");
-        $prefs = Cache::get('erudit.user_preference_' . $User);
+        $prefs = Cache::get(self::PREFS_KEY . $User);
 
         if (!isset($waitingPlayers[$User])) {
             $options = isset($this->POST['ochki_num'])
@@ -567,7 +569,7 @@ class Queue
         $numUsers = 1;
 
         foreach ($waitingPlayers as $player => $data) {
-            $prefs = Cache::get('erudit.user_preference_' . $player);
+            $prefs = Cache::get(self::PREFS_KEY . $player);
             $data = unserialize($data);
 
             //Прописываем юзерам - удаление из очереди и номер игры

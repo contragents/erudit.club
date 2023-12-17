@@ -1661,11 +1661,28 @@ class Game
         if (!$this->currentGame) {
             if (isset($_GET['queryNumber']) && ($_GET['queryNumber'] == 1) && !$this->isUserInInviteQueue()) {
                 return $this->makeResponse(
-                    ['gameState' => 'chooseGame', 'gameSubState' => 'choosing', 'players' => $this->onlinePlayers()]
+                    [
+                        'gameState' => 'chooseGame',
+                        'gameSubState' => 'choosing',
+                        'players' => $this->onlinePlayers(),
+                        'prefs' => Cache::get(Queue::PREFS_KEY . $this->User)
+                    ]
                 );
             } else {
                 return $this->startGame();
             }
+            /*elseif($this->isUserInInviteQueue() || isset($_POST['players_count']) || $this->isBot()) {
+                return $this->startGame();
+            } else {
+                return $this->makeResponse(
+                    [
+                        'gameState' => 'chooseGame',
+                        'gameSubState' => 'choosing',
+                        'players' => $this->onlinePlayers(),
+                        'prefs' => Cache::get(Queue::PREFS_KEY . $this->User)
+                    ]
+                );
+            }*/
         }
 
         if ($this->activeGameUsers() == 1) {
@@ -2303,6 +2320,11 @@ class Game
         }
 
         return false;
+    }
+
+    private function isBot(): bool
+    {
+        return !(strstr($this->User, 'botV3#') === false);
     }
 }
 
