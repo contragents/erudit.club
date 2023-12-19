@@ -997,9 +997,9 @@ class Game
     private function statusComments_initGame()
     {
         if ($this->gamePlayersWaiting) {
-            return '<strong>Подбор игры!</strong> <br />Ожидает игроков: <strong>' . $this->gamePlayersWaiting . '</strong>';
+            return '<strong>Подбор игры!</strong> <br />Готово игроков: <strong>' . $this->gamePlayersWaiting . '</strong>';
         } else {
-            return '<strong>Подбор игры!</strong> <br />Ожидаем других игроков';
+            return '<strong>Подбор игры!</strong> <br />Поиск других игроков';
         }
     }
 
@@ -2123,7 +2123,7 @@ class Game
         $gameSubState .= $numActiveUsers;
         if (!(isset($arr['inviteStatus']) && $arr['inviteStatus'] == 'newGameStarting')) {
             if ($this->gameStatus['invite'] == $this->User) {
-                $arr['comments'] .= "<br />Ожидаем подтверждения соперников. В игре осталось: $numActiveUsers";
+                $arr['comments'] .= "<br />Запрашиваем подтверждения соперников. В игре осталось: $numActiveUsers";
                 $arr['inviteStatus'] = 'waiting';
             } else {
                 if ($numActiveUsers) {

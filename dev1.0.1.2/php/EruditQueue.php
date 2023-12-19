@@ -428,7 +428,7 @@ class Queue
                 'gameSubState' => 0,
                 'timeWaiting' => date('U') - $this->userTime,
                 'ratingGameWaitLimit' => $this->caller->ratingGameWaitLimit,
-                'comments' => '<h6>Ожидаем игрока с указанным рейтингом</h6>'
+                'comments' => '<h6>Поиск игрока с указанным рейтингом</h6>'
             ]
         );
     }

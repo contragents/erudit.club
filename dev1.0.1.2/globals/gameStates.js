@@ -737,7 +737,7 @@ function commonCallback(data) {
                     dialog.init(function () {
                         intervalId = setInterval(function () {
                             if ('gameSubState' in data)
-                                var igrokiWaiting = "<br />Ожидает игроков: " + data['gameSubState'];
+                                var igrokiWaiting = "<br />Набрано игроков: " + data['gameSubState'];
                             else
                                 var igrokiWaiting = '';
                             if ('timeWaiting' in data) {
