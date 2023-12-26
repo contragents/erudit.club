@@ -61,11 +61,7 @@ function complain()
 
 
     if (isset($_POST['chatTo'])) {
-        include_once 'EruditGame.php';
-
-        if (isset($_POST['chatTo'])) {
-            $resp = ($obj = new Erudit\Game())->addComplain($_POST['chatTo']);
-        }
+        $resp = ($obj = new Erudit\Game())->addComplain($_POST['chatTo']);
     }
 
     print $resp;
@@ -75,13 +71,8 @@ function sendChatMessage()
 {
     $resp = json_encode(['message' => 'Ошибка отправки сообщения']);
 
-
-    if (isset($_POST['messageText'])) {
-        include_once 'EruditGame.php';
-
-        if (isset($_POST['chatTo'])) {
-            $resp = (new Erudit\Game())->addToChat($_POST['messageText'], $_POST['chatTo']);
-        }
+    if (!empty($_POST['messageText']) && isset($_POST['chatTo'])) {
+        $resp = (new Erudit\Game())->addToChat($_POST['messageText'], $_POST['chatTo']);
     }
 
     print $resp;

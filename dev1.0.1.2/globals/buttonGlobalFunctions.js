@@ -219,6 +219,8 @@ function chatButtonFunction() {
             isSelectedPlaced = true;
         }
 
+    radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_words" name="chatTo" value="words" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_words">Подбор слов</label></div>';
+
     let textInput = '<div class="input-group input-group-lg">  <div class="input-group-prepend"></div>  <input type="text" id="chattext" class="form-control" name="messageText"></div>';
 
 
@@ -270,16 +272,21 @@ function chatButtonFunction() {
                                     }
 
                                     if (data['message'] !== 'Сообщение отправлено') {
-                                        dialog2 = bootbox.alert({
-                                            message: responseText,
-                                            size: 'small'
-                                        });
-                                        setTimeout(
-                                            function () {
-                                                dialog2.find(".bootbox-close-button").trigger("click");
-                                            }
-                                            , 2000
-                                        );
+                                        if (data['gameState'] == 'wordQuery') {
+                                            $('#no_msg_span').html('');
+                                            $('#msg_span').html('<li>' + data['message'] + '</li>');
+                                        } else {
+                                            dialog2 = bootbox.alert({
+                                                message: responseText,
+                                                size: 'small'
+                                            });
+                                            setTimeout(
+                                                function () {
+                                                    dialog2.find(".bootbox-close-button").trigger("click");
+                                                }
+                                                , 2000
+                                            );
+                                        }
                                     }
 
                                     buttons['chatButton']['svgObject'].setInteractive();

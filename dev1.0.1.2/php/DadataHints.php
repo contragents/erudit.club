@@ -4,6 +4,8 @@ namespace Dadata;
 
 class Hints
 {
+    public const TYPE_WORDS_QUERY = 'words';
+    const BOT_WORD_REQUEST_URL = 'https://xn--d1aiwkc2d.club/bot/words?word=';
     private static $p;
     private static $gameState;
     private static $User;
@@ -310,6 +312,29 @@ class Hints
     private static function link($url, $anchor)
     {
         return "<a href=\"$url\" target=\"_blank\">$anchor</a>";
+    }
+
+    public static function getWordHint(string $word): array
+    {
+        try {
+            $words = json_decode(file_get_contents(self::BOT_WORD_REQUEST_URL . $word), true);
+        } catch(\Throwable $e) {
+            $words = ['Ошибка сервера'];
+        }
+
+        if (!is_array($words)) {
+            $words = [];
+        }
+
+        if(count($words) == 5) {
+            $words[] = 'Показаны только 5 слов в случайном порядке'
+                . '<br>'
+                . 'Для доступа к полному списку подключитесь к нашему <a target="_blank" href="https://t.me/erudit_club_bot">Telegram-боту</a>';
+        }
+
+        $res = ['message' => implode('<br>', $words)];
+
+        return $res;
     }
 
     private static function top3Hint()

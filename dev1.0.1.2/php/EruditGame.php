@@ -32,6 +32,8 @@ class Game
 
     const OCHKI_VARIANTS = [200 => 0, 300 => 0];
     const TIME_VARIANTS = [60 => 0, 90 => 0, 120 => 0];
+    const ADD_TO_CHAT_STATE = 'addToChat';
+    const WORD_QUERY_STATE = 'wordQuery';
 
     public static $configStatic;
     public $serverName;
@@ -207,34 +209,6 @@ class Game
         }
 
         return $incomingCookie;
-
-
-        //Далее логика, которая возможно пригодится в будущем для тонкой настройки
-
-        if ($this->currentGame = Cache::get(self::GET_GAME_KEY . $incomingCookie)) {
-            return $incomingCookie;
-        }
-
-        if ($storedCookie = Cache::get(
-            $sintCookie = (md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']))
-        )) {
-            if ($storedCookie == $incomingCookie) {
-                $this->currentGame = false;
-                return $incomingCookie;
-            } else {
-                Cache::setex(self::GET_GAME_KEY . $sintCookie, $this->activityTimeout, $incomingCookie);
-                if (!$this->currentGame = Cache::get(self::GET_GAME_KEY . $sintCookie)) {
-                    $this->currentGame = false;
-                }
-
-                return $sintCookie;
-            }
-        } else {
-            Cache::setex(self::GET_GAME_KEY . $sintCookie, $this->activityTimeout, $incomingCookie);
-            $this->currentGame = false;
-
-            return $incomingCookie;
-        }
     }
 
     public function setInactive()
@@ -244,7 +218,7 @@ class Game
         $this->addToLog("Закрыл вкладку с игрой", $this->numUser);
 
         return $this->makeResponse(
-            ['gameState' => 'addToChat', 'message' => 'Вы закрыли вкладку с игрой и стали Неактивным!' . $this->numUser]
+            ['gameState' => self::ADD_TO_CHAT_STATE, 'message' => 'Вы закрыли вкладку с игрой и стали Неактивным!' . $this->numUser]
         );
     }
 
@@ -713,7 +687,7 @@ class Game
         return $this->makeResponse(
             [
                 'message' => $respMessage,
-                'gameState' => 'addToChat'
+                'gameState' => self::ADD_TO_CHAT_STATE,
             ]
         );
     }
@@ -721,7 +695,7 @@ class Game
     public function addToChat($message, $toNumUser = 'all', $needConfirm = true)
     {
         try {
-            $commonIdFrom = PlayerModel::getPlayerID($this->User, true);//PlayerModel::getCommonID($this->User);
+            $commonIdFrom = PlayerModel::getPlayerID($this->User, true);
 
             $bannedTill = BanModel::isBannedTotal($commonIdFrom ?: 0);
             if ($bannedTill) {
@@ -729,12 +703,19 @@ class Game
                     return $this->makeResponse(
                         [
                             'message' => 'Сообщение НЕ отправлено - БАН до ' . date('d.m.Y', $bannedTill),
-                            'gameState' => 'addToChat'
+                            'gameState' => self::ADD_TO_CHAT_STATE
                         ]
                     );
                 } else {
                     return true;
                 }
+            }
+
+            if ($toNumUser == Hints::TYPE_WORDS_QUERY) {
+                return $this->makeResponse(
+                    Hints::getWordHint($message)
+                    + ['gameState' => self::WORD_QUERY_STATE]
+                );
             }
 
             $bannedBy = BanModel::bannedBy($commonIdFrom ?: 0);
@@ -775,18 +756,18 @@ class Game
                 return $this->makeResponse(
                     [
                         'message' => '<strong>Сообщение НЕ отправлено - БАН от Игрока' . ((int)$toNumUser + 1) . '</strong>',
-                        'gameState' => 'addToChat'
+                        'gameState' => self::ADD_TO_CHAT_STATE
                     ]
                 );
             }
 
             if ($needConfirm) {
-                return $this->makeResponse(['message' => 'Сообщение отправлено', 'gameState' => 'addToChat']);
+                return $this->makeResponse(['message' => 'Сообщение отправлено', 'gameState' => self::ADD_TO_CHAT_STATE]);
             } else {
                 return true;
             }
         } catch (\Throwable $e) {
-            return $this->makeResponse(['message' => $e->__toString(), 'gameState' => 'addToChat']);
+            return $this->makeResponse(['message' => $e->__toString(), 'gameState' => self::ADD_TO_CHAT_STATE]);
         }
     }
 
@@ -2245,7 +2226,7 @@ class Game
                     //Добавили лог событий в ответ юзеру
                 }
             }
-            if ($arr['gameState'] != 'addToChat') {
+            if ($arr['gameState'] != self::ADD_TO_CHAT_STATE) {
                 if (isset($this->gameStatus['users'][$this->numUser]['chatStack'])) {
                     if (count($this->gameStatus['users'][$this->numUser]['chatStack'])) {
                         $log = [];
