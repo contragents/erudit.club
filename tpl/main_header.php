@@ -1,6 +1,8 @@
 <?php
 /**
  * @var string $title
+ * @var string $description
+ * @var string $canonical
  */
 ?>
 <!DOCTYPE html>
@@ -11,6 +13,8 @@
 	<meta name="csrf-param" content="_csrf">
     <meta name="csrf-token" content="aGRURF9VS0gZMBwPEREqPSk9BhVuPAA.Ggc5ERY8Gw4NDTsLFGUZHg==">
 	<title><?=$title?></title>
+    <meta name="description" content="<?=$description?>" />
+    <?=$canonical?>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/png">
     </head>
 <body>

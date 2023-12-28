@@ -142,11 +142,9 @@ function setInactive()
 
 function word(): bool
 {
-    if (($_GET['ingame'] ?? '') !== 'yes' && !isAndroidApp()) {
-        $title = "Игра Эрудит.CLUB :: Словарь | " . $_GET['word'];
-        include(__DIR__ . '/../../tpl/main_header.php');
-        print "<h1>{$_GET['word']}</h1>";
-    }
+    $content = '';
+    $result = true;
+
     $CONTENT_SELECT = "SELECT 
 content COLLATE utf8_general_ci, 
 content_perevod COLLATE utf8_general_ci
@@ -173,22 +171,23 @@ slovo = '" . urldecode($_GET['word']) . "';";
 
     $res = DB::queryArray($CONTENT_SELECT);
     if (!is_array($res) || empty($res)) {
-        print "Слово не найдено.";
-        return false;
-    }
+        $content .= "Слово не найдено.";
+        $result = false;
+    } else {
+        $row = current($res);
+        if (!is_array($row) || empty($row)) {
+            $content .= "Слово не найдено.";
+            $result = false;
+        }
 
-    $row = current($res);
-    if (!is_array($row) || empty($row)) {
-        print "Слово не найдено.";
-        return false;
-    }
-
-    foreach ($row as $field => $value) {
-        if ($spacePos = strpos($field, ' ')) {
-            $row[substr($field, 0, $spacePos)] = $value;
+        foreach ($row as $field => $value) {
+            if ($spacePos = strpos($field, ' ')) {
+                $row[substr($field, 0, $spacePos)] = $value;
+            }
         }
     }
 
+    // убираем всякую херню после парсинга
     if (strstr($_SERVER['HTTP_REFERER'] ?? '', 'andex') || strstr($_SERVER['HTTP_REFERER'] ?? '', '-5.su')) {
         $row['content'] = str_replace('href=', '', $row['content']);
         $row['content_perevod'] = str_replace('href=', '', $row['content_perevod']);
@@ -200,13 +199,36 @@ slovo = '" . urldecode($_GET['word']) . "';";
         $row['content']
     );
 
-    print str_replace(
+    $content .= str_replace(
         ["\r\n", "\n"],
         '<br />',
         str_replace('href="', 'href="https://xn--d1aiwkc2d.club', $row['content'] . $row['content_perevod'])
     );
 
-    return true;
+    $content = preg_replace('/googletag\.cmd\.push\(.{0,400}\}\);/','', $content);
+
+    if (($_GET['ingame'] ?? '') !== 'yes' && !isAndroidApp()) {
+        $title = "Игра Эрудит.CLUB :: Словарь | " . $_GET['word'];
+        $description = strip_tags($content);
+        $description = mb_substr($description, 0, 500);
+        $description = str_replace('"', "'", $description);
+
+        $description = str_replace('  ', " ", $description);
+        $description = str_replace('  ', " ", $description);
+        $description = str_replace('  ', " ", $description);
+        $description = str_replace('  ', " ", $description);
+        $description = str_replace('  ', " ", $description);
+        $description = str_replace('  ', " ", $description);
+        $canonical = isset($_GET['voc'])
+            ? ('<link rel="canonical" href="https://эрудит.club/dict/' . urlencode($_GET['word']) . '" />')
+            : '';
+        include(__DIR__ . '/../../tpl/main_header.php');
+        print "<h1>{$_GET['word']}</h1>";
+    }
+
+    print $content;
+
+    return $result;
 }
 
 function isAndroidApp(): bool
