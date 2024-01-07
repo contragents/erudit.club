@@ -178,8 +178,6 @@ class Game
                         'message' => 'Потеря синхронизации с сервером',
                     ]
                 );
-                // todo протестировать десинк методом BadRequest::sendBadRequest или вернуться к прежнему
-                // return $this->desync($this->gameStatus['users'][$this->numUser]['last_request_num']);
             } else {
                 $this->gameStatus['users'][$this->numUser]['last_request_num']
                     =
@@ -2104,7 +2102,7 @@ class Game
         $gameSubState .= $numActiveUsers;
         if (!(isset($arr['inviteStatus']) && $arr['inviteStatus'] == 'newGameStarting')) {
             if ($this->gameStatus['invite'] == $this->User) {
-                $arr['comments'] .= "<br />Запрашиваем подтверждения соперников. В игре осталось: $numActiveUsers";
+                $arr['comments'] .= "<br />Запрашиваем подтверждения соперников.<br />В игре осталось: $numActiveUsers";
                 $arr['inviteStatus'] = 'waiting';
             } else {
                 if ($numActiveUsers) {

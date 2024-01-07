@@ -67,12 +67,23 @@ async function fetchGlobalMVC(urlPart, param_name, param_data) {
     return await response.json(); // parses JSON response into native JavaScript objects
 }
 
+function commonParams() {
+    return 'queryNumber='
+        + (queryNumber++)
+        + '&lang='
+        + lang
+        + '&gameNumber='
+        + gameNumber
+        + '&gameState='
+        + gameState
+        + (pageActive == 'hidden' ? '&page_hidden=true' : '');
+}
+
 async function fetchGlobalNominal(script, param_name, param_data) {
     const response = await fetch('//xn--d1aiwkc2d.club/<?=$dir?>/php/'
         + script
-        + '?queryNumber=' + (queryNumber++)
-        + '&lang=' + lang
-        + (pageActive == 'hidden' ? '&page_hidden=true' : ''),
+        + '?'
+        + commonParams(),
         {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors', // no-cors, *cors, same-origin
@@ -108,10 +119,8 @@ async function fetchGlobalYowser(script, param_name, param_data) {
         + localStorage.erudit_user_session_ID
         + '&script='
         + script
-        + '&queryNumber='
-        + (queryNumber++)
-        + '&lang=' + lang
-        + (pageActive == 'hidden' ? '&page_hidden=true' : ''),
+        + '&'
+        + commonParams(),
         {
             method: 'POST',
             mode: 'cors',

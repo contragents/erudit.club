@@ -663,6 +663,10 @@ function commonCallback(data) {
 
     if ('gameState' in data && gameState != data['gameState']) {
         gameState = data['gameState'];
+
+        if('gameNumber' in data) {
+            gameNumber = data['gameNumber'];
+        }
     }
 
     if (gameOldState != gameState) {
@@ -736,10 +740,10 @@ function commonCallback(data) {
                 if ('gameWaitLimit' in data)
                     dialog.init(function () {
                         intervalId = setInterval(function () {
+                            var igrokiWaiting = '';
                             if ('gameSubState' in data)
-                                var igrokiWaiting = "<br />Набрано игроков: " + data['gameSubState'];
-                            else
-                                var igrokiWaiting = '';
+                                igrokiWaiting = "<br />Найдено игроков: " + data['gameSubState'];
+
                             if ('timeWaiting' in data) {
 
                                 if (!tWaiting) tWaiting = data['timeWaiting'];
@@ -757,7 +761,6 @@ function commonCallback(data) {
                 else if ('ratingGameWaitLimit' in data)
                     dialog.init(function () {
                         intervalId = setInterval(function () {
-
                             if ('timeWaiting' in data)
                                 if (!tWaiting)
                                     tWaiting = data['timeWaiting'];
@@ -770,7 +773,7 @@ function commonCallback(data) {
                                 '<br />время подбора: ' +
                                 (tWaiting++) +
                                 'с' +
-                                '<br />Лимит по времени на подбор: ' +
+                                '<br />Лимит по времени: ' +
                                 data['ratingGameWaitLimit'] +
                                 'c' +
                                 '<hr>Вы можете начать новую игру, если долго ждать..');
