@@ -129,6 +129,12 @@ class Game
                     Cache::del(self::CHECK_STATUS_RESULTS_KEY . $this->User);
                 }
 
+                if (($_GET['gameNumber'] ?? 0) > 0) {
+                    print $this->makeResponse(
+                        ['gameState' => 'noGame', 'comments' => 'Игра закончена. Начните новую игру!']
+                    );
+                }
+
                 if (($_GET['queryNumber'] ?? 1) >= 10 && !$this->isUserInQueue() && !$this->isUserInCabinet()) {
                     print $this->makeResponse(
                         ['gameState' => 'noGame', 'comments' => 'Игра закончена. Начните новую игру!']
@@ -1638,30 +1644,28 @@ class Game
     public function checkGameStatus()
     {
         if (!$this->currentGame) {
-            if (isset($_GET['queryNumber']) && ($_GET['queryNumber'] == 1) && !$this->isUserInInviteQueue()) {
-                return $this->makeResponse(
-                    [
-                        'gameState' => 'chooseGame',
-                        'gameSubState' => 'choosing',
-                        'players' => $this->onlinePlayers(),
-                        'prefs' => Cache::get(Queue::PREFS_KEY . $this->User)
-                    ]
-                );
-            } else {
+            if ($this->isUserInInviteQueue()) {
                 return $this->startGame();
+            } else {
+                if ($this->isUserInQueue()) {
+                    return $this->startGame();
+                }
+
+                $chooseGameParams = [
+                    'gameState' => 'chooseGame',
+                    'gameSubState' => 'choosing',
+                    'players' => $this->onlinePlayers(),
+                    'prefs' => Cache::get(Queue::PREFS_KEY . $this->User)
+                ];
+
+                if (isset($_GET['queryNumber']) && ($_GET['queryNumber'] == 1)) {
+                    return $this->makeResponse($chooseGameParams);
+                } elseif (!isset($_POST['players_count']) && !$this->isBot()) {
+                    return $this->makeResponse($chooseGameParams);
+                } else {
+                    return $this->startGame();
+                }
             }
-            /*elseif($this->isUserInInviteQueue() || isset($_POST['players_count']) || $this->isBot()) {
-                return $this->startGame();
-            } else {
-                return $this->makeResponse(
-                    [
-                        'gameState' => 'chooseGame',
-                        'gameSubState' => 'choosing',
-                        'players' => $this->onlinePlayers(),
-                        'prefs' => Cache::get(Queue::PREFS_KEY . $this->User)
-                    ]
-                );
-            }*/
         }
 
         if ($this->activeGameUsers() == 1) {

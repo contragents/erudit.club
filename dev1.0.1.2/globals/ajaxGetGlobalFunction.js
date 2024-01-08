@@ -73,7 +73,7 @@ function commonParams() {
         + '&lang='
         + lang
         + '&gameNumber='
-        + gameNumber
+        + (gameNumber ? gameNumber : 0)
         + '&gameState='
         + gameState
         + (pageActive == 'hidden' ? '&page_hidden=true' : '');
