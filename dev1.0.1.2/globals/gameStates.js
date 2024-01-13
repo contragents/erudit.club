@@ -737,28 +737,35 @@ function commonCallback(data) {
                         }
                     }
                 });
-                if ('gameWaitLimit' in data)
+                if ('gameWaitLimit' in data) {
                     dialog.init(function () {
                         intervalId = setInterval(function () {
                             var igrokiWaiting = '';
                             if ('gameSubState' in data)
                                 igrokiWaiting = "<br />Найдено игроков: " + data['gameSubState'];
 
+
                             if ('timeWaiting' in data) {
-
-                                if (!tWaiting) tWaiting = data['timeWaiting'];
-                                if (!gWLimit) gWLimit = data['gameWaitLimit'];
-                                dialog.find('.bootbox-body').html(data['comments'] + igrokiWaiting + '<br />время подбора: ' + (tWaiting++) + '<br />Среднее время ожидания: ' + (gWLimit) + 'с');
-
+                                if (!tWaiting) {
+                                    tWaiting = data['timeWaiting'];
+                                }
+                                if (!gWLimit) {
+                                    gWLimit = data['gameWaitLimit'];
+                                }
                             } else {
-                                if (!gWLimit) gWLimit = data['gameWaitLimit'];
-                                data['timeWaiting'] = 0;
-                                if (!tWaiting) tWaiting = data['timeWaiting'];
-                                dialog.find('.bootbox-body').html(data['comments'] + igrokiWaiting + '<br />время подбора: ' + (tWaiting++) + '<br />Среднее время ожидания: ' + (gWLimit) + 'с');
+                                if (!gWLimit) {
+                                    gWLimit = data['gameWaitLimit'];
+                                }
+                                if (!tWaiting) {
+                                    tWaiting = 0
+                                }
                             }
+
+                            let content = data['comments'] + igrokiWaiting + '<br />Время подбора: ' + (tWaiting++) + '<br />Среднее время ожидания: ' + (gWLimit) + 'с';
+                            dialog.find('.bootbox-body').html(content);
                         }, 1000);
                     });
-                else if ('ratingGameWaitLimit' in data)
+                } else if ('ratingGameWaitLimit' in data)
                     dialog.init(function () {
                         intervalId = setInterval(function () {
                             if ('timeWaiting' in data)
@@ -770,7 +777,7 @@ function commonCallback(data) {
                                         tWaiting = data['timeWaiting'];
                                 }
                             dialog.find('.bootbox-body').html(data['comments'] +
-                                '<br />время подбора: ' +
+                                '<br />Время подбора: ' +
                                 (tWaiting++) +
                                 'с' +
                                 '<br />Лимит по времени: ' +
