@@ -57,10 +57,9 @@ function playersRatings()
 
 function complain()
 {
-    $resp = json_encode(['message' => 'Ошибка отправки сообщения']);
+    $resp = json_encode(['message' => 'Ошибка отправки жалобы<br><br>Выберите игрока']);
 
-
-    if (isset($_POST['chatTo'])) {
+    if (isset($_POST['chatTo']) && $_POST['chatTo'] !== 'words') {
         $resp = ($obj = new Erudit\Game())->addComplain($_POST['chatTo']);
     }
 
