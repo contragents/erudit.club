@@ -34,6 +34,16 @@ class Game
     const TIME_VARIANTS = [60 => 0, 90 => 0, 120 => 0];
     const ADD_TO_CHAT_STATE = 'addToChat';
     const WORD_QUERY_STATE = 'wordQuery';
+    const IN_GAME_STATUSES = [
+        self::MY_TURN_STATUS,
+        self::OTHER_TURN_STATUS,
+        self::PRE_MY_TURN_STATUS,
+        self::START_GAME_STATUS,
+    ];
+    const MY_TURN_STATUS = 'myTurn';
+    const OTHER_TURN_STATUS = 'otherTurn';
+    const PRE_MY_TURN_STATUS = 'preMyTurn';
+    const START_GAME_STATUS = 'startGame';
 
     public static $configStatic;
     public $serverName;
@@ -56,10 +66,10 @@ class Game
     private $chisloFishek;
     private $numUser = false;
     private $statusComments = [
-        'startGame' => 1,
-        'preMyTurn' => 1,
-        'myTurn' => 1,
-        'otherTurn' => 1,
+        self::START_GAME_STATUS => 1,
+        self::PRE_MY_TURN_STATUS => 1,
+        self::MY_TURN_STATUS => 1,
+        self::OTHER_TURN_STATUS => 1,
         'desync' => 1,
         'initGame' => 1
     ];
@@ -331,6 +341,16 @@ class Game
 
     public function inviteNewGame()
     {
+        // Если в игре останутся игроки, то ничего не делать
+        if ($this->activeGameUsers() > 2) {
+            return $this->makeResponse(['gameState' => $this->getUserStatus(), 'message' => 'Запрос отклонен. Игра еще продолжается.']);
+        }
+
+        // Если игрок решил сдаться и отправить вызов на реванш
+        if( in_array($this->getUserStatus(), self::IN_GAME_STATUSES)) {
+            $this->storeGameResults($this->lost3TurnsWinner($this->numUser, true));
+        }
+
         $this->gameStatus['invite_accepted_users'][$this->User] = $this->User;
 
         $inviteStatus = [];
@@ -1006,7 +1026,7 @@ class Game
 
     public function changeFishki($fishkiToChange)
     {
-        if ($this->getUserStatus() != 'myTurn') {
+        if ($this->getUserStatus() != self::MY_TURN_STATUS) {
             return $this->checkGameStatus();
         }
 
@@ -1084,9 +1104,9 @@ class Game
         }
     }
 
-    private function getUserStatus($user = false)
+    private function getUserStatus($user = false): string
     {
-        return $this->gameStatus['users'][$this->gameStatus[($user ? $user : $this->User)]]['status'] ?? self::ERROR_STATUS;
+        return $this->gameStatus['users'][$this->gameStatus[($user ?: $this->User)]]['status'] ?? self::ERROR_STATUS;
     }
 
     public function updateUserStatus($newStatus, $user = false)
@@ -1099,7 +1119,7 @@ class Game
             $this->gameStatus['users'][$this->gameStatus[$user]]['status'] = $newStatus;
             //Обновили статус по новой версии
 
-            if ($newStatus == 'myTurn') {
+            if ($newStatus == self::MY_TURN_STATUS) {
                 $this->gameStatus['activeUser'] = $this->gameStatus[$user];
             }
             //Активный пользователь
@@ -1228,7 +1248,7 @@ class Game
 
     public function submitTurn()
     {
-        if ($this->getUserStatus() != 'myTurn') {
+        if ($this->getUserStatus() != self::MY_TURN_STATUS) {
             $this->addToLog(
                 'пытается сделать ход не в свою очередь (ход #' . $this->gameStatus['turnNumber'] . ')',
                 $this->numUser
@@ -1679,11 +1699,7 @@ class Game
         }
 
         if ($this->getUserStatus() == 'gameResults') {
-            if (!(($desk = Cache::get(
-                    ('erudit.current_game_' . $this->currentGame)
-                )) && $this->currentGame)) {
-                $desk = [];
-            }
+            $desk = Cache::get('erudit.current_game_' . $this->currentGame);
 
             $result = $this->gameStatus['results'];
             if (isset($result['winner'])) {
@@ -1692,7 +1708,7 @@ class Game
                         [
                             'gameState' => 'gameResults',
                             'comments' => "<strong style=\"color:green;\">Вы выиграли!</strong><br/>Начните новую игру",
-                            'desk' => $desk
+                            ($desk ? 'desk' : 'nothing') => $desk
                         ]
                     );
                 } else {
@@ -1700,7 +1716,7 @@ class Game
                         [
                             'gameState' => 'gameResults',
                             'comments' => "<strong style=\"color:red;\">Вы проиграли!</strong><br/>Начните новую игру",
-                            'desk' => $desk
+                            ($desk ? 'desk' : 'nothing') => $desk
                         ]
                     );
                 }
@@ -1709,7 +1725,7 @@ class Game
 
         //Поставим коррекцию времени начала хода для учета периодичности запросов пользователей
         if (
-            $this->getUserStatus() == 'myTurn'
+            $this->getUserStatus() == self::MY_TURN_STATUS
             &&
             !$this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']]
         ) {
@@ -1732,14 +1748,7 @@ class Game
                 $this->storeGameResults($this->lost3TurnsWinner($this->gameStatus['activeUser']));
                 // Начало фрагмента для объединения - чего с чем?
 
-                // todo зачем, если игра сыграна
                 $desk = Cache::get('erudit.current_game_' . $this->currentGame);
-                if (
-                !($desk && $this->currentGame)
-                ) {
-                    $desk = [];
-                }
-                // todo конец зачем
 
                 $result = $this->gameStatus['results'];
                 if (isset($result['winner'])) {
@@ -1748,7 +1757,7 @@ class Game
                             [
                                 'gameState' => 'gameResults',
                                 'comments' => "<strong style=\"color:green;\">Вы выиграли!</strong><br/>Начните новую игру",
-                                'desk' => $desk
+                                ($desk ? 'desk' : 'nothing') => $desk
                             ]
                         );
                     } else {
@@ -1756,7 +1765,7 @@ class Game
                             [
                                 'gameState' => 'gameResults',
                                 'comments' => "<strong style=\"color:red;\">Вы проиграли!</strong><br/>Начните новую игру",
-                                'desk' => $desk
+                                ($desk ? 'desk' : 'nothing') => $desk
                             ]
                         );
                     }
@@ -1821,7 +1830,7 @@ class Game
         return $this->gameStatus['users'][$userWinner]['ID'];
     }
 
-    private function lost3TurnsWinner($numLostUser)
+    private function lost3TurnsWinner($numLostUser, bool $pass = false): string
     {
         $maxres = 0;
         $userWinner = 0;
@@ -1837,7 +1846,9 @@ class Game
         }
 
         $this->addToLog(
-            'пропустил 3 хода! Победитель - ' . $this->gameStatus['users'][$userWinner]['username'] . ' со счетом ' . $this->gameStatus['users'][$userWinner]['score'],
+            $pass
+                ? 'сдался'
+                : 'пропустил 3 хода! Победитель - ' . $this->gameStatus['users'][$userWinner]['username'] . ' со счетом ' . $this->gameStatus['users'][$userWinner]['score'],
             $numLostUser
         );
 
@@ -1848,7 +1859,7 @@ class Game
     {
         foreach ($this->gameStatus['users'] as $numUser => $user) {
             // Дали всем игрокам статус - другойХодит
-            $this->updateUserStatus('otherTurn', $user['ID']);
+            $this->updateUserStatus(self::OTHER_TURN_STATUS, $user['ID']);
 
             if (
                 ($this->gameStatus['turnNumber'] > $this->activeGameUsers())
@@ -1878,13 +1889,13 @@ class Game
             }
         }
 
-        $this->updateUserStatus('myTurn', $this->gameStatus['users'][$nextActiveUser]['ID']);
+        $this->updateUserStatus(self::MY_TURN_STATUS, $this->gameStatus['users'][$nextActiveUser]['ID']);
         //Прописали статус новому активному пользователю
 
         $nextPreMyTurnUser = ($nextActiveUser + 1) % count($this->gameStatus['users']);
 
 
-        $this->updateUserStatus('preMyTurn', $this->gameStatus['users'][$nextPreMyTurnUser]['ID']);
+        $this->updateUserStatus(self::PRE_MY_TURN_STATUS, $this->gameStatus['users'][$nextPreMyTurnUser]['ID']);
         //Прописали статус следующему преМайТерн-юзеру
 
         $this->gameStatus['turnNumber']++;
@@ -2017,7 +2028,7 @@ class Game
         if ($statusUpdateNeeded) {
             $firstTurnUser = rand(0, count($this->currentGameUsers) - 1);
             $this->gameStatus['gameNumber'] = $this->currentGame;
-            $this->gameStatus['users'][$firstTurnUser]['status'] = 'myTurn';
+            $this->gameStatus['users'][$firstTurnUser]['status'] = self::MY_TURN_STATUS;
             $this->gameStatus['activeUser'] = $firstTurnUser;
             $this->gameStatus['gameBeginTime'] = date('U');
             $this->gameStatus['turnBeginTime'] = $this->gameStatus['gameBeginTime'];
@@ -2028,7 +2039,7 @@ class Game
             $this->gameStatus['wordsAccepted'] = [];
             $this->gameStatus['winScore'] = $this->makeWishWinscore();
             $this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] = false;
-            $this->updateUserStatus('myTurn', $this->currentGameUsers[$firstTurnUser]);
+            $this->updateUserStatus(self::MY_TURN_STATUS, $this->currentGameUsers[$firstTurnUser]);
             //Назначили ход случайному юзеру
 
             $ost = ($firstTurnUser - 1) % count($this->gameStatus['users']);
@@ -2037,7 +2048,7 @@ class Game
             } else {
                 $preMyTurnUser = count($this->gameStatus['users']) + $ost;
             }
-            $this->updateUserStatus('preMyTurn', $preMyTurnUser);
+            $this->updateUserStatus(self::PRE_MY_TURN_STATUS, $preMyTurnUser);
             //Вычислили игрока, идущего за первым и дали ему статус преМайТерн
 
             foreach ($this->gameStatus['users'] as $num => $user) {
@@ -2105,6 +2116,7 @@ class Game
         }
         $gameSubState .= $numActiveUsers;
         if (!(isset($arr['inviteStatus']) && $arr['inviteStatus'] == 'newGameStarting')) {
+            $arr['comments'] = $arr['comments'] ?? '';
             if ($this->gameStatus['invite'] == $this->User) {
                 $arr['comments'] .= "<br />Запрашиваем подтверждения соперников.<br />В игре осталось: $numActiveUsers";
                 $arr['inviteStatus'] = 'waiting';
@@ -2208,7 +2220,7 @@ class Game
                 ]
             );
 
-            if ($arr['gameState'] == 'myTurn') {
+            if ($arr['gameState'] == self::MY_TURN_STATUS) {
                 $arr = array_merge($arr, ['turnTime' => $this->gameStatus['turnTime']]);
             }
 
@@ -2261,9 +2273,9 @@ class Game
         //Сохранили статус игры
 
         if (isset($_GET['queryNumber'])) {
-            return json_encode(array_merge($arr, ['query_number' => $_GET['queryNumber']]));
+            return json_encode(array_merge($arr, ['query_number' => $_GET['queryNumber']]), JSON_UNESCAPED_UNICODE);
         } else {
-            return json_encode($arr);
+            return json_encode($arr, JSON_UNESCAPED_UNICODE);
         }
     }
 

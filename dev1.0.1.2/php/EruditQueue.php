@@ -602,7 +602,7 @@ class Queue
         foreach ($game_users as $num => $user) {
             $this->caller->gameStatus['users'][$num] = [
                 'ID' => $user['userCookie'],
-                'status' => 'startGame',
+                'status' => Game::START_GAME_STATUS,
                 'isActive' => true,
                 'score' => 0,
                 'username' => 'Игрок' . ($num + 1),
@@ -618,7 +618,7 @@ class Queue
 
             $this->caller->gameStatus[$user['userCookie']] = $num;
             // Заполнили массив нормеров игроков
-            $this->caller->updateUserStatus('startGame', $user['userCookie']);
+            $this->caller->updateUserStatus(Game::START_GAME_STATUS, $user['userCookie']);
             // Назначили статусы всем игрокам
         }
 

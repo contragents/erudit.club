@@ -2,6 +2,8 @@
 
 namespace Dadata;
 
+use Erudit\Game;
+
 class Hints
 {
     public const TYPE_WORDS_QUERY = 'words';
@@ -49,7 +51,7 @@ class Hints
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>' => 'isAndroidApp',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>' => 'isAndroidApp',
         ],
-        'myTurn' => [//Подсказки для myTurn
+        Game::MY_TURN_STATUS => [//Подсказки для myTurn
             'share' => 'isMyTurn',
             //не просить поделиться во время хода игрока
             'video' => 'isMyTurn',
@@ -572,7 +574,7 @@ class Hints
     public
     static function isMyTurn()
     {
-        if (self::$gameState['users'][self::$gameState[self::$User]]['status'] == 'myTurn') {
+        if (self::$gameState['users'][self::$gameState[self::$User]]['status'] == Game::MY_TURN_STATUS) {
             return true;
         }
 

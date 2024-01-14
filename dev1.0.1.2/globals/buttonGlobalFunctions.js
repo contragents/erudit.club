@@ -67,6 +67,75 @@ function newGameButtonFunction(ignoreDialog = false) {
     buttons['newGameButton']['svgObject'].disableInteractive();
 
     if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'startGame') {
+        dialog = bootbox.dialog({
+            // title: 'Требуется подтверждение',
+            message: 'Вы проиграете, если выйдете из игры! ПРОДОЛЖИТЬ?',
+            size: 'medium',
+            // onEscape: false,
+            closeButton: true,
+            buttons: {
+                cancel: {
+                    label: 'Отмена',
+                    className: 'btn-outline-success',//''btn btn-success',
+                    callback: function () {
+                        return true;
+                    }
+                },
+                confirm: {
+                    label: 'Подтвердить',
+                    className: 'btn-primary',
+                    callback: function () {
+                        requestToServerEnabled = true;
+                        fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState)
+                            .then((data) => {
+                                document.location.reload(true);
+                            });
+
+                        buttons['newGameButton']['svgObject'].setInteractive();
+
+                        return true;
+                    }
+                },
+                invite: {
+                    label: 'Реванш!',
+                    className: 'btn-info',
+                    callback: function () {
+                        setTimeout(function () {
+                            fetchGlobal(INVITE_SCRIPT, '', 'gameState=' + gameState)
+                                .then((dataInvite) => {
+                                    let responseText = 'Запрос отклонен';
+                                    if (dataInvite != '') {
+                                        responseText = dataInvite['message'];
+                                    }
+
+                                    dialogResponse = bootbox.alert({
+                                        message: responseText,
+                                        locale: 'ru',
+                                        size: 'small',
+                                        callback: function () {
+                                            dialogResponse.modal('hide');
+                                            gameStates['gameResults']['results'](dataInvite);
+                                        }
+                                    });
+
+                                    setTimeout(
+                                        function () {
+                                            dialogResponse.find(".bootbox-close-button").trigger("click");
+                                        }
+                                        , 2000
+                                    );
+
+                                    buttons['newGameButton']['svgObject'].setInteractive();
+
+                                });
+                        }, 100);
+
+                        return true;
+                    }
+                },
+            }
+        });
+        /*
         dialog = bootbox.confirm({
             message: 'Вы проиграете, если выйдете из игры! ПРОДОЛЖИТЬ?',
             locale: 'ru',
@@ -81,7 +150,7 @@ function newGameButtonFunction(ignoreDialog = false) {
                     buttons['newGameButton']['svgObject'].setInteractive();
                 }
             }
-        });
+        });*/
     } else {
         let lastState = gameState;
         gameState = 'chooseGame';

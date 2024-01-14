@@ -1,5 +1,6 @@
 <?php
 
+use Erudit\Game;
 use Lang\Eng;
 use Lang\Ru;
 
@@ -56,7 +57,7 @@ class BotEng
                     print $resp['gameState'];
 
 
-                    if ($resp['gameState'] == 'myTurn') {
+                    if ($resp['gameState'] == Game::MY_TURN_STATUS) {
                         if (
                             ($resp['turnTime'] == 120
                                 && (

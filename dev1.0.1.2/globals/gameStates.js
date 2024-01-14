@@ -316,6 +316,7 @@ var gameStates = {
                                 message: instruction,
                                 locale: 'ru'
                             }).off("shown.bs.modal");
+
                             return false;
                         }
                     },
@@ -487,7 +488,7 @@ var gameStates = {
         },
         refresh: 10,
         action: function (data) {
-            if ("desk" in data)
+            if ("desk" in data && data.desk.length > 0)
                 parseDeskGlobal(data['desk']);
             if ("score" in data)
                 ochki.text = data['score'];
