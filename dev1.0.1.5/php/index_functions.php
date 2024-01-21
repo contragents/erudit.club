@@ -21,7 +21,7 @@ const SCRIPTS = [
     'word' => 'word'
 ];
 
-const CATCH_REFERER_KEY = 'erudit.catched_referer';
+const CATCH_REFERER_KEY = 'erudit.private.catched_referer';
 
 function statusChecker()
 {

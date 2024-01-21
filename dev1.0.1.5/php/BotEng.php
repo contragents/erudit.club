@@ -14,11 +14,11 @@ class BotEng
     public static $thinkEndTime;
     const LNG_ID = 2;
 
-    const BOT_GAMES = 'erudit.botEN_games';
+    const BOT_GAMES = 'erudit.private.botEN_games';
 
     public static function Run()
     {
-        $_SERVER['DOCUMENT_ROOT'] = '/var/www/erudit.club';
+        $_SERVER['DOCUMENT_ROOT'] = '/var/www/erudit.private.club';
         set_time_limit(self::MINUTES_TO_GO * 60 + 25);
         $start_script_time = date('U');
         $script_work_time = self::MINUTES_TO_GO * 60 - 5;
@@ -47,7 +47,7 @@ class BotEng
                     //Не будем анализировать ответы!)) - просто новая игра
                     unset($botsTurns[$Bot]);
                     unset($botTimes[$Bot]);
-                    Cache::hdel('erudit.bot_v3_list', $Bot);
+                    Cache::hdel('erudit.private.bot_v3_list', $Bot);
 
                     continue;
                 } else {

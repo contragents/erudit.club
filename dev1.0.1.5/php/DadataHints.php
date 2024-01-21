@@ -14,7 +14,7 @@ class Hints
 
     const HINT_DAILY_SHOW = 2;
     const HINT_CACHE_TTL = 12 * 60 * 60;
-    const HINT_USER_CACHE_KEY = "erudit.hint_";
+    const HINT_USER_CACHE_KEY = "erudit.private.hint_";
     const LAMP_IMG_URL = "//xn--d1aiwkc2d.club/img/idea.png";
     const YANDEX_RATING_URL = "https://yandex.ru/ugcpub/object-digest?app_id=yandex-games&otype=Soft&object=%2Fontoid%2Fygs126941&show_rating=1&view=games";
 

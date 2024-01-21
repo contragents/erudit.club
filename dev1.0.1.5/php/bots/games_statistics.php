@@ -99,23 +99,23 @@ function addDeltaRatingsToCache($player)
 
     $cacheTime = 7 * 24 * 60 * 60;
 
-    Cache::setex('erudit.delta_rating_' . $player['cookie'], $cacheTime, $deltaArr);
-    Cache::setex('erudit.delta_rating_' . $player['found_cookie'], $cacheTime, $deltaArr);
+    Cache::setex('erudit.private.delta_rating_' . $player['cookie'], $cacheTime, $deltaArr);
+    Cache::setex('erudit.private.delta_rating_' . $player['found_cookie'], $cacheTime, $deltaArr);
 
     if (isset($player['userID']) && $player['userID'] > 0) {
-        Cache::setex('erudit.delta_rating_' . $player['userID'], $cacheTime, $deltaArr);
-        Cache::setex('erudit.delta_rating_' . $player['userID'], $cacheTime, $deltaArr);
+        Cache::setex('erudit.private.delta_rating_' . $player['userID'], $cacheTime, $deltaArr);
+        Cache::setex('erudit.private.delta_rating_' . $player['userID'], $cacheTime, $deltaArr);
     }
 }
 
 function deleteRatingsFromCache($player)
 {
-    Cache::del('erudit.rating_cache_' . $player['cookie']);
-    Cache::del('erudit.rating_cache_' . $player['found_cookie']);
+    Cache::del('erudit.private.rating_cache_' . $player['cookie']);
+    Cache::del('erudit.private.rating_cache_' . $player['found_cookie']);
 
     if (isset($player['userID']) && $player['userID'] > 0) {
-        Cache::del('erudit.rating_cache_' . $player['cookie'] . $player['userID']);
-        Cache::del('erudit.rating_cache_' . $player['found_cookie'] . $player['userID']);
+        Cache::del('erudit.private.rating_cache_' . $player['cookie'] . $player['userID']);
+        Cache::del('erudit.private.rating_cache_' . $player['found_cookie'] . $player['userID']);
     }
 }
 
@@ -123,7 +123,7 @@ function deleteRatingsFromCache($player)
 function saveRatings(&$players)
 {
     foreach ($players as $num => $player) {
-        $UPDATE = "UPDATE erudit.players 
+        $UPDATE = "UPDATE erudit.private.players 
                     SET
                         rating=" . ($player['rating'] + $player['deltaRating']) . "
                         , win_percent = round(
@@ -216,14 +216,14 @@ function addCookie(&$player)
 function getRatings(&$players, &$gameStatus)
 {
     /**todo REFACTOR IT */
-    $SELECTRATING = "SELECT rating, id as player_id, cookie, games_played FROM erudit.players WHERE cookie='";
+    $SELECTRATING = "SELECT rating, id as player_id, cookie, games_played FROM erudit.private.players WHERE cookie='";
     $SELECTRATING_REGISTERED1 = "SELECT 
                                     max(rating) as rating, 
                                     min(id) as player_id,
                                     CASE WHEN max(user_id) IS NULL THEN 0 ELSE max(user_id) END as user_id,
                                     max(cookie) as cookie,
                                     max(games_played) as games_played
-                                    FROM erudit.players 
+                                    FROM erudit.private.players 
                                     WHERE cookie='";
     $SELECTRATING_REGISTERED2 = "' OR user_id = ";
     $SELECTRATING_REGISTERED3 = " GROUP BY gruping";
@@ -246,7 +246,7 @@ function getRatings(&$players, &$gameStatus)
                 $players[$num]['games_played'] = $sel['games_played'];
 
                 if (!$players[$num]['user_id']) {
-                    $UPDATE = "UPDATE erudit.players SET
+                    $UPDATE = "UPDATE erudit.private.players SET
                             user_id = {$player['userID']}
                             , date_registered=UNIX_TIMESTAMP()
                             WHERE
@@ -261,7 +261,7 @@ function getRatings(&$players, &$gameStatus)
                     addCookie($players[$num]);
                 }
             } else {
-                $INSERT = "INSERT INTO erudit.players SET
+                $INSERT = "INSERT INTO erudit.private.players SET
                             cookie='{$player['cookie']}',
                             first_played = UNIX_TIMESTAMP(),
                             rating=1700,
@@ -289,7 +289,7 @@ function getRatings(&$players, &$gameStatus)
                 $players[$num]['found_cookie'] = $sel['cookie'];
                 $players[$num]['games_played'] = $sel['games_played'];
             } else {
-                $INSERT = "INSERT INTO erudit.players SET
+                $INSERT = "INSERT INTO erudit.private.players SET
                             cookie='{$player['cookie']}',
                             first_played=UNIX_TIMESTAMP(),
                             rating=1700,

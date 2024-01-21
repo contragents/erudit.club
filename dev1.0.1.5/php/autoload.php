@@ -1,6 +1,6 @@
 <?php
 
-if (strpos(__DIR__, 'dev1.0.1.2')) {
+if (strpos(__DIR__, 'dev1.0.1.5')) {
     ini_set("display_errors", 1);
     error_reporting(E_ALL);
 }

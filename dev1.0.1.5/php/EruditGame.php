@@ -25,10 +25,10 @@ class Game
     const BOT_ERRORS_KEY = 'erudit_bot_errors';
     const LOG_BOT_ERRORS_KEY = 'erudit_bot_log_errors';
     const MAX_ERRORS = 100;
-    const GAMES_ENDED_KEY = 'erudit.games_ended';
-    const STATS_FAILED = 'erudit.games_statistics_failed';
-    const NUM_RATING_PLAYERS_KEY = 'erudit.num_rating_players';
-    const GET_GAME_KEY = 'erudit.get_game_';
+    const GAMES_ENDED_KEY = 'erudit.private.games_ended';
+    const STATS_FAILED = 'erudit.private.games_statistics_failed';
+    const NUM_RATING_PLAYERS_KEY = 'erudit.private.num_rating_players';
+    const GET_GAME_KEY = 'erudit.private.get_game_';
 
     const OCHKI_VARIANTS = [200 => 0, 300 => 0];
     const TIME_VARIANTS = [60 => 0, 90 => 0, 120 => 0];
@@ -101,7 +101,7 @@ class Game
                             'gameLog' => []
                             ];*/
 
-    const CHECK_STATUS_RESULTS_KEY = 'erudit.game_results_';
+    const CHECK_STATUS_RESULTS_KEY = 'erudit.private.game_results_';
     const CHECK_STATUS_RESULTS_KEY_TTL = 24 * 60 * 60;
 
     public function __construct($server_name = '')
@@ -153,14 +153,14 @@ class Game
                 }
             }
         } else {
-            $this->currentGameUsers = Cache::get("erudit.game_{$this->currentGame}_users");
+            $this->currentGameUsers = Cache::get("erudit.private.game_{$this->currentGame}_users");
 
             if (!$this->lockTry()) {
                 //Вышли с Десинком, если не смогли получить Лок
                 return $this->desync();
             }
 
-            $this->gameStatus = Cache::get('erudit.game_status_' . $this->currentGame);
+            $this->gameStatus = Cache::get('erudit.private.game_status_' . $this->currentGame);
             //Забрали статус игры из кэша
             try {
                 if (!isset($this->gameStatus[$this->User])) {
@@ -645,13 +645,13 @@ class Game
             $this->gameStatus['users'][$this->numUser]['last_request_num'] = $_GET['queryNumber'] ?? 1000;
 
             Cache::setex(
-                'erudit.game_status_' . $this->currentGame,
+                'erudit.private.game_status_' . $this->currentGame,
                 $this->cacheTimeout,
                 $this->gameStatus
             );
         }
 
-        Cache::setex('erudit.user_' . $this->User . '_last_activity', $this->cacheTimeout, date('U'));
+        Cache::setex('erudit.private.user_' . $this->User . '_last_activity', $this->cacheTimeout, date('U'));
         $this->unlock();
         //Разлочили сохранение состояния
     }
@@ -1138,7 +1138,7 @@ class Game
         }
         $check_statuses = ['Слово не найдено', 'Корректно', 'Слово из одной буквы', 'Повтор'];
         $result = '';
-        $desk = Cache::get('erudit.current_game_' . $this->currentGame);
+        $desk = Cache::get('erudit.private.current_game_' . $this->currentGame);
         //Текущая доска
         $cells = json_decode($_POST['cells'], true);
         //Присланная доска
@@ -1186,24 +1186,24 @@ class Game
         while ((date('U') - $cycleBeginTime) <= $this->turnDeltaTime) {
             // Получаем время блокировки
             $lockTime = Cache::hget(
-                'erudit.games_' . date('Y_m_d') . '_locks',
+                'erudit.private.games_' . date('Y_m_d') . '_locks',
                 $this->currentGame . '_lock_time'
             ) ?: 0;
 
             if (
-                Cache::hincrby('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1) === 1
+                Cache::hincrby('erudit.private.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1) === 1
                 ||
                 (date('U') - $lockTime) > $this->turnDeltaTime
             ) {
                 // Обновляем время блокировки
                 Cache::hset(
-                    'erudit.games_' . date('Y_m_d') . '_locks',
+                    'erudit.private.games_' . date('Y_m_d') . '_locks',
                     $this->currentGame . '_lock_time',
                     date('U')
                 );
 
                 // ставим блокировку
-                Cache::hset('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1);
+                Cache::hset('erudit.private.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1);
 
                 $this->isStateLocked = true;
 
@@ -1225,9 +1225,9 @@ class Game
 
     private function unlock()
     {
-        Cache::hset('erudit.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 0);
+        Cache::hset('erudit.private.games_' . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 0);
         Cache::hdel(
-            'erudit.games_' . date('Y_m_d') . '_locks',
+            'erudit.private.games_' . date('Y_m_d') . '_locks',
             $this->currentGame . '_lock_time'
         );
 
@@ -1258,7 +1258,7 @@ class Game
         }
 
         try {
-            $desk = Cache::get('erudit.current_game_' . $this->currentGame);
+            $desk = Cache::get('erudit.private.current_game_' . $this->currentGame);
             // Текущая доска
 
             $saveDesk = $desk;
@@ -1508,7 +1508,7 @@ class Game
                 ]
             );
         } else {
-            Cache::setex('erudit.current_game_' . $this->currentGame, $this->cacheTimeout, $cells);
+            Cache::setex('erudit.private.current_game_' . $this->currentGame, $this->cacheTimeout, $cells);
             //Измененная Присланная доска -> текущая
         }
 
@@ -1563,10 +1563,10 @@ class Game
     private function onlinePlayers()
     {
         if (!($rangedOnlinePlayers = Cache::get(self::NUM_RATING_PLAYERS_KEY))) {
-            $lastGame = Cache::get('erudit.num_games');
+            $lastGame = Cache::get('erudit.private.num_games');
             $players = [];
             for ($i = $lastGame; $i > ($lastGame - 50); $i--) {
-                if ($game = Cache::get("erudit.game_status_" . $i)) {
+                if ($game = Cache::get("erudit.private.game_status_" . $i)) {
                     if (!isset($game['results'])) {
                         foreach ($game['users'] as $num => $user) {
                             if (strstr($user['ID'], 'botV3#') === false) {
@@ -1634,7 +1634,7 @@ class Game
         }
 
         if ($rangedOnlinePlayers[1900]) {
-            $cnt = Cache::hlen(Queue::QUEUES['erudit.rating_waiters']);
+            $cnt = Cache::hlen(Queue::QUEUES['erudit.private.rating_waiters']);
             if ($cnt < ($rangedOnlinePlayers[1900] / 2)) {
                 $thisUserRating = $this->getRatings(['cookie' => $this->User, 'userID' => false]);
                 if (($thisUserRating !== false) && ($thisUserRating['rating'] > 1750)) {
@@ -1650,11 +1650,11 @@ class Game
 
     private function isUserInInviteQueue()
     {
-        if (Cache::hget(Queue::QUEUES['erudit.inviteplayers_waiters'], $this->User)) {
+        if (Cache::hget(Queue::QUEUES['erudit.private.inviteplayers_waiters'], $this->User)) {
             return true;
         }
 
-        if (Cache::hget(Queue::QUEUES['erudit.inviteENplayers_waiters'], $this->User)) {
+        if (Cache::hget(Queue::QUEUES['erudit.private.inviteENplayers_waiters'], $this->User)) {
             return true;
         }
 
@@ -1699,7 +1699,7 @@ class Game
         }
 
         if ($this->getUserStatus() == 'gameResults') {
-            $desk = Cache::get('erudit.current_game_' . $this->currentGame);
+            $desk = Cache::get('erudit.private.current_game_' . $this->currentGame);
 
             $result = $this->gameStatus['results'];
             if (isset($result['winner'])) {
@@ -1748,7 +1748,7 @@ class Game
                 $this->storeGameResults($this->lost3TurnsWinner($this->gameStatus['activeUser']));
                 // Начало фрагмента для объединения - чего с чем?
 
-                $desk = Cache::get('erudit.current_game_' . $this->currentGame);
+                $desk = Cache::get('erudit.private.current_game_' . $this->currentGame);
 
                 $result = $this->gameStatus['results'];
                 if (isset($result['winner'])) {
@@ -1778,7 +1778,7 @@ class Game
 
         $userStatus = $this->getUserStatus();
 
-        if (($desk = Cache::get(('erudit.current_game_' . $this->currentGame))) && $this->currentGame) {
+        if (($desk = Cache::get(('erudit.private.current_game_' . $this->currentGame))) && $this->currentGame) {
             if ($userStatus == self::ERROR_STATUS) {
                 Cache::hset(
                     self::BOT_ERRORS_KEY,

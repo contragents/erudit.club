@@ -19,14 +19,14 @@ class Stats
         'yearly' => 'Y',
     ];
 
-    const COOKIE_KEY = 'erudit.stats_cookie_';
-    const REFERERS_HKEY = 'erudit.stats_referers';
+    const COOKIE_KEY = 'erudit.private.stats_cookie_';
+    const REFERERS_HKEY = 'erudit.private.stats_referers';
 
     const STAT_PREFIXES = [
-        'daily' => 'erudit.stats_daily_',
-        'weekly' => 'erudit.stats_weekly_',
-        'monthly' => 'erudit.stats_monthly_',
-        'yearly' => 'erudit.stats_yearly_',
+        'daily' => 'erudit.private.stats_daily_',
+        'weekly' => 'erudit.private.stats_weekly_',
+        'monthly' => 'erudit.private.stats_monthly_',
+        'yearly' => 'erudit.private.stats_yearly_',
     ];
 
     const DEVICES = [

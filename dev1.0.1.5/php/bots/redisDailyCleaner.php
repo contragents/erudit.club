@@ -14,7 +14,7 @@ $lastDays = 1;
 while ((date('U') - $start_script_time) < $script_work_time) {
     $lastDay = date('Y_m_d', strtotime("-$lastDays day"));
 
-    if (Cache::del("erudit.games_{$lastDay}_locks")) {
+    if (Cache::del("erudit.private.games_{$lastDay}_locks")) {
         $lastDays++;
         print $lastDay . " success\n";
     } else {

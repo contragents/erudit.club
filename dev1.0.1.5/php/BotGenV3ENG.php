@@ -9,15 +9,15 @@ class BotGenV3ENG
     public $p;
     private $config;
 
-    const BOT_GAMES = 'erudit.botEN_games';
-    const WAITERS_2_PLAYERS_QUEUE = 'erudit.2ENplayers_waiters';
-    const WAITERS_4_PLAYERS_QUEUE = 'erudit.4ENplayers_waiters';
-    const BOT_LIST = 'erudit.bot_v3_list';
+    const BOT_GAMES = 'erudit.private.botEN_games';
+    const WAITERS_2_PLAYERS_QUEUE = 'erudit.private.2ENplayers_waiters';
+    const WAITERS_4_PLAYERS_QUEUE = 'erudit.private.4ENplayers_waiters';
+    const BOT_LIST = 'erudit.private.bot_v3_list';
     const BOT_TPL = 'botV3#';
 
     public function __construct()
     {
-        $_SERVER['DOCUMENT_ROOT'] = '/var/www/erudit.club';
+        $_SERVER['DOCUMENT_ROOT'] = '/var/www/erudit.private.club';
         set_time_limit(self::MINUTES_TO_GO * 60 + 5);
         $start_script_time = date('U');
         $script_work_time = self::MINUTES_TO_GO * 60 - 5;

@@ -7,7 +7,7 @@ class BotRu extends BotEng
     public static $langClass = Ru::class;
     public static $lang = self::RU_LANG;
 
-    const BOT_GAMES = 'erudit.bot_games';
+    const BOT_GAMES = 'erudit.private.bot_games';
 
     const LNG_ID = 1;
 
