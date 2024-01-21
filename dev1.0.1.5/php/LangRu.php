@@ -86,15 +86,18 @@ class Ru
         30 => ['ю', 10, 1, 'glas'],
         31 => ['я', 3, 3, 'glas'],
         32 => ['ё', 1, 0, false],
-        999 => ['*', 3, 3, false]
+        999 => ['*', 3, 300, false]
     ];
 
     private static $words = [];
     private static $badWords = [];
     private static $goodWords = [];
+    private static $goodWordsPrice = [];
     private static $goodWordsLinks = [];
 
     private static $dictTable = 'dict';
+
+    public static bool $isFirstTurn = false;
 
     public static function generateBankFishki()
     {
@@ -241,9 +244,9 @@ class Ru
             $ij = explode('-', $h_v);
             if (isset($h_v_word['hor'])) {
                 if (!isset($good_words[$h_v_word['hor']])) {
-                    $good_words[$h_v_word['hor']] = self::wordPrice($h_v_word['hor'], $ij[0], $ij[1], 'hor');
+                    $good_words[$h_v_word['hor']] = self::wordPrice(self::$goodWordsPrice[$h_v]['hor'], $ij[0], $ij[1], 'hor', self::$isFirstTurn);
                 } else {
-                    $price = self::wordPrice($h_v_word['hor'], $ij[0], $ij[1], 'hor');
+                    $price = self::wordPrice(self::$goodWordsPrice[$h_v]['hor'], $ij[0], $ij[1], 'hor', self::$isFirstTurn);
                     if ($good_words[$h_v_word['hor']] < $price) {
                         $good_words[$h_v_word['hor']] = $price;
                     }
@@ -252,9 +255,9 @@ class Ru
 
             if (isset($h_v_word['vert'])) {
                 if (!isset($good_words[$h_v_word['vert']])) {
-                    $good_words[$h_v_word['vert']] = self::wordPrice($h_v_word['vert'], $ij[0], $ij[1], 'vert');
+                    $good_words[$h_v_word['vert']] = self::wordPrice(self::$goodWordsPrice[$h_v]['vert'], $ij[0], $ij[1], 'vert', self::$isFirstTurn);
                 } else {
-                    $price = self::wordPrice($h_v_word['vert'], $ij[0], $ij[1], 'vert');
+                    $price = self::wordPrice(self::$goodWordsPrice[$h_v]['vert'], $ij[0], $ij[1], 'vert', self::$isFirstTurn);
                     if ($good_words[$h_v_word['vert']] < $price) {
                         $good_words[$h_v_word['vert']] = $price;
                     }
@@ -313,13 +316,16 @@ class Ru
         return;
     }
 
-    private static function wordPrice($word, $i, $j, $orientation = 'hor')
+    private static function wordPrice($word, $i, $j, $orientation = 'hor', $isFirstTurn = false)
     {
         //print $i.' - '.$j;
         $price = 0;
         $word_multi = [];
         $I = $i;
         $J = $j;
+        $slovoX2FirstTurn = false;
+        $slovoLen = mb_strlen($word, 'UTF-8');
+        $bigWordLen = 5;
 
         for ($k = 0; $k < mb_strlen($word, 'UTF-8'); $k++) {
             if ($orientation == 'hor') {
@@ -328,6 +334,9 @@ class Ru
                 $J = $j + $k;
             }
 
+            if($I == 7 && $J == 7 && $isFirstTurn) {
+                $slovoX2FirstTurn = true;
+            }
 
             $letterPrice = static::$bukvy[self::getLetterCode(mb_substr($word, $k, 1, 'UTF-8'))][1];
 
@@ -342,6 +351,15 @@ class Ru
             //print $I.' - '.$J.' - '.$letterPrice.'<br />';
 
             $price += $letterPrice;
+        }
+
+        // CLUB-394
+        if($slovoLen > $bigWordLen) {
+            $price += $slovoLen;
+        }
+
+        if($slovoX2FirstTurn) {
+            $price = $price * 2;
         }
 
         foreach ($word_multi as $multi) {
@@ -373,6 +391,9 @@ class Ru
             return 0;
         }
 
+        // CLUB-290
+        return 1;
+
         return DB::queryValue(
             "SELECT count(1) as cnt FROM " . self::$dictTable . " WHERE slovo='$word' AND deleted = 0 LIMIT 1;"
         );
@@ -380,6 +401,10 @@ class Ru
 
     private static function compare_desks(&$desk, &$cells, &$gameStatus)
     {
+        if($gameStatus['turnNumber'] == 1) {
+            self::$isFirstTurn = true;
+        }
+
         $fshki = [];
         //$j - строки, $i - столбцы
         for ($j = 0; $j <= 14; $j++) {
@@ -418,6 +443,9 @@ class Ru
         }
 
         if (($fishka[0] == 7) && ($fishka[1] == 7)) {
+
+            // CLUB-294
+            self::$isFirstTurn = true;
             return true;
         }
 
@@ -487,9 +515,9 @@ class Ru
         return false;
     }
 
-    private static function code($code)
+    private static function code($code, bool $zvezdaLetter = false)
     {
-        return ($code < 999 ? $code : $code - 999 - 1);
+        return ($code < 999 ? $code : ($zvezdaLetter ? 999 : $code - 999 - 1));
     }
 
     private static function fishka_correct(&$fishka, &$cells, &$desk, &$gameStatus)
@@ -497,6 +525,8 @@ class Ru
         //Определяем слово по горизонтали
         //$i - столбец
         $hor_word = static::$bukvy[self::code($fishka[2])][0];
+        // CLUB-294
+        $hor_word_price = static::$bukvy[self::code($fishka[2], true)][0];
         $horWordStart = [$fishka[0], $fishka[1]];
         //Начало слова по горизонтали
 
@@ -505,6 +535,8 @@ class Ru
         if ($i >= 0) {
             while (($cells[$i][$fishka[1]][0]) && ($i >= 0) && ($i <= 14)) {
                 $hor_word = static::$bukvy[self::code($cells[$i][$fishka[1]][1])][0] . $hor_word;
+                // CLUB-294
+                $hor_word_price = static::$bukvy[self::code($cells[$i][$fishka[1]][1], true)][0] . $hor_word_price;
                 $horWordStart = [$i, $fishka[1]];
                 $i--;
                 if ($i < 0) {
@@ -518,6 +550,8 @@ class Ru
         if ($i <= 14) {
             while (($cells[$i][$fishka[1]][0]) && ($i >= 0) && ($i <= 14)) {
                 $hor_word .= static::$bukvy[self::code($cells[$i][$fishka[1]][1])][0];
+                // CLUB-294
+                $hor_word_price .= static::$bukvy[self::code($cells[$i][$fishka[1]][1], true)][0];
                 $i++;
                 if ($i > 14) {
                     break;
@@ -535,6 +569,8 @@ class Ru
         //Определяем слово по вертикали
         //$j - строка
         $vert_word = static::$bukvy[self::code($fishka[2])][0];
+        // CLUB-294
+        $vert_word_price = static::$bukvy[self::code($fishka[2], true)][0];
         $vertWordStart = [$fishka[0], $fishka[1]];
         //Начало слова по горизонтали
 
@@ -544,6 +580,8 @@ class Ru
         if ($j >= 0) {
             while (($cells[$fishka[0]][$j][0]) && ($j >= 0) && ($j <= 14)) {
                 $vert_word = static::$bukvy[self::code($cells[$fishka[0]][$j][1])][0] . $vert_word;
+                //CLUB-294
+                $vert_word_price = static::$bukvy[self::code($cells[$fishka[0]][$j][1], true)][0] . $vert_word_price;
                 $vertWordStart = [$fishka[0], $j];
                 $j--;
                 if ($j < 0) {
@@ -557,6 +595,8 @@ class Ru
         if ($j <= 14) {
             while (($cells[$fishka[0]][$j][0]) && ($j >= 0) && ($j <= 14)) {
                 $vert_word .= static::$bukvy[self::code($cells[$fishka[0]][$j][1])][0];
+                // CLUB-294
+                $vert_word_price .= static::$bukvy[self::code($cells[$fishka[0]][$j][1], true)][0];
                 $j++;
                 if ($j > 14) {
                     break;
@@ -577,13 +617,16 @@ class Ru
 
         if (mb_strlen($hor_word, 'UTF-8') > 1) {
             self::$words[$fishka[0] . '-' . $fishka[1]]['hor'] = $hor_word;
+            // todo добавить переменную с * вместо буквы под *
             self::$goodWords[$horWordStart[0] . '-' . $horWordStart[1]]['hor'] = $hor_word;
+            self::$goodWordsPrice[$horWordStart[0] . '-' . $horWordStart[1]]['hor'] = $hor_word_price;
             self::$goodWordsLinks[$fishka[0] . '-' . $fishka[1]]['hor'] = $horWordStart[0] . '-' . $horWordStart[1];
         }
 
         if (mb_strlen($vert_word, 'UTF-8') > 1) {
             self::$words[$fishka[0] . '-' . $fishka[1]]['vert'] = $vert_word;
             self::$goodWords[$vertWordStart[0] . '-' . $vertWordStart[1]]['vert'] = $vert_word;
+            self::$goodWordsPrice[$vertWordStart[0] . '-' . $vertWordStart[1]]['vert'] = $vert_word_price;
             self::$goodWordsLinks[$fishka[0] . '-' . $fishka[1]]['vert'] = $vertWordStart[0] . '-' . $vertWordStart[1];
         }
         //Сохранили собранные слова
