@@ -86,7 +86,7 @@ class Ru
         30 => ['ю', 10, 1, 'glas'],
         31 => ['я', 3, 3, 'glas'],
         32 => ['ё', 1, 0, false],
-        999 => ['*', 3, 300, false]
+        999 => ['*', 3, 3, false]
     ];
 
     private static $words = [];
