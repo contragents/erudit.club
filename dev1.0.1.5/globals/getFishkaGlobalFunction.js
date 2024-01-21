@@ -82,7 +82,7 @@ function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = D
         testLetter.x = fishka.displayWidth - 15 * 2 - testLetter.displayWidth;
         testLetter.y = fishka.displayHeight - 3 * 2 - testLetter.displayHeight;
 
-        if ((numLetter !== 25) && (numLetter !== 26) && (numLetter !== 50) && (numLetter !== 59)) {
+        if (letterPrices.get(numLetter) < 10) {
             let digitLetter = _this.add.image(0, 0, 'digits', letterPrices.get(numLetter));
 
             digitLetter.displayWidth = fishka.displayWidth / correction / 2;
