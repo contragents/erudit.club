@@ -760,7 +760,7 @@ class Prizes
                 : ['word' => 'юра', 'length' => 3];
         }
         if ($wordLen > $yearRecord['length']) {
-            Cache::setex(self::WORD_LEN_YEARLY . date('n'), self::YEAR_TTL, ['word' => $word, 'length' => $wordLen]);
+            Cache::setex(self::WORD_LEN_YEARLY . date('Y'), self::YEAR_TTL, ['word' => $word, 'length' => $wordLen]);
 
             return ['год' => true];
         }

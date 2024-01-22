@@ -21,32 +21,32 @@ class Prizes
         'год' => 'year'
     ];
 
-    private const ALL_RECORDS = 'erudit_all_records';
+    private const ALL_RECORDS = 'erudit.private_all_records';
 
     private const WORD_LEN_DAILY = 'erudit_word_len_daily_';
-    private const WORD_LEN_WEEKLY = 'erudit_word_len_weekly_';
-    private const WORD_LEN_MONTHLY = 'erudit_word_len_monthly_';
-    private const WORD_LEN_YEARLY = 'erudit_word_len_yearly_';
+    private const WORD_LEN_WEEKLY = 'erudit.private_word_len_weekly_';
+    private const WORD_LEN_MONTHLY = 'erudit.private_word_len_monthly_';
+    private const WORD_LEN_YEARLY = 'erudit.private_word_len_yearly_';
 
-    private const WORD_PRICE_DAILY = 'erudit_word_price_daily_';
-    private const WORD_PRICE_WEEKLY = 'erudit_word_price_weekly_';
-    private const WORD_PRICE_MONTHLY = 'erudit_word_price_monthly_';
-    private const WORD_PRICE_YEARLY = 'erudit_word_price_yearly_';
+    private const WORD_PRICE_DAILY = 'erudit.private_word_price_daily_';
+    private const WORD_PRICE_WEEKLY = 'erudit.private_word_price_weekly_';
+    private const WORD_PRICE_MONTHLY = 'erudit.private_word_price_monthly_';
+    private const WORD_PRICE_YEARLY = 'erudit.private_word_price_yearly_';
 
-    private const TURN_PRICE_DAILY = 'erudit_turn_price_daily_';
-    private const TURN_PRICE_WEEKLY = 'erudit_turn_price_weekly_';
-    private const TURN_PRICE_MONTHLY = 'erudit_turn_price_monthly_';
-    private const TURN_PRICE_YEARLY = 'erudit_turn_price_yearly_';
+    private const TURN_PRICE_DAILY = 'erudit.private_turn_price_daily_';
+    private const TURN_PRICE_WEEKLY = 'erudit.private_turn_price_weekly_';
+    private const TURN_PRICE_MONTHLY = 'erudit.private_turn_price_monthly_';
+    private const TURN_PRICE_YEARLY = 'erudit.private_turn_price_yearly_';
 
-    private const GAME_PRICE_DAILY = 'erudit_game_price_daily_';
-    private const GAME_PRICE_WEEKLY = 'erudit_game_price_weekly_';
-    private const GAME_PRICE_MONTHLY = 'erudit_game_price_monthly_';
-    private const GAME_PRICE_YEARLY = 'erudit_game_price_yearly_';
+    private const GAME_PRICE_DAILY = 'erudit.private_game_price_daily_';
+    private const GAME_PRICE_WEEKLY = 'erudit.private_game_price_weekly_';
+    private const GAME_PRICE_MONTHLY = 'erudit.private_game_price_monthly_';
+    private const GAME_PRICE_YEARLY = 'erudit.private_game_price_yearly_';
 
-    private const GAMES_PLAYED_DAILY = 'erudit_games_played_daily_';
-    private const GAMES_PLAYED_WEEKLY = 'erudit_games_played_weekly_';
-    private const GAMES_PLAYED_MONTHLY = 'erudit_games_played_monthly_';
-    private const GAMES_PLAYED_YEARLY = 'erudit_games_played_yearly_';
+    private const GAMES_PLAYED_DAILY = 'erudit.private_games_played_daily_';
+    private const GAMES_PLAYED_WEEKLY = 'erudit.private_games_played_weekly_';
+    private const GAMES_PLAYED_MONTHLY = 'erudit.private_games_played_monthly_';
+    private const GAMES_PLAYED_YEARLY = 'erudit.private_games_played_yearly_';
 
     private const PRIZE_LINKS = [
         'game_price-year' => 'img/prizes/yearly/ochki_za_igru_year.svg',
@@ -760,7 +760,7 @@ class Prizes
                 : ['word' => 'юра', 'length' => 3];
         }
         if ($wordLen > $yearRecord['length']) {
-            Cache::setex(self::WORD_LEN_YEARLY . date('n'), self::YEAR_TTL, ['word' => $word, 'length' => $wordLen]);
+            Cache::setex(self::WORD_LEN_YEARLY . date('Y'), self::YEAR_TTL, ['word' => $word, 'length' => $wordLen]);
 
             return ['год' => true];
         }
