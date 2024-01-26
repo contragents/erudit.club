@@ -58,12 +58,16 @@ class ORM
 
     public static function where($fieldName, $cond, $value, $isRaw = false)
     {
-        return " WHERE ($fieldName $cond " . ($value instanceof ORM ? $value->rawExpression : ($isRaw ? $value : "'$value'")) . ') ';
+        return ' WHERE ' . self::getWhereCondition($fieldName, $cond, $value, $isRaw);
     }
 
     public static function andWhere($fieldName, $cond, $value, $isRaw = false)
     {
-        return " AND ($fieldName $cond " . ($value instanceof ORM ? $value->rawExpression : ($isRaw ? $value : "'$value'")) . ') ';
+        return ' AND ' . self::getWhereCondition($fieldName, $cond, $value, $isRaw);
+    }
+
+    private static function getWhereCondition($fieldName, $cond, $value, $isRaw = false): string {
+        return " ($fieldName $cond " . ($value instanceof ORM ? $value->rawExpression : ($isRaw ? $value : "'$value'")) . ') ';
     }
 
     public static function orBegin($odin = '')
@@ -184,5 +188,10 @@ class ORM
                 ? ($as . ' ')
                 : ''
             );
+    }
+
+    public static function andNot($fieldName, $cond, $value, $isRaw = false): string
+    {
+        return ' AND NOT ' . self::getWhereCondition($fieldName, $cond, $value, $isRaw);
     }
 }
