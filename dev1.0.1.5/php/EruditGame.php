@@ -1042,8 +1042,6 @@ class Game
                     if ($fishkaCode == $code) {
                         unset($this->gameStatus['users'][$this->numUser]['fishki'][$num]);
 
-                        // todo подбросить фишки в мешочек в коце оьмена
-                        //array_push($this->gameStatus['bankFishki'], $fishkaCode);
                         $limb[] = $fishkaCode;
 
                         break;
