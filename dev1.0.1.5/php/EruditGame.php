@@ -1032,6 +1032,7 @@ class Game
 
         if (count($fishkiToChange)) {
             $this->addToLog('меняет фишки и пропускает ход', $this->numUser);
+            $limb = [];
 
             foreach ($fishkiToChange as $newFishka => $on) {
                 $fishkaCode = explode('_', $newFishka);
@@ -1041,23 +1042,37 @@ class Game
                     if ($fishkaCode == $code) {
                         unset($this->gameStatus['users'][$this->numUser]['fishki'][$num]);
 
-                        array_push($this->gameStatus['bankFishki'], $fishkaCode);
+                        // todo подбросить фишки в мешочек в коце оьмена
+                        //array_push($this->gameStatus['bankFishki'], $fishkaCode);
+                        $limb[] = $fishkaCode;
 
                         break;
                     }
                 }
             }
 
+            $numNeedFishki = $this->chisloFishek - count($this->gameStatus['users'][$this->numUser]['fishki']);
+
+            if (count($this->gameStatus['bankFishki']) < $numNeedFishki) {
+                array_push($this->gameStatus['bankFishki'], $limb);
+                $limb = [];
+            }
+
+
             shuffle($this->gameStatus['bankFishki']);
 
-            $addFishki = $this->giveFishki(
-                $this->chisloFishek - count($this->gameStatus['users'][$this->numUser]['fishki'])
-            );
+            $addFishki = $this->giveFishki($numNeedFishki);
             $this->gameStatus['users'][$this->numUser]['fishki'] = array_merge(
                 $this->gameStatus['users'][$this->numUser]['fishki'],
                 $addFishki
             );
         }
+
+        if (count($limb)) {
+            array_push($this->gameStatus['bankFishki'], $limb);
+            shuffle($this->gameStatus['bankFishki']);
+        }
+
         $this->gameStatus['users'][$this->numUser]['lostTurns']++;
         //Увеличили число пропущенных подряд ходов
 
