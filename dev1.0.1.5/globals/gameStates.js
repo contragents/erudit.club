@@ -670,6 +670,10 @@ function commonCallback(data) {
         }
     }
 
+    if (NUM_BANK_FISHKI_PARAM in data) {
+        numBankFishki = data[NUM_BANK_FISHKI_PARAM];
+    }
+
     if (gameOldState != gameState) {
         soundPlayed = false;
     }

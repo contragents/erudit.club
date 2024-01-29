@@ -1052,10 +1052,9 @@ class Game
             $numNeedFishki = $this->chisloFishek - count($this->gameStatus['users'][$this->numUser]['fishki']);
 
             if (count($this->gameStatus['bankFishki']) < $numNeedFishki) {
-                array_push($this->gameStatus['bankFishki'], $limb);
+                array_push($this->gameStatus['bankFishki'], ...$limb);
                 $limb = [];
             }
-
 
             shuffle($this->gameStatus['bankFishki']);
 
@@ -1067,7 +1066,7 @@ class Game
         }
 
         if (count($limb)) {
-            array_push($this->gameStatus['bankFishki'], $limb);
+            array_push($this->gameStatus['bankFishki'], ...$limb);
             shuffle($this->gameStatus['bankFishki']);
         }
 
@@ -2169,6 +2168,7 @@ class Game
             if (is_array($this->gameStatus['users'][$this->numUser]['fishki'])) {
                 if (count($this->gameStatus['users'][$this->numUser]['fishki'])) {
                     $arr = array_merge($arr, ['fishki' => $this->gameStatus['users'][$this->numUser]['fishki']]);
+                    $arr = array_merge($arr, ['num_bank_fishki' => count($this->gameStatus['bankFishki'])]);
                 }
             }
 

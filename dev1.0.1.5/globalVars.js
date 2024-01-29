@@ -52,6 +52,10 @@ const SET_AVATAR_SCRIPT = 'set_player_avatar_url.php';
 const HOR = 'horizontal';
 const VERT = 'vertical';
 
+//params
+const NUM_BANK_FISHKI_PARAM = 'num_bank_fishki'
+var numBankFishki = false;
+
 const BAD_REQUEST = 400;
 const PAGE_NOT_FOUND = 404;
 

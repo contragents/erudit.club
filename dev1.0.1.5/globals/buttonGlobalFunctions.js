@@ -209,6 +209,9 @@ function changeButtonFunction() {
 
     let formHeader = '<form id="myForm" class="form-horizontal">';
     let formFooter = '</div></form>';
+    formFooter += 'Количество фишек в банке: '
+        + numBankFishki
+        + '<br>Если вы отметите больше фишек на замену, чем осталось в банке, то <strong>ВСЕ</strong> ваши фишки будут помещены в банк <strong>перед раздачей</strong> и могут вам вернуться обратно'
     var formInner = '<div class="form-group">';
     var zvezdaStyle = '999" title="Зачем?';
     for (let k in container)
