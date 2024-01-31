@@ -32,6 +32,8 @@ class Game
 
     const OCHKI_VARIANTS = [200 => 0, 300 => 0];
     const TIME_VARIANTS = [60 => 0, 90 => 0, 120 => 0];
+    const TURN_TIME = 30 * 60; // CLUB-296 30 мин на ход
+    const WIN_SCORE = 10000; // CLUB-296 игра до последней фишки
     const ADD_TO_CHAT_STATE = 'addToChat';
     const WORD_QUERY_STATE = 'wordQuery';
     const IN_GAME_STATUSES = [
@@ -51,7 +53,7 @@ class Game
     public $p;
     public $User;
     public $currentGame;
-    public $currentGameUsers = false;
+    public ?array $currentGameUsers = null;
     private $isStateLocked = false;
     private $isGameEndedSaved = false;
     private $gamePlayersWaiting = false;//Количество игроков, ожидающих начала игры
@@ -954,7 +956,7 @@ class Game
 
         $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings ? $ratings[0]['rating'] : 'new_player';
 
-        return 'Новая игра начата! <br />Набери <strong>' . $this->gameStatus['winScore'] . '</strong> очков' . '<br />' . $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
+        return 'Новая игра начата! <br />Набери как можно больше очков' . '<br />' . $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
     }
 
     private function statusComments_otherTurn()
@@ -988,7 +990,7 @@ class Game
 
             $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings[0]['rating'] ?? 'new_player';
 
-            return 'Ваш ход! <br />Игра до <strong>' . $this->gameStatus['winScore'] . '</strong> очков' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
+            return 'Ваш ход! <br />Игра до последней фишки' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
         } else {
             return $this->gameStatus['users'][$this->numUser]['username'] . ', Ваш ход!'
                 . Hints::getHint(
@@ -1013,7 +1015,7 @@ class Game
     {
         if ($this->gameStatus['turnNumber'] == 1) {
             $ratings = $this->getRatings($this->User);
-            return 'Игра до <strong>' . $this->gameStatus['winScore'] . '</strong> очков<br />Ваш ход следующий - приготовьтесь!' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
+            return 'Игра до последней фишки<br />Ваш ход следующий - приготовьтесь!' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
         } else {
             return $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит. <br />Ваш ход следующий - приготовьтесь!'
                 . Hints::getHint(
@@ -2044,12 +2046,12 @@ class Game
             $this->gameStatus['activeUser'] = $firstTurnUser;
             $this->gameStatus['gameBeginTime'] = date('U');
             $this->gameStatus['turnBeginTime'] = $this->gameStatus['gameBeginTime'];
-            $this->gameStatus['turnTime'] = $this->makeWishTime();
+            $this->gameStatus['turnTime'] = self::TURN_TIME; // CLUB-296 $this->makeWishTime();
             $this->gameStatus['turnNumber'] = 1;
             $this->gameStatus['firstTurnUser'] = $firstTurnUser;
             $this->gameStatus['bankFishki'] = $this->gameStatus['lngClass']::generateBankFishki();
             $this->gameStatus['wordsAccepted'] = [];
-            $this->gameStatus['winScore'] = $this->makeWishWinscore();
+            $this->gameStatus['winScore'] = self::WIN_SCORE; // CLUB-296 $this->makeWishWinscore();
             $this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] = false;
             $this->updateUserStatus(self::MY_TURN_STATUS, $this->currentGameUsers[$firstTurnUser]);
             //Назначили ход случайному юзеру
@@ -2076,7 +2078,7 @@ class Game
                 //Прописали рейтинг и common_id игрока в статусе игры - только для games_statistic.php
             }
             $this->addToLog(
-                'Новая игра начата! <br />Набери <strong>' . $this->gameStatus['winScore'] . '</strong> очков'
+                'Новая игра начата! <br />Набери как можно больше очков'
             );
         }
 

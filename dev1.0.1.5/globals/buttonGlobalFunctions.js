@@ -439,7 +439,7 @@ function logButtonFunction() {
         },
         buttons: {
             cancel: {
-                label: "Играем до <strong>" + winScore + "</strong>",
+                label: "До последней фишки",
                 className: 'btn btn-outline-secondary',
                 callback: function () {
                     return false;

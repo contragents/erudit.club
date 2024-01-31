@@ -59,12 +59,8 @@ function (time, delta) {
                     let x = ochki_arr[k].x;
                     if (((flor % 2) === 0) && (flor > lastflor)) {
                         ochki_arr[k].visible = false;
-                        //ochki_arr[k].setFontSize(vremiaFontSizeDefault + 3);
-                        //ochki_arr[k].x = ochki_arr[k].x-13;
                     } else if (flor > lastflor) {
                         ochki_arr[k].visible = true;
-                        //ochki_arr[k].setFontSize(vremiaFontSizeDefault);
-                        //ochki_arr[k].x = ochki_arr[k].x+13;
                     }
                     lastflor = flor;
                 } else if (responseData['userNames'][k] === '')
@@ -74,15 +70,16 @@ function (time, delta) {
         if (flor > lastTimeCorrection) {
             lastTimeCorrection = flor;
             if ((vremiaMinutes > 0) || (vremiaSeconds > 0)) {
+                let timeStrLen = vremiaMinutes > 9 ? 5 : 4;
                 vremiaSeconds--;
                 if (vremiaSeconds < 0) {
                     vremiaMinutes--;
                     vremiaSeconds = 59;
                 }
                 if (vremiaSeconds < 10)
-                    vremia.text = vremia.text.substr(0, vremia.text.length - 4) + vremiaMinutes + ':' + '0' + vremiaSeconds;
+                    vremia.text = vremia.text.substr(0, vremia.text.length - timeStrLen) + vremiaMinutes + ':' + '0' + vremiaSeconds;
                 else
-                    vremia.text = vremia.text.substr(0, vremia.text.length - 4) + vremiaMinutes + ':' + vremiaSeconds;
+                    vremia.text = vremia.text.substr(0, vremia.text.length - timeStrLen) + vremiaMinutes + ':' + vremiaSeconds;
                 if ((vremiaMinutes === 0) && (vremiaSeconds < 20)) {
                     if (vremiaSeconds > 10)
                         vremia.setColor('yellow');
