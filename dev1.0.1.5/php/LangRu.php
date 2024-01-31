@@ -2,10 +2,6 @@
 
 namespace Lang;
 
-//include_once(__DIR__ . '/DadataDB.php');
-
-//use \Dadata\DB;
-
 use DB;
 
 class Ru
@@ -97,7 +93,10 @@ class Ru
 
     private static $dictTable = 'dict';
 
+    const BIG_WORD_LEN = 5;
     public static bool $isFirstTurn = false;
+    private static int $slovoX2Price = 0;
+    private static ?string $slovoX2Orient = null;
 
     public static function generateBankFishki()
     {
@@ -239,31 +238,58 @@ class Ru
             }
         }
 
-        $good_words = [];
-        foreach (self::$goodWords as $h_v => $h_v_word) {
-            $ij = explode('-', $h_v);
-            if (isset($h_v_word['hor'])) {
-                if (!isset($good_words[$h_v_word['hor']])) {
-                    $good_words[$h_v_word['hor']] = self::wordPrice(self::$goodWordsPrice[$h_v]['hor'], $ij[0], $ij[1], 'hor', self::$isFirstTurn);
-                } else {
-                    $price = self::wordPrice(self::$goodWordsPrice[$h_v]['hor'], $ij[0], $ij[1], 'hor', self::$isFirstTurn);
-                    if ($good_words[$h_v_word['hor']] < $price) {
-                        $good_words[$h_v_word['hor']] = $price;
+        // CLUB-294 делаем 2 прогона подсчета очков для определения Х2 слова
+        for ($i = 0; $i <= 1; $i++) {
+            $good_words = [];
+            foreach (self::$goodWords as $h_v => $h_v_word) {
+                $ij = explode('-', $h_v);
+                if (isset($h_v_word['hor'])) {
+                    if (!isset($good_words[$h_v_word['hor']])) {
+                        $good_words[$h_v_word['hor']] = self::wordPrice(
+                            self::$goodWordsPrice[$h_v]['hor'],
+                            $ij[0],
+                            $ij[1],
+                            'hor',
+                            self::$isFirstTurn
+                        );
+                    } else {
+                        $price = self::wordPrice(
+                            self::$goodWordsPrice[$h_v]['hor'],
+                            $ij[0],
+                            $ij[1],
+                            'hor',
+                            self::$isFirstTurn
+                        );
+                        if ($good_words[$h_v_word['hor']] < $price) {
+                            $good_words[$h_v_word['hor']] = $price;
+                        }
                     }
                 }
-            }
 
-            if (isset($h_v_word['vert'])) {
-                if (!isset($good_words[$h_v_word['vert']])) {
-                    $good_words[$h_v_word['vert']] = self::wordPrice(self::$goodWordsPrice[$h_v]['vert'], $ij[0], $ij[1], 'vert', self::$isFirstTurn);
-                } else {
-                    $price = self::wordPrice(self::$goodWordsPrice[$h_v]['vert'], $ij[0], $ij[1], 'vert', self::$isFirstTurn);
-                    if ($good_words[$h_v_word['vert']] < $price) {
-                        $good_words[$h_v_word['vert']] = $price;
+                if (isset($h_v_word['vert'])) {
+                    if (!isset($good_words[$h_v_word['vert']])) {
+                        $good_words[$h_v_word['vert']] = self::wordPrice(
+                            self::$goodWordsPrice[$h_v]['vert'],
+                            $ij[0],
+                            $ij[1],
+                            'vert',
+                            self::$isFirstTurn
+                        );
+                    } else {
+                        $price = self::wordPrice(
+                            self::$goodWordsPrice[$h_v]['vert'],
+                            $ij[0],
+                            $ij[1],
+                            'vert',
+                            self::$isFirstTurn
+                        );
+                        if ($good_words[$h_v_word['vert']] < $price) {
+                            $good_words[$h_v_word['vert']] = $price;
+                        }
                     }
                 }
+                //Посчитали очки для всех хороших слов
             }
-            //Посчитали очки для всех хороших слов
         }
 
         foreach ($fishki as $nn => $fishka) {
@@ -325,7 +351,6 @@ class Ru
         $J = $j;
         $slovoX2FirstTurn = false;
         $slovoLen = mb_strlen($word, 'UTF-8');
-        $bigWordLen = 5;
 
         for ($k = 0; $k < mb_strlen($word, 'UTF-8'); $k++) {
             if ($orientation == 'hor') {
@@ -353,12 +378,19 @@ class Ru
             $price += $letterPrice;
         }
 
-        // CLUB-394
-        if($slovoLen > $bigWordLen) {
+        // CLUB-294
+        if($slovoLen > self::BIG_WORD_LEN) {
             $price += $slovoLen;
         }
 
-        if($slovoX2FirstTurn) {
+        // CLUB-294
+        // Условие для первого прогона
+        if ($slovoX2FirstTurn && ($price * 2) > static::$slovoX2Price) {
+            $price = $price * 2;
+            static::$slovoX2Price = $price;
+            static::$slovoX2Orient = $orientation;
+        } elseif ($orientation == static::$slovoX2Orient) {
+            // Второй прогон
             $price = $price * 2;
         }
 
