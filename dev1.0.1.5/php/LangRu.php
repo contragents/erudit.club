@@ -419,12 +419,12 @@ class Ru
 
     private static function word_correct($word, array &$wordsAccepted)
     {
+        // CLUB-290, CLUB-299
+        return 1;
+
         if (isset($wordsAccepted[$word])) {
             return 0;
         }
-
-        // CLUB-290
-        return 1;
 
         return DB::queryValue(
             "SELECT count(1) as cnt FROM " . self::$dictTable . " WHERE slovo='$word' AND deleted = 0 LIMIT 1;"
