@@ -3,21 +3,16 @@
 class UserModel extends BaseModel
 {
     const TABLE_NAME = 'users';
+    const AVATAR_URL_FIELD = 'avatar_url';
 
     public static function updateUrl(int $commonID, string $url): bool {
-
-        // todo remove after model tested
-        $avatarUpdateQuery = "UPDATE users
-                SET 
-                    avatar_url = '" . DB::escapeString($url) . "'
-                WHERE 
-                    id = $commonID";
-
         $avatarUpdateQuery = ORM::update(self::TABLE_NAME)
-            .ORM::insertFields(['avatar_url'=>DB::escapeString($url)])
+            . ORM::set(['field' => self::AVATAR_URL_FIELD, 'value' => DB::escapeString($url)])
             .ORM::where('id','=',$commonID, true);
 
-        return DB::queryInsert($avatarUpdateQuery) ? true : false;
+        $res = DB::queryInsert($avatarUpdateQuery);
+
+        return $res;
     }
 
     public static function getNameByCommonId(int $commonId){

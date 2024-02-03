@@ -125,6 +125,9 @@ ORDER BY
 
     public static function addUserAvatarUrl($url, $commonID): string
     {
+        $url = trim($url);
+        $url = lcfirst($url);
+        
         if (!preg_match('/^https?:\/\//', $url)) {
             return json_encode(
                 [
@@ -134,10 +137,18 @@ ORDER BY
             );
         }
 
-        if (UserModel::updateUrl($commonID, $url)) {
+        $updateRes = UserModel::updateUrl($commonID, $url);
+        if ($updateRes >= 1) {
             return json_encode(['result' => 'saved', 'url' => $url]);
-        } else {
+        } elseif($updateRes === 0) {
             return json_encode(['result' => 'saved', 'message' => 'Файл перезаписан', 'url' => $url]);
+        } else {
+            return json_encode(
+                [
+                    'result' => 'error',
+                    'message' => 'Ошибка сохранения нового URL'
+                ]
+            );
         }
     }
 
