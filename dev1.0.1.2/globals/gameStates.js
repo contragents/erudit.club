@@ -225,7 +225,7 @@ var gameStates = {
                 buttons: {
                     cabinet: {
                         label: 'Личный кабинет',
-                        className: 'btn-outline-success',//''btn btn-success',
+                        className: 'btn-outline-success',
                         callback: function () {
                             setTimeout(function () {
                                 fetchGlobal(CABINET_SCRIPT, '', 12)
@@ -310,10 +310,22 @@ var gameStates = {
                     },
                     instruction: {
                         label: '&nbsp;Инструкция&nbsp;',
-                        className: 'btn-outline-success',//'btn-primary',
+                        className: 'btn-outline-success',
                         callback: function () {
                             dialog = bootbox.alert({
                                 message: instruction,
+                                locale: 'ru'
+                            }).off("shown.bs.modal");
+
+                            return false;
+                        }
+                    },
+                    stats: {
+                        label: '&nbsp;Статистика&nbsp;',
+                        className: 'btn-outline-success',
+                        callback: function () {
+                            dialog = bootbox.alert({
+                                message: getStatPageGlobal(),
                                 locale: 'ru'
                             }).off("shown.bs.modal");
 
@@ -694,17 +706,18 @@ function commonCallback(data) {
         }
     }
 
+    if ('common_id' in data && !commonId) {
+        commonId = data.common_id;
+    }
+
     if (myUserNum === false)
         if ('yourUserNum' in data)
             myUserNum = data['yourUserNum']
 
     if ('gameSubState' in data)
         gameSubState = data['gameSubState'];
-    //else gameSubState = gameStates[gameState]['1'];
-
 
     console.log(gameOldState + '->' + gameState);
-
 
     if ((gameOldState != gameState) || (gameOldSubState != gameSubState)) {
         if ('active_users' in data && data['active_users'] == 0) {

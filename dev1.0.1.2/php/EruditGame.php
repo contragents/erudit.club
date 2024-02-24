@@ -278,7 +278,7 @@ class Game
             return $this->config['botNames'][substr($user['ID'], (strlen($user['ID']) == 7 ? -1 : -2))];
         }
 
-        $commonId = PlayerModel::getPlayerID($user['ID'], true);//PlayerModel::getCommonID($user['ID']);
+        $commonId = PlayerModel::getPlayerID($user['ID'], true);
         if ($commonId && ($commonIDName = UserModel::getNameByCommonId($commonId))) {
             return $commonIDName;
         }
@@ -2139,6 +2139,14 @@ class Game
         if (!isset($arr['gameState'])) {
             return json_encode($arr);
         }
+
+        $arr = array_merge(
+            $arr,
+            ['common_id' => $this->gameStatus['users'][$this->numUser]['commonId'] ?? PlayerModel::getPlayerID(
+                $this->User,
+                false
+            )]
+        );
 
         if (isset($this->gameStatus[$this->User])) {
             if (isset($this->statusComments[$arr['gameState']])) {

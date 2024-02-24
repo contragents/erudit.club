@@ -2,6 +2,7 @@
 
 namespace Dadata;
 
+use AchievesModel;
 use Erudit\Game;
 
 class Hints
@@ -422,7 +423,7 @@ class Hints
 <strong><span style=\"color:purple\">Поздравляем Игрока</span> {$recordData['PlayerName']}&nbsp;!!!</strong>&nbsp;
 <img style=\"border-radius: 5px 5px 5px 5px; margin-left:20px;padding-top:0;\" alt=\"😰\" src=\"{$recordData['AvatarUrl']}\" height=\"75px\" max-width=\"100px\" />
 <br />
-Новое достижение - <strong>" . Prizes::PRIZE_TITLES[$recordData['type']] . "</strong> <br />"
+Новое достижение - <strong>" . AchievesModel::PRIZE_TITLES[$recordData['type']] . "</strong> <br />"
             . ($recordData['word']
                 ? "Составленное слово: <strong>{$recordData['word']}</strong> <br />"
                 : ''

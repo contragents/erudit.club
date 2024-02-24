@@ -314,6 +314,47 @@ function savePlayerAvatar(url, commonID) {
     return false;
 }
 
+function refreshId(element_id, url) {
+    let respMessage = 'Ошибка загрузки статистики';
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        async: false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (returndata) {
+            console.log(returndata);
+            resp = JSON.parse(returndata);
+            console.log(resp);
+            $('#'+element_id).html(resp.message+resp.pagination);
+        }
+    });
+}
+
+function getStatPageGlobal() {
+    let urlPart = STATS_URL + commonId;
+    let respMessage = 'Ошибка загрузки статистики';
+
+    $.ajax({
+        url: '//xn--d1aiwkc2d.club/' + urlPart,
+        type: 'GET',
+        async: false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (returndata) {
+            console.log(returndata);
+            resp = JSON.parse(returndata);
+            console.log(resp);
+            respMessage = resp.message+resp.pagination;
+        }
+    });
+
+    return respMessage;
+}
+
 function savePlayerAvatarUrl(url, commonID) {
     if (url.trim() == '') {
         let resp = {result: 'error', message: 'Задано пустое значение'};

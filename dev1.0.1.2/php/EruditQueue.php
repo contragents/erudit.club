@@ -3,6 +3,7 @@
 namespace Erudit;
 
 use Cache;
+use PlayerModel;
 
 class Queue
 {
@@ -602,6 +603,7 @@ class Queue
         foreach ($game_users as $num => $user) {
             $this->caller->gameStatus['users'][$num] = [
                 'ID' => $user['userCookie'],
+                'commonId' => PlayerModel::getPlayerID($user['userCookie'], true),
                 'status' => Game::START_GAME_STATUS,
                 'isActive' => true,
                 'score' => 0,

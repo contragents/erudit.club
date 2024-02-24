@@ -2,6 +2,8 @@
 
 namespace Dadata;
 
+use AchievesModel;
+
 class Prizes
 {
     private const DAY_DISCOUNT = 0.5;
@@ -48,60 +50,6 @@ class Prizes
     private const GAMES_PLAYED_MONTHLY = 'erudit_games_played_monthly_';
     private const GAMES_PLAYED_YEARLY = 'erudit_games_played_yearly_';
 
-    private const PRIZE_LINKS = [
-        'game_price-year' => 'img/prizes/yearly/ochki_za_igru_year.svg',
-        'game_price-month' => 'img/prizes/monthly/ochki_za_igru_month.svg',
-        'game_price-week' => 'img/prizes/weekly/ochki_za_igru_week.svg',
-        'game_price-day' => 'img/prizes/daily/ochki_za_igru_day.svg',
-
-        'turn_price-year' => 'img/prizes/yearly/ochki_za_hod_year.svg',
-        'turn_price-month' => 'img/prizes/monthly/ochki_za_hod_month.svg',
-        'turn_price-week' => 'img/prizes/weekly/ochki_za_hod_week.svg',
-        'turn_price-day' => 'img/prizes/daily/ochki_za_hod_day.svg',
-
-        'word_price-year' => 'img/prizes/yearly/ochki_za_slovo_year.svg',
-        'word_price-month' => 'img/prizes/monthly/ochki_za_slovo_month.svg',
-        'word_price-week' => 'img/prizes/weekly/ochki_za_slovo_week.svg',
-        'word_price-day' => 'img/prizes/daily/ochki_za_slovo_day.svg',
-
-        'word_len-year' => 'img/prizes/yearly/dlinnoe_slovo_year.svg',
-        'word_len-month' => 'img/prizes/monthly/dlinnoe_slovo_month.svg',
-        'word_len-week' => 'img/prizes/weekly/dlinnoe_slovo_week.svg',
-        'word_len-day' => 'img/prizes/daily/dlinnoe_slovo_day.svg',
-
-        'games_played-year' => 'img/prizes/yearly/sygrano_partiy_year.svg',
-        'games_played-month' => 'img/prizes/monthly/sygrano_partiy_month.svg',
-        'games_played-week' => 'img/prizes/weekly/sygrano_partiy_week.svg',
-        'games_played-day' => 'img/prizes/daily/sygrano_partiy_day.svg',
-    ];
-
-    const PRIZE_TITLES = [
-        'game_price-year' => 'Очки за ИГРУ - Рекорд Года!',
-        'game_price-month' => 'Очки за ИГРУ - Рекорд Месяца!',
-        'game_price-week' => 'Очки за ИГРУ - Рекорд Недели!',
-        'game_price-day' => 'Очки за ИГРУ - Рекорд Дня!',
-
-        'turn_price-year' => 'Очки за ХОД - Рекорд Года!',
-        'turn_price-month' => 'Очки за ХОД - Рекорд Месяца!',
-        'turn_price-week' => 'Очки за ХОД - Рекорд Недели!',
-        'turn_price-day' => 'Очки за ХОД - Рекорд Дня!',
-
-        'word_price-year' => 'Очки за СЛОВО - Рекорд Года!',
-        'word_price-month' => 'Очки за СЛОВО - Рекорд Месяца!',
-        'word_price-week' => 'Очки за СЛОВО - Рекорд Недели!',
-        'word_price-day' => 'Очки за СЛОВО - Рекорд Дня!',
-
-        'word_len-year' => 'Самое длинное СЛОВО - Рекорд Года!',
-        'word_len-month' => 'Самое длинное СЛОВО - Рекорд Месяца!',
-        'word_len-week' => 'Самое длинное СЛОВО - Рекорд Недели!',
-        'word_len-day' => 'Самое длинное СЛОВО - Рекорд Дня!',
-
-        'games_played-year' => 'Сыграно ПАРТИЙ - Рекорд Года!',
-        'games_played-month' => 'Сыграно ПАРТИЙ - Рекорд Месяца!',
-        'games_played-week' => 'Сыграно ПАРТИЙ - Рекорд Недели!',
-        'games_played-day' => 'Сыграно ПАРТИЙ - Рекорд Дня!',
-    ];
-
     public static function playerCurrentRecords($cookie = false, $playerName = false)
     {
         $cookie = $cookie ?: $_COOKIE['erudit_user_session_ID'];
@@ -111,7 +59,7 @@ class Prizes
         foreach ($allRecords as $type => $record) {
             $record = unserialize($record);
             if ($record['cookie'] == $cookie) {
-                $records[$type] = array_merge($record, ['link' => self::PRIZE_LINKS[$type], 'type' => $type]);
+                $records[$type] = array_merge($record, ['link' => AchievesModel::PRIZE_LINKS[$type], 'type' => $type]);
             }
         }
 
@@ -131,7 +79,7 @@ class Prizes
             $record = array_merge(
                 $record,
                 [
-                    'link' => self::PRIZE_LINKS[$type],
+                    'link' => AchievesModel::PRIZE_LINKS[$type],
                     'type' => $type,
                     'common_id' => Players::getCommonIDByCookie($record['cookie'])
                 ]

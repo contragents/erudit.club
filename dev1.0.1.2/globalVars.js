@@ -41,6 +41,7 @@ const SET_INACTIVE_SCRIPT = 'set_inactive.php';
 const MERGE_IDS_SCRIPT = 'merge_the_ids.php';
 const SET_PLAYER_NAME_SCRIPT = 'set_player_name.php';
 const DELETE_BAN_URL = 'mvc/ban/remove?common_id=';
+const STATS_URL = 'mvc/stats/view/?common_id='
 const NEW_GAME_SCRIPT = 'new_game.php';
 const PLAYER_RATING_SCRIPT = 'players_ratings.php';
 const CHANGE_FISHKI_SCRIPT = 'change_fishki.php';
@@ -54,6 +55,8 @@ const VERT = 'vertical';
 
 const BAD_REQUEST = 400;
 const PAGE_NOT_FOUND = 404;
+
+var commonId = false;
 
 var turnAutocloseDialog = false;
 var timeToCloseDilog = false;
