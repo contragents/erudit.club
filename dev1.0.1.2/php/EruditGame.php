@@ -371,25 +371,28 @@ class Game
     public function playerCabinetInfo()
     {
         $message = [];
-        $playerID = PlayerModel::getPlayerID($this->User, true);
 
-        $userData = UserModel::getOne($playerID);
+        $message['common_id'] = $this->gameStatus['users'][$this->numUser]['common_id']
+            ?? PlayerModel::getPlayerID($this->User, false);
+
+        $userData = UserModel::getOne($message['common_id']);
 
         // todo remove after model test
-        //"SELECT * FROM users WHERE id = $playerID";
+        //"SELECT * FROM users WHERE id = common_id";
         //$userData = DB::queryArray($getaDataFromUsersQuery);
+
         $message['url'] = $userData['avatar_url'];
         if (!$message['url']) {
-            $message['url'] = AvatarModel::getDefaultAvatar($playerID);
+            $message['url'] = AvatarModel::getDefaultAvatar($message['common_id']);
             $message['img_title'] = "Используется аватар по умолчанию";
         } else {
             $message['img_title'] = "Аватар по предоставленной ссылке";
         }
         $message['name'] = $userData['name'];
-        $message['common_id'] = $playerID;
+
         $message['text'] = '';
         $message['form'][] = [
-            'prompt' => "Никнейм (id: $playerID)",
+            'prompt' => "Никнейм (id: {$message['common_id']})",
             'inputName' => 'name',
             'inputId' => 'player_name',
             'onclick' => 'savePlayerName',
@@ -433,7 +436,7 @@ class Game
             'inputId' => 'key_for_id',
             'onclick' => 'copyKeyForID',
             'buttonCaption' => 'В буфер',
-            'value' => $this->genKeyForCommonID($playerID),
+            'value' => $this->genKeyForCommonID($message['common_id']),
             'readonly' => 'true'
         ];
 
@@ -1111,7 +1114,7 @@ class Game
 
     public function updateUserStatus($newStatus, $user = false)
     {
-        if ($user == false) {
+        if (!$user) {
             $user = $this->User;
         }
 
@@ -2063,11 +2066,11 @@ class Game
                 $this->gameStatus['users'][$num]['common_id'] = PlayerModel::getPlayerID($user['ID'], true);
                 //Прописали рейтинг и common_id игрока в статусе игры - только для games_statistic.php
             }
+
             $this->addToLog(
                 'Новая игра начата! <br />Набери <strong>' . $this->gameStatus['winScore'] . '</strong> очков'
             );
         }
-
 
         return $this->makeResponse(
             [
@@ -2142,7 +2145,7 @@ class Game
 
         $arr = array_merge(
             $arr,
-            ['common_id' => $this->gameStatus['users'][$this->numUser]['commonId'] ?? PlayerModel::getPlayerID(
+            ['common_id' => $this->gameStatus['users'][$this->numUser]['common_id'] ?? PlayerModel::getPlayerID(
                 $this->User,
                 false
             )]

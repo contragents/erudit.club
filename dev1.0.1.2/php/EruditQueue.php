@@ -112,23 +112,19 @@ class Queue
                 if ($this->players2Waiting($this->User)) {
                     if ($this->tryNewGameSemaphore()) {
                         return $this->makeGame($this->User, 2);
-                    } else {
-                        return $this->storeTo4Players($this->User);
                     }
-                } else {
-                    return $this->storeTo4Players($this->User);
                 }
+
+                return $this->storeTo4Players($this->User);
             }
         } else {
             if ($this->players2Waiting($this->User)) {
                 if ($this->tryNewGameSemaphore()) {
                     return $this->makeGame($this->User, 2);
-                } else {
-                    return $this->storeTo2Players($this->User);
                 }
-            } else {
-                return $this->storeTo2Players($this->User);
             }
+
+            return $this->storeTo2Players($this->User);
         }
     }
 
@@ -522,7 +518,7 @@ class Queue
         if (($sem = Cache::incr('semaphore_waiting')) == 1) {
             return true;
         } else {
-            if ($sem > 20) {
+            if ($sem > 200) {
                 Cache::set('semaphore_waiting', 1);
                 return true;
             }
@@ -603,7 +599,7 @@ class Queue
         foreach ($game_users as $num => $user) {
             $this->caller->gameStatus['users'][$num] = [
                 'ID' => $user['userCookie'],
-                'commonId' => PlayerModel::getPlayerID($user['userCookie'], true),
+                'common_id' => PlayerModel::getPlayerID($user['userCookie'], true),
                 'status' => Game::START_GAME_STATUS,
                 'isActive' => true,
                 'score' => 0,
@@ -632,8 +628,12 @@ class Queue
         );
 
         $this->cleanUp($User, $numPlayers);
+
+        $res = $this->caller->gameStarted(true);
+
         $this->unlockSemaphore();
-        return $this->caller->gameStarted(true);
+
+        return $res;
     }
 
     private function unlockSemaphore()
