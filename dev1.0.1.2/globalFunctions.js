@@ -337,20 +337,24 @@ function getStatPageGlobal() {
     let urlPart = STATS_URL + commonId;
     let respMessage = 'Ошибка загрузки статистики';
 
-    $.ajax({
-        url: '//xn--d1aiwkc2d.club/' + urlPart,
-        type: 'GET',
-        async: false,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (returndata) {
-            console.log(returndata);
-            resp = JSON.parse(returndata);
-            console.log(resp);
-            respMessage = resp.message+resp.pagination;
-        }
-    });
+    if (commonId) {
+        $.ajax({
+            url: '//xn--d1aiwkc2d.club/' + urlPart,
+            type: 'GET',
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (returndata) {
+                console.log(returndata);
+                resp = JSON.parse(returndata);
+                console.log(resp);
+                respMessage = resp.message + resp.pagination;
+            }
+        });
+    } else {
+        respMessage = 'Для просмотра статистики сыграйте хотя бы одну партию';
+    }
 
     return respMessage;
 }

@@ -327,7 +327,9 @@ var gameStates = {
                             dialog = bootbox.alert({
                                 message: getStatPageGlobal(),
                                 locale: 'ru'
-                            }).off("shown.bs.modal");
+                            })
+                                .off("shown.bs.modal")
+                                .find('.modal-content').css({'background-color': 'rgba(230, 255, 230, 1)'});
 
                             return false;
                         }

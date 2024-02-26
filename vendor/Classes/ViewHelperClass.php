@@ -66,6 +66,10 @@ class ViewHelper
             );
         }
 
+        if ($i == 2) {
+            return '';
+        }
+
         $res .= self::tagClose('span');
 
         return $res;

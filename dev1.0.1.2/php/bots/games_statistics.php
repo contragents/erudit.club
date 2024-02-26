@@ -50,7 +50,7 @@ game_id = {$Game['gameNumber']}+300000,
 cookie = $intCookie,
 user_id = $user_id,
 common_id=$common_id";
-            print $INSERTPLAYER;
+            //print $INSERTPLAYER;
             DB::queryInsert($INSERTPLAYER);
         }
     }
@@ -63,16 +63,16 @@ function saveGameStats(&$Game, &$results)
       game_id={$Game['gameNumber']}+300000
     , players_num = " . count($results) . "
     , game_ended_date = {$Game['turnBeginTime']}
-    , winner_player_id = {$results[0]['player_id']}
+    , winner_player_id = " .$results[0]['common_id'] ?? $results[0]['player_id'] ."
     ";
     foreach ($results as $num => $player) {
         $INSERTSTATS .= "
-        , " . ($Game[$player['cookie']] + 1) . "_player_id = {$player['player_id']}
+        , " . ($Game[$player['cookie']] + 1) . "_player_id = " . ($player['common_id'] ?? $player['player_id']) . "
         , " . ($Game[$player['cookie']] + 1) . "_player_rating_delta = {$player['deltaRating']}
         , " . ($Game[$player['cookie']] + 1) . "_player_old_rating = {$player['rating']}";
     }
 
-    //print $INSERTSTATS;
+    print $INSERTSTATS;
     DB::queryInsert($INSERTSTATS);
 
     if (!DB::insertID()) {
@@ -328,6 +328,7 @@ function getRanks(&$Game)
     $winner['userID'] = isset($Game['users'][$Game[$winner['cookie']]]['userID'])
         ? Game::hash_str_2_int($Game['users'][$Game[$winner['cookie']]]['userID'])
         : false;
+    $winner['common_id'] = $Game['users'][$Game[$winner['cookie']]]['common_id'] ?? false;
 
     $lostPlayers = [];
 
@@ -340,6 +341,8 @@ function getRanks(&$Game)
         $lostPlayers[$num]['userID'] = isset($Game['users'][$Game[$cookie]]['userID'])
             ? Game::hash_str_2_int($Game['users'][$Game[$cookie]]['userID'])
             : false;
+
+        $lostPlayers[$num]['common_id'] = $Game['users'][$Game[$cookie]]['common_id'] ?? false;
     }
 
     usort($lostPlayers, 'arComp');

@@ -1,8 +1,12 @@
 <?php
 
+use Dadata\Players;
+use Erudit\Game;
+
 class AchievesModel extends BaseModel
 {
     const TABLE_NAME = 'achieves';
+
     const LIMIT = 10;
 
     const ID_FIELD = 'id_achieve';
@@ -30,6 +34,10 @@ class AchievesModel extends BaseModel
         self::EVENT_PERIOD_FIELD => 'Период',
         self::WORD_FIELD => 'Слово',
         self::EVENT_VALUE_FIELD => 'Очков/букв',
+        self::GAME_DATE_FIELD => 'Дата',
+        self::YOUR_RESULT => 'Результат',
+        self::OPPONENT_COMMON_ID => 'Оппоненты',
+        self::YOUR_RATING_PROGRESS => 'Рейтинг',
     ];
 
     public const PRIZE_TITLES = [
@@ -85,6 +93,22 @@ class AchievesModel extends BaseModel
         'games_played-day' => 'img/prizes/daily/sygrano_partiy_day.svg',
     ];
 
+    const GAMES_STATS_TABLE = 'games_stats';
+    const GAME_ID_FIELD = 'game_id';
+    const PLAYERS_NUMBER_FIELD = 'players_num';
+    const PLAYER1_ID_FIELD = '1_player_id';
+    const PLAYER2_ID_FIELD = '2_player_id';
+    const WINNER_ID_FIELD = 'winner_player_id';
+    const GAME_DATE_FIELD = 'game_ended_date';
+    const RATING_DELTA_1_FIELD = '1_player_rating_delta';
+    const RATING_DELTA_2_FIELD = '2_player_rating_delta';
+    const RATING_OLD_1_FIELD = '1_player_old_rating';
+    const RATING_OLD_2_FIELD = '2_player_old_rating';
+    const OPPONENT_COMMON_ID = 'opponent_common_id';
+    const YOUR_RESULT = 'your_result';
+    const YOUR_RATING_PROGRESS = 'your_progress';
+
+
     public static function getAchievesByCommonId(int $commonId, int $limit = 10, int $page = 1, array $filters = []) {
         $query = ORM::select(
                 [
@@ -129,5 +153,140 @@ class AchievesModel extends BaseModel
             . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', 'month') : '')
             . ($filters[StatsController::NO_GOLD_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', 'year') : '')
         );
+    }
+
+    public static function getGamesByCommonId(int $commonId, int $limit = 10, int $page = 1, array $filters = []) {
+        $query = ORM::select(
+                [
+                    self::GAME_ID_FIELD,
+                    self::PLAYER1_ID_FIELD,
+                    self::PLAYER2_ID_FIELD,
+                    self::WINNER_ID_FIELD,
+                    self::GAME_DATE_FIELD,
+                    self::RATING_DELTA_1_FIELD,
+                    self::RATING_DELTA_2_FIELD,
+                    self::RATING_OLD_1_FIELD,
+                    self::RATING_OLD_2_FIELD
+                ],
+                self::GAMES_STATS_TABLE
+            )
+            // Пока строим статистику только для игр на 2 игрока
+            . ORM::where(self::PLAYERS_NUMBER_FIELD, '=', 2, true)
+            . ' AND ( '
+            . ORM::getWhereCondition('1_player_id', '=', $commonId, true)
+            . ORM::orWhere('2_player_id', '=', $commonId, true)
+            . ' ) '
+            . (
+                $filters[StatsController::FILTER_PLAYER_PARAM] ?? false
+                    ? (' AND ( '
+                    . ORM::getWhereCondition('1_player_id', '=', StatsController::$Request[StatsController::FILTER_PLAYER_PARAM], true)
+                    . ORM::orWhere('2_player_id', '=', StatsController::$Request[StatsController::FILTER_PLAYER_PARAM], true)
+                    . ' ) ')
+                    : ''
+            )
+            .ORM::orderBy(self::GAME_ID_FIELD, false)
+            .ORM::limit($limit, ($page - 1) * $limit);
+
+        $res = DB::queryArray($query);
+
+        $gameStats = [];
+
+        include_once('/var/www/erudit.club/yandex1.0.1.1/php/autoload.php');
+        $instance = new Game();
+        $instance->gameStatus['lngClass'] = "\Lang\\" . 'Ru';
+
+        foreach($res as $row) {
+            $opponentCommonId = $row[self::PLAYER1_ID_FIELD] != $commonId ? $row[self::PLAYER1_ID_FIELD] : $row[self::PLAYER2_ID_FIELD];
+            $opponentCookie = PlayerModel::getOne($opponentCommonId)['cookie'] ?? '';
+
+            $gameStats[] = [
+                self::GAME_DATE_FIELD =>
+                    ViewHelper::tag('span', date('Y-m-d', $row[self::GAME_DATE_FIELD]),[
+                        'style' => 'white-space: nowrap;'
+                    ]),
+                self::YOUR_RESULT => $row[self::WINNER_ID_FIELD] == $commonId
+                    ? ViewHelper::tag('span','Победа', ['class' => 'badge badge-success'])
+                    : ViewHelper::tag('span','Проигрыш', ['class' => 'badge badge-warning']),
+                self::YOUR_RATING_PROGRESS => $row[self::PLAYER1_ID_FIELD] == $commonId
+                    ? ((string)($row[self::RATING_OLD_1_FIELD] + $row[self::RATING_DELTA_1_FIELD]) . ' ('. ($row[self::RATING_DELTA_1_FIELD] > 0 ? '+' : '') . $row[self::RATING_DELTA_1_FIELD] .')')
+                    : ((string)($row[self::RATING_OLD_2_FIELD] + $row[self::RATING_DELTA_2_FIELD]) . ' ('. ($row[self::RATING_DELTA_2_FIELD] > 0 ? '+' : '') . $row[self::RATING_DELTA_2_FIELD] .')'),
+                self::OPPONENT_COMMON_ID =>
+                    ViewHelper::tag(
+                        'img',
+                        '',
+                        [
+                            'src' => Players::getAvatarUrl($opponentCommonId),
+                            //'width' => '50px',
+                            'style' => 'border-radius: 5px 5px 5px 5px; margin-bottom: 9px;',
+                            'height' => '75px',
+                            'max-width' => '100px',
+                        ]
+                    )
+                    . ViewHelper::tagOpen('br')
+                    . ViewHelper::tag(
+                        'button',
+                        $instance->getPlayerName(
+                            [
+                                'ID' => $opponentCookie,
+                                'common_id' => $opponentCommonId
+                            ]
+                        ),
+                        [
+                            'class' => 'btn btn-sm ' . (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
+                                    ? 'btn-outline-secondary'
+                                    : 'btn-outline-primary',
+                            'title' => (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
+                                    ? 'Снять фильтр'
+                                    : 'Фильтровать по игроку',
+                            'onClick' => "refreshId('" . StatsAchievesGamesView::ACHIEVES_ELEMENT_ID . "', '"
+                                . StatsController::getUrl(
+                                    'games',
+                                    [
+                                        'common_id' => StatsController::$Request['common_id'] ?? '',
+                                        'refresh' => '1',
+                                        (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
+                                            ? 'none'
+                                            : StatsController::FILTER_PLAYER_PARAM
+                                        => $opponentCommonId,
+                                    ]
+                                )
+                                . "')"
+                        ]
+                    )
+            ];
+        }
+        if (empty($gameStats)) {
+            $gameStats = [
+                0=>[
+                    self::GAME_DATE_FIELD => '',
+                    self::YOUR_RESULT => '',
+                    self::OPPONENT_COMMON_ID => '',
+                    self::YOUR_RATING_PROGRESS => '',
+                ]
+            ];
+        }
+
+        return $gameStats;
+    }
+
+    public static function getGamesByCommonIdCount($commonId, array $filters = []): ?int
+    {
+        return DB::queryValue(
+            ORM::select(['count(1)'], self::GAMES_STATS_TABLE)
+            // Пока строим статистику только для игр на 2 игрока
+            . ORM::where(self::PLAYERS_NUMBER_FIELD, '=', 2, true)
+            . ' AND ( '
+            . ORM::getWhereCondition('1_player_id', '=', $commonId, true)
+            . ORM::orWhere('2_player_id', '=', $commonId, true)
+            . ' ) '
+            . (
+                $filters[StatsController::FILTER_PLAYER_PARAM] ?? false
+                    ? (' AND ( '
+                        . ORM::getWhereCondition('1_player_id', '=', StatsController::$Request[StatsController::FILTER_PLAYER_PARAM], true)
+                        . ORM::orWhere('2_player_id', '=', StatsController::$Request[StatsController::FILTER_PLAYER_PARAM], true)
+                        . ' ) ')
+                    : ''
+            )
+        ) ?: null;
     }
 }

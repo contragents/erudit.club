@@ -66,7 +66,7 @@ class ORM
         return ' AND ' . self::getWhereCondition($fieldName, $cond, $value, $isRaw);
     }
 
-    private static function getWhereCondition($fieldName, $cond, $value, $isRaw = false): string {
+    public static function getWhereCondition($fieldName, $cond, $value, $isRaw = false): string {
         return " ($fieldName $cond " . ($value instanceof ORM ? $value->rawExpression : ($isRaw ? $value : "'$value'")) . ') ';
     }
 
