@@ -110,19 +110,11 @@ class StatsController extends BaseController
             self::$Request['page'] ?? 1,
             self::getGamesFilters()
         );
-/*
-        foreach ($games as $num => $row) {
-            $games[$num][AchievesModel::EVENT_TYPE_FIELD] = ViewHelper::tag(
-                'img',
-                '',
-                [
-                    'src' => '/' . (AchievesModel::PRIZE_LINKS[$row[AchievesModel::EVENT_TYPE_FIELD]] ?? ''),
-                    'width' => '100%',
-                    'alt' => 'Пусто'
-                ]
-            );
-        }
-*/
-        return StatsAchievesGamesView::render($baseUrl, $baseUrlPage, $games, $gamesCount);
+
+        if(self::getGamesFilters()[self::FILTER_PLAYER_PARAM]) {
+            $opponentStats = AchievesModel::getStatsVsOpponent(self::$Request['common_id'], self::getGamesFilters()[self::FILTER_PLAYER_PARAM]);
+        } else $opponentStats = false;
+
+        return StatsAchievesGamesView::render($baseUrl, $baseUrlPage, $games, $gamesCount, $opponentStats);
     }
 }

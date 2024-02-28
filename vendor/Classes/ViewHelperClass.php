@@ -4,8 +4,8 @@ class ViewHelper
 {
     const MAX_PAGE_LINKS = 16;
 
-    public static function renderGridFromQueryResult(array $queryResult, string $title, array $attributeLabels = []): string {
-        $grid = self::tag('h5', $title);
+    public static function renderGridFromQueryResult(array $queryResult, string $title = '', array $attributeLabels = []): string {
+        $grid = $title ? self::tag('h5', $title) : '';
         $grid .= self::tagOpen('table', '', ['class' => 'table table-sm', 'style' => 'word-wrap: break-word;']);
         $grid .= self::tagOpen('tr');
         foreach ($queryResult[0] ?? [] as $field => $nothing) {

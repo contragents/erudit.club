@@ -2,7 +2,7 @@
 
 class StatsAchievesGamesView extends StatsAchievesView
 {
-    public static function render($baseUrl, $baseUrlPage, $games, $count): string
+    public static function render($baseUrl, $baseUrlPage, $games, $count, $opponentStats = false): string
     {
         $attributeLabels = AchievesModel::ATTRIBUTE_LABELS;
         $attributeLabels[AchievesModel::EVENT_TYPE_FIELD] .= ViewHelper::tagOpen('br');
@@ -33,7 +33,10 @@ class StatsAchievesGamesView extends StatsAchievesView
                         $attributeLabels
                     ),
                     ['id' => 'achieves_table']
-                ),
+                )
+                . ($opponentStats
+                    ? ViewHelper::renderGridFromQueryResult($opponentStats, '', $attributeLabels)
+                    : ''),
                 'pagination' => ViewHelper::pagination(
                     StatsController::$Request['page'] ?? 1,
                     ceil($count / AchievesModel::LIMIT),

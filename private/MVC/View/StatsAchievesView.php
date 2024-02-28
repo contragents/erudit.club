@@ -13,7 +13,7 @@ class StatsAchievesView
         StatsController::NO_GOLD_PARAM => AchievesModel::PRIZE_LINKS['game_price-year'],
     ];
 
-    public static function render($baseUrl, $baseUrlPage, $achieves, $count): string
+    public static function render($baseUrl, $baseUrlPage, $achieves, $count, $some = false): string
     {
         $attributeLabels = AchievesModel::ATTRIBUTE_LABELS;
         $attributeLabels[AchievesModel::EVENT_TYPE_FIELD] .= ViewHelper::tagOpen('br');

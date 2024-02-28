@@ -328,7 +328,7 @@ function refreshId(element_id, url) {
             console.log(returndata);
             resp = JSON.parse(returndata);
             console.log(resp);
-            $('#'+element_id).html(resp.message+resp.pagination);
+            $('#' + element_id).html(resp.message + resp.pagination);
         }
     });
 }

@@ -38,6 +38,10 @@ class AchievesModel extends BaseModel
         self::YOUR_RESULT => 'Результат',
         self::OPPONENT_COMMON_ID => 'Оппоненты',
         self::YOUR_RATING_PROGRESS => 'Рейтинг',
+        'games_count' => 'Всего партий',
+        'wins' => 'Всего побед',
+        'delta_rating' => 'Прибавка/потеря в рейтинге',
+        'win_percent' => '% побед',
     ];
 
     public const PRIZE_TITLES = [
@@ -107,6 +111,8 @@ class AchievesModel extends BaseModel
     const OPPONENT_COMMON_ID = 'opponent_common_id';
     const YOUR_RESULT = 'your_result';
     const YOUR_RATING_PROGRESS = 'your_progress';
+
+    private static ?Game $instance = null;
 
 
     public static function getAchievesByCommonId(int $commonId, int $limit = 10, int $page = 1, array $filters = []) {
@@ -191,9 +197,7 @@ class AchievesModel extends BaseModel
 
         $gameStats = [];
 
-        include_once('/var/www/erudit.club/yandex1.0.1.1/php/autoload.php');
-        $instance = new Game();
-        $instance->gameStatus['lngClass'] = "\Lang\\" . 'Ru';
+        $instance = self::getGameInstance();
 
         foreach($res as $row) {
             $opponentCommonId = $row[self::PLAYER1_ID_FIELD] != $commonId ? $row[self::PLAYER1_ID_FIELD] : $row[self::PLAYER2_ID_FIELD];
@@ -288,5 +292,46 @@ class AchievesModel extends BaseModel
                     : ''
             )
         ) ?: null;
+    }
+
+    public static function getStatsVsOpponent($commonId, $opponentId)
+    {
+        $query = ORM::select(
+                [
+                    'COUNT(1) as games_count',
+                    "SUM(CASE WHEN winner_player_id=$commonId THEN 1 ELSE 0 END) as wins",
+                    "SUM(CASE WHEN 1_player_id=$commonId THEN 1_player_rating_delta ELSE 2_player_rating_delta END) as delta_rating"
+                ],
+                self::GAMES_STATS_TABLE
+            )
+            // Пока строим статистику только для игр на 2 игрока
+            . ORM::where(self::PLAYERS_NUMBER_FIELD, '=', 2, true)
+            . ' AND ( '
+            . ORM::getWhereCondition('1_player_id', '=', $commonId, true)
+            . ORM::orWhere('2_player_id', '=', $commonId, true)
+            . ' ) '
+            . ' AND ( '
+            . ORM::getWhereCondition('1_player_id', '=', $opponentId, true)
+            . ORM::orWhere('2_player_id', '=', $opponentId, true)
+            . ' ) ';
+
+        $res = DB::queryArray($query);
+
+        if (count($res)) {
+            $res[0]['win_percent'] = number_format($res[0]['wins'] / $res[0]['games_count'] * 100, 1, ',', ' ') . '%';
+        }
+
+        return $res;
+    }
+
+    private static function getGameInstance()
+    {
+        if (!self::$instance) {
+            include_once('/var/www/erudit.club/yandex1.0.1.1/php/autoload.php');
+            self::$instance = new Game();
+            self::$instance->gameStatus['lngClass'] = "\Lang\\" . 'Ru';
+        }
+
+        return self::$instance;
     }
 }
