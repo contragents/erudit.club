@@ -125,11 +125,11 @@ var gameStates = {
                 onlinePlayers += '<div class="form-row">';
                 onlinePlayers += '<div title="' + title + '" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_0" name="from_rating" value="0" '
                 +  checked_0
-                    + '> <label style="cursor: pointer;" class="form-check-label" for="from_0">Любой</label></div>';
+                    + '> <label style="cursor: pointer;" class="form-check-label" for="from_0">Любой (' + data['players'][0] + ' онлайн)</label></div>';
                 if ((1900 in data['players']) && (data['players'][1900] > 0)) {
                     onlinePlayers += '<div title="' + data['players'][1900] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_1900" name="from_rating" value="1900" ' + chooseDisabled.toString()
                         + checked_1900
-                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_1900">ОТ 1900 (' + data['players'][1900] + ' онлайн)</label></div>';
+                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_1900">ОТ 1900 (' + data['players'][1900] + ')</label></div>';
                 }
                     onlinePlayers += '</div>';
 

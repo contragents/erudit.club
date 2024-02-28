@@ -1584,6 +1584,7 @@ class Game
             }
 
             $rangedOnlinePlayers = [
+                0 => 0,
                 1900 => 0,
                 2000 => 0,
                 2100 => 0,
@@ -1596,6 +1597,8 @@ class Game
             ];
 
             foreach ($players as $num => $player) {
+                $rangedOnlinePlayers[0]++;
+
                 if (($rating = $this->getRatings($player))) {
                     $players[$num]['rating'] = $rating;
 
