@@ -188,8 +188,8 @@ var gameStates = {
             radioButtons += '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore">До четырех игроков</label></div>';
 
             let wish = ''; //'<br /><br /><h6>Желательно:</h6>';
-            let colOchki = screenOrient === HOR ? "col-5" : "col-6";
-            let colOchkiRow = screenOrient === HOR ? "col-5" : "col-8";
+            let colOchki = screenOrient === HOR ? "col-5" : "col-5";
+            let colOchkiRow = screenOrient === HOR ? "col-5" : "col-5";
 
             let checked_200 = 'checked';
             let checked_300 = '';
@@ -199,10 +199,10 @@ var gameStates = {
                 checked_300 = (data['prefs']['ochki_num'] == 300) ? 'checked' : '';
             }
 
-            let radioOchki = '<br /><div class="' + colOchkiRow + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="dvesti" name="ochki_num" value="200" ' + checked_200 + '> <label class="form-check-label" for="dvesti">Игра до 200 очков</label></div>';
-            radioOchki += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="trista" name="ochki_num" value="300" ' + checked_300 + '> <label class="form-check-label" for="trista">Игра до 300 очков</label></div>';
+            let radioOchki = '<br /><strong>Играем до:</strong><br /><div class="' + colOchkiRow + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="dvesti" name="ochki_num" value="200" ' + checked_200 + '> <label class="form-check-label" for="dvesti">200 очков</label></div>';
+            radioOchki += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="trista" name="ochki_num" value="300" ' + checked_300 + '> <label class="form-check-label" for="trista">300 очков</label></div>';
 
-            let wishTime = '<br /><br />'; //'<br /><br />Время на ход:<br />';
+            let wishTime = '<br /><br /><strong>Время на ход:</strong><br />';
             let wish_120 = 'checked';
             let wish_60 = '';
 
@@ -211,8 +211,8 @@ var gameStates = {
                 wish_60 = (data['prefs']['turn_time'] == 60) ? 'checked' : '';
             }
 
-            let radioTime = '<div class="' + colOchki + '  form-check form-check-inline"><input class="form-check-input" type="radio" id="dve" name="turn_time" value="120" ' + wish_120 + '> <label class="form-check-label" for="dve">2 минуты на ход</label></div>';
-            radioTime += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="odna" name="turn_time" value="60" ' + wish_60 + '> <label class="form-check-label" for="odna">1 минута на ход</label></div>';
+            let radioTime = '<div class="' + colOchki + '  form-check form-check-inline"><input class="form-check-input" type="radio" id="dve" name="turn_time" value="120" ' + wish_120 + '> <label class="form-check-label" for="dve">2 минуты</label></div>';
+            radioTime += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="odna" name="turn_time" value="60" ' + wish_60 + '> <label class="form-check-label" for="odna">1 минута</label></div>';
 
             let formHead = '<h5>Параметры игры (будут учтены при подборе)</h5>';
             let gameform = formHead + '<form onsubmit="return false" id="myGameForm">' + radioButtons + wish + radioOchki + wishTime + radioTime + onlinePlayers + '</form>';
