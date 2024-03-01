@@ -148,19 +148,14 @@ class Prizes
             return false;
         }
 
-        if (
-        DB::queryInsert(
-            "INSERT INTO achieves
-            SET
-            common_id = $commonID,
-            date_achieved = '" . date('Y-m-d H:i:s', $arr['record_date']) . "',
-            event_type = '$eventType',
-            event_period = '$eventPeriod',
-            word = '" . ($arr['word'] ? $arr['word'] : '') . "',
-            event_value = {$arr['value']}
-            "
-        )
-        ) {
+        if (AchievesModel::add([
+                AchievesModel::COMMON_ID_FIELD => $commonID,
+                AchievesModel::DATE_ACHIEVED_FIELD => date('Y-m-d H:i:s', $arr['record_date']),
+                AchievesModel::EVENT_TYPE_FIELD => $eventType,
+                AchievesModel::EVENT_PERIOD_FIELD => $eventPeriod,
+                AchievesModel::WORD_FIELD => $arr['word'] ?: '',
+                AchievesModel::EVENT_VALUE_FIELD => $arr['value'],
+        ])) {
             return true;
         }
 
@@ -175,10 +170,12 @@ class Prizes
         $eventValue,
         $word = false
     ) {
-        $lastRecord = Cache::hget(self::ALL_RECORDS, $eventType . '-' . $eventPeriod);
-        if ($lastRecord) {
-            self::saveHistory($eventType, $eventPeriod, $lastRecord);
-        }
+        self::saveHistory($eventType, $eventPeriod, [
+            'cookie' => $cookie ? $cookie : $_COOKIE['erudit_user_session_ID'],
+            'value' => $eventValue,
+            'word' => $word,
+            'record_date' => date('U'),
+        ]);
 
         Cache::hset(
             self::ALL_RECORDS,
@@ -194,8 +191,7 @@ class Prizes
         return true;
     }
 
-    public
-    static function checkDayGamesPlayedRecord(
+    public static function checkDayGamesPlayedRecord(
         array $players
     ) {
         $todayRecord = Cache::get(self::GAMES_PLAYED_DAILY . strtotime('today'));
@@ -328,8 +324,7 @@ class Prizes
         return $playersRecords;
     }
 
-    public
-    static function checkDayGamePriceRecord(
+    public static function checkDayGamePriceRecord(
         $price,
         $cookie = false
     ) {
