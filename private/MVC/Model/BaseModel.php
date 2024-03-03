@@ -18,6 +18,14 @@ class BaseModel
     const TYPE_INT = 'int';
     const TYPE_STRING = 'string';
     const TYPE_DATE = 'timestamp';
+    const TEASERS_IN_CHUNK = 1000;
+
+    public static function select(array $fields = [], bool $skobki = false): string
+    {
+        return ($skobki ? '(' : '')
+            . ORM::select($fields, static::TABLE_NAME)
+            . ($skobki ? ')' : '');
+    }
 
     public static function getFieldWithTable(string $field): string
     {
@@ -307,7 +315,7 @@ class BaseModel
             $query .= ORM::where($field, $condition, $value, $isRaw);
         }
 
-        return DB::queryArray($query);
+        return DB::queryArray($query) ?: [];
     }
 
     /**

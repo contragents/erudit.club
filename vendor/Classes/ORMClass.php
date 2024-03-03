@@ -128,6 +128,10 @@ class ORM
 
     public static function select(array $fieldArr, string $tableName): string
     {
+        if ($fieldArr == []) {
+            $fieldArr = ['*'];
+        }
+
         return " SELECT " . implode(',', $fieldArr) . " FROM $tableName ";
     }
 

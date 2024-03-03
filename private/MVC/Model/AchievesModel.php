@@ -44,6 +44,13 @@ class AchievesModel extends BaseModel
         'win_percent' => '% побед',
     ];
 
+    public const DAY_PERIOD = 'day';
+    public const WEEK_PERIOD = 'week';
+    public const MONTH_PERIOD = 'month';
+    public const YEAR_PERIOD = 'year';
+
+    public const TOP_TYPE = 'top';
+
     public const PRIZE_TITLES = [
         'game_price-year' => 'Очки за ИГРУ - Рекорд Года!',
         'game_price-month' => 'Очки за ИГРУ - Рекорд Месяца!',
@@ -71,6 +78,11 @@ class AchievesModel extends BaseModel
         'games_played-day' => 'Сыграно ПАРТИЙ - Рекорд Дня!',
     ];
     public const PRIZE_LINKS = [
+        'top-year' => 'img/prizes/top_1.svg',
+        'top-month' => 'img/prizes/top_2.svg',
+        'top-week' => 'img/prizes/top_3.svg',
+        'top-day' => 'img/prizes/top_10.svg',
+
         'game_price-year' => 'img/prizes/yearly/ochki_za_igru_year.svg',
         'game_price-month' => 'img/prizes/monthly/ochki_za_igru_month.svg',
         'game_price-week' => 'img/prizes/weekly/ochki_za_igru_week.svg',
@@ -114,7 +126,6 @@ class AchievesModel extends BaseModel
 
     private static ?Game $instance = null;
 
-
     public static function getAchievesByCommonId(int $commonId, int $limit = 10, int $page = 1, array $filters = []) {
         $query = ORM::select(
                 [
@@ -126,10 +137,10 @@ class AchievesModel extends BaseModel
                 self::TABLE_NAME
             )
             .ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
-            . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', 'day') : '')
-            . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', 'week') : '')
-            . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', 'month') : '')
-            . ($filters[StatsController::NO_GOLD_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', 'year') : '')
+            . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::DAY_PERIOD) : '')
+            . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::WEEK_PERIOD) : '')
+            . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::MONTH_PERIOD) : '')
+            . ($filters[StatsController::NO_GOLD_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::YEAR_PERIOD) : '')
             .ORM::orderBy(self::ID_FIELD, false)
             .ORM::limit($limit, ($page - 1) * $limit);
 
@@ -154,10 +165,10 @@ class AchievesModel extends BaseModel
         return DB::queryValue(
             ORM::select(['count(1)'], self::TABLE_NAME)
             .ORM::where(self::COMMON_ID_FIELD,'=', $commonId, true)
-            . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', 'day') : '')
-            . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', 'week') : '')
-            . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', 'month') : '')
-            . ($filters[StatsController::NO_GOLD_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', 'year') : '')
+            . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::DAY_PERIOD) : '')
+            . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::WEEK_PERIOD) : '')
+            . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::MONTH_PERIOD) : '')
+            . ($filters[StatsController::NO_GOLD_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::YEAR_PERIOD) : '')
         );
     }
 

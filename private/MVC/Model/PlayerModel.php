@@ -13,6 +13,11 @@ class PlayerModel extends BaseModel
     const DELTA_RATING_KEY_PREFIX = 'erudit.delta_rating_';
     const RATING_CACHE_TTL = 7 * 24 * 60 * 60;
 
+    const RATING_FIELD = 'rating';
+    const COMMON_ID_FIELD = 'common_id';
+    const TOP_10 = 10;
+    const MIN_TOP_RATING = 2100; // Рейтинг, ниже которого ТОП не рассчитывается в некоторых запросах
+
     /**
      * Определяет common_id по сложной схеме через связанные куки и ID от яндекса
      * @param string $cookie
@@ -191,6 +196,43 @@ class PlayerModel extends BaseModel
                 self::TABLE_NAME . ' ps'
             )
             . ORM::where('false', '', '', true);
+    }
+
+    /**
+     * @param int $top Номер в рейтинге - 1,2,3 ...
+     * @param int $topMax Максимальный номер в рейтинге (для поиска ТОП10 задать 4,10)
+     * @return array
+     */
+    public static function getTopPlayers(int $top, ?int $topMax = null): array
+    {
+        if ($top >= ($topMax ?? self::TOP_10)) {
+            return [];
+        }
+
+        $topRatingsQuery = self::select([self::RATING_FIELD])
+            .ORM::where(self::RATING_FIELD,'>',self::MIN_TOP_RATING,true)
+            .ORM::groupBy([self::RATING_FIELD])
+            .ORM::orderBy(self::RATING_FIELD, false)
+            .ORM::limit($topMax ? $topMax - $top + 1 : 1, $top - 1);
+
+        $topRatings = DB::queryArray($topRatingsQuery) ?: [];
+
+        $resultRatings = [];
+
+        for ($i = $top; $i <= $top + $topMax ?? 0; $i++) {
+            $currentRating = $topRatings[$i-$top][self::RATING_FIELD] ?? false;
+            if (!$currentRating) {
+                break;
+            }
+
+            $resultRatings[$i] = DB::queryArray(
+                self::select([self::COMMON_ID_FIELD, self::RATING_FIELD])
+                . ORM::where(self::RATING_FIELD, '=', $currentRating, true)
+                . ORM::andWhere(self::COMMON_ID_FIELD, 'IS', 'NOT NULL', true)
+            ) ?: [];
+        }
+
+        return $resultRatings;
     }
 
     public static function getTop($rating)
