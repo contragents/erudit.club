@@ -123,6 +123,7 @@ class AchievesModel extends BaseModel
     const OPPONENT_COMMON_ID = 'opponent_common_id';
     const YOUR_RESULT = 'your_result';
     const YOUR_RATING_PROGRESS = 'your_progress';
+    public const ACHIEVES_ELEMENT_ID = 'achieves_table';
 
     private static ?Game $instance = null;
 
@@ -208,11 +209,11 @@ class AchievesModel extends BaseModel
 
         $gameStats = [];
 
-        $instance = self::getGameInstance();
+        // todo сделать подгрузку классов централизованно
+        include_once('/var/www/erudit.club/yandex1.0.1.1/php/autoload.php');
 
         foreach($res as $row) {
             $opponentCommonId = $row[self::PLAYER1_ID_FIELD] != $commonId ? $row[self::PLAYER1_ID_FIELD] : $row[self::PLAYER2_ID_FIELD];
-            $opponentCookie = PlayerModel::getOne($opponentCommonId)['cookie'] ?? '';
 
             $gameStats[] = [
                 self::GAME_DATE_FIELD =>
@@ -240,12 +241,7 @@ class AchievesModel extends BaseModel
                     . ViewHelper::tagOpen('br')
                     . ViewHelper::tag(
                         'button',
-                        $instance->getPlayerName(
-                            [
-                                'ID' => $opponentCookie,
-                                'common_id' => $opponentCommonId
-                            ]
-                        ),
+                        self::getPlayerNameByCommonId($opponentCommonId),
                         [
                             'class' => 'btn btn-sm ' . (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
                                     ? 'btn-outline-secondary'
@@ -253,7 +249,7 @@ class AchievesModel extends BaseModel
                             'title' => (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
                                     ? 'Снять фильтр'
                                     : 'Фильтровать по игроку',
-                            'onClick' => "refreshId('" . StatsAchievesGamesView::ACHIEVES_ELEMENT_ID . "', '"
+                            'onClick' => "refreshId('" . self::ACHIEVES_ELEMENT_ID . "', '"
                                 . StatsController::getUrl(
                                     'games',
                                     [
@@ -344,5 +340,19 @@ class AchievesModel extends BaseModel
         }
 
         return self::$instance;
+    }
+
+    // todo поменять на метод Players
+    public static function getPlayerNameByCommonId(int $commonId): string
+    {
+        $instance = self::getGameInstance();
+        $cookie = PlayerModel::getOne($commonId)['cookie'] ?? '';
+
+        return $instance->getPlayerName(
+            [
+                'ID' => $cookie,
+                'common_id' => $commonId
+            ]
+        );
     }
 }

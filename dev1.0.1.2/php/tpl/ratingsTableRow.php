@@ -26,10 +26,26 @@ return "<tr style='border-top:1px solid black !important;'>
     . (!$rating['isActive']
         ? '&nbsp;<img title="Игрок отключился" height="24px" src="https://xn--d1aiwkc2d.club/img/no-network-logo.png" />'
         : '')
-    . "<br />
-      <span style='white-space: nowrap;color:forestgreen;cursor:pointer'" . ($user['ID'] == $this->User ? " id='playersNikname' " : '') . " title='Никнейм игрока'>
-      	{$rating['playerName']}
-      </span>"
+    . "<br />"
+    . ViewHelper::tag(
+        'button',
+        $rating['playerName'],
+        [
+            'class' => 'btn btn-sm btn-outline-primary',
+            //'style' => 'white-space: nowrap;color:forestgreen;cursor:pointer',
+            $user['ID'] == $this->User ? 'id' : 'none' => 'playersNikname',
+            'title' => 'Открыть статистику игрока',
+            'onClick' => "refreshId('" . AchievesModel::ACHIEVES_ELEMENT_ID . "', '"
+                . StatsController::getUrl(
+                    'view',
+                    [
+                        'common_id' => $user['common_id'] ?? '',
+                        'refresh' => '1',
+                    ]
+                )
+                . "')"
+        ]
+    )
     . "</div>"
     . ($rating['playerAvatarUrl']
         ? "<div style='" . ($vertical === true ? '' : 'display: inline;') . "'>

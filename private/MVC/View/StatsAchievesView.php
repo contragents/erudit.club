@@ -2,7 +2,6 @@
 
 class StatsAchievesView
 {
-    public const ACHIEVES_ELEMENT_ID = 'achieves_table';
     public const SMALL_ZHETON_WIDTH = '20%';
     public const OFF_OPACITY = 0.3;
 
@@ -12,6 +11,7 @@ class StatsAchievesView
         StatsController::NO_SILVER_PARAM => AchievesModel::PRIZE_LINKS['game_price-month'],
         StatsController::NO_GOLD_PARAM => AchievesModel::PRIZE_LINKS['game_price-year'],
     ];
+    const PLAYER_ACHIEVES_MSG = 'Достижения игрока';
 
     public static function render($baseUrl, $baseUrlPage, $achieves, $count, $some = false): string
     {
@@ -25,7 +25,7 @@ class StatsAchievesView
                     [
                         'src' => '/' . $link,
                         'width' => self::SMALL_ZHETON_WIDTH,
-                        'onClick' => "refreshId('" . self::ACHIEVES_ELEMENT_ID . "', '"
+                        'onClick' => "refreshId('" . AchievesModel::ACHIEVES_ELEMENT_ID . "', '"
                             . str_replace($filter, 'none', $baseUrlPage)
                             . (StatsController::$Request[$filter] ?? false ? '' : "&$filter=1")
                             . "')",
@@ -41,12 +41,13 @@ class StatsAchievesView
                     (StatsController::$Request['refresh'] ?? false) ? '' : 'div',
                     ViewHelper::renderGridFromQueryResult(
                         $achieves,
-                        'Достижения игрока | '
+                        self::PLAYER_ACHIEVES_MSG . ' ' . ViewHelper::tag('strong',AchievesModel::getPlayerNameByCommonId(StatsController::$Request['common_id'] ?? 0))
+                        . ' | '
                         . ViewHelper::tag(
                             'a',
                             'Партии',
-                            [
-                                'onClick' => "refreshId('" . self::ACHIEVES_ELEMENT_ID . "', '"
+                            [ // todo сделать метод генерации refreshId(..)
+                                'onClick' => "refreshId('" . AchievesModel::ACHIEVES_ELEMENT_ID . "', '"
                                     . StatsController::getUrl(
                                         'games',
                                         [
@@ -60,12 +61,12 @@ class StatsAchievesView
                         ),
                         $attributeLabels
                     ),
-                    ['id' => 'achieves_table']
+                    ['id' => AchievesModel::ACHIEVES_ELEMENT_ID]
                 ),
                 'pagination' => ViewHelper::pagination(
                     StatsController::$Request['page'] ?? 1,
                     ceil($count / AchievesModel::LIMIT),
-                    self::ACHIEVES_ELEMENT_ID,
+                    AchievesModel::ACHIEVES_ELEMENT_ID,
                     $baseUrl
                 )
             ],

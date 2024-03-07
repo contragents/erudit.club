@@ -56,6 +56,8 @@ const VERT = 'vertical';
 const BAD_REQUEST = 400;
 const PAGE_NOT_FOUND = 404;
 
+const CHECK_BUTTON_INACTIVE_CLASS = 'disable-check-button';
+
 var commonId = false;
 
 var turnAutocloseDialog = false;

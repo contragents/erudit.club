@@ -6,7 +6,7 @@ if (isset($_POST['vertical'])) {
     $vertical = false;
 }
 
-return '<form>
+return '<form id="'. AchievesModel::ACHIEVES_ELEMENT_ID .'">
 <table class="table table-sm table-borderless">
   <thead>
     <tr>

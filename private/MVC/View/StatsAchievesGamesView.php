@@ -15,9 +15,9 @@ class StatsAchievesGamesView extends StatsAchievesView
                         $games,
                         ViewHelper::tag(
                             'a',
-                            'Достижения игрока',
+                            self::PLAYER_ACHIEVES_MSG . ' ' . ViewHelper::tag('strong',AchievesModel::getPlayerNameByCommonId(StatsController::$Request['common_id'] ?? 0)),
                             [
-                                'onClick' => "refreshId('" . self::ACHIEVES_ELEMENT_ID . "', '"
+                                'onClick' => "refreshId('" . AchievesModel::ACHIEVES_ELEMENT_ID . "', '"
                                     . StatsController::getUrl(
                                         'view',
                                         [
@@ -32,7 +32,7 @@ class StatsAchievesGamesView extends StatsAchievesView
                         . ' | Партии',
                         $attributeLabels
                     ),
-                    ['id' => 'achieves_table']
+                    ['id' => AchievesModel::ACHIEVES_ELEMENT_ID]
                 )
                 . ($opponentStats
                     ? ViewHelper::renderGridFromQueryResult($opponentStats, '', $attributeLabels)
@@ -40,7 +40,7 @@ class StatsAchievesGamesView extends StatsAchievesView
                 'pagination' => ViewHelper::pagination(
                     StatsController::$Request['page'] ?? 1,
                     ceil($count / AchievesModel::LIMIT),
-                    self::ACHIEVES_ELEMENT_ID,
+                    AchievesModel::ACHIEVES_ELEMENT_ID,
                     $baseUrl
                 )
             ],

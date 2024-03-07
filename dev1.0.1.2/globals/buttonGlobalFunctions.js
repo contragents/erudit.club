@@ -28,6 +28,10 @@ function submitButtonFunction() {
 function checkButtonFunction() {
     //if (bootBoxIsOpenedGlobal())        return;
 
+    if (!checkButtonActive()) {
+        return;
+    }
+
     buttons['checkButton']['svgObject'].disableInteractive();
     buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + 'Inactive'));
 
@@ -465,6 +469,14 @@ function logButtonFunction() {
     return;
 };
 
+function makeCheckButtonInactive(dialog) {
+    dialog.addClass(CHECK_BUTTON_INACTIVE_CLASS);
+}
+
+function checkButtonActive() {
+    return !$('.' + CHECK_BUTTON_INACTIVE_CLASS).length;
+}
+
 function playersButtonFunction() {
     if (bootBoxIsOpenedGlobal())
         return;
@@ -501,7 +513,8 @@ function playersButtonFunction() {
                 dialog
                     .find('.modal-content').css({'background-color': 'rgba(255, 255, 255, 0.7)'})
                     .find('img').css('background-color', 'rgba(0, 0, 0, 0)');
-
+                makeCheckButtonInactive(dialog);
+                
                 buttons['playersButton']['svgObject'].setInteractive();
                 buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + 'Otjat'));
 
