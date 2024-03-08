@@ -22,12 +22,13 @@ class Queue
         'invite' => 'invite',
     ];
 
-    const MAX_INVITE_WAIT_TIME = 20;
+    const MAX_INVITE_WAIT_TIME = 60;
     const PREFERENCES_TTL = 30 * 24 * 60 * 60;
     const PREFS_KEY = 'erudit.user_preference_';
 
     private $User;
     private $userTime;
+    private $semaphoreLocked = false;
 
     private Game $caller;
     private array $POST;
@@ -140,7 +141,7 @@ class Queue
             if ($playerInfo && $player != $this->User) {
                 $player_data = @unserialize($playerInfo);
                 if (isset($player_data['time']) && (date('U') - $player_data['time']) > self::MAX_INVITE_WAIT_TIME) {
-                    $this->cleanUp($player, self::QUEUE_NUMS['invite']);
+                    $this->cleanUp($player);
                 }
             }
         }
@@ -159,7 +160,7 @@ class Queue
 
         if ($playerInfo) {
             if (isset($playerInfo['time']) && (date('U') - $playerInfo['time']) > self::MAX_INVITE_WAIT_TIME) {
-                $this->cleanUp($this->User, self::QUEUE_NUMS['invite']);
+                $this->cleanUp($this->User);
 
                 return false;
             } else {
@@ -433,22 +434,13 @@ class Queue
     /**
      * Removes User from queue
      * @param $User
-     * @param $queue
-     * @return bool|int
+     * @return void
      */
-    private function cleanUp($User, $queue)
+    private function cleanUp($User): void
     {
-        if (isset(self::QUEUE_NUMS[$queue])) {
-            $searchQueue = $queue . $this->lang;
-
-            foreach (self::QUEUES as $eachQueue) {
-                if (strpos($eachQueue, $searchQueue) !== false) {
-                    return Cache::hdel($eachQueue, $User);
-                }
-            }
+        foreach (self::QUEUES as $eachQueue) {
+            Cache::hdel($eachQueue, $User);
         }
-
-        return Cache::hdel('erudit.' . $queue . $this->lang . 'players_waiters', $User);
     }
 
     private function want4Players($User)
@@ -461,12 +453,12 @@ class Queue
         }
 
         if (isset($this->POST['players_count']) && ($this->POST['players_count'] == 2)) {
-            $this->cleanUp($User, 4);
+            $this->cleanUp($User);
             return false;
         }
 
         if (Cache::hget("erudit.4{$this->lang}players_waiters", $User)) {
-            $this->cleanUp($User, 2);
+            $this->cleanUp($User);
             return true;
         }
 
@@ -515,11 +507,21 @@ class Queue
 
     private function tryNewGameSemaphore()
     {
+        if ($this->semaphoreLocked) {
+            Cache::set('semaphore_waiting', 1);
+
+            return true;
+        }
+
         if (($sem = Cache::incr('semaphore_waiting')) == 1) {
+            $this->semaphoreLocked = true;
+
             return true;
         } else {
-            if ($sem > 200) {
+            if ($sem > 20) {
+                $this->semaphoreLocked = true;
                 Cache::set('semaphore_waiting', 1);
+
                 return true;
             }
         }
@@ -527,7 +529,7 @@ class Queue
         return false;
     }
 
-    private function makeGame($User, $numPlayers)
+    private function makeGame($User, $queue)
     {
         Cache::setex(
             'erudit.current_game_' . $this->caller->currentGame = Cache::incr('erudit.num_games'),
@@ -540,7 +542,7 @@ class Queue
 
         $game_users = [];
         $this->caller->currentGameUsers = [];
-        $waitingPlayers = Cache::hgetall("erudit.{$numPlayers}{$this->lang}players_waiters");
+        $waitingPlayers = Cache::hgetall("erudit.{$queue}{$this->lang}players_waiters");
         $prefs = Cache::get(self::PREFS_KEY . $User);
 
         if (!isset($waitingPlayers[$User])) {
@@ -559,7 +561,7 @@ class Queue
 
         // Прописываем текущему юзеру - добавление в игру,  номер игры, удаляем из очереди ждунов
         $game_users[] = ['userCookie' => $User, 'options' => $options];
-        Cache::hdel("erudit.{$numPlayers}{$this->lang}players_waiters", $User);
+        Cache::hdel("erudit.{$queue}{$this->lang}players_waiters", $User);
         Cache::setex(Game::GET_GAME_KEY . $User, $this->caller->cacheTimeout, $this->caller->currentGame);
 
         $this->caller->currentGameUsers[] = $User;
@@ -570,7 +572,7 @@ class Queue
             $data = unserialize($data);
 
             //Прописываем юзерам - удаление из очереди и номер игры
-            Cache::hdel("erudit.{$numPlayers}{$this->lang}players_waiters", $player);
+            Cache::hdel("erudit.{$queue}{$this->lang}players_waiters", $player);
             Cache::setex(
                 Game::GET_GAME_KEY . $player,
                 $this->caller->cacheTimeout,
@@ -586,7 +588,7 @@ class Queue
             $this->caller->currentGameUsers[] = $player;
 
             $numUsers++;
-            if ($numUsers == ($numPlayers == self::QUEUE_NUMS['invite'] ? 4 : $numPlayers)) {
+            if ($numUsers == ($queue == self::QUEUE_NUMS['invite'] ? 4 : $queue)) {
                 break;
             }
         }
@@ -627,7 +629,7 @@ class Queue
             $this->caller->currentGameUsers
         );
 
-        $this->cleanUp($User, $numPlayers);
+        $this->cleanUp($User);
 
         $res = $this->caller->gameStarted(true);
 
