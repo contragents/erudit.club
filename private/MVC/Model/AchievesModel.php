@@ -249,8 +249,10 @@ class AchievesModel extends BaseModel
                             'title' => (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
                                     ? 'Снять фильтр'
                                     : 'Фильтровать по игроку',
-                            'onClick' => "refreshId('" . self::ACHIEVES_ELEMENT_ID . "', '"
-                                . StatsController::getUrl(
+                            'onClick' => ViewHelper::onClick(
+                                'refreshId',
+                                AchievesModel::ACHIEVES_ELEMENT_ID,
+                                StatsController::getUrl(
                                     'games',
                                     [
                                         'common_id' => StatsController::$Request['common_id'] ?? '',
@@ -260,8 +262,7 @@ class AchievesModel extends BaseModel
                                             : StatsController::FILTER_PLAYER_PARAM
                                         => $opponentCommonId,
                                     ]
-                                )
-                                . "')"
+                                ))
                         ]
                     )
             ];

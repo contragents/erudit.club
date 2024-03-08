@@ -25,10 +25,12 @@ class StatsAchievesView
                     [
                         'src' => '/' . $link,
                         'width' => self::SMALL_ZHETON_WIDTH,
-                        'onClick' => "refreshId('" . AchievesModel::ACHIEVES_ELEMENT_ID . "', '"
-                            . str_replace($filter, 'none', $baseUrlPage)
+                        'onClick' => ViewHelper::onClick(
+                            'refreshId',
+                            AchievesModel::ACHIEVES_ELEMENT_ID,
+                            str_replace($filter, 'none', $baseUrlPage)
                             . (StatsController::$Request[$filter] ?? false ? '' : "&$filter=1")
-                            . "')",
+                        ),
                         'style' => 'opacity: ' . (StatsController::$Request[$filter] ?? false ? self::OFF_OPACITY : 1),
                         'title' => StatsController::$Request[$filter] ?? false ? 'Снять фильтр' : 'Фильтровать'
                     ]
@@ -46,16 +48,17 @@ class StatsAchievesView
                         . ViewHelper::tag(
                             'a',
                             'Партии',
-                            [ // todo сделать метод генерации refreshId(..)
-                                'onClick' => "refreshId('" . AchievesModel::ACHIEVES_ELEMENT_ID . "', '"
-                                    . StatsController::getUrl(
+                            [
+                                'onClick' => ViewHelper::onClick(
+                                    'refreshId',
+                                    AchievesModel::ACHIEVES_ELEMENT_ID,
+                                    StatsController::getUrl(
                                         'games',
                                         [
                                             'common_id' => StatsController::$Request['common_id'] ?? '',
                                             'refresh' => '1',
                                         ]
-                                    )
-                                    . "')",
+                                    )),
                                 'class' => "link-underline-primary",
                             ]
                         ),
@@ -66,7 +69,6 @@ class StatsAchievesView
                 'pagination' => ViewHelper::pagination(
                     StatsController::$Request['page'] ?? 1,
                     ceil($count / AchievesModel::LIMIT),
-                    AchievesModel::ACHIEVES_ELEMENT_ID,
                     $baseUrl
                 )
             ],

@@ -6,17 +6,23 @@ if (isset($_POST['vertical'])) {
     $vertical = false;
 }
 
-return '<form id="'. AchievesModel::ACHIEVES_ELEMENT_ID .'">
-<table class="table table-sm table-borderless">
-  <thead>
-    <tr>
-      <th scope="col" class="align-top">Имя</th>
-      <th scope="col" class="align-top"><div align="center">Рейтинг / ТОП</div></th>' .
-    ($vertical
-        ? ''
-        : '<th scope="col" class="align-top"><div align="center">Сыграл игр</div></th>
-               <!--<th scope="col" class="align-top">% побед/отказа</th>-->'
-    ) . '
-    </tr>
-  </thead>
-  <tbody>';
+return ViewHelper::tagOpen(
+    'form',
+    ViewHelper::tagOpen(
+        'table',
+        ViewHelper::tagOpen('col', '', ['style' => 'width:65%'])
+        . ViewHelper::tagOpen('col', '', ['style' => 'width:35%'])
+        . ViewHelper::tagOpen(
+            'thead',
+            ViewHelper::tag(
+                'tr',
+                ViewHelper::tag('th', 'Игроки', ['scope' => 'col', 'class' => 'align-top text-center'])
+                . ViewHelper::tag('th', 'Рейтинг&nbsp;/ ТОП', ['scope' => 'col', 'class' => 'align-top text-center']) .
+                ($vertical
+                    ? ''
+                    : ViewHelper::tag('th', 'Сыграл игр', ['scope' => 'col', 'class' => 'align-top text-center'])
+                )
+            )
+        ) . ViewHelper::tagOpen('tbody'),
+        ['class' => 'table table-sm table-borderless']),
+    ['id' => AchievesModel::ACHIEVES_ELEMENT_ID]);

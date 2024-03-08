@@ -25,7 +25,16 @@ class ViewHelper
         return $grid;
     }
 
-    public static function tag(string $tag, string $content = '', array $options = []) {
+    /**
+     * @param string $tag
+     * @param string $content
+     * @param array $options
+     * @param bool $condition Условие, при котором тег рендерится
+     * @return string
+     */
+    public static function tag(string $tag, string $content = '', array $options = [], bool $condition = true) {
+        if (!$condition) return '';
+
         if(empty($tag)) {
             return $content;
         }
@@ -48,11 +57,10 @@ class ViewHelper
     /**
      * @param int $curentPage
      * @param int $pageQuantity
-     * @param string $element_id
      * @param string $baseUrl
      * @return string
      */
-    public static function pagination(int $curentPage, int $pageQuantity, string $element_id, string $baseUrl): string
+    public static function pagination(int $curentPage, int $pageQuantity, string $baseUrl): string
     {
         $res = self::tagOpen('span','', ['style' => 'word-wrap: break-word;']);
         for ($i = 1; $i <= $pageQuantity && $i <= self::MAX_PAGE_LINKS; $i++) {
@@ -60,7 +68,11 @@ class ViewHelper
                 $i != $curentPage ? 'a' : 'span',
                 $i,
                 [
-                    $i != $curentPage ? 'onClick' : 'none' => "refreshId('$element_id', '$baseUrl&page=".$i."')",
+                    $i != $curentPage ? 'onClick' : 'none' => ViewHelper::onClick(
+                        'refreshId',
+                        AchievesModel::ACHIEVES_ELEMENT_ID,
+                        "$baseUrl&page=$i"
+                    ),
                     'class' => "link-underline-primary",
                 ]
             );
@@ -73,5 +85,25 @@ class ViewHelper
         $res .= self::tagClose('span');
 
         return $res;
+    }
+
+    public static function onClick(string $function, string $elementId, string $url): string
+    {
+        return "$function('$elementId', '$url')";
+    }
+
+    public static function br(): string
+    {
+        return '<br />';
+    }
+
+    public static function nbsp(): string
+    {
+        return '&nbsp;';
+    }
+
+    public static function img(array $options): string
+    {
+        return self::tagOpen('img','',$options);
     }
 }

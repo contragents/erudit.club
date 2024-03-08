@@ -17,15 +17,16 @@ class StatsAchievesGamesView extends StatsAchievesView
                             'a',
                             self::PLAYER_ACHIEVES_MSG . ' ' . ViewHelper::tag('strong',AchievesModel::getPlayerNameByCommonId(StatsController::$Request['common_id'] ?? 0)),
                             [
-                                'onClick' => "refreshId('" . AchievesModel::ACHIEVES_ELEMENT_ID . "', '"
-                                    . StatsController::getUrl(
+                                'onClick' => ViewHelper::onClick(
+                                    'refreshId',
+                                    AchievesModel::ACHIEVES_ELEMENT_ID,
+                                    StatsController::getUrl(
                                         'view',
                                         [
                                             'common_id' => StatsController::$Request['common_id'] ?? '',
                                             'refresh' => '1',
                                         ]
-                                    )
-                                    . "')",
+                                    )),
                                 'class' => "link-underline-primary",
                             ]
                         )
@@ -40,7 +41,6 @@ class StatsAchievesGamesView extends StatsAchievesView
                 'pagination' => ViewHelper::pagination(
                     StatsController::$Request['page'] ?? 1,
                     ceil($count / AchievesModel::LIMIT),
-                    AchievesModel::ACHIEVES_ELEMENT_ID,
                     $baseUrl
                 )
             ],
