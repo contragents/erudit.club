@@ -1,8 +1,6 @@
 //
 function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = DEFAULT_FISHKA_SET) {
     if (fishkaSet != DEFAULT_FISHKA_SET) {
-        console.log('Not default');
-        console.log(numLetter);
         if (fishkaSet in fishkiLoaded && numLetter in fishkiLoaded[fishkaSet]) {
             let fishka = _this.add.image(0, 0, fishkiLoaded[fishkaSet][numLetter]);
             fishka.displayWidth = FISHKA_AVAILABLE_SETS[fishkaSet] * 2;
@@ -24,8 +22,6 @@ function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = D
         } else {
             if (!(fishkaSet in fishkiLoaded)) {
                 loadFishkiSet(fishkaSet);
-            } else {
-                console.log(fishkaSet + " is NOT loaded yet");
             }
         }
     }
@@ -130,8 +126,6 @@ function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = D
 async function loadFishkiSet(fishkaSet) {
     fishkiLoaded[fishkaSet] = [];
 
-    console.log(lang);
-
     /*CODES['RU'].forEach(function (numLetter) {
         imgName = fishkaSet + numLetter;
         preloaderObject.load.svg(imgName, '//xn--d1aiwkc2d.club/img/fishki_sets/' + fishkaSet + '/' + numLetter + '.svg');
@@ -146,12 +140,11 @@ async function loadFishkiSet(fishkaSet) {
     CODES[lang].forEach(function (numLetter) {
         imgName = fishkaSet + numLetter;
         preloaderObject.load.svg(imgName, '//xn--d1aiwkc2d.club/img/fishki_sets/' + fishkaSet + '/' + numLetter + '.svg');
-        console.log(imgName);
+
         if (numLetter != 999) {
             let numfishka = numLetter + 999 + 1;
             imgName = fishkaSet + numfishka;
             preloaderObject.load.svg(imgName, '//xn--d1aiwkc2d.club/img/fishki_sets/' + fishkaSet + '/' + numfishka + '.svg');
-            console.log(imgName);
         }
     });
 
@@ -170,12 +163,10 @@ async function loadFishkiSet(fishkaSet) {
         CODES[lang].forEach(function (numLetter) {
             imgName = fishkaSet + numLetter;
             fishkiLoaded[fishkaSet][numLetter] = imgName;
-            console.log(imgName);
             if (numLetter != 999) {
                 let numfishka = numLetter + 999 + 1;
                 imgName = fishkaSet + numfishka;
                 fishkiLoaded[fishkaSet][numfishka] = imgName;
-                console.log(imgName);
             }
         });
     });

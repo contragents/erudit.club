@@ -17,7 +17,6 @@ async function mobileShare() {
 
     try {
         await navigator.share(shareObj);
-        console.log('share SUCCESS!');
     } catch (err) {
         console.log('share ERROR! ' + err);
     }
@@ -146,8 +145,6 @@ document.addEventListener("visibilitychange", function () {
 });
 
 function showFullImage(idImg, width, oldWidth = 198) {
-
-    console.log(idImg, width);
     if ($('#' + idImg).width() < width) {
         if (fullImgID !== false) {
             $('#' + fullImgID).css('z-index', '50');
@@ -184,7 +181,6 @@ function mergeTheIDs(oldKey, commonID) {
 
     fetchGlobal(MERGE_IDS_SCRIPT, '', 'oldKey=' + btoa(oldKey) + '&commonID=' + commonID)
         .then((resp) => {
-            console.log(resp['result']);
             showCabinetActionResult(resp);
         });
 }
@@ -214,13 +210,11 @@ function copyKeyForID(key, commonID = '') {
 function copyDonateKey() {
     $('#donate_id').select();
     document.execCommand("copy");
-    console.log($('#donate_id').val());
 }
 
 function deleteBan(commonID) {
     fetchGlobalMVC(DELETE_BAN_URL + commonID, '', 'commonID=' + commonID)
         .then((resp) => {
-            console.log(resp['result']);
             showCabinetActionResult(resp);
         });
 }
@@ -235,7 +229,6 @@ function savePlayerName(name, commonID = '') {
 
     fetchGlobal(SET_PLAYER_NAME_SCRIPT, '', 'name=' + encodeURIComponent(name) + (commonID != '' ? '&commonID=' + commonID : ''))
         .then((resp) => {
-            console.log(resp['result']);
             if (resp['result'] == 'saved') {
                 $('#playersNikname').text(name);
             }
@@ -324,7 +317,6 @@ function savePlayerAvatarUrl(url, commonID) {
 
     fetchGlobal(SET_AVATAR_SCRIPT, '', 'avatar=' + encodeURIComponent(url) + '&commonID=' + commonID)
         .then((resp) => {
-            console.log(resp['result']);
             if (resp['result'] == 'saved')
                 $('#playersAvatar').html('<img src="' + url + '" width="100px" max-height = "100px"/>');
             showCabinetActionResult(resp);
@@ -422,7 +414,6 @@ function enableButtons() {
                     buttons[k]['svgObject']
                         .bringToTop(buttons[k]['svgObject']
                             .getByName(k + 'Inactive'));
-                    console.log('Inactive');
                 }
 
             }
@@ -438,7 +429,6 @@ function placeFishki(fishki) {
     for (var i in container) {
         if (i > maxI)
             maxI = i;
-        console.log('!!!!!!' + i);
         if (container[i].getData('cellX')) {
             cells[container[i].getData('cellX')][container[i].getData('cellY')][0] = false;
             cells[container[i].getData('cellX')][container[i].getData('cellY')][1] = false;
@@ -462,7 +452,6 @@ function placeFishki(fishki) {
         let lotokXY = lotokFindSlotXY();
 
         container.push(getFishkaGlobal(fishki[i], lotokGetX(lotokXY[0], lotokXY[1]), lotokGetY(lotokXY[0], lotokXY[1]), this.game.scene.scenes[gameScene], true, userFishkaSet).setData('lotokX', lotokXY[0]).setData('lotokY', lotokXY[1]));
-        //console.log(container[i].getData('lotokX'));
     }
 }
 

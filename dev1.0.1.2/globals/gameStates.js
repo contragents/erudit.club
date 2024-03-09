@@ -235,8 +235,7 @@ var gameStates = {
                                             var responseText = 'Ошибка';
                                         else
                                             var responseArr = JSON.parse(dataCabinet['message']);
-                                        console.log(responseArr);
-                                        var message = '<form id="superForm" >';
+                                            var message = '<form id="superForm" >';
                                         for (k in responseArr['form']) {
                                             message += '<div class="form-group"'
                                                 + (('type' in responseArr['form'][k] && responseArr['form'][k]['type'] === 'hidden')

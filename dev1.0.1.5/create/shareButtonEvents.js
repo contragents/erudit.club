@@ -14,7 +14,6 @@
                 //image.style.paddingLeft = '2px';
                 image.id = 'strange';
                 //snapHistory.push(image);
-                console.log('snap!');
                 document.getElementById('ss').appendChild(image);
             });
             
@@ -29,7 +28,6 @@
 
                 xhr.onreadystatechange = function (govno){
                     if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                        console.log(xhr.responseText);
                         window.open('//xn--d1aiwkc2d.club/snapshots/'+xhr.responseText+'/');
                     };
                 };

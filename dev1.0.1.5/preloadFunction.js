@@ -53,10 +53,6 @@ function () {
         progressBar.fillRect(gameWidth / 2 + 10 - 320 / 2, gameHeight / 2 - 30 / 2 + 15, 300 * value, 30);
     });
 
-    /*this.load.on('fileprogress', function (file) {
-        console.log(file.src);
-    });*/
-
     this.load.on('complete', function () {
         progressBar.destroy();
         progressBox.destroy();

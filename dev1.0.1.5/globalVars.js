@@ -121,7 +121,6 @@ if (windowInnerWidth > windowInnerHeight) {
     if (isYandexAppGlobal()) {
         propKoef = window.outerHeight / window.outerWidth;
     } else if (isIOSDevice()) {
-        //console.log('IOS!!!');
         propKoef = window.innerHeight / window.innerWidth;
     } else {
         const outerHeight = (window.screen.availHeight - window.outerHeight) / 2 + window.outerHeight;
@@ -129,13 +128,11 @@ if (windowInnerWidth > windowInnerHeight) {
     }
 
     buttonHeightKoef = propKoef / (standardVerticalHeight / standardVerticalWidth);
-    console.log(propKoef + '-' + buttonHeightKoef);
     if (buttonHeightKoef < 1) {
         buttonHeightKoef = 1;
     }
     var gameWidth = standardVerticalWidth;
     var gameHeight = buttonHeightKoef <= 1 ? standardVerticalHeight : (gameWidth * propKoef);
-    console.log(gameHeight);
     var knopkiWidth = gameWidth;
     var lotokX = 30 * 2;
     var lotokY = 530 * 2;

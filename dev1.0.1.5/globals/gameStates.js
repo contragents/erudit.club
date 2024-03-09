@@ -234,7 +234,6 @@ var gameStates = {
                                             var responseText = 'Ошибка';
                                         else
                                             var responseArr = JSON.parse(dataCabinet['message']);
-                                        console.log(responseArr);
                                         var message = '<form id="superForm" >';
                                         for (k in responseArr['form']) {
                                             message += '<div class="form-group"'
@@ -651,7 +650,6 @@ function commonCallback(data) {
     }
 
     if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
-        console.log(data['message']);
         return;
     }
 
@@ -704,11 +702,6 @@ function commonCallback(data) {
 
     if ('gameSubState' in data)
         gameSubState = data['gameSubState'];
-    //else gameSubState = gameStates[gameState]['1'];
-
-
-    console.log(gameOldState + '->' + gameState);
-
 
     if ((gameOldState != gameState) || (gameOldSubState != gameSubState)) {
         if ('active_users' in data && data['active_users'] == 0) {

@@ -104,7 +104,6 @@ function containerFishkaPresent(i, j) {
 }
 
 function chooseLetterGlobal(gameObject) {
-    console.log(gameObject.getData('cellX'), gameObject.getData('cellY'));
     if (gameObject.getData('cellX') === false) return;
     if (gameObject.getData('cellY') === false) return;
     disableButtons();
@@ -127,7 +126,6 @@ function chooseLetterGlobal(gameObject) {
             label: bukvy,
             className: lang == 'EN' ? 'button1' : 'button1',
             callback: function () {
-                //console.log('You choose '+i);
                 var _this = window.game.scene.scenes[gameScene];
                 var newLetter = getFishkaGlobal(i + 1 + 999, gameObject.x, gameObject.y, _this, true, userFishkaSet);
                 newLetter.setData('lotokX', false);

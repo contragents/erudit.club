@@ -6,7 +6,6 @@ function (time, delta) {
         noNetworkImg.alpha = ((new Date()).getTime() - requestTimestamp) < (normalRequestTimeout * 2)
             ? ((new Date()).getTime() - requestTimestamp - normalRequestTimeout) / 1000
             : 1;
-        console.log('No Network');
     } else {
         noNetworkImg.visible = false;
     }

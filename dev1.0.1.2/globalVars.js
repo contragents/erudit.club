@@ -122,7 +122,6 @@ if (windowInnerWidth > windowInnerHeight) {
     if (isYandexAppGlobal()) {
         propKoef = window.outerHeight / window.outerWidth;
     } else if (isIOSDevice()) {
-        //console.log('IOS!!!');
         propKoef = window.innerHeight / window.innerWidth;
     } else {
         const outerHeight = (window.screen.availHeight - window.outerHeight) / 2 + window.outerHeight;

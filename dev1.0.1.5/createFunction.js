@@ -35,7 +35,6 @@ function () {
     stepX = game.config.width - ground.width;
     stepY = 0;
     initLotok();
-    console.log(lotokCells);
 
     initCellsGlobal();
 

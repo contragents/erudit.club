@@ -33,7 +33,6 @@ var tryCount = 5;
                     .then(_player => {
                         player = _player;
                         uniqID = player.getUniqueID();
-                        console.log(player.getUniqueID());
 
                         if (buttons['razdvButton']['svgObject'] !== false) {
                             buttons['razdvButton']['svgObject'].disableInteractive();
