@@ -48,7 +48,6 @@ class Game
     public static $configStatic;
     public $serverName;
     public $config;
-    public $p;
     public $User;
     public $currentGame;
     public $currentGameUsers = false;
@@ -106,9 +105,6 @@ class Game
 
     public function __construct($server_name = '')
     {
-        $this->p = Cache::getInstance();
-
-
         $this->config = include(__DIR__ . "/../../configs/conf.php");
         self::$configStatic = $this->config;
         $this->turnTime = $this->config['turnTime'];
@@ -546,13 +542,15 @@ class Game
         }
 
         foreach ($this->gameStatus['users'] as $num => $user) {
-            if (isset($user['userID'])) {
+            $deltaRating = PlayerModel::getDeltaRating($user['userID'] ?? false, $user['ID']);
+
+            /*if (isset($user['userID'])) {
                 if (!($deltaRating = $this->getDeltaRating(self::hash_str_2_int($user['userID'])))) {
                     $deltaRating = $this->getDeltaRating($user['ID']);
                 }
             } else {
                 $deltaRating = $this->getDeltaRating($user['ID']);
-            }
+            }*/
 
             $ratingFound = false;
             foreach ($ratings as $rating) {
@@ -803,15 +801,6 @@ class Game
         $this->gameStatus['gameLog'][] = [$numUser, $message];
         foreach ($this->gameStatus['users'] as $num => $User) {
             $this->gameStatus['users'][$num]['logStack'][] = [$numUser, $message];
-        }
-    }
-
-    public function getDeltaRating($key)
-    {
-        if ($delta = Cache::get(PlayerModel::DELTA_RATING_KEY_PREFIX . $key)) {
-            return $delta;
-        } else {
-            return false;
         }
     }
 
@@ -1667,31 +1656,36 @@ class Game
         return false;
     }
 
+    public function initGame()
+    {
+        return (new Queue($this->User, $this, $_POST + ['init_game' => true]))->doSomethingWithThisStuff(
+        (isset($_GET['lang']) && $_GET['lang'] == 'EN') ? $_GET['lang'] : '');
+    }
+
     public function checkGameStatus()
     {
         if (!$this->currentGame) {
             if ($this->isUserInInviteQueue()) {
                 return $this->startGame();
-            } else {
-                if ($this->isUserInQueue()) {
-                    return $this->startGame();
-                }
-
-                $chooseGameParams = [
-                    'gameState' => 'chooseGame',
-                    'gameSubState' => 'choosing',
-                    'players' => $this->onlinePlayers(),
-                    'prefs' => Cache::get(Queue::PREFS_KEY . $this->User)
-                ];
-
-                if (isset($_GET['queryNumber']) && ($_GET['queryNumber'] == 1)) {
-                    return $this->makeResponse($chooseGameParams);
-                } elseif (!isset($_POST['players_count']) && !$this->isBot()) {
-                    return $this->makeResponse($chooseGameParams);
-                } else {
-                    return $this->startGame();
-                }
+            } elseif ($this->isUserInQueue()) {
+                return $this->startGame();
             }
+
+            $chooseGameParams = [
+                'gameState' => 'chooseGame',
+                'gameSubState' => 'choosing',
+                'players' => $this->onlinePlayers(),
+                'prefs' => Cache::get(Queue::PREFS_KEY . $this->User)
+            ];
+
+            return $this->isBot() ? $this->initGame() : $this->makeResponse($chooseGameParams);
+            /*if (isset($_GET['queryNumber']) && ($_GET['queryNumber'] == 1)) {
+                return $this->makeResponse($chooseGameParams);
+            } elseif (!isset($_POST['players_count']) && !$this->isBot()) {
+                return $this->makeResponse($chooseGameParams);
+            } else {
+                return $this->startGame();
+            }*/
         }
 
         if ($this->activeGameUsers() == 1) {

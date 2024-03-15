@@ -99,12 +99,12 @@ function addDeltaRatingsToCache($player)
 
     $cacheTime = 7 * 24 * 60 * 60;
 
-    Cache::setex('erudit.delta_rating_' . $player['cookie'], $cacheTime, $deltaArr);
-    Cache::setex('erudit.delta_rating_' . $player['found_cookie'], $cacheTime, $deltaArr);
+    Cache::setex(PlayerModel::DELTA_RATING_KEY_PREFIX . $player['cookie'], $cacheTime, $deltaArr);
+    Cache::setex(PlayerModel::DELTA_RATING_KEY_PREFIX . $player['found_cookie'], $cacheTime, $deltaArr);
 
     if (isset($player['userID']) && $player['userID'] > 0) {
-        Cache::setex('erudit.delta_rating_' . $player['userID'], $cacheTime, $deltaArr);
-        Cache::setex('erudit.delta_rating_' . $player['userID'], $cacheTime, $deltaArr);
+        Cache::setex(PlayerModel::DELTA_RATING_KEY_PREFIX . $player['userID'], $cacheTime, $deltaArr);
+        Cache::setex(PlayerModel::DELTA_RATING_KEY_PREFIX . $player['userID'], $cacheTime, $deltaArr);
     }
 }
 

@@ -4,9 +4,9 @@ return [
 'turnTime' => [2 => 120, 3 => 90, 4 => 60],
 'winScore' => 200,
 'ratingGameWaitLimit' => 360,
-'gameWaitLimit' => $this->p->redis->llen('erudit.bot_games') > 5 
+'gameWaitLimit' => Cache::llen('erudit.bot_games') > 5
     ? 15 
-    : ($this->p->redis->llen('erudit.bot_games') == 0 
+    : (Cache::llen('erudit.bot_games') == 0
         ? 60 
         : 30),
 'cacheTimeout' => 3000,

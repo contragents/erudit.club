@@ -88,14 +88,14 @@ return ViewHelper::tag(
     ) // td1.2
     . ViewHelper::tag(
         'td',
-        ViewHelper::tag('strong', $rating['rating'])
+        ViewHelper::tag('strong', $rating['rating'] ?? '')
         . ViewHelper::tag(
             'span',
-            ViewHelper::nbsp() . ($deltaRating['delta'] > 0 ? '+' : '') . $deltaRating['delta'],
+            ViewHelper::nbsp() . (($deltaRating['delta'] ?? 0) > 0 ? '+' : '') . ($deltaRating['delta'] ?? 0),
             [
                 'title' => 'Последнее изменение рейтинга',
-                'style' => 'color:' . ($deltaRating['delta'] <= 0 ? 'indianred' : 'lawngreen'),
-            ],$deltaRating !== false
+                'style' => 'color:' . (($deltaRating['delta'] ?? 0) <= 0 ? 'indianred' : 'lawngreen'),
+            ], !!$deltaRating
         )
         . (is_numeric($top = $rating['top'])
             ? ($top <= 3

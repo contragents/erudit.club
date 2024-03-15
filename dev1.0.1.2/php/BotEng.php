@@ -42,7 +42,7 @@ class BotEng
 
                 if (($resp['gameState'] == 'gameResults') || ($resp['gameState'] == 'initGame')) {
                     ob_start();
-                    $resp = include __DIR__ . '/exit_game.php';
+                    (new Erudit\Game())->exitGame();
                     ob_end_clean();
                     //Не будем анализировать ответы!)) - просто новая игра
                     unset($botsTurns[$Bot]);

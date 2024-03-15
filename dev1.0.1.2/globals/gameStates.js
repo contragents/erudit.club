@@ -340,7 +340,7 @@ var gameStates = {
                         callback: function () {
                             activateFullScreenForMobiles();
                             gameState = 'noGame';
-                            fetchGlobal(STATUS_CHECKER_SCRIPT, '', $(".bootbox-body #myGameForm").serialize())
+                            fetchGlobal(INIT_GAME_SCRIPT, '', $(".bootbox-body #myGameForm").serialize())
                                 .then((data) => {
                                     if (data == '')
                                         var responseText = 'Ошибка';
@@ -363,7 +363,7 @@ var gameStates = {
                             //<?php include('instruction_eng.js'); ?>
                             /** todo not working on yandex*/
                             asyncCSS('https://xn--d1aiwkc2d.club/css/choose_css.css');
-                            fetchGlobal(STATUS_CHECKER_SCRIPT, '', $(".bootbox-body #myGameForm").serialize())
+                            fetchGlobal(INIT_GAME_SCRIPT, '', $(".bootbox-body #myGameForm").serialize())
                                 .then((data) => {
                                     if (data == '')
                                         var responseText = 'Ошибка';

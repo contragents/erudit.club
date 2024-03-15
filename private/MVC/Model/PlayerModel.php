@@ -274,6 +274,24 @@ class PlayerModel extends BaseModel
         }
     }
 
+    public static function getDeltaRating($key1, $key2)
+    {
+        if ($key1) {
+            $key = Game::hash_str_2_int($key1);
+            if ($delta = Cache::get(PlayerModel::DELTA_RATING_KEY_PREFIX . $key)) {
+                return $delta;
+            }
+        }
+
+        $key = $key2;
+
+        if ($delta = Cache::get(PlayerModel::DELTA_RATING_KEY_PREFIX . $key)) {
+            return $delta;
+        } else {
+            return false;
+        }
+    }
+
     public
     static function decreaseRatings()
     {

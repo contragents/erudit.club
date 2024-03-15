@@ -2,6 +2,7 @@
 
 const PAGE_HIDDEN_SLEEP_TIME = 10;
 const SCRIPTS = [
+    'init_game' => 'initGame',
     'status_checker' => 'statusChecker',
     'turn_submitter' => 'turnSubmitter',
     'new_game' => 'newGame',
@@ -22,6 +23,13 @@ const SCRIPTS = [
 ];
 
 const CATCH_REFERER_KEY = 'erudit.catched_referer';
+
+function initGame()
+{
+    $res = (new Erudit\Game())->initGame();
+    print $res;
+    return $res;
+}
 
 function statusChecker()
 {

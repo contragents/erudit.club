@@ -35,6 +35,7 @@ const CODES = {
 const SUBMIT_SCRIPT = 'turn_submitter.php';
 const WORD_CHECKER_SCRIPT = 'word_checker.php';
 const STATUS_CHECKER_SCRIPT = 'status_checker.php';
+const INIT_GAME_SCRIPT = 'init_game.php'
 const CHAT_SCRIPT = 'send_chat_message.php';
 const COMPLAIN_SCRIPT = 'complain.php';
 const SET_INACTIVE_SCRIPT = 'set_inactive.php';
