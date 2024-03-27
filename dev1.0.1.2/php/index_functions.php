@@ -28,7 +28,6 @@ function initGame()
 {
     $res = (new Erudit\Game())->initGame();
     print $res;
-    return $res;
 }
 
 function statusChecker()
@@ -38,14 +37,12 @@ function statusChecker()
     }
     $res = (new Erudit\Game())->checkGameStatus();
     print $res;
-    return $res;
 }
 
 function turnSubmitter()
 {
     $res = (new Erudit\Game())->submitTurn();
     print $res;
-    return $res;
 }
 
 function newGame()
@@ -89,8 +86,6 @@ function changeFishki()
 {
     $resp = (new Erudit\Game())->changeFishki($_POST);
     print $resp;
-
-    return $resp;
 }
 
 function cookieChecker()
@@ -107,10 +102,6 @@ function inviteToNewGame()
 
 function playerCabinet()
 {
-    // todo remove after app check
-    $nothing = Config::$config;
-    Cache::hset(CATCH_REFERER_KEY, time() % 100, $_SERVER['HTTP_REFERER'] ?? 'NA');
-
     print (new Erudit\Game())->playerCabinetInfo();
 }
 

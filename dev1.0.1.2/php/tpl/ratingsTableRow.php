@@ -111,7 +111,7 @@ return ViewHelper::tag(
                                 $user['ID'],
                                 500
                             ),
-                            'src' => 'https://xn--d1aiwkc2d.club/img/prizes/top_$top.svg',
+                            'src' => "https://xn--d1aiwkc2d.club/img/prizes/top_$top.svg",
                             'width' => '192px'
                         ]
                     ))

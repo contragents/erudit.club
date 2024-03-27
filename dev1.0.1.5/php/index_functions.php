@@ -2,6 +2,7 @@
 
 const PAGE_HIDDEN_SLEEP_TIME = 10;
 const SCRIPTS = [
+    'init_game' => 'initGame',
     'status_checker' => 'statusChecker',
     'turn_submitter' => 'turnSubmitter',
     'new_game' => 'newGame',
@@ -21,7 +22,13 @@ const SCRIPTS = [
     'word' => 'word'
 ];
 
-const CATCH_REFERER_KEY = 'erudit.private.catched_referer';
+const CATCH_REFERER_KEY = 'erudit.catched_referer';
+
+function initGame()
+{
+    $res = (new Erudit\Game())->initGame();
+    print $res;
+}
 
 function statusChecker()
 {
@@ -30,14 +37,12 @@ function statusChecker()
     }
     $res = (new Erudit\Game())->checkGameStatus();
     print $res;
-    return $res;
 }
 
 function turnSubmitter()
 {
     $res = (new Erudit\Game())->submitTurn();
     print $res;
-    return $res;
 }
 
 function newGame()
@@ -81,8 +86,6 @@ function changeFishki()
 {
     $resp = (new Erudit\Game())->changeFishki($_POST);
     print $resp;
-
-    return $resp;
 }
 
 function cookieChecker()
@@ -99,10 +102,6 @@ function inviteToNewGame()
 
 function playerCabinet()
 {
-    // todo remove after app check
-    $nothing = Config::$config;
-    Cache::hset(CATCH_REFERER_KEY, time() % 100, $_SERVER['HTTP_REFERER'] ?? 'NA');
-
     print (new Erudit\Game())->playerCabinetInfo();
 }
 

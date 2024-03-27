@@ -9,7 +9,7 @@ return [
     : (Cache::llen('erudit.bot_games') == 0
         ? 60 
         : 30),
-'cacheTimeout' => 3000,
+'cacheTimeout' => 3600 * 4,
 'ratingsCacheTimeout' => 200,
 'turnDeltaTime' => 10,//Разрешенное превышение длительности хода
 'activityTimeout' => 30,
