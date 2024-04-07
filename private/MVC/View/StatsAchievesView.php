@@ -1,6 +1,6 @@
 <?php
 
-class StatsAchievesView
+class StatsAchievesView extends BaseView
 {
     public const SMALL_ZHETON_WIDTH = '20%';
     public const OFF_OPACITY = 0.3;

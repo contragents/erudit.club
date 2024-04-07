@@ -1,11 +1,10 @@
 <?php
 class BaseView
 {
-    public static function render($vars, $subview)
+    public static function renderFull(array $params): string
     {
-        extract($vars);
-        include 'Tpl/HeaderTemplate.php';
-        include "SubViews/$subview.php";
-        include 'Tpl/FooterTemplate.php';
+        $res = json_decode(static::render(...$params), true);
+
+        return ($res['message'] ?? '') . ($res['pagination'] ?? '');
     }
 }

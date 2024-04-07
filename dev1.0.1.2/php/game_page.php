@@ -16,7 +16,7 @@ foreach ($gameData['users'] as $num => $player) {
     $players[$num]['avatarUrl'] = $instance->getAvatarUrl($player['ID']);
 }
 print "Играют " . implode('&nbsp;vs&nbsp;', array_map(function ($player) {
-        return $player['nickName']
+        return ViewHelper::tag('a', $player['nickName'], ['href' => '/mvc/stats/view?common_id=' . $player['common_id']])
             . '&nbsp;'
             . $player['rating']
             . '&nbsp;'

@@ -14,7 +14,7 @@
     <meta name="csrf-token" content="aGRURF9VS0gZMBwPEREqPSk9BhVuPAA.Ggc5ERY8Gw4NDTsLFGUZHg==">
 	<title><?=$title?></title>
     <meta name="description" content="<?=$description?>" />
-    <?=$canonical?>
+    <?= $canonical ?? ''?>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/png">
     </head>
 <body>

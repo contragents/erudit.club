@@ -89,7 +89,11 @@ class StatsController extends BaseController
             );
         }
 
-        return StatsAchievesView::render($baseUrl, $baseUrlPage, $achieves, $achievesCount);
+        if (BaseController::isAjaxRequest()) {
+            return StatsAchievesView::render($baseUrl, $baseUrlPage, $achieves, $achievesCount);
+        } else {
+            return StatsAchievesView::renderFull([$baseUrl, $baseUrlPage, $achieves, $achievesCount]);
+        }
     }
 
     public function gamesAction()

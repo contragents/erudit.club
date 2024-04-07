@@ -33,7 +33,7 @@ function saveGame(&$Game, &$results)
 {
     $INSERTGAME = "INSERT INTO games
 SET 
-id = {$Game['gameNumber']} + 300000,
+id = " . ($Game['gameNumber'] + GameController::GAME_ID_BASE_INC) .",
 game_data = compress('" . DB::escapeString(serialize($Game)) . "')";
 
     if (DB::queryInsert($INSERTGAME)) {
@@ -46,7 +46,7 @@ game_data = compress('" . DB::escapeString(serialize($Game)) . "')";
 
             $INSERTPLAYER = "INSERT INTO game_players
 SET 
-game_id = {$Game['gameNumber']}+300000,
+game_id = " . ($Game['gameNumber'] + GameController::GAME_ID_BASE_INC) .",
 cookie = $intCookie,
 user_id = $user_id,
 common_id=$common_id";
@@ -60,7 +60,7 @@ function saveGameStats(&$Game, &$results)
 {
     $INSERTSTATS = "INSERT INTO games_stats
     SET
-      game_id={$Game['gameNumber']}+300000
+      game_id=" . ($Game['gameNumber'] + GameController::GAME_ID_BASE_INC) ."
     , players_num = " . count($results) . "
     , game_ended_date = {$Game['turnBeginTime']}
     , winner_player_id = " .$results[0]['common_id'] ?? $results[0]['player_id'] ."

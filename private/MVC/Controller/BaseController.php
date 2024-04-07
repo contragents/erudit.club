@@ -5,7 +5,7 @@ class BaseController
     public static $Request;
     public $Action;
 
-    const FIELDS_TO_LOWER = ['platform', 'device_type'];
+    const MAIN_PARAM = 'id';
 
     const VIEW_PATH = __DIR__ . '/../View/';
 
@@ -14,6 +14,12 @@ class BaseController
         static::$Request = $request;
 
         $this->Action = $action . 'Action';
+    }
+
+    public static function isAjaxRequest(): bool
+    {
+        return (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
     }
 
     public function Run()

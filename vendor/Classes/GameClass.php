@@ -1,5 +1,4 @@
 <?php
-use Dadata\DB;
 use Dadata\Hints;
 use Dadata\Players;
 use Dadata\Prizes;
@@ -435,6 +434,10 @@ class Game
             foreach (str_split($sintName) as $index => $lowByte) {
                 $letterNumber = base_convert("0x" . $lowByte, 16, 10)
                     + base_convert("0x" . substr($sintName, $index < 5 ? $index : 0, 1), 16, 10);
+
+                if (!isset($this->gameStatus['lngClass'])) {
+                    $this->gameStatus['lngClass'] = "\Lang\\" . 'Ru';;
+                }
 
                 if (!isset($this->gameStatus['lngClass']::$bukvy[$letterNumber])) {
                     //Английская версия
