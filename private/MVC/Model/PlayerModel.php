@@ -15,8 +15,11 @@ class PlayerModel extends BaseModel
 
     const RATING_FIELD = 'rating';
     const COMMON_ID_FIELD = 'common_id';
+    const COOKIE_FIELD = 'cookie';
+
     const TOP_10 = 10;
     const MIN_TOP_RATING = 2100; // Рейтинг, ниже которого ТОП не рассчитывается в некоторых запросах
+
 
     /**
      * Определяет common_id по сложной схеме через связанные куки и ID от яндекса
@@ -144,6 +147,11 @@ class PlayerModel extends BaseModel
             . ORM::limit(1);
 
         return DB::queryValue($commonIDQuery);
+    }
+
+    public static function getRatingByCookie(string $cookie): int
+    {
+        return self::getOneCustom(self::COOKIE_FIELD, $cookie)[self::RATING_FIELD] ?? 0;
     }
 
     public static function getRating($commonID = false, $cookie = false, $userID = false)

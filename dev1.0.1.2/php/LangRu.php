@@ -2,10 +2,6 @@
 
 namespace Lang;
 
-//include_once(__DIR__ . '/DadataDB.php');
-
-//use \Dadata\DB;
-
 use DB;
 
 class Ru
@@ -89,12 +85,12 @@ class Ru
         999 => ['*', 0, 3, false]
     ];
 
-    private static $words = [];
-    private static $badWords = [];
-    private static $goodWords = [];
-    private static $goodWordsLinks = [];
+    protected static $words = [];
+    protected static $badWords = [];
+    protected static $goodWords = [];
+    protected static $goodWordsLinks = [];
 
-    private static $dictTable = 'dict';
+    protected static $dictTable = 'dict';
 
     public static function generateBankFishki()
     {

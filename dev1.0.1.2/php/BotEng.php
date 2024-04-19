@@ -152,8 +152,8 @@ class BotEng
             $slovaPlayed = [];
         }
 
-        error_reporting(E_ALL & ~E_NOTICE);
-        ini_set('display_errors', 0);
+        //error_reporting(E_ALL & ~E_NOTICE);
+        //ini_set('display_errors', 0);
         try {
             if (self::makeTurn($cells, $data['fishki'], $slovaPlayed)) {
                 print "++++++++++Submiting turn...........";

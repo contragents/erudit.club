@@ -4,7 +4,6 @@ class Queue
 {
     const QUEUES = [
         'erudit.rating_waiters' => 'erudit.rating_waiters',
-        'erudit.ratingEN_waiters' => 'erudit.ratingEN_waiters',
         'erudit.2players_waiters' => 'erudit.2players_waiters',
         'erudit.2ENplayers_waiters' => 'erudit.2ENplayers_waiters',
         'erudit.4players_waiters' => 'erudit.4players_waiters',
@@ -24,6 +23,7 @@ class Queue
     const GAMES_COUNTER = 'erudit.num_games';
     const GET_GAME_KEY = 'erudit.get_game_';
     const GAME_KEY = 'erudit.game_';
+    const RATING_QUEUE = 'ratingQueue';
 
     protected $User;
     protected $userTime;
@@ -37,15 +37,17 @@ class Queue
     protected array $POST;
     protected $lang;
 
+    const LANGS = ['RU' => '', 'EN' => 'EN', '' => ''];
+
     public function __construct($User, Game $caller, array $POST)
     {
         $this->User = $User;
         $this->caller = $caller;
         $this->POST = $POST;
 
-        $this->userInInitStatus = $this->checkPlayerStatus();
+        $this->userInInitStatus = $this->checkPlayerInitStatus();
 
-        $this->lang = $this->POST['lang'] ?? '';
+        $this->lang = self::LANGS[$this->POST['lang'] ?? ''];
 
         if (isset($this->POST['ochki_num'])) {
             Cache::setex(
@@ -57,16 +59,28 @@ class Queue
         }
     }
 
-    protected function checkPlayerStatus(): bool
+    protected function checkPlayerInitStatus(): bool
     {
-        $initGame = $this->POST['init_game'] ?? (bool)($this->POST['ochki_num'] ?? false);
+        $initGame = ($this->POST['init_game'] ?? (bool)($this->POST['ochki_num'] ?? false))
+        ||
+        self::isUserInQueue($this->User);
 
-        if (!$initGame && !Cache::get(static::USER_STATUS_PREFIX . $this->User)) {
-            return false;
+        if ($initGame) {
+            self::setPlayerInitStatus($this->User); // todo возможно не надо помещать в кеш
+
+            return true;
         }
 
-        Cache::setex(static::USER_STATUS_PREFIX . $this->User, 60, Game::INIT_GAME_STATE);
-        return true;
+        if(Cache::get(static::USER_STATUS_PREFIX . $this->User)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function setPlayerInitStatus($User): void
+    {
+        Cache::setex(static::USER_STATUS_PREFIX . $User, 60, Game::INIT_GAME_STATE);
     }
 
     public static function isUserInInviteQueue(string $user)
@@ -93,28 +107,26 @@ class Queue
         return false;
     }
 
-    public function doSomethingWithThisStuff($lang = '')
+    public function doSomethingWithThisStuff(string $lang = '')
     {
-        if (!$this->userInInitStatus) {
+        $this->lang = self::LANGS[$lang];
+
+        if (!$this->userInInitStatus) { // todo разобраться почему при подборе игры выкидывает в выбор параметров
             $chooseGameParams = [
                 'gameState' => 'chooseGame',
                 'gameSubState' => 'choosing',
                 'players' => $this->caller->onlinePlayers(),
-                'prefs' => Cache::get(Queue::PREFS_KEY . $this->User)
+                'prefs' => Cache::get(static::PREFS_KEY . $this->User)
             ];
 
             return $this->caller
                 ->makeResponse($chooseGameParams);
         }
 
-        if ($lang) {
-            $this->lang = $lang;
-        }
-
         if ($this->checkInviteQueue()) {
             if ($this->inviteQueueFull()) {
                 if ($this->tryNewGameSemaphore()) {
-                    return $this->makeGame($this->User, static::QUEUE_NUMS['invite']);
+                    return $this->makeGame($this->User, static::QUEUE_NUMS['invite'], 4);
                 }
             }
 
@@ -128,15 +140,16 @@ class Queue
                 );
         }
 
-        if ($this->lang === '') {
+        if ($this->lang == '') {
             // Только для игры на Русском
-            if ($ratingWanted = $this->waitRatingPlayer($this->User)) //Сразу помещает в спецочередь
+            if ($ratingWanted = $this->waitRatingPlayer($this->User)) // Сразу помещает в спецочередь
             {
-                if (($ratingPlayer = $this->findRatingPlayer($ratingWanted)) !== false) {
+                if ($ratingPlayer = $this->findRatingPlayer($ratingWanted)) {
                     if ($this->tryNewGameSemaphore()) {
                         return $this->makeRatingGame($this->User, $ratingPlayer);
                     }
                 }
+
                 if ($this->timeToWaitRatingPlayerOver($this->User)) {
                     return $this->storeToCommonQueue($this->User);
                 }
@@ -144,42 +157,21 @@ class Queue
                 return $this->stillWaitRatingPlayer();
             }
 
-            if (strpos($this->User, 'ot') === false) {
-                if (($curPlayerRating = $this->caller->getRatings($this->User)[0]['rating'] ?? 0) > 1900) {
-                    if (is_array($ratingPlayer = $this->findWaitingRaitingPlayer($curPlayerRating))) {
-                        if ($this->tryNewGameSemaphore()) {
-                            return $this->makeReverseRatingGame($ratingPlayer);
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($this->want4Players($this->User)) {
-            if ($this->players4Waiting($this->User)) {
-                if ($this->timeToMake4Game() && $this->tryNewGameSemaphore()) {
-                    return $this->makeGame($this->User, 4);
-                } else {
-                    return $this->storeTo4Players($this->User);
-                }
-            } else {
-                if ($this->players2Waiting($this->User)) {
-                    if ($this->tryNewGameSemaphore()) {
-                        return $this->makeGame($this->User, 2);
-                    }
-                }
-
-                return $this->storeTo4Players($this->User);
-            }
-        } else {
-            if ($this->players2Waiting($this->User)) {
+            $curPlayerRating = PlayerModel::getRatingByCookie($this->User);
+            if ($curPlayerRating > 1900 && ($ratingPlayer = $this->findWaitingRaitingPlayer($curPlayerRating))) {
                 if ($this->tryNewGameSemaphore()) {
-                    return $this->makeGame($this->User, 2);
+                    return $this->makeReverseRatingGame($ratingPlayer);
                 }
             }
-
-            return $this->storeTo2Players($this->User);
         }
+
+        if ($this->players2Waiting($this->User)) {
+            if ($this->tryNewGameSemaphore()) {
+                return $this->makeGame($this->User, '2');
+            }
+        }
+
+        return $this->storeTo2Players($this->User);
     }
 
     protected function inviteQueueFull()
@@ -226,10 +218,6 @@ class Queue
 
     protected function waitRatingPlayer($User)
     {
-        if (strpos($User, 'ot') !== false) {
-            return false;
-        }
-
         if (isset($this->POST['from_rating']) && ($this->POST['from_rating'] == 0)) {
             return false;
         }
@@ -243,22 +231,20 @@ class Queue
 
             $this->userTime = date('U');
             Cache::hset(
-                static::QUEUES["erudit.rating{$this->lang}_waiters"],
+                static::QUEUES["erudit.rating_waiters"],
                 $User,
                 [
                     'time' => $this->userTime,
-                    'rating' => $this->POST['from_rating'],
+                    'from_rating' => $this->POST['from_rating'],
                     'options' => $options
                 ]
             );
 
             return $this->POST['from_rating'];
-        }
-
-        if ($waiterData = Cache::hget(static::QUEUES["erudit.rating{$this->lang}_waiters"], $User)) {
+        } elseif ($waiterData = Cache::hget(static::QUEUES["erudit.rating_waiters"], $User)) {
             $this->userTime = $waiterData['time'];
 
-            return $waiterData['rating'];
+            return $waiterData['from_rating'];
         }
 
         return false;
@@ -268,39 +254,34 @@ class Queue
     {
         if (($players2Waiting = Cache::hgetall(static::QUEUES["erudit.2{$this->lang}players_waiters"]))) {
             foreach ($players2Waiting as $player => $data) {
-                if (
-                    !strpos($player, 'ot')
-                    &&
-                    ($this->caller->getRatings(['cookie' => $player])['rating'] ?? 0) >= $ratingWanted
-                ) {
-                    return [$player => 2];
+                $playerRating = PlayerModel::getRatingByCookie($player);
+                if ($playerRating >= $ratingWanted) {
+                    return [
+                        'cookie' => $player,
+                        'options' => @unserialize($data)['options'] ?? false,
+                        'queue' => 2,
+                        'rating' => $playerRating
+                    ];
                 }
             }
         }
 
-        if (($players4Waiting = Cache::hgetall(static::QUEUES["erudit.4{$this->lang}players_waiters"]))) {
-            foreach ($players4Waiting as $player => $data) {
-                if (
-                    !strpos($player, 'ot')
-                    &&
-                    ($this->caller->getRatings(['cookie' => $player])['rating'] ?? 0) >= $ratingWanted
-                ) {
-                    return [$player => 4];
-                }
-            }
-        }
-
-        if (($playersRatingWaiting = Cache::hgetall(static::QUEUES["erudit.rating{$this->lang}_waiters"]))) {
+        if (($playersRatingWaiting = Cache::hgetall(static::QUEUES["erudit.rating_waiters"]))) {
             foreach ($playersRatingWaiting as $player => $data) {
                 if ($player != $this->User) {
                     $playerInfo = unserialize($data);
-
+                    $playerRating = PlayerModel::getRatingByCookie($player);
                     if (
-                        ($this->caller->getRatings(['cookie' => $player])['rating'] ?? 0) >= $ratingWanted
+                        $playerRating >= $ratingWanted
                         &&
-                        ($this->caller->getRatings(['cookie' => $this->User])['rating'] ?? 0) >= $playerInfo['rating']
+                        (PlayerModel::getRatingByCookie($this->User)) >= $playerInfo['from_rating']
                     ) {
-                        return [$player => 'ratingQueue'];
+                        return [
+                            'cookie' => $player,
+                            'options' => $data['options'] ?? false,
+                            'queue' => self::RATING_QUEUE,
+                            'rating' => $playerRating
+                        ];
                     }
                 }
             }
@@ -311,12 +292,17 @@ class Queue
 
     protected function findWaitingRaitingPlayer($curPlayerRating)
     {
-        if (($playersRatingWaiting = Cache::hgetall(static::QUEUES["erudit.rating{$this->lang}_waiters"]))) {
+        if (($playersRatingWaiting = Cache::hgetall(static::QUEUES["erudit.rating_waiters"]))) {
             foreach ($playersRatingWaiting as $player => $data) {
                 if ($player != $this->User) {
                     $data = unserialize($data);
-                    if ($curPlayerRating >= $data['rating']) {
-                        return ['cookie' => $player, 'options' => $data['options']];
+                    if ($curPlayerRating >= $data['from_rating']) {
+                        return [
+                            'cookie' => $player,
+                            'options' => $data['options'] ?? false,
+                            'queue' => static::RATING_QUEUE,
+                            'rating' => PlayerModel::getRatingByCookie($player),
+                        ];
                     }
                 }
             }
@@ -331,30 +317,26 @@ class Queue
             return $this->POST;
         }
 
-        if ($players2Queue = Cache::hget(
+        $players2Queue = Cache::hget(
             static::QUEUES["erudit.2{$this->lang}players_waiters"],
             $this->User
-        )
-        ) {
+        );
+        if ($players2Queue && ($players2Queue['options'] ?? false)) {
             return $players2Queue['options'];
         }
 
-        if ($players4Queue = Cache::hget(
-            static::QUEUES["erudit.4{$this->lang}players_waiters"],
-            $this->User
-        )
-        ) {
-            return $players4Queue['options'];
-        }
-
-        return ['num_players' => 4, 'ochki_num' => rand(200, 300), 'turn_time' => rand(60, 120)];
+        return Cache::get(static::PREFS_KEY . $this->User)
+            ?: ['num_players' => 2, 'ochki_num' => rand(200, 300), 'turn_time' => rand(60, 120)];
     }
 
     protected function makeReverseRatingGame(array $ratingPlayer)
     {
         $thisUserOptions = $this->gatherUserData();
 
-        Cache::hset(static::QUEUES["erudit.{$thisUserOptions['players_count']}{$this->lang}players_waiters"],
+        self::cleanUp($ratingPlayer['cookie']);
+        //Удалили ожидающего рейтинг игрока из очереди рейтинга
+
+        Cache::hset(static::QUEUES["erudit.2{$this->lang}players_waiters"],
             $ratingPlayer['cookie'],
             [
                 'time' => date('U'),
@@ -362,61 +344,56 @@ class Queue
             ]
         );
         //Поместили ожидающего рейтинг игрока в очередь текущего игрока
-        Cache::hdel(static::QUEUES["erudit.rating{$this->lang}_waiters"], $ratingPlayer['cookie']);
-        //Удалили ожидающего рейтинг игрока из очереди рейтинга
 
-        Cache::hset(static::QUEUES["erudit.{$thisUserOptions['players_count']}{$this->lang}players_waiters"],
+        self::cleanUp($this->User);
+
+        Cache::hset(static::QUEUES["erudit.2{$this->lang}players_waiters"],
             $this->User,
             [
                 'time' => date('U'),
                 'options' => $thisUserOptions
             ]
         );
-        //Поместили текущего игрока в очередь текущего игрока))
 
-        return $this->{"makeGame"}($this->User, $thisUserOptions['players_count']);
-        //Начали игру
+        return $this->makeGame($this->User, '2', 2, $ratingPlayer['rating']);
     }
 
     protected function makeRatingGame($User, array $ratingPlayer)
     {
-        $waiter = Cache::hget(static::QUEUES["erudit.rating{$this->lang}_waiters"], $User);
-        $waiterData = $waiter;
+        $waiterData = Cache::hget(static::QUEUES["erudit.rating_waiters"], $User);
 
-        foreach ($ratingPlayer as $player => $numPlayersQueue) {
-            if ($numPlayersQueue == 'ratingQueue') {
-                $numPlayersQueue = 4;
-                $playerData = Cache::hget(static::QUEUES["erudit.rating{$this->lang}_waiters"], $player);
-                Cache::hset(static::QUEUES["erudit.{$numPlayersQueue}{$this->lang}players_waiters"],
-                    $player,
-                    [
-                        'time' => $playerData['time'],
-                        'options' => $playerData['options']
-                    ]
-                );
+        if ($ratingPlayer['queue'] == self::RATING_QUEUE) {
+            $playerData = Cache::hget(static::QUEUES["erudit.rating_waiters"], $ratingPlayer['cookie']);
 
-                Cache::hdel(static::QUEUES["erudit.rating{$this->lang}_waiters"], $player);
-            }
+            self::cleanUp($ratingPlayer['cookie']);
 
             Cache::hset(
-                static::QUEUES["erudit.{$numPlayersQueue}{$this->lang}players_waiters"],
-                $User,
+                static::QUEUES["erudit.2{$this->lang}players_waiters"],
+                $ratingPlayer['cookie'],
                 [
-                    'time' => $waiterData['time'],
-                    'options' => $waiterData['options']
+                    'time' => $playerData['time'],
+                    'options' => $playerData['options']
                 ]
             );
-
-            break;
         }
 
-        Cache::hdel(static::QUEUES["erudit.rating{$this->lang}_waiters"], $User);
-        return $this->{"makeGame"}($User, $numPlayersQueue);
+        self::cleanUp($User);
+
+        Cache::hset(
+            static::QUEUES["erudit.2{$this->lang}players_waiters"],
+            $User,
+            [
+                'time' => $waiterData['time'],
+                'options' => $waiterData['options']
+            ]
+        );
+
+        return $this->makeGame($User, '2', 2, $ratingPlayer['rating']);
     }
 
     protected function timeToWaitRatingPlayerOver($User)
     {
-        $waiterData = Cache::hget(static::QUEUES["erudit.rating{$this->lang}_waiters"], $User);
+        $waiterData = Cache::hget(static::QUEUES["erudit.rating_waiters"], $User);
 
         if ((date('U') - $waiterData['time']) > $this->caller->ratingGameWaitLimit) {
             return true;
@@ -427,45 +404,10 @@ class Queue
 
     protected function storeToCommonQueue($User)
     {
-        $waiterData = Cache::hget(static::QUEUES["erudit.rating{$this->lang}_waiters"], $User);
-        Cache::hdel(static::QUEUES["erudit.rating{$this->lang}_waiters"], $User);
+        $waiterData = Cache::hget(static::QUEUES["erudit.rating_waiters"], $User) ?: [];
+        self::cleanUp($User);
 
-        if (isset($waiterData['options']) && isset($waiterData['options']['players_count'])) {
-            Cache::hset(
-                static::QUEUES["erudit.{$waiterData['options']['players_count']}{$this->lang}players_waiters"],
-                $User,
-                [
-                    'time' => $waiterData['time'],
-                    'options' => $waiterData['options']
-                ]
-            );
-
-            return $this->caller->makeResponse(
-                [
-                    'gameState' => Game::INIT_GAME_STATE,
-                    'gameSubState' => Cache::hlen(
-                        static::QUEUES["erudit.{$waiterData['options']['players_count']}{$this->lang}players_waiters"]
-                    ),
-                    'gameWaitLimit' => $this->caller->gameWaitLimit
-                ]
-            );
-        }
-
-        Cache::hset(
-            static::QUEUES["erudit.2{$this->lang}players_waiters"],
-            $User,
-            [
-                'time' => date('U'),
-                'options' => false
-            ]
-        );
-        return $this->caller->makeResponse(
-            [
-                'gameState' => Game::INIT_GAME_STATE,
-                'gameSubState' => Cache::hlen(static::QUEUES["erudit.2{$this->lang}players_waiters"]),
-                'gameWaitLimit' => $this->caller->gameWaitLimit
-            ]
-        );
+        return $this->storeTo2Players($User, $waiterData['options'] ?? []);
     }
 
     protected function stillWaitRatingPlayer()
@@ -493,69 +435,7 @@ class Queue
         }
     }
 
-    protected function want4Players($User)
-    {
-        // todo отключил 4ю очередь, чтобы меньше ждали
-        return false;
-
-        if (isset($this->POST['players_count']) && ($this->POST['players_count'] == 4)) {
-            return true;
-        }
-
-        if (isset($this->POST['players_count']) && ($this->POST['players_count'] == 2)) {
-            self::cleanUp($User);
-            return false;
-        }
-
-        if (Cache::hget(static::QUEUES["erudit.4{$this->lang}players_waiters"], $User)) {
-            self::cleanUp($User);
-            return true;
-        }
-
-        if (Cache::hget(static::QUEUES["erudit.2{$this->lang}players_waiters"], $User)) {
-            return false;
-        }
-
-
-        if ((Cache::hlen(static::QUEUES["erudit.2{$this->lang}players_waiters"]) == 1) && (strpos($User, 'ot') !== false)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function players4Waiting($User)
-    {
-        if ($cnt = Cache::hlen(static::QUEUES["erudit.4{$this->lang}players_waiters"])) {
-            if (!Cache::hget(static::QUEUES["erudit.4{$this->lang}players_waiters"], $User)) {
-                return true;
-            } else {
-                if ($cnt > 1) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    protected function timeToMake4Game()
-    {
-        $waitingPlayers = Cache::hgetall(static::QUEUES["erudit.4{$this->lang}players_waiters"]);
-        $maxTimeWaiting = 0;
-        foreach ($waitingPlayers as $player => $data) {
-            $data = unserialize($data);
-            if ((date('U') - $data['time']) > $maxTimeWaiting) {
-                $maxTimeWaiting = date('U') - $data['time'];
-            }
-        }
-        if ($maxTimeWaiting < $this->caller->gameWaitLimit) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    protected function tryNewGameSemaphore()
+    protected function tryNewGameSemaphore(): bool
     {
         if ($this->semaphoreLocked) {
             Cache::set('semaphore_waiting', 1);
@@ -579,7 +459,7 @@ class Queue
         return false;
     }
 
-    protected function makeGame($User, $queue)
+    protected function makeGame($User, $queue, $maxNumUsers = 2, $wishRating = null)
     {
         Cache::setex(
             static::CURRENT_GAME_KEY . $this->caller->currentGame = Cache::incr(static::GAMES_COUNTER),
@@ -592,8 +472,9 @@ class Queue
 
         $game_users = [];
         $this->caller->currentGameUsers = [];
+
         $waitingPlayers = Cache::hgetall(static::QUEUES["erudit.{$queue}{$this->lang}players_waiters"]);
-        $prefs = Cache::get(self::PREFS_KEY . $User);
+        $prefs = Cache::get(static::PREFS_KEY . $User);
 
         if (!isset($waitingPlayers[$User])) {
             $options = isset($this->POST['ochki_num'])
@@ -607,17 +488,22 @@ class Queue
                 : ($prefs ?: false);
 
             unset($waitingPlayers[$User]);
+            reset($waitingPlayers);
         }
 
         // Прописываем текущему юзеру - добавление в игру,  номер игры, удаляем из очереди ждунов
         $game_users[] = ['userCookie' => $User, 'options' => $options];
+
         self::cleanUp($User);
         Cache::setex(static::GET_GAME_KEY . $User, $this->caller->cacheTimeout, $this->caller->currentGame);
 
         $this->caller->currentGameUsers[] = $User;
-        $numUsers = 1;
 
         foreach ($waitingPlayers as $player => $data) {
+            if($wishRating && PlayerModel::getRatingByCookie($player) != $wishRating) {
+                continue;
+            }
+
             $prefs = Cache::get(static::PREFS_KEY . $player);
             $data = unserialize($data);
 
@@ -637,10 +523,14 @@ class Queue
             //Заполняем массив игроков
             $this->caller->currentGameUsers[] = $player;
 
-            $numUsers++;
-            if ($numUsers == ($queue == static::QUEUE_NUMS['invite'] ? 4 : $queue)) {
+            if (count($game_users) >= $maxNumUsers) {
                 break;
             }
+        }
+
+        if (count($game_users) < 2) {
+            // игра не собралась - отменяем, помещаем игрока обратно в очередь 2
+            return $this->storeTo2Players($User, $game_users[0]['options'] ?? []);
         }
 
         $this->caller->gameStatus['lang'] = ($this->lang == 'EN' ? 'EN' : 'RU');
@@ -691,9 +581,9 @@ class Queue
         Cache::set('semaphore_waiting', 0);
     }
 
-    public function storePlayersToQueue($User, $count = 2)
+    public function storePlayerToInviteQueue($User)
     {
-        if (!Cache::hget(static::QUEUES["erudit.{$count}{$this->lang}players_waiters"], $User)) {
+        if (!Cache::hget(static::QUEUES["erudit.invite{$this->lang}players_waiters"], $User)) {
             if (isset($this->POST['ochki_num'])) {
                 $options = $this->POST;
             } else {
@@ -701,7 +591,7 @@ class Queue
             }
 
             Cache::hset(
-                static::QUEUES["erudit.{$count}{$this->lang}players_waiters"],
+                static::QUEUES["erudit.invite{$this->lang}players_waiters"],
                 $User,
                 [
                     'time' => date('U'),
@@ -713,35 +603,7 @@ class Queue
         return $this->caller->makeResponse(
             [
                 'gameState' => Game::INIT_GAME_STATE,
-                'gameSubState' => Cache::hlen(static::QUEUES["erudit.{$count}{$this->lang}players_waiters"]),
-                'gameWaitLimit' => $this->caller->gameWaitLimit
-            ]
-        );
-    }
-
-    public function storeTo4Players($User)
-    {
-        if (!Cache::hget(static::QUEUES["erudit.4{$this->lang}players_waiters"], $User)) {
-            if (isset($this->POST['ochki_num'])) {
-                $options = $this->POST;
-            } else {
-                $options = false;
-            }
-
-            Cache::hset(
-                static::QUEUES["erudit.4{$this->lang}players_waiters"],
-                $User,
-                [
-                    'time' => date('U'),
-                    'options' => $options
-                ]
-            );
-        }
-
-        return $this->caller->makeResponse(
-            [
-                'gameState' => Game::INIT_GAME_STATE,
-                'gameSubState' => Cache::hlen(static::QUEUES["erudit.4{$this->lang}players_waiters"]),
+                'gameSubState' => Cache::hlen(static::QUEUES["erudit.invite{$this->lang}players_waiters"]),
                 'gameWaitLimit' => $this->caller->gameWaitLimit
             ]
         );
@@ -758,16 +620,20 @@ class Queue
                 }
             }
         }
+
         return false;
     }
 
-    protected function storeTo2Players($User)
+    protected function storeTo2Players($User, $options = [])
     {
-        if (isset($this->POST['ochki_num'])) {
-            $options = $this->POST;
-        } else {
-            $options = false;
+        if (empty($options)) {
+            if (isset($this->POST['ochki_num'])) {
+                $options = $this->POST;
+            } else {
+                $options = false;
+            }
         }
+
         if (!Cache::hget(static::QUEUES["erudit.2{$this->lang}players_waiters"], $User)) {
             Cache::hset(
                 static::QUEUES["erudit.2{$this->lang}players_waiters"],

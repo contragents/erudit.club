@@ -45,8 +45,8 @@ class StatsController extends BaseController
 
     public function Run()
     {
-        ini_set("display_errors", 1);
-        error_reporting(E_ALL);
+        // ini_set("display_errors", 1);
+        // error_reporting(E_ALL);
 
         return parent::Run();
     }

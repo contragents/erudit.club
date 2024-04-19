@@ -8,7 +8,7 @@ class GameController extends BaseController
     public function indexAction(): string
     {
         //return print_r(self::$Request, true);
-        ini_set("display_errors", 1); error_reporting(E_ALL);
+        // ini_set("display_errors", 1); error_reporting(E_ALL);
         $_GET['game_id'] = self::$Request[self::MAIN_PARAM];
 
         ob_start();

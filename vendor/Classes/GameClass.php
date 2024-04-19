@@ -162,9 +162,12 @@ class Game
 
             $this->gameStatus = Cache::get(static::GAME_STATUS_KEY . $this->currentGame);
             //Забрали статус игры из кэша
+
             try {
                 if (!isset($this->gameStatus[$this->User])) {
-                    $this->newGame();
+                    print $this->newGame();
+
+                    exit;
                 }
 
                 $this->numUser = $this->gameStatus[$this->User];
@@ -207,10 +210,6 @@ class Game
                 $this->gameStatus['users'][$this->numUser]['inactiveTurn'] = 1000;
                 //Обновили время активности, если это не закрытие вкладки
             }
-            if (isset($_POST['g']) && (strlen(strval($_POST['g'])) > 3)) {
-                $this->gameStatus['users'][$this->numUser]['userID'] = $_POST['g'];
-            }
-            unset($_POST['g']);
         }
     }
 
@@ -264,6 +263,7 @@ class Game
                 if ($game = Cache::get(static::GAME_STATUS_KEY . $i)) {
                     if (!isset($game['results'])) {
                         foreach ($game['users'] as $num => $user) {
+                            if (!isset($user['ID'])) {continue;}
                             if (strstr($user['ID'], 'botV3#') === false) {
                                 $players[$user['ID']] = [
                                     'cookie' => $user['ID'],
@@ -708,6 +708,7 @@ class Game
             $records = Prizes::playerCurrentRecords($user['ID'], $rating['playerName']);
             $recordsShown = 0;
             foreach ($records as $record) {
+                // todo переделать на ViewHelper
                 $recImgs .= "<img 
 								style=\"
 									cursor: pointer; 
@@ -1635,16 +1636,14 @@ class Game
 
     public function initGame()
     {
-        return (new $this->Queue($this->User, $this, $_POST + ['init_game' => true]))->doSomethingWithThisStuff(
-            (isset($_GET['lang']) && $_GET['lang'] == 'EN') ? $_GET['lang'] : '');
+        return (new $this->Queue($this->User, $this, $_POST + ['init_game' => true]))
+            ->doSomethingWithThisStuff($_GET['lang'] ?? '');
     }
 
     public function checkGameStatus()
     {
         if (!$this->currentGame) {
-            if ($this->Queue::isUserInInviteQueue($this->User)) {
-                return $this->startGame();
-            } elseif ($this->Queue::isUserInQueue($this->User)) {
+            if ($this->Queue::isUserInQueue($this->User)) {
                 return $this->startGame();
             }
 
@@ -1658,7 +1657,7 @@ class Game
             return $this->isBot() ? $this->initGame() : $this->makeResponse($chooseGameParams);
         }
 
-        if ($this->activeGameUsers() == 1) {
+        if ($this->activeGameUsers() < 2) {
             if (!isset($this->gameStatus['results'])) {
                 $this->storeGameResults($this->User);
                 $this->addToLog('остался в игре один - Победа!', $this->numUser);
@@ -1668,8 +1667,10 @@ class Game
             }
         }
 
+        $desk = Cache::get(static::CURRENT_GAME_KEY . $this->currentGame);
+
         if ($this->getUserStatus() == 'gameResults') {
-            $desk = Cache::get(static::CURRENT_GAME_KEY . $this->currentGame);
+
 
             $result = $this->gameStatus['results'];
             if (isset($result['winner'])) {
@@ -1717,8 +1718,6 @@ class Game
             if ($this->gameStatus['users'][$this->gameStatus['activeUser']]['lostTurns'] >= 3) {
                 $this->storeGameResults($this->lost3TurnsWinner($this->gameStatus['activeUser']));
 
-                $desk = Cache::get(static::CURRENT_GAME_KEY . $this->currentGame);
-
                 $result = $this->gameStatus['results'];
                 if (isset($result['winner'])) {
                     if ($result['winner'] == $this->User) {
@@ -1747,19 +1746,8 @@ class Game
 
         $userStatus = $this->getUserStatus();
 
-        if ($desk = Cache::get((static::CURRENT_GAME_KEY . $this->currentGame))) {
-            if ($userStatus == self::ERROR_STATUS) {
-                Cache::hset(
-                    self::BOT_ERRORS_KEY,
-                    time() % self::MAX_ERRORS,
-                    ['date' => date('Y-m-d H:i:s'), 'gameStatus' => $this->gameStatus]
-                );
-                return $this->makeResponse(
-                    ['gameState' => $userStatus, 'desk' => $desk]
-                );
-            } else {
-                return $this->makeResponse(['gameState' => $userStatus, 'desk' => $desk]);
-            }
+        if ($desk) {
+            return $this->makeResponse(['gameState' => $userStatus, 'desk' => $desk]);
         } else {
             if ($userStatus && $userStatus != self::ERROR_STATUS) {
                 return $this->makeResponse(['gameState' => $userStatus]);
@@ -1768,7 +1756,6 @@ class Game
                 return $this->newGame();
             }
         }
-
     }
 
     protected function endOfFishki()
@@ -1831,17 +1818,29 @@ class Game
             $this->updateUserStatus(self::OTHER_TURN_STATUS, $user['ID']);
         }
 
-        if ($this->activeGameUsers() < 2) { // Пользователь остался в игре один и выиграл
-            return $this->checkGameStatus();
-        }
-
         $isActiveUserFound = false;
 
-        while (!$isActiveUserFound) {
+        $i = 0;
+
+        while (!$isActiveUserFound && is_array($this->gameStatus['users']) && count($this->gameStatus['users']) > $i) {
             $nextActiveUser = ($this->gameStatus['activeUser'] + 1) % count($this->gameStatus['users']);
             $this->gameStatus['activeUser'] = $nextActiveUser;
             if ($this->gameStatus['users'][$nextActiveUser]['isActive']) {
                 $isActiveUserFound = true;
+            }
+
+            $i++;
+        }
+
+        if (!$isActiveUserFound) {
+            if (count($this->gameStatus['users'] ?? null)) {
+                $nextActiveUser = $this->numUser;
+                $this->gameStatus['activeUser'] = $nextActiveUser;
+            } else {
+                $this->storeGameResults($this->User);
+                $this->addToLog('остался в игре один - Победа!', $this->numUser);
+
+                return; // todo что делать если нет ни одного юзера - заканчиваем игру
             }
         }
 
@@ -1849,7 +1848,6 @@ class Game
         //Прописали статус новому активному пользователю
 
         $nextPreMyTurnUser = ($nextActiveUser + 1) % count($this->gameStatus['users']);
-
 
         $this->updateUserStatus(self::PRE_MY_TURN_STATUS, $this->gameStatus['users'][$nextPreMyTurnUser]['ID']);
         //Прописали статус следующему преМайТерн-юзеру
@@ -1860,7 +1858,7 @@ class Game
         $this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] = false;
     }
 
-    public function exitGame($numuser = false, $commitState = true) // todo проверит, кто вызывает этот метод
+    public function exitGame($numuser = false, $commitState = true) // todo проверить, кто вызывает этот метод
     {
         if (!$numuser) {
             $numuser = $this->numUser;
@@ -1879,7 +1877,7 @@ class Game
         }
     }
 
-    public function newGame() // todo проверит, кто вызывает этот метод
+    public function newGame() // todo проверить, кто вызывает этот метод
     {
         /** todo
          * Нужно доделать - уведомление остальных игроков,
@@ -2028,9 +2026,7 @@ class Game
             //Вернули статус начатой игры без обновления статусов в кеше
         }
 
-        return (new $this->Queue($this->User, $this, $_POST))->doSomethingWithThisStuff(
-            (isset($_GET['lang']) && $_GET['lang'] == 'EN') ? $_GET['lang'] : ''
-        );
+        return (new $this->Queue($this->User, $this, $_POST))->doSomethingWithThisStuff($_GET['lang'] ?? '');
     }
 
     protected function processInvites(&$arr)
@@ -2042,10 +2038,13 @@ class Game
             $arr['gameSubState'] = $gameSubState;
             $arr['inviteStatus'] = 'newGameStarting';
 
-            (new $this->Queue($this->User, $this, ['lang' => ($this->gameStatus['lang'] == 'EN' ? 'EN' : '')]))
-                ->storePlayersToQueue($this->User, 'invite');
-
             $this->exitGame($this->numUser);
+
+            /** @var $Queue Queue */
+
+            (new $this->Queue($this->User, $this, ['lang' => ($this->gameStatus['lang'] == 'EN' ? 'EN' : '')]))
+                ->storePlayerToInviteQueue($this->User);
+            // $this->Queue::setPlayerInitStatus($this->User);
 
             return;
         }
@@ -2062,7 +2061,7 @@ class Game
         if (!(isset($arr['inviteStatus']) && $arr['inviteStatus'] == 'newGameStarting')) {
             $arr['comments'] = $arr['comments'] ?? '';
             if ($this->gameStatus['invite'] == $this->User) {
-                $arr['comments'] .= "<br />Запрашиваем подтверждения соперников.<br />В игре осталось: $numActiveUsers";
+                $arr['comments'] .= "<br />Запрашиваем подтверждение соперников.<br />В игре осталось: $numActiveUsers";
                 $arr['inviteStatus'] = 'waiting';
             } else {
                 if ($numActiveUsers) {

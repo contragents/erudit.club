@@ -4,7 +4,6 @@ class QueuePrivate extends Queue
 {
     const QUEUES = [
         'erudit.rating_waiters' => 'erudit.private.rating_waiters',
-        'erudit.ratingEN_waiters' => 'erudit.private.ratingEN_waiters',
         'erudit.2players_waiters' => 'erudit.private.2players_waiters',
         'erudit.2ENplayers_waiters' => 'erudit.private.2ENplayers_waiters',
         'erudit.4players_waiters' => 'erudit.private.2ENplayers_waiters',

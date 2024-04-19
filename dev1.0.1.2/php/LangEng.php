@@ -32,14 +32,5 @@ class Eng extends Ru
         57 => ['x', 8, 1, 'soglas'],
         58 => ['y', 4, 2, 'glas'],
         59 => ['z', 10, 1, 'soglas'],
-        999 => ['*', 0, 10]];//2]];
-
-
-    private static $words = [];
-    private static $badWords = [];
-    private static $goodWords = [];
-    private static $goodWordsLinks = [];
-
-    private static $dictTable = 'dict';
-
+        999 => ['*', 0, 10]];
 }
