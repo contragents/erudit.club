@@ -1,5 +1,8 @@
 //
 function submitButtonFunction() {
+    if (!submitButtonActive()) {
+        return;
+    }
 
     buttons['submitButton']['svgObject'].disableInteractive();
     buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
@@ -26,8 +29,6 @@ function submitButtonFunction() {
 
 
 function checkButtonFunction() {
-    //if (bootBoxIsOpenedGlobal())        return;
-
     if (!checkButtonActive()) {
         return;
     }
@@ -473,8 +474,16 @@ function makeCheckButtonInactive(dialog) {
     dialog.addClass(CHECK_BUTTON_INACTIVE_CLASS);
 }
 
+function makeSubmitButtonInactive(dialog) {
+    dialog.addClass(SUBMIT_BUTTON_INACTIVE_CLASS);
+}
+
 function checkButtonActive() {
     return !$('.' + CHECK_BUTTON_INACTIVE_CLASS).length;
+}
+
+function submitButtonActive() {
+    return !$('.' + SUBMIT_BUTTON_INACTIVE_CLASS).length;
 }
 
 function playersButtonFunction() {
@@ -513,7 +522,9 @@ function playersButtonFunction() {
                 dialog
                     .find('.modal-content').css({'background-color': 'rgba(255, 255, 255, 0.7)'})
                     .find('img').css('background-color', 'rgba(0, 0, 0, 0)');
+
                 makeCheckButtonInactive(dialog);
+                makeSubmitButtonInactive(dialog);
                 
                 buttons['playersButton']['svgObject'].setInteractive();
                 buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + 'Otjat'));

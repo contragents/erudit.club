@@ -58,6 +58,7 @@ const BAD_REQUEST = 400;
 const PAGE_NOT_FOUND = 404;
 
 const CHECK_BUTTON_INACTIVE_CLASS = 'disable-check-button';
+const SUBMIT_BUTTON_INACTIVE_CLASS = 'disable-submit-button';
 
 var commonId = false;
 
