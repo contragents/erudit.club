@@ -19,7 +19,6 @@ class Game
     public $User;
     public $currentGame;
     public $currentGameUsers = false;
-    protected $isStateLocked = false;
     protected $gamePlayersWaiting = false; // Количество игроков, ожидающих начала игры
     public $gameWaitLimit; // Макс время ожидания начала игры
     public $ratingGameWaitLimit;// Время ожидания игрока с выбранным рейтингом
@@ -81,7 +80,6 @@ class Game
 
     const ERROR_STATUS = 'error';
 
-    const MAX_ERRORS = 100;
     const GAMES_ENDED_KEY = 'erudit.games_ended';
     const STATS_FAILED = 'erudit.games_statistics_failed';
     const NUM_RATING_PLAYERS_KEY = 'erudit.num_rating_players';
@@ -118,44 +116,24 @@ class Game
 
         $this->User = $this->validateCookie($_COOKIE['erudit_user_session_ID']);
 
+        // Если не удалось дождаться лока по текущему игроку, то посылаем ошибку и выходим
+        if(!Cache::waitLock($this->User)) {
+            \BadRequest::sendBadRequest(
+                ['err_msg' => 'lock error'],
+                $this->isBot()
+            );
+        }
+
         $this->currentGame = Cache::get($this->Queue::GET_GAME_KEY . $this->User);
 
         if (!$this->currentGame) {
             $this->currentGame = false;
 
-            if (!empty($this->User)) {
-                $checkEndGame = Cache::get(self::CHECK_STATUS_RESULTS_KEY . $this->User);
-
-                if ($checkEndGame && ($checkEndGame < $_GET['queryNumber'])) {
-                    // Проверяем если вкладка с игрой осталась открытой, но игра уже стерта из кеша
-                    print $this->makeResponse(['gameState' => 'noGame']);
-                    if (!$this->isBot()) {
-                        exit;
-                    }
-                } else {
-                    Cache::del(self::CHECK_STATUS_RESULTS_KEY . $this->User);
-                }
-
-                if (($_GET['gameNumber'] ?? 0) > 0) {
-                    print $this->makeResponse(
-                        ['gameState' => 'noGame', 'comments' => 'Игра закончена. Начните новую игру!']
-                    );
-                }
-
-                if (($_GET['queryNumber'] ?? 1) >= 10 && !$this->Queue::isUserInQueue($this->User) && !$this->isUserInCabinet()) {
-                    print $this->makeResponse(
-                        ['gameState' => 'noGame', 'comments' => 'Игра закончена. Начните новую игру!']
-                    );
-
-                    if (!$this->isBot()) {
-                        exit;
-                    }
-                }
-            }
+            return;
         } else {
             $this->currentGameUsers = Cache::get($this->Queue::GET_GAME_KEY . "{$this->currentGame}_users");
 
-            if (!$this->lockTry()) {
+            if (!Cache::waitLock($this->currentGame)) {
                 //Вышли с Десинком, если не смогли получить Лок
                 return $this->desync();
             }
@@ -175,7 +153,6 @@ class Game
 
                 if (isset($_GET['page_hidden']) && $_GET['page_hidden'] == 'true') {
                     if (isset($_GET['queryNumber']) && $_GET['queryNumber'] < ($this->gameStatus['users'][$this->numUser]['last_request_num'] ?? 0)) {
-                        $this->unlock();
                         throw new \BadRequest('Num packet error when returned from page_hidden state');
                     }
                 }
@@ -213,13 +190,6 @@ class Game
         }
     }
 
-    public function __destruct()
-    {
-        if ($this->isStateLocked) {
-            $this->unlock();
-        }
-    }
-
     protected function destruct()
     {
         if ($this->currentGame) {
@@ -239,19 +209,6 @@ class Game
         }
 
         Cache::setex(static::GAME_USER_KEY . $this->User . '_last_activity', $this->cacheTimeout, date('U'));
-        $this->unlock();
-        //Разлочили сохранение состояния
-    }
-
-    protected function unlock()
-    {
-        Cache::hset(static::GAMES_KEY . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 0);
-        Cache::hdel(
-            static::GAMES_KEY . date('Y_m_d') . '_locks',
-            $this->currentGame . '_lock_time'
-        );
-
-        $this->isStateLocked = false;
     }
 
     public function onlinePlayers()
@@ -1258,53 +1215,9 @@ class Game
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-    public function lockTry(): bool
-    {
-        if ($this->isStateLocked) {
-            return true;
-        }
-
-        $cycleBeginTime = date('U');
-
-        //Будем ждать освобождения семафора, не более $this->turnDeltaTime
-        while ((date('U') - $cycleBeginTime) <= $this->turnDeltaTime) {
-            // Получаем время блокировки
-            $lockTime = Cache::hget(
-                static::GAMES_KEY . date('Y_m_d') . '_locks',
-                $this->currentGame . '_lock_time'
-            ) ?: 0;
-
-            if (
-                Cache::hincrby(static::GAMES_KEY . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1) === 1
-                ||
-                (date('U') - $lockTime) > $this->turnDeltaTime
-            ) {
-                // Обновляем время блокировки
-                Cache::hset(
-                    static::GAMES_KEY . date('Y_m_d') . '_locks',
-                    $this->currentGame . '_lock_time',
-                    date('U')
-                );
-
-                // ставим блокировку
-                Cache::hset(static::GAMES_KEY . date('Y_m_d') . '_locks', $this->currentGame . '_lock', 1);
-
-                $this->isStateLocked = true;
-
-                return true;
-                //Семафор освободился
-            }
-
-            usleep(100000);
-        }
-
-        //Ждали слишком долго - возвращаем десинхрон
-        return false;
-    }
-
     public function botUnlock(): void
     {
-        $this->unlock();
+        // todo как рахзлочить игру для бота в Cache::__destruct
     }
 
     protected function desync($queryNumber = false)

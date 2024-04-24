@@ -2,7 +2,12 @@
 
 class Cache
 {
+    const LOCKS_KEY = 'locks_';
+    const LOCK_RETRY_TIME = 10000;
+    const LOCK_TRIES = 200;
+
     public static $_instance = null;
+    private static array $locks = [];
 
     public $redis;
 
@@ -88,6 +93,16 @@ class Cache
     {
         self::checkInstance();
 
+        if (is_array($arguments[count($arguments) - 1]) && isset($arguments[count($arguments) - 1]['lock'])) {
+            $lockKey = $arguments[count($arguments) - 1]['lock'];
+
+            if(!self::lock($lockKey)) {
+                return false;
+            }
+
+            unset($arguments[count($arguments) - 1]);
+        }
+
         // Сериализуем все массивы в параметрах, кроме z-команд для упорядоченных множеств
         // т.к. они могут принимать массивы в качестве параметров
         if (substr($name, 0, 1) != 'z') {
@@ -148,5 +163,49 @@ class Cache
 
         self::$_instance = new self;
         return self::$_instance;
+    }
+
+    public static function waitLock($lockKey): bool
+    {
+        $lockTries = 0;
+
+        while($lockTries < self::LOCK_TRIES) {
+            if (self::lock($lockKey)) {
+                return true;
+            }
+
+            $lockTries++;
+            usleep(self::LOCK_RETRY_TIME);
+        }
+
+        return false;
+    }
+
+    /**
+     * Делаем 1 попытку получить локи и возвращаем true, false;
+     * @param $lockKey
+     * @return bool
+     */
+    private static function lock($lockKey): bool
+    {
+        if (self::$locks[$lockKey] ?? false) {
+            return true;
+        }
+
+        if (self::$_instance->redis->incr(self::LOCKS_KEY . $lockKey) == 1) {
+            self::$_instance->redis->setex(self::LOCKS_KEY . $lockKey, self::LOCK_RETRY_TIME * self::LOCK_TRIES, 1);
+            self::$locks[$lockKey] = true;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function __destruct()
+    {
+        foreach(self::$locks as $lockKey => $nothing) {
+            self::$_instance->redis->del(self::LOCKS_KEY . $lockKey);
+        }
     }
 }
