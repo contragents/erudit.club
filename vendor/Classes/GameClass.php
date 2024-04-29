@@ -1260,13 +1260,14 @@ class Game
                 LogModel::add(
                     [
                         LogModel::CATEGORY_FIELD => LogModel::CATEGORY_SUBMIT_ERROR,
-                        LogModel::MESSAGE_FIELD => json_encode([
-                                                                   'game_status' => $this->gameStatus,
-                                                                   'User' => $this->User,
-                                                                   'cells' => $cells,
-                                                                   'desk' => $desk,
-                                                               ],
-                                                               JSON_UNESCAPED_UNICODE
+                        LogModel::MESSAGE_FIELD => json_encode(
+                            [
+                                'game_status' => $this->gameStatus,
+                                'User' => $this->User,
+                                'cells' => $cells,
+                                'desk' => $desk,
+                            ],
+                            JSON_UNESCAPED_UNICODE
                         )
                     ]
                 );

@@ -254,14 +254,7 @@ class Game extends \Game
             shuffle($this->gameStatus['bankFishki']);
         }
 
-        $this->gameStatus['users'][$this->numUser]['lostTurns']++;
-        //Увеличили число пропущенных подряд ходов
-
-        if ($this->gameStatus['users'][$this->numUser]['lostTurns'] >= 3) {
-            $this->storeGameResults($this->lost3TurnsWinner($this->numUser));
-        } else {
-            $this->nextTurn();
-        }
+        $this->nextTurn();
 
         return $this->checkGameStatus();
     }

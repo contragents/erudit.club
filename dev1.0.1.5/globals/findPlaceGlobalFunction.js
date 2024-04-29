@@ -1,4 +1,11 @@
 //
+function checkZvezdaGlobal(gameObject) {
+    if (gameObject.getData('letter') > '999') {
+
+        switchFishkaGlobal(999, gameObject);
+    }
+}
+
 function findPlaceGlobal(gameObject, oldX, oldY, cellX, cellY) {
     if ((cells[cellX][cellY][0] === false) && (oldX == 1) && (oldY == 1)) {
         oldX = 1;
@@ -126,31 +133,10 @@ function chooseLetterGlobal(gameObject) {
             label: bukvy,
             className: lang == 'EN' ? 'button1' : 'button1',
             callback: function () {
-                var _this = window.game.scene.scenes[gameScene];
-                var newLetter = getFishkaGlobal(i + 1 + 999, gameObject.x, gameObject.y, _this, true, userFishkaSet);
-                newLetter.setData('lotokX', false);
-                newLetter.setData('lotokY', false);
-                newLetter.setData('cellX', gameObject.getData('cellX'));
-                newLetter.setData('cellY', gameObject.getData('cellY'));
-
-                if (gameObject.getData('isTemporary') == true) {
-                    newLetter.setData('isTemporary', true);
-                    newLetter.setData('zvezdaFrom', gameObject.getData('zvezdaFrom'));
-                    cells[0 + newLetter.getData('cellX')][0 + newLetter.getData('cellY')][2] = newLetter.getData('zvezdaFrom');
-                }
-
-                cells[0 + newLetter.getData('cellX')][0 + newLetter.getData('cellY')][1] = newLetter.getData('letter');
-                cells[0 + newLetter.getData('cellX')][0 + newLetter.getData('cellY')][3] = userFishkaSet;
-
-
-                for (let k in container)
-                    if (container[k] == gameObject) {
-                        gameObject.destroy();
-                        container.splice(k, 1);
-                        break;
-                    }
-                container.push(newLetter);
+                switchFishkaGlobal(i + 1 + 999, gameObject);
                 chooseFishka = false;
+
+                return;
             }
         }
     }
@@ -162,4 +148,36 @@ function chooseLetterGlobal(gameObject) {
     });
 
     enableButtons();
+}
+
+function switchFishkaGlobal(letterNum, gameObject) {
+    const _this = window.game.scene.scenes[gameScene];
+    let newLetter = getFishkaGlobal(letterNum, gameObject.x, gameObject.y, _this, true, userFishkaSet);
+    newLetter.setData('lotokX', false);
+    newLetter.setData('lotokY', false);
+    newLetter.setData('cellX', gameObject.getData('cellX'));
+    newLetter.setData('cellY', gameObject.getData('cellY'));
+
+    if (gameObject.getData('isTemporary') == true) {
+        newLetter.setData('isTemporary', true);
+        newLetter.setData('zvezdaFrom', gameObject.getData('zvezdaFrom'));
+        if(newLetter.getData('cellX') !== false) {
+            cells[0 + newLetter.getData('cellX')][0 + newLetter.getData('cellY')][2] = newLetter.getData('zvezdaFrom');
+        }
+    }
+
+    if(newLetter.getData('cellX') !== false) {
+        cells[0 + newLetter.getData('cellX')][0 + newLetter.getData('cellY')][1] = newLetter.getData('letter');
+        cells[0 + newLetter.getData('cellX')][0 + newLetter.getData('cellY')][3] = userFishkaSet;
+    }
+
+
+    for (let k in container)
+        if (container[k] == gameObject) {
+            gameObject.destroy();
+            container.splice(k, 1);
+            break;
+        }
+
+    container.push(newLetter);
 }

@@ -40,12 +40,13 @@ this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
 
 this.input.on('dragend', function (pointer, gameObject) {
 
-    if (gameObject.x > stepX)
-        if (gameObject.y < ground.height) {
-            let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
-            let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
-            findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
-        }
+    if (gameObject.x > stepX && gameObject.y < ground.height) {
+        let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
+        let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
+        findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
+    } else {
+        checkZvezdaGlobal(gameObject);
+    }
 
     gameObject.depth = 1;
 });
