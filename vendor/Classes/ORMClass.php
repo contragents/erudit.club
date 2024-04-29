@@ -56,6 +56,16 @@ class ORM
         return ' SET ' . implode(',', $fields);
     }
 
+    public static function whereIn(string $fieldName, array $values): string
+    {
+        return " WHERE $fieldName IN (" . implode(', ', $values) . ') ';
+    }
+
+    public static function andWhereIn(string $fieldName, array $values): string
+    {
+        return " AND $fieldName IN (" . implode(',', $values) . ') ';
+    }
+
     public static function where($fieldName, $cond, $value, $isRaw = false)
     {
         return ' WHERE ' . self::getWhereCondition($fieldName, $cond, $value, $isRaw);

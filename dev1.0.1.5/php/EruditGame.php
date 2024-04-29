@@ -617,7 +617,7 @@ class Game extends \Game
             } else {
                 $preMyTurnUser = count($this->gameStatus['users']) + $ost;
             }
-            $this->updateUserStatus(self::PRE_MY_TURN_STATUS, $preMyTurnUser);
+            $this->updateUserStatus(self::PRE_MY_TURN_STATUS, $this->currentGameUsers[$preMyTurnUser]);
             //Вычислили игрока, идущего за первым и дали ему статус преМайТерн
 
             foreach ($this->gameStatus['users'] as $num => $user) {

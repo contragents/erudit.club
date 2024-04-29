@@ -217,7 +217,7 @@ class BaseModel
                     if (
                         !is_array($value[$num])
                         ||
-                        (count($value[$num]) > TeaserModel::TEASERS_IN_CHUNK) // todo разбить по чанкам
+                        (count($value[$num]) > 1000) // todo разбить по чанкам
                         ||
                         empty($value[$num])
                     ) {
@@ -248,7 +248,7 @@ class BaseModel
                 if (
                     !is_array($value)
                     ||
-                    (count($value) > TeaserModel::TEASERS_IN_CHUNK)
+                    (count($value) > 1000)
                     ||
                     empty($value)
                 ) {
@@ -372,8 +372,6 @@ class BaseModel
             . $isDelited
             . ORM::orderBy('id')
             . ORM::limit(1);
-
-        //"SELECT * FROM " . static::TABLE_NAME . " WHERE id > $id $isDelited ORDER BY id ASC LIMIT 1";
 
         return DB::queryArray($query)[0] ?? [];
     }
