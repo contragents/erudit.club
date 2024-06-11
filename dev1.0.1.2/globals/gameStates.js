@@ -913,6 +913,7 @@ function commonCallback(data) {
                     ||
                     ((data['chat'][k].indexOf('Новости') + 1) === 1))
             ) {
+                hasIncomingMessages = true;
                 buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm'));
                 buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', true);
             }

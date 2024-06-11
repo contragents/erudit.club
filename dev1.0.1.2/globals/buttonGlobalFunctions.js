@@ -384,26 +384,27 @@ function chatButtonFunction() {
             },
             complain: {
                 label: 'Пожаловаться',
-                className: 'ml-5 btn-danger',
+                className: 'ml-5 ' + (hasIncomingMessages ? 'btn-danger' : 'btn-light'),
                 callback: function () {
-
-                    fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
-                        .then((data) => {
-                            if (data == '')
-                                var responseText = 'Ошибка';
-                            else
-                                var responseText = data['message'];
-                            dialog2 = bootbox.alert({
-                                message: responseText,
-                                size: 'small'
+                    if (hasIncomingMessages) {
+                        fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
+                            .then((data) => {
+                                if (data == '')
+                                    var responseText = 'Ошибка';
+                                else
+                                    var responseText = data['message'];
+                                dialog2 = bootbox.alert({
+                                    message: responseText,
+                                    size: 'small'
+                                });
+                                setTimeout(
+                                    function () {
+                                        dialog2.find(".bootbox-close-button").trigger("click");
+                                    }
+                                    , 5000
+                                );
                             });
-                            setTimeout(
-                                function () {
-                                    dialog2.find(".bootbox-close-button").trigger("click");
-                                }
-                                , 5000
-                            );
-                        });
+                    }
 
                     return false;
                 }

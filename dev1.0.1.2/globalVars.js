@@ -199,6 +199,7 @@ var responseData = [];
 var lastflor = 0;
 var gameLog = [];
 var chatLog = [];
+var hasIncomingMessages = false;
 var intervalId = 0;
 var vremia = false;
 var vremiaMinutes = false;
