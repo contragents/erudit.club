@@ -27,24 +27,6 @@ class Players
 
     public static function getTopPlayer($numTop = 1): array
     {
-        // todo remove after ORM query tested
-        $topQuery = "SELECT
-	max( rating ) AS rating,
-	max( rating_changed_date ) AS updated_at,
-	common_id,
-	max( user_id ) AS user_id,
-    max( users.`name` ) AS name,
-	max( users.avatar_url ) AS avatar_url 
-FROM
-	( SELECT * FROM players WHERE common_id > 0 ORDER BY rating DESC LIMIT " . ($numTop * 10) . " ) AS p1
-	LEFT JOIN player_names ON some_id = user_id
-	LEFT JOIN users ON users.id = common_id 
-GROUP BY
-	common_id 
-ORDER BY
-	max( rating ) DESC 
-	LIMIT $numTop";
-
         $topQuery = ORM::select(
                 [
                     'max( rating ) AS rating',
