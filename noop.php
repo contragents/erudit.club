@@ -1,5 +1,5 @@
 <?php
-
+/*
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 
@@ -66,6 +66,7 @@ for ($i = 0; $i <= NUM_CYCLES; $i++) {
 </table>
 <?php
 exit;
+*/
 
 $url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest';
 $parameters = [
