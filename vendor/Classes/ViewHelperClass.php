@@ -73,6 +73,7 @@ class ViewHelper
                         AchievesModel::ACHIEVES_ELEMENT_ID,
                         "$baseUrl&page=$i"
                     ),
+                    'href' => "$baseUrl&page=$i",
                     'class' => "link-underline-primary",
                 ]
             );
@@ -89,7 +90,7 @@ class ViewHelper
 
     public static function onClick(string $function, string $elementId, string $url): string
     {
-        return "$function('$elementId', '$url')";
+        return "$function('$elementId', '$url'); return false;";
     }
 
     public static function br(): string

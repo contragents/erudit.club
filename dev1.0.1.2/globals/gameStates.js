@@ -352,7 +352,12 @@ var gameStates = {
                             return true;
                         }
                     },
-                    engGame: {
+                    ...(commonId == 26907 && { telegram: {
+                        label: 'Перейти на Telegram',
+                            className: 'btn-danger',
+                            callback: function () {document.location='https://t.me/erudit_club_bot/?start='+commonId; return false;},
+                        } }),
+                    ...(commonId != 26907 && {engGame: {
                         label: '&nbsp;&nbsp;In English!&nbsp;&nbsp;&nbsp;',
                         className: 'btn-danger',
                         callback: function () {
@@ -374,7 +379,7 @@ var gameStates = {
 
                             return true;
                         }
-                    }
+                    }})
                 }
             });
         }

@@ -27,6 +27,13 @@ class StatsAchievesGamesView extends StatsAchievesView
                                             'refresh' => '1',
                                         ]
                                     )),
+                                'href' => StatsController::getUrl(
+                                    'view',
+                                    [
+                                        'common_id' => StatsController::$Request['common_id'] ?? '',
+                                        'refresh' => '1',
+                                    ]
+                                ),
                                 'class' => "link-underline-primary",
                             ]
                         )
