@@ -1,0 +1,38 @@
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+
+# For details see man 4 crontabs
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name  command to be executed
+10 13 20 apr,jul,oct,jan * root certbot renew
+30 13 20 apr,jul,oct,jan * root service nginx reload
+10 13 9 mar,jun,sep,dec * root certbot renew
+30 13 9 mar,jun,sep,dec * root service nginx reload
+
+#*/5 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/clientLists.php oracle > /dev/null 2>&1
+##*/5 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/clientLists.php oracle > /dev/null 2>&1
+##*/5 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/clientLists.php oracle > /dev/null 2>&1
+##*/5 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/clientLists.php oracle > /dev/null 2>&1
+
+#*/5 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/newBotsGenV3.php oracle > /dev/null 2>&1
+
+#*/5 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/clientListsENG.php oracle > /dev/null 2>&1
+*/5 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/newBotsGenV3ENG.php oracle > /dev/null 2>&1
+
+
+*/20 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/games_statistics.php oracle > /dev/null 2>&1
+0 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/topChecker.php > /dev/null 2>&1
+
+50 4 * * * root php /var/www/erudit.club/yandex1.0.1.1/php/bots/redisDailyCleaner.php > /dev/null 2>&1
+#
+* * * * * root php /var/www/invest.legal/private/command/today_worker.php > /dev/null 2>&1
+* * * * * root php /var/www/invest.legal/private/command/trader_worker.php > /dev/null 2>&1
+

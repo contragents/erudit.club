@@ -31,7 +31,7 @@ class StatsAchievesView extends BaseView
                             str_replace($filter, 'none', $baseUrlPage)
                             . (StatsController::$Request[$filter] ?? false ? '' : "&$filter=1")
                         ),
-                        'href' => str_replace($filter, 'none', $baseUrlPage)
+                        'href' => '/' . str_replace($filter, 'none', $baseUrlPage)
                             . (StatsController::$Request[$filter] ?? false ? '' : "&$filter=1"),
                         'style' => 'opacity: ' . (StatsController::$Request[$filter] ?? false ? self::OFF_OPACITY : 1),
                         'title' => StatsController::$Request[$filter] ?? false ? 'Снять фильтр' : 'Фильтровать'
@@ -61,7 +61,7 @@ class StatsAchievesView extends BaseView
                                             'refresh' => '1',
                                         ]
                                     )),
-                                'href' => StatsController::getUrl(
+                                'href' => '/' . StatsController::getUrl(
                                     'games',
                                     [
                                         'common_id' => StatsController::$Request['common_id'] ?? '',

@@ -13,6 +13,6 @@ if ($_GET['word'] == '') {
 }
 
 include('yandex1.0.1.1/php/word.php');
-include('tpl/main_footer.php');
+include (__DIR__ . '/private/MVC/View/Tpl/main_footer.php');
 
 exit();

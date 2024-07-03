@@ -220,7 +220,7 @@ slovo = '" . urldecode($_GET['word']) . "';";
         $canonical = isset($_GET['voc'])
             ? ('<link rel="canonical" href="https://эрудит.club/dict/' . urlencode($_GET['word']) . '" />')
             : '';
-        include(__DIR__ . '/../../tpl/main_header.php');
+        include(__DIR__ . '/../../private/MVC/View/Tpl/main_header.php');
         print "<h1>{$_GET['word']}</h1>";
     }
 

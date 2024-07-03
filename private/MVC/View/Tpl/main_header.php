@@ -41,10 +41,11 @@
                 </nav>
             </div>
             <div class="logo" style="display:inline-block;">
-                <form>
+                <form action="/dict/">
                     <fieldset id="SearchForm" class="search">
-                        <input type="text" id="form-query" name="search" value="" placeholder="Искать слово"> <input
-                                type="submit" id="searchInfo" name="submit" value="Найти!" title="Поиск"></fieldset>
+                        <input type="text" id="form-query" name="search" value="" placeholder="Искать слово">
+                        <input type="submit" id="searchInfo" name="submit" value="Найти!" title="Поиск">
+                    </fieldset>
                 </form>
             </div>
         </div>

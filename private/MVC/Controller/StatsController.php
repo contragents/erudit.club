@@ -17,12 +17,15 @@ class StatsController extends BaseController
             . (!empty($params)
                 ? ('?' . implode(
                         '&',
-                        array_map(
-                            fn($param, $value) => !in_array($param, $excludedParams) ? "$param=$value" : null,
-                            array_keys($params),
-                            $params
+                        array_filter(
+                            array_map(
+                                fn($param, $value) => !in_array($param, $excludedParams) ? "$param=$value" : null,
+                                array_keys($params),
+                                $params
+                            )
                         )
-                    ))
+                    )
+                )
                 : '');
     }
 
@@ -92,8 +95,13 @@ class StatsController extends BaseController
         if (BaseController::isAjaxRequest()) {
             return StatsAchievesView::render($baseUrl, $baseUrlPage, $achieves, $achievesCount);
         } else {
-            return StatsAchievesView::renderFull([$baseUrl, $baseUrlPage, $achieves, $achievesCount]);
+            return 'not AJAX' . StatsAchievesView::renderFull([$baseUrl, $baseUrlPage, $achieves, $achievesCount]);
         }
+    }
+
+    public function testAction()
+    {
+        return var_export(self::isAjaxRequest(), true);
     }
 
     public function gamesAction()
@@ -119,6 +127,12 @@ class StatsController extends BaseController
             $opponentStats = AchievesModel::getStatsVsOpponent(self::$Request['common_id'], self::getGamesFilters()[self::FILTER_PLAYER_PARAM]);
         } else $opponentStats = false;
 
-        return StatsAchievesGamesView::render($baseUrl, $baseUrlPage, $games, $gamesCount, $opponentStats);
+
+        if (BaseController::isAjaxRequest()) {
+            return StatsAchievesGamesView::render($baseUrl, $baseUrlPage, $games, $gamesCount, $opponentStats);
+        } else {
+            return StatsAchievesGamesView::renderFull([$baseUrl, $baseUrlPage, $games, $gamesCount, $opponentStats]);
+        }
+
     }
 }

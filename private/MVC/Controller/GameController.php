@@ -15,9 +15,9 @@ class GameController extends BaseController
 
         include(__DIR__ . '/../../../yandex1.0.1.1/php/autoload.php');
         $title = 'Игра №' . $_GET['game_id'];
-        include (__DIR__ . '/../../../tpl/main_header.php');
+        include (__DIR__ . '/../View/Tpl/main_header.php');
         include(__DIR__ . '/../../../yandex1.0.1.1/php/game_page.php');
-        include (__DIR__ . '/../../../tpl/main_footer.php');
+        include (__DIR__ . '/../View/Tpl/main_footer.php');
 
         return ob_get_clean();
     }
