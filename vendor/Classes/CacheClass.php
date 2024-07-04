@@ -165,6 +165,12 @@ class Cache
         return self::$_instance;
     }
 
+    public static function unlock($lockKey): void
+    {
+        self::$_instance->redis->del(self::LOCKS_KEY . $lockKey);
+        unset(self::$locks[$lockKey]);
+    }
+
     public static function waitLock($lockKey): bool
     {
         $lockTries = 0;

@@ -118,10 +118,12 @@ class Game
 
         // Если не удалось дождаться лока по текущему игроку, то посылаем ошибку и выходим
         if(!Cache::waitLock($this->User)) {
-            \BadRequest::sendBadRequest(
+            Cache::unlock($this->User);
+            Cache::waitLock($this->User);
+            /*\BadRequest::sendBadRequest(
                 ['err_msg' => 'lock error'],
                 $this->isBot()
-            );
+            );*/
         }
 
         $this->currentGame = Cache::get($this->Queue::GET_GAME_KEY . $this->User);

@@ -5,6 +5,8 @@ class BaseController
     public static $Request;
     public $Action;
 
+    const COMMON_URL = 'game/';
+
     const MAIN_PARAM = 'id';
 
     const VIEW_PATH = __DIR__ . '/../View/';
@@ -20,6 +22,25 @@ class BaseController
     {
         return (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])
             && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+    }
+
+    public static function getUrl(string $action, array $params = [], array $excludedParams = [])
+    {
+        return static::COMMON_URL
+            . $action . '/'
+            . (!empty($params)
+                ? ('?' . implode(
+                        '&',
+                        array_filter(
+                            array_map(
+                                fn($param, $value) => !in_array($param, $excludedParams) ? "$param=$value" : null,
+                                array_keys($params),
+                                $params
+                            )
+                        )
+                    )
+                )
+                : '');
     }
 
     public function Run()

@@ -49,7 +49,7 @@ class ViewHelper
             . $content;
     }
 
-    private static function tagClose(string $tag)
+    public static function tagClose(string $tag)
     {
         return "</$tag>";
     }

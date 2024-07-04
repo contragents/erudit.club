@@ -15,7 +15,7 @@ class StatsAchievesGamesView extends StatsAchievesView
                         $games,
                         ViewHelper::tag(
                             'a',
-                            self::PLAYER_ACHIEVES_MSG . ' ' . ViewHelper::tag('strong',AchievesModel::getPlayerNameByCommonId(StatsController::$Request['common_id'] ?? 0)),
+                            self::PLAYER_ACHIEVES_MSG . ' ' . ViewHelper::tag('strong', AchievesModel::getPlayerNameByCommonId(StatsController::$Request['common_id'] ?? 0)),
                             [
                                 'onClick' => ViewHelper::onClick(
                                     'refreshId',
@@ -37,7 +37,13 @@ class StatsAchievesGamesView extends StatsAchievesView
                                 'class' => "link-underline-primary",
                             ]
                         )
-                        . ' | Партии',
+                        . ' | Партии'
+                        . (
+                            (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? false)
+                                ? ' против игрока '
+                                    . AchievesModel::getPlayerNameByCommonId(StatsController::$Request[StatsController::FILTER_PLAYER_PARAM])
+                                : ''
+                            ),
                         $attributeLabels
                     ),
                     ['id' => AchievesModel::ACHIEVES_ELEMENT_ID]

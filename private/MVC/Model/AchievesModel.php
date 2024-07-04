@@ -219,7 +219,18 @@ class AchievesModel extends BaseModel
                 self::GAME_DATE_FIELD =>
                     ViewHelper::tag('span', date('Y-m-d', $row[self::GAME_DATE_FIELD]),[
                         'style' => 'white-space: nowrap;'
-                    ]),
+                    ])
+                . (BaseController::isAjaxRequest()
+                        ? ''
+                        : ViewHelper::tag(
+                            'a',
+                            ' ...',
+                            [
+                                'href' => '/' . GameController::getUrl($row[self::GAME_ID_FIELD]),
+                                'title' => 'Перейти в игру'
+                            ]
+                        )
+                    ),
                 self::YOUR_RESULT => $row[self::WINNER_ID_FIELD] == $commonId
                     ? ViewHelper::tag('span','Победа', ['class' => 'badge badge-success'])
                     : ViewHelper::tag('span','Проигрыш', ['class' => 'badge badge-warning']),
@@ -227,7 +238,20 @@ class AchievesModel extends BaseModel
                     ? ((string)($row[self::RATING_OLD_1_FIELD] + $row[self::RATING_DELTA_1_FIELD]) . ' ('. ($row[self::RATING_DELTA_1_FIELD] > 0 ? '+' : '') . $row[self::RATING_DELTA_1_FIELD] .')')
                     : ((string)($row[self::RATING_OLD_2_FIELD] + $row[self::RATING_DELTA_2_FIELD]) . ' ('. ($row[self::RATING_DELTA_2_FIELD] > 0 ? '+' : '') . $row[self::RATING_DELTA_2_FIELD] .')'),
                 self::OPPONENT_COMMON_ID =>
-                    ViewHelper::tag(
+                    (BaseController::isAjaxRequest()
+                        ? ''
+                        : ViewHelper::tagOpen(
+                            'a',
+                            '',
+                            [
+                                'href' => '/' . StatsController::getUrl(
+                                        'games',
+                                        ['common_id' => $opponentCommonId,]
+                                    ),
+                                'title' => 'Перейти к статистике игрока'
+                            ]
+                        ))
+                    . ViewHelper::tag(
                         'img',
                         '',
                         [
@@ -238,9 +262,12 @@ class AchievesModel extends BaseModel
                             'max-width' => '100px',
                         ]
                     )
+                    . (BaseController::isAjaxRequest()
+                        ? ''
+                        : ViewHelper::tagClose('a'))
                     . ViewHelper::tagOpen('br')
                     . ViewHelper::tag(
-                        'button',
+                        BaseController::isAjaxRequest() ? 'button' : 'a',
                         self::getPlayerNameByCommonId($opponentCommonId),
                         [
                             'class' => 'btn btn-sm ' . (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
@@ -262,7 +289,18 @@ class AchievesModel extends BaseModel
                                             : StatsController::FILTER_PLAYER_PARAM
                                         => $opponentCommonId,
                                     ]
-                                ))
+                                )),
+                            (BaseController::isAjaxRequest() ? 'nothing' : 'href') => '/' . StatsController::getUrl(
+                                'games',
+                                [
+                                    'common_id' => StatsController::$Request['common_id'] ?? '',
+                                    'refresh' => '1',
+                                    (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
+                                        ? 'none'
+                                        : StatsController::FILTER_PLAYER_PARAM
+                                    => $opponentCommonId,
+                                ]
+                            ),
                         ]
                     )
             ];

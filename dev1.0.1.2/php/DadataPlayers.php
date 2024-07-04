@@ -172,6 +172,8 @@ class Players
     static function getAvatarUrl(
         int $commonID
     ) {
+        return PlayerModel::getAvatarUrl($commonID);
+
         $avatarUrl = UserModel::getOne($commonID)['avatar_url'] ?? false;
 
         if (!empty($avatarUrl)) {
@@ -194,6 +196,13 @@ class Players
     static function getPlayerName(
         array $user = ['ID' => 'cookie', 'common_id' => 15, 'userID' => 'user_ID']
     ) {
+
+        if (strpos($user['ID'], 'bot') !== false) {
+            return Game::$configStatic['botNames'][substr($user['ID'], (strlen($user['ID']) == 7 ? -1 : -2))];
+        }
+
+        return PlayerModel::getPlayerName($user);
+
         if (strpos($user['ID'], 'bot') !== false) {
             return Game::$configStatic['botNames'][substr($user['ID'], (strlen($user['ID']) == 7 ? -1 : -2))];
         }

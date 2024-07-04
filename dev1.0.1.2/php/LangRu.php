@@ -4,7 +4,7 @@ namespace Lang;
 
 use DB;
 
-class Ru
+class Ru extends \Ru
 {
     public static $multi = [
         0 => [

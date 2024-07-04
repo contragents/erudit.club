@@ -4,7 +4,7 @@
 
 $game_id = $i + GameController::GAME_ID_BASE_INC;
 $row = "<tr>
-        <th scope=\"row\"><a href=\"/game/$game_id\" target=\"_blank\">$game_id</a></th>
+        <th scope=\"row\"><a href=\"/game/$game_id/\" target=\"_blank\">$game_id</a></th>
         <td>".(isset($game['results']) ? 'Завершена в '.date('H:i:s',$game['turnBeginTime']+3*3600) : 'Ход №'.$game['turnNumber'])."</td>
         <td>";
 foreach($game['users'] as $user)
