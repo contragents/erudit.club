@@ -3,7 +3,7 @@
 class Cache
 {
     const LOCKS_KEY = 'locks_';
-    const LOCK_RETRY_TIME = 10000;
+    const LOCK_RETRY_TIME = 10000; // in microseconds
     const LOCK_TRIES = 200;
 
     public static $_instance = null;
@@ -199,7 +199,7 @@ class Cache
         }
 
         if (self::$_instance->redis->incr(self::LOCKS_KEY . $lockKey) == 1) {
-            self::$_instance->redis->setex(self::LOCKS_KEY . $lockKey, self::LOCK_RETRY_TIME * self::LOCK_TRIES, 1);
+            self::$_instance->redis->setex(self::LOCKS_KEY . $lockKey, self::LOCK_RETRY_TIME * self::LOCK_TRIES / 1000000, 1);
             self::$locks[$lockKey] = true;
 
             return true;

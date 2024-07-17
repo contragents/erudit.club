@@ -1,98 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 23.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 96 31.7" style="enable-background:new 0 0 96 31.7;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:url(#SVGID_1_);}
-	.st1{fill:url(#SVGID_2_);}
-	.st2{fill:#231F20;}
-	.st3{fill:url(#SVGID_3_);}
-	.st4{fill:url(#SVGID_4_);}
-	.st5{enable-background:new    ;}
-	.st6{fill:#FFFFFF;}
-</style>
-<title>chat_najat</title>
-<g>
-	<g id="chat">
-		<g id="chat_najat">
-			<g id="Layer_6">
-				
-					<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-315.797" y1="-5041.5288" x2="-464.5717" y2="-5041.5288" gradientTransform="matrix(-0.95 0 0 0.15 -319.53 772.03)">
-					<stop  offset="1.000000e-02" style="stop-color:#7DC9A9"/>
-					<stop  offset="7.000000e-02" style="stop-color:#367A55"/>
-					<stop  offset="0.5" style="stop-color:#E1E3E7"/>
-					<stop  offset="0.62" style="stop-color:#BBCCD9"/>
-					<stop  offset="0.67" style="stop-color:#B7CCD5"/>
-					<stop  offset="0.71" style="stop-color:#ABCBCA"/>
-					<stop  offset="0.76" style="stop-color:#97C9B8"/>
-					<stop  offset="0.81" style="stop-color:#7BC69E"/>
-					<stop  offset="0.81" style="stop-color:#79C69C"/>
-					<stop  offset="1" style="stop-color:#1D5E10"/>
-				</linearGradient>
-				<path class="st0" d="M13.2,0h69.7C89.6,0,95,5.8,95,12.9v5.8c0,7.1-5.4,12.9-12.2,12.9H13.2C6.4,31.7,1,25.9,1,18.7v-5.8
-					C1,5.8,6.4,0,13.2,0z"/>
-				
-					<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="-386.9263" y1="-4929.5933" x2="-386.9263" y2="-5156.1934" gradientTransform="matrix(-0.95 0 0 0.15 -319.53 772.03)">
-					<stop  offset="1.000000e-02" style="stop-color:#7DC9A9"/>
-					<stop  offset="7.000000e-02" style="stop-color:#367A55"/>
-					<stop  offset="0.5" style="stop-color:#E1E3E7"/>
-					<stop  offset="0.62" style="stop-color:#BBCCD9"/>
-					<stop  offset="0.67" style="stop-color:#B7CCD5"/>
-					<stop  offset="0.71" style="stop-color:#ABCBCA"/>
-					<stop  offset="0.76" style="stop-color:#97C9B8"/>
-					<stop  offset="0.81" style="stop-color:#7BC69E"/>
-					<stop  offset="0.81" style="stop-color:#79C69C"/>
-					<stop  offset="1" style="stop-color:#1D5E10"/>
-				</linearGradient>
-				<path class="st1" d="M13.2,3.1h69.7c5.1,0,9.3,4.4,9.3,9.9v5.8c0,5.4-4.2,9.9-9.3,9.9H13.2c-5.1,0-9.3-4.4-9.3-9.9V13
-					C3.9,7.5,8,3.1,13.2,3.1z"/>
-				<path class="st2" d="M13.2,4.8h69.7c4.4,0.1,7.8,3.8,7.7,8.1v5.8c0.1,4.4-3.3,8-7.7,8.1H13.2c-4.4-0.1-7.8-3.8-7.7-8.1v-5.8
-					C5.4,8.6,8.8,4.9,13.2,4.8z"/>
-				
-					<radialGradient id="SVGID_3_" cx="-389.9871" cy="-5092.23" r="133.497" gradientTransform="matrix(-0.96 0 0 0.16 -322.22 823.63)" gradientUnits="userSpaceOnUse">
-					<stop  offset="0" style="stop-color:#FFFFFF"/>
-					<stop  offset="1.000000e-02" style="stop-color:#F6FCF9"/>
-					<stop  offset="8.000000e-02" style="stop-color:#CBEFDA"/>
-					<stop  offset="0.14" style="stop-color:#A9E5C2"/>
-					<stop  offset="0.19" style="stop-color:#90DEB1"/>
-					<stop  offset="0.25" style="stop-color:#81DAA7"/>
-					<stop  offset="0.29" style="stop-color:#7CD8A3"/>
-					<stop  offset="0.65" style="stop-color:#00AF64"/>
-					<stop  offset="0.79" style="stop-color:#027E42"/>
-					<stop  offset="1" style="stop-color:#052D09"/>
-				</radialGradient>
-				<path class="st3" d="M13.2,5.1h69.7c4.2,0.1,7.5,3.6,7.3,7.8v5.8c0.1,4.2-3.2,7.7-7.3,7.8H13.2c-4.2-0.1-7.5-3.6-7.3-7.8v-5.8
-					C5.7,8.7,9,5.2,13.2,5.1z"/>
-				
-					<radialGradient id="SVGID_4_" cx="-388.1688" cy="-4939.25" r="74.8576" gradientTransform="matrix(-0.96 0 0 0.16 -322.22 823.63)" gradientUnits="userSpaceOnUse">
-					<stop  offset="0" style="stop-color:#BDE5CF"/>
-					<stop  offset="1.000000e-02" style="stop-color:#B0E4C8"/>
-					<stop  offset="6.000000e-02" style="stop-color:#7BE0AA"/>
-					<stop  offset="0.12" style="stop-color:#4FDC92"/>
-					<stop  offset="0.17" style="stop-color:#2DDA7F"/>
-					<stop  offset="0.21" style="stop-color:#14D871"/>
-					<stop  offset="0.26" style="stop-color:#05D669"/>
-					<stop  offset="0.29" style="stop-color:#00D666"/>
-					<stop  offset="0.65" style="stop-color:#009971"/>
-					<stop  offset="0.92" style="stop-color:#216956"/>
-					<stop  offset="1" style="stop-color:#3B7262"/>
-				</radialGradient>
-				<path class="st4" d="M13.2,6.1h69.7c3.6,0.1,6.5,3.2,6.4,6.8v5.8c0.1,3.6-2.8,6.7-6.4,6.8H13.2c-3.6-0.1-6.5-3.2-6.4-6.8v-5.8
-					C6.7,9.3,9.5,6.2,13.2,6.1z"/>
-				<g>
-					<g class="st5">
-						<path class="st6" d="M37.9,22.6V17c-1,0.4-2,0.5-3.1,0.5c-3.2,0-5.1-1.6-5.1-4.7V8.1h2.8v4.2c0,1.8,0.9,2.5,2.6,2.5
-							c1,0,1.9-0.2,2.7-0.6v-6h2.8v14.6h-2.7V22.6z"/>
-					</g>
-					<g class="st5">
-						<path class="st6" d="M42.5,22.6L48.4,8h2.7L57,22.6h-3l-1.3-3.4h-5.8l-1.3,3.4H42.5z M47.7,16.8h4l-2-5.1L47.7,16.8z"/>
-					</g>
-					<g class="st5">
-						<path class="st6" d="M55.9,8.1h11.5v2.7H63v11.9h-2.8V10.8h-4.3V8.1z"/>
-					</g>
-				</g>
-			</g>
-		</g>
-	</g>
-</g>
+<svg viewBox="-39.271 -46.302 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <filter id="drop-shadow-filter-2" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="drop-shadow 1 -1 3 4 0.73 rgba(0,0,0,0.3)">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+      <feOffset dx="-1" dy="3"/>
+      <feComponentTransfer result="offsetblur">
+        <feFuncA id="spread-ctrl" type="linear" slope="1.46"/>
+      </feComponentTransfer>
+      <feFlood flood-color="rgba(0,0,0,0.3)"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="inner-shadow-filter-2" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="inner-shadow 1 0 0 36 0.55 #50c938">
+      <feOffset dx="0" dy="0"/>
+      <feGaussianBlur stdDeviation="36"/>
+      <feComposite operator="out" in="SourceGraphic"/>
+      <feComponentTransfer result="choke">
+        <feFuncA type="linear" slope="1.1"/>
+      </feComponentTransfer>
+      <feFlood flood-color="#50c938" result="color"/>
+      <feComposite operator="in" in="color" in2="choke" result="shadow"/>
+      <feComposite operator="over" in="shadow" in2="SourceGraphic"/>
+    </filter>
+    <filter id="posterize-filter-0" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="posterize 1 r 3 0.9">
+      <feColorMatrix type="saturate" values="0.9"/>
+      <feComponentTransfer>
+        <feFuncR type="discrete" tableValues="0 0.333 0.667 1"/>
+        <feFuncG type="discrete" tableValues=""/>
+        <feFuncB type="discrete" tableValues=""/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="brightness-filter-0" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="brightness 1 1.5">
+      <feComponentTransfer>
+        <feFuncR type="linear" slope="1.5"/>
+        <feFuncG type="linear" slope="1.5"/>
+        <feFuncB type="linear" slope="1.5"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="drop-shadow-filter-1" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="drop-shadow 1 -3 -14 0 1 #54d26a">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0"/>
+      <feOffset dx="-3" dy="-14"/>
+      <feComponentTransfer result="offsetblur">
+        <feFuncA id="spread-ctrl" type="linear" slope="2"/>
+      </feComponentTransfer>
+      <feFlood flood-color="#54d26a"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="493.209" cy="449.692" r="292.042" id="gradient-1" gradientTransform="matrix(0.002682, 0.429999, -1.301894, 0.009792, 1077.337109, 233.208929)" spreadMethod="reflect">
+      <stop offset="0" style="stop-color: rgb(153, 255, 153);"/>
+      <stop offset="1" style="stop-color: rgb(0, 255, 100);"/>
+    </radialGradient>
+    <filter id="drop-shadow-filter-0" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="drop-shadow 1 2 0 10 0.72 rgba(0,0,0,0.3)">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="2" dy="0"/>
+      <feComponentTransfer result="offsetblur">
+        <feFuncA id="spread-ctrl" type="linear" slope="1.44"/>
+      </feComponentTransfer>
+      <feFlood flood-color="rgba(0,0,0,0.3)"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect x="-22.892" y="-25.615" width="987.928" height="982.673" style="fill: rgb(255, 255, 255); stroke-width: 8px; stroke: rgb(0, 0, 50); filter: url('#drop-shadow-filter-2') url('#inner-shadow-filter-2');" transform="matrix(1, 0, 0.00040900002932175994, 1, 1.5613510608673096, 0)" rx="85.827" ry="85.827"/>
+  <g transform="matrix(1.2303210496902466, 0, 0, 1.1204570531845093, -50.685142517089844, -102.9388427734375)" style="filter: url('#posterize-filter-0');">
+    <path d="M 76.132 770.826 L 76.132 398.891 C 76.177 387.386 80.879 376.779 88.408 369.25 C 95.937 361.721 106.54 357.019 118.045 356.974 L 496.533 356.974 L 570.42 262.704 L 591.212 356.974 L 618.299 356.974 C 629.804 357.019 640.411 361.721 647.94 369.25 C 655.469 376.779 660.171 387.382 660.216 398.887 L 660.216 770.822 C 660.171 782.327 655.469 792.934 647.94 800.463 C 640.411 807.992 629.808 812.694 618.303 812.739 L 118.049 812.739 C 106.544 812.694 95.937 807.992 88.408 800.463 C 80.879 792.934 76.177 782.331 76.132 770.826" style="stroke: rgb(0, 0, 0); transform-box: fill-box; transform-origin: 50% 50%; fill: rgb(0, 0, 37); filter: url('#brightness-filter-0') url('#drop-shadow-filter-1'); stroke-width: 0px;" transform="matrix(-1, 0, 0, -1, -0.000071, -0.000112)"/>
+    <path d="M 202.591 252.544 L 202.591 624.479 C 202.636 635.984 207.338 646.591 214.867 654.12 C 222.396 661.649 232.999 666.351 244.504 666.396 L 622.992 666.396 L 696.879 760.666 L 717.671 666.396 L 744.758 666.396 C 756.263 666.351 766.87 661.649 774.399 654.12 C 781.928 646.591 786.63 635.988 786.675 624.483 L 786.675 252.548 C 786.63 241.043 781.928 230.436 774.399 222.907 C 766.87 215.378 756.267 210.676 744.762 210.631 L 244.508 210.631 C 233.003 210.676 222.396 215.378 214.867 222.907 C 207.338 230.436 202.636 241.039 202.591 252.544" style="stroke: rgb(255, 255, 255); stroke-width: 18px; transform-origin: 494.633px 485.649px; fill-rule: nonzero; fill: url('#gradient-1'); paint-order: fill;"/>
+  </g>
+  <g transform="matrix(1.2416620254516602, 0, 0, 1.2190020084381104, -53.40489959716797, -90.7778091430664)" style="filter: url('#drop-shadow-filter-0');">
+    <ellipse style="fill: rgb(255, 251, 251); stroke: rgba(0, 0, 0, 0); filter: url('#posterize-filter-0');" cx="489.218" cy="402.409" rx="27.895" ry="27.895"/>
+    <ellipse style="fill: rgb(255, 251, 251); stroke: rgba(0, 0, 0, 0); filter: url('#posterize-filter-0');" cx="415.596" cy="402.607" rx="27.895" ry="27.895"/>
+    <ellipse style="fill: rgb(255, 251, 251); stroke: rgba(0, 0, 0, 0); filter: url('#posterize-filter-0');" cx="562.759" cy="402.409" rx="27.895" ry="27.895"/>
+  </g>
 </svg>

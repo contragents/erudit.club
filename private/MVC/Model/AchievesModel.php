@@ -375,7 +375,7 @@ class AchievesModel extends BaseModel
         if (!self::$instance) {
             include_once('/var/www/erudit.club/yandex1.0.1.1/php/autoload.php');
             self::$instance = new Game();
-            self::$instance->gameStatus['lngClass'] = "\Lang\\" . 'Ru';
+            self::$instance->gameStatus['lngClass'] = Ru::class;
         }
 
         return self::$instance;

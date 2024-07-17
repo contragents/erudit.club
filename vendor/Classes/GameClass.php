@@ -1,10 +1,9 @@
 <?php
+
 use Dadata\Hints;
 use Dadata\Players;
 use Dadata\Prizes;
 use Dadata\Stats;
-use Lang\Eng;
-use Lang\Ru;
 
 class Game
 {
@@ -395,7 +394,7 @@ class Game
                     + base_convert("0x" . substr($sintName, $index < 5 ? $index : 0, 1), 16, 10);
 
                 if (!isset($this->gameStatus['lngClass'])) {
-                    $this->gameStatus['lngClass'] = "\Lang\\" . 'Ru';;
+                    $this->gameStatus['lngClass'] = Ru::class;
                 }
 
                 if (!isset($this->gameStatus['lngClass']::$bukvy[$letterNumber])) {

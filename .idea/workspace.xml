@@ -17,21 +17,137 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="083cf621-0e75-4976-a3cb-6b5812dcdbdc" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/local.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/checkButtonEvents.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/fishkaDragEvents.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/getSVGButtonFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/newGameButtonEvents.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/shareButtonEvents.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/submitButtonEvents.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/createFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globalFunctions.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globalVars.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/ajaxGetGlobalFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/bootBoxIsOpenedGlobalFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonGlobalFunctions.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonSettingsGlobal.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/changeFishkiGlobalFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/findPlaceGlobalFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gagetTypeFunctions.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gameStates.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/getFishkaGlobalFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/initCellsGlobalFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/instruction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/instruction_eng.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/letterPrices.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/openWindowGlobalFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/parseDeskGlobalFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/rusLetters.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/wav.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/initializeFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/main.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/BotEng.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/BotGenV3.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/BotGenV3ENG.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/BotRu.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/Cookie.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataCache.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataDB.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataHints.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataPlayers.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataPrizes.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataStats.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/EruditGame.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/autoload.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/avatar_upload.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bad_combinations.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/avatar_url_parser.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/clientLists.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/clientListsENG.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/games_statistics.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/newBotsGenV3.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/newBotsGenV3ENG.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/redisDailyCleaner.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/topChecker.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/change_fishki.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/choose_css.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/complain.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/cookie_checker.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/cors.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/game_page.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/game_starter.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/games_history.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/index.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/index_functions.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/init_game.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/invite_to_new_game.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/merge_the_ids.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/new_game.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/player_cabinet.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/players_ratings.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/send_chat_message.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/set_inactive.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/set_player_avatar_url.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/set_player_name.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/status_checker.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTableFooter.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTableHeader.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTableNicknameFormRow.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTablePrizesRow.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTableRow.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/turn_submitter.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/word.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/word_checker.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/youtube_videos.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/yowser/index.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/preloadFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/updateFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/ysdk.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/conf.php" beforeDir="false" afterPath="$PROJECT_DIR$/configs/conf.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JsComposer.php" beforeDir="false" afterPath="$PROJECT_DIR$/JsComposer.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globals/gameStates.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globals/gameStates.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/BotEng.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/BotEng.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/EruditGame.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/EruditGame.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/EruditQueue.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/EruditQueue.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/BotRu.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/BotRu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/DadataHints.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/DadataHints.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/DadataPlayers.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/DadataPlayers.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/DadataPrizes.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/DadataPrizes.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/DadataStats.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/DadataStats.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/LangEng.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/Classes/EngClass.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/LangRu.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bad_combinations.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bad_combinations.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/avatar_url_parser.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/avatar_url_parser.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/checkWordFishkiFunction.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/checkWordFishkiFunctionENG.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSlevaFunction.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSlevaFunctionENG.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSpravaFunction.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSpravaFunctionENG.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSverhuFunction.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSverhuFunctionENG.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordVnizFunction.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordVnizFunctionENG.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/games_statistics.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/games_statistics.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/exit_game.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/init_game.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/index_functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/index_functions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/players_ratings.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/players_ratings.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/tpl/ratingsTableRow.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/tpl/ratingsTableRow.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/private/MVC/Model/PlayerModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/MVC/Model/PlayerModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/maxToFunctions.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/game_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/game_page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/games_history.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/games_history.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/bid-win.jfif" beforeDir="false" afterPath="$PROJECT_DIR$/img/bid-win.jfif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/inactive/dups/otpravit.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/najatie/dups/new_game.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/najatie/dups/otpravit.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/navedenie/chat1.svg" beforeDir="false" afterPath="$PROJECT_DIR$/img/navedenie/chat1.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/otjat/chat_bak.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/private/MVC/Model/AchievesModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/MVC/Model/AchievesModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scramble.html" beforeDir="false" afterPath="$PROJECT_DIR$/scramble.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/Classes/CacheClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/Classes/CacheClass.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/Classes/GameClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/Classes/GameClass.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/Classes/QueueClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/Classes/QueueClass.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/Classes/RuClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/Classes/RuClass.php" afterDir="false" />
     </list>
     <list id="493eaa45-d165-4bb4-bddd-131381b96e0a" name="ignore" comment="">
+      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/erudit.club.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/erudit.club.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yandex_204db8b54d13840c.html" beforeDir="false" afterPath="$PROJECT_DIR$/yandex_204db8b54d13840c.html" afterDir="false" />
@@ -47,7 +163,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="staging" />
+        <entry key="$PROJECT_DIR$" value="CLUB-353" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -65,128 +181,30 @@
   <component name="LineStatusTrackerManager">
     <file path="$PROJECT_DIR$/.idea/workspace.xml">
       <ranges>
-        <range start1="9" end1="10" start2="9" end2="16" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="13" end1="15" start2="19" end2="19" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="16" end1="21" start2="20" end2="21" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="22" end1="25" start2="22" end2="22" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="26" end1="32" start2="23" end2="24" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="33" end1="43" start2="25" end2="26" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="44" end1="59" start2="27" end2="32" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="61" end1="61" start2="34" end2="35" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="62" end1="62" start2="36" end2="37" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="93" end1="121" start2="68" end2="189" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="131" end1="131" start2="199" end2="200" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="133" end1="135" start2="202" end2="205" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="140" end1="140" start2="210" end2="213" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="141" end1="141" start2="214" end2="217" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="142" end1="149" start2="218" end2="219" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="375" end1="375" start2="445" end2="523" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="376" end1="380" start2="524" end2="528" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="381" end1="382" start2="529" end2="530" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="383" end1="387" start2="531" end2="535" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="388" end1="389" start2="536" end2="537" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="390" end1="394" start2="538" end2="542" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="395" end1="396" start2="543" end2="544" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="397" end1="401" start2="545" end2="549" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="402" end1="403" start2="550" end2="551" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="404" end1="408" start2="552" end2="556" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="409" end1="410" start2="557" end2="558" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="411" end1="415" start2="559" end2="563" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="416" end1="417" start2="564" end2="565" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="418" end1="422" start2="566" end2="570" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="423" end1="424" start2="571" end2="572" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="425" end1="429" start2="573" end2="577" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="430" end1="431" start2="578" end2="579" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="432" end1="436" start2="580" end2="584" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="437" end1="438" start2="585" end2="586" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="439" end1="443" start2="587" end2="591" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="444" end1="445" start2="592" end2="593" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="446" end1="450" start2="594" end2="598" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="451" end1="452" start2="599" end2="600" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="453" end1="457" start2="601" end2="605" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="458" end1="459" start2="606" end2="607" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="460" end1="464" start2="608" end2="612" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="465" end1="466" start2="613" end2="614" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="467" end1="471" start2="615" end2="619" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="472" end1="473" start2="620" end2="621" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="474" end1="478" start2="622" end2="626" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="479" end1="480" start2="627" end2="628" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="481" end1="485" start2="629" end2="633" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="486" end1="487" start2="634" end2="635" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="488" end1="492" start2="636" end2="640" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="493" end1="494" start2="641" end2="642" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="495" end1="499" start2="643" end2="647" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="500" end1="501" start2="648" end2="649" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="502" end1="506" start2="650" end2="654" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="507" end1="508" start2="655" end2="656" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="509" end1="513" start2="657" end2="661" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="514" end1="515" start2="662" end2="663" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="516" end1="520" start2="664" end2="668" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="521" end1="522" start2="669" end2="670" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="523" end1="527" start2="671" end2="675" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="528" end1="529" start2="676" end2="677" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="530" end1="534" start2="678" end2="682" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="535" end1="536" start2="683" end2="684" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="537" end1="541" start2="685" end2="689" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="542" end1="543" start2="690" end2="691" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="544" end1="548" start2="692" end2="696" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="549" end1="550" start2="697" end2="698" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="551" end1="555" start2="699" end2="703" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="556" end1="557" start2="704" end2="705" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="558" end1="562" start2="706" end2="710" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="563" end1="564" start2="711" end2="712" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="565" end1="569" start2="713" end2="717" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="570" end1="571" start2="718" end2="719" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="572" end1="576" start2="720" end2="724" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="577" end1="578" start2="725" end2="726" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="579" end1="583" start2="727" end2="731" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="584" end1="585" start2="732" end2="733" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="586" end1="590" start2="734" end2="738" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="591" end1="592" start2="739" end2="740" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="593" end1="597" start2="741" end2="745" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="598" end1="599" start2="746" end2="747" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="600" end1="604" start2="748" end2="752" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="605" end1="606" start2="753" end2="754" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="607" end1="611" start2="755" end2="759" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="612" end1="613" start2="760" end2="761" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="614" end1="618" start2="762" end2="766" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="619" end1="620" start2="767" end2="768" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="621" end1="625" start2="769" end2="773" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="626" end1="627" start2="774" end2="775" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="628" end1="632" start2="776" end2="780" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="633" end1="634" start2="781" end2="782" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="635" end1="639" start2="783" end2="787" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="640" end1="641" start2="788" end2="789" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="642" end1="646" start2="790" end2="794" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="647" end1="648" start2="795" end2="796" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="649" end1="653" start2="797" end2="801" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="654" end1="655" start2="802" end2="803" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="656" end1="660" start2="804" end2="808" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="661" end1="662" start2="809" end2="810" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="663" end1="667" start2="811" end2="815" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="668" end1="669" start2="816" end2="817" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="670" end1="674" start2="818" end2="822" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="675" end1="676" start2="823" end2="824" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="677" end1="681" start2="825" end2="829" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="682" end1="683" start2="830" end2="831" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="684" end1="688" start2="832" end2="836" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="689" end1="690" start2="837" end2="838" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="691" end1="695" start2="839" end2="843" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="696" end1="697" start2="844" end2="845" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="698" end1="699" start2="846" end2="847" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="729" end1="755" start2="877" end2="903" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="757" end1="767" start2="905" end2="907" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="768" end1="771" start2="908" end2="911" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="772" end1="775" start2="912" end2="915" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="776" end1="779" start2="916" end2="919" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="780" end1="783" start2="920" end2="924" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="784" end1="787" start2="925" end2="929" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="788" end1="791" start2="930" end2="933" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="792" end1="795" start2="934" end2="937" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="796" end1="799" start2="938" end2="942" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="800" end1="803" start2="943" end2="947" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="804" end1="807" start2="948" end2="951" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="808" end1="813" start2="952" end2="953" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
+        <range start1="13" end1="14" start2="13" end2="14" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
+        <range start1="19" end1="19" start2="19" end2="106" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="20" end1="21" start2="107" end2="108" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="22" end1="23" start2="109" end2="110" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="24" end1="26" start2="111" end2="130" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="27" end1="32" start2="131" end2="147" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="49" end1="50" start2="164" end2="165" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="67" end1="189" start2="182" end2="206" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="202" end1="204" start2="219" end2="221" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="210" end1="210" start2="227" end2="234" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="213" end1="220" start2="237" end2="237" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="503" end1="587" start2="520" end2="553" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="847" end1="848" start2="813" end2="898" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="852" end1="852" start2="902" end2="912" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="864" end1="865" start2="924" end2="925" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="878" end1="890" start2="938" end2="938" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="903" end1="904" start2="951" end2="964" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="906" end1="915" start2="966" end2="967" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="917" end1="919" start2="969" end2="971" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="921" end1="924" start2="973" end2="975" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="926" end1="933" start2="977" end2="979" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="935" end1="937" start2="981" end2="983" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="939" end1="942" start2="985" end2="987" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="944" end1="954" start2="989" end2="990" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
       </ranges>
     </file>
   </component>
@@ -200,23 +218,23 @@
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="TEXT&#10;JSON&#10;JavaScript&#10;PHP" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/dev1.0.1.2/php" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JavaScript&#10;JSON&#10;TEXT&#10;HTML" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/scrabble1.0.1.6" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="php.override.implement.member.chooser.php.doc" value="COPY_ALWAYS" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\dev1.0.1.2" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\scrabble1.0.1.6" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\yandex1.0.1.1" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\vendor\Classes" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ili\PhpstormProjects\erudit.club\dev1.0.1.2\php" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\dev1.0.1.2\php" />
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\dev1.0.1.2\php\bots" />
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\private\MVC\View" />
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\vendor\Classes" />
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\private\MVC\Model" />
     </key>
   </component>
   <component name="RestClientSettings">
@@ -501,97 +519,39 @@
       <workItem from="1709828301114" duration="33630000" />
       <workItem from="1710277913331" duration="4502000" />
       <workItem from="1710352615668" duration="930000" />
-    </task>
-    <task id="LOCAL-00056" summary="staging user key POST hotfix">
-      <created>1697108189085</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1697108189085</updated>
-    </task>
-    <task id="LOCAL-00057" summary="CLUB-246 to prod">
-      <created>1697440996853</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1697440996853</updated>
-    </task>
-    <task id="LOCAL-00058" summary="CLUB-274 to prod">
-      <created>1697886131418</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1697886131418</updated>
-    </task>
-    <task id="LOCAL-00059" summary="CLUB-275 to prod">
-      <created>1697887470997</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1697887470998</updated>
-    </task>
-    <task id="LOCAL-00060" summary="CLUB-275 to prod 2">
-      <created>1697887535739</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1697887535739</updated>
-    </task>
-    <task id="LOCAL-00061" summary="CLUB-276 to prod">
-      <created>1697890945236</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1697890945236</updated>
-    </task>
-    <task id="LOCAL-00062" summary="CLUB-277 done">
-      <created>1699296748329</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1699296748329</updated>
-    </task>
-    <task id="LOCAL-00063" summary="CLUB-277 need to finish task">
-      <created>1700031298794</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1700031298794</updated>
-    </task>
-    <task id="LOCAL-00064" summary="CLUB-277 for test">
-      <created>1701938144340</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1701938144341</updated>
-    </task>
-    <task id="LOCAL-00065" summary="CLUB-277 fix">
-      <created>1701942144679</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1701942144680</updated>
-    </task>
-    <task id="LOCAL-00066" summary="staging bot query fix">
-      <created>1702294116376</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1702294116376</updated>
-    </task>
-    <task id="LOCAL-00067" summary="CLUB-280 need to think about not to start game simultaneously))">
-      <created>1702808341600</created>
-      <option name="number" value="00067" />
-      <option name="presentableId" value="LOCAL-00067" />
-      <option name="project" value="LOCAL" />
-      <updated>1702808341600</updated>
-    </task>
-    <task id="LOCAL-00068" summary="CLUB-282">
-      <created>1702981367169</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
-      <option name="project" value="LOCAL" />
-      <updated>1702981367169</updated>
+      <workItem from="1710952821814" duration="9287000" />
+      <workItem from="1711114692431" duration="27470000" />
+      <workItem from="1711530015739" duration="3239000" />
+      <workItem from="1711549964414" duration="5000" />
+      <workItem from="1711620070033" duration="631000" />
+      <workItem from="1711693377165" duration="11000" />
+      <workItem from="1711910787669" duration="1841000" />
+      <workItem from="1712494962628" duration="9000" />
+      <workItem from="1712495233790" duration="9663000" />
+      <workItem from="1712606794958" duration="2816000" />
+      <workItem from="1712754014576" duration="3691000" />
+      <workItem from="1712997336355" duration="9747000" />
+      <workItem from="1713171331631" duration="5184000" />
+      <workItem from="1713213792901" duration="2774000" />
+      <workItem from="1713355844378" duration="721000" />
+      <workItem from="1713432985145" duration="5431000" />
+      <workItem from="1713859369571" duration="23055000" />
+      <workItem from="1714397148514" duration="22073000" />
+      <workItem from="1715173667818" duration="612000" />
+      <workItem from="1715338062071" duration="1224000" />
+      <workItem from="1715596430954" duration="2770000" />
+      <workItem from="1716463424998" duration="1189000" />
+      <workItem from="1717678784283" duration="4591000" />
+      <workItem from="1718078353956" duration="1384000" />
+      <workItem from="1718080653805" duration="553000" />
+      <workItem from="1718881092353" duration="814000" />
+      <workItem from="1718882613624" duration="2417000" />
+      <workItem from="1719832050520" duration="611000" />
+      <workItem from="1719834703299" duration="22886000" />
+      <workItem from="1720176309674" duration="3373000" />
+      <workItem from="1720461872875" duration="10267000" />
+      <workItem from="1720701110248" duration="2481000" />
+      <workItem from="1721042857306" duration="10178000" />
     </task>
     <task id="LOCAL-00069" summary="CLUB-283">
       <created>1703011777329</created>
@@ -845,11 +805,112 @@
       <option name="project" value="LOCAL" />
       <updated>1709983784001</updated>
     </task>
-    <option name="localTasksCounter" value="105" />
+    <task id="LOCAL-00105" summary="CLUB-329 for testing">
+      <created>1711530398318</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1711530398318</updated>
+    </task>
+    <task id="LOCAL-00106" summary="CLUB-345">
+      <created>1712499308153</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1712499308153</updated>
+    </task>
+    <task id="LOCAL-00107" summary="CLUB-346 testing">
+      <created>1713514148687</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1713514148687</updated>
+    </task>
+    <task id="LOCAL-00108" summary="CLUB-334 done">
+      <created>1713648739984</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1713648739984</updated>
+    </task>
+    <task id="LOCAL-00109" summary="CLUB-347">
+      <created>1713961182836</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1713961182836</updated>
+    </task>
+    <task id="LOCAL-00110" summary="staging small fix">
+      <created>1714397435928</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1714397435929</updated>
+    </task>
+    <task id="LOCAL-00111" summary="CLUB-348 prod">
+      <created>1714419201328</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1714419201328</updated>
+    </task>
+    <task id="LOCAL-00112" summary="staging update">
+      <created>1718078510224</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1718078510224</updated>
+    </task>
+    <task id="LOCAL-00113" summary="CLUB-350 done">
+      <created>1718080678044</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1718080678044</updated>
+    </task>
+    <task id="LOCAL-00114" summary="staging noop coinmarketcap api test">
+      <created>1719861999730</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1719861999731</updated>
+    </task>
+    <task id="LOCAL-00115" summary="CLUB-252 in progres + mvc href fix">
+      <created>1719918994181</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1719918994181</updated>
+    </task>
+    <task id="LOCAL-00116" summary="CLUB-353 in progres 2">
+      <created>1720020322317</created>
+      <option name="number" value="00116" />
+      <option name="presentableId" value="LOCAL-00116" />
+      <option name="project" value="LOCAL" />
+      <updated>1720020322317</updated>
+    </task>
+    <task id="LOCAL-00117" summary="CLUB-353-in-progress with new buttons chat2">
+      <created>1721218185030</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1721218185031</updated>
+    </task>
+    <option name="localTasksCounter" value="118" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -862,7 +923,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="staging" />
+                        <option value="CLUB-353" />
                       </list>
                     </value>
                   </entry>
@@ -876,19 +937,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="CLUB-292" />
-    <MESSAGE value="CLUB-293" />
-    <MESSAGE value="CLUB-294 fix" />
-    <MESSAGE value="CLUB-290 Prizes cache keys fix" />
-    <MESSAGE value="CLUB-298" />
-    <MESSAGE value="CLUB-295 2" />
-    <MESSAGE value="CLUB-295" />
-    <MESSAGE value="CLUB-294" />
-    <MESSAGE value="CLUB-295 strong" />
-    <MESSAGE value="CLUB-296" />
-    <MESSAGE value="CLUB-301" />
-    <MESSAGE value="CLUB-299" />
-    <MESSAGE value="CLUB-302" />
     <MESSAGE value="CLUB-303 чтото сделал" />
     <MESSAGE value="CLUB-304" />
     <MESSAGE value="CLUB-305" />
@@ -901,56 +949,45 @@
     <MESSAGE value="CLUB-318 готово" />
     <MESSAGE value="CLUB-306 to test" />
     <MESSAGE value="staging delete console.log" />
-    <option name="LAST_COMMIT_MESSAGE" value="staging delete console.log" />
+    <MESSAGE value="CLUB-329 for testing" />
+    <MESSAGE value="CLUB-345" />
+    <MESSAGE value="CLUB-346 testing" />
+    <MESSAGE value="CLUB-334 done" />
+    <MESSAGE value="CLUB-347" />
+    <MESSAGE value="staging small fix" />
+    <MESSAGE value="CLUB-348 prod" />
+    <MESSAGE value="staging update" />
+    <MESSAGE value="CLUB-350 done" />
+    <MESSAGE value="staging noop coinmarketcap api test" />
+    <MESSAGE value="CLUB-252 in progres + mvc href fix" />
+    <MESSAGE value="CLUB-353 in progres 2" />
+    <MESSAGE value="CLUB-353-in-progress with new buttons chat2" />
+    <option name="LAST_COMMIT_MESSAGE" value="CLUB-353-in-progress with new buttons chat2" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="345" y="61" key="#SSH_Configurations" timestamp="1701941736381">
-      <screen x="0" y="0" width="1536" height="832" />
-    </state>
-    <state x="345" y="61" key="#SSH_Configurations/0.0.1536.832@0.0.1536.832" timestamp="1701941736381" />
-    <state x="361" y="74" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1701941737589">
-      <screen x="0" y="0" width="1536" height="832" />
-    </state>
-    <state x="361" y="74" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.832@0.0.1536.832" timestamp="1701941737589" />
-    <state x="226" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1708972403699">
+    <state x="499" y="172" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1720533343939">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="226" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.834@0.0.1536.834" timestamp="1708972403699" />
-    <state x="543" y="165" key="#com.jetbrains.php.refactoring.move.member.PhpMoveMemberDialog#" timestamp="1709497833653">
+    <state x="499" y="172" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1536.834@0.0.1536.834" timestamp="1720533343939" />
+    <state x="93" y="93" width="1350" height="649" key="DiffContextDialog" timestamp="1720537351930">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="543" y="165" key="#com.jetbrains.php.refactoring.move.member.PhpMoveMemberDialog#/0.0.1536.832@0.0.1536.832" timestamp="1703581653558" />
-    <state x="543" y="165" key="#com.jetbrains.php.refactoring.move.member.PhpMoveMemberDialog#/0.0.1536.834@0.0.1536.834" timestamp="1709497833653" />
-    <state x="93" y="93" width="1350" height="649" key="DiffContextDialog" timestamp="1710280969726">
+    <state x="93" y="93" width="1350" height="649" key="DiffContextDialog/0.0.1536.834@0.0.1536.834" timestamp="1720537351930" />
+    <state x="549" y="172" key="FileChooserDialogImpl" timestamp="1721145674841">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="93" y="93" width="1350" height="647" key="DiffContextDialog/0.0.1536.832@0.0.1536.832" timestamp="1705850679083" />
-    <state x="93" y="93" width="1350" height="649" key="DiffContextDialog/0.0.1536.834@0.0.1536.834" timestamp="1710280969726" />
-    <state x="510" y="118" key="RollbackChangesDialog" timestamp="1705250935908">
-      <screen x="0" y="0" width="1536" height="832" />
-    </state>
-    <state x="510" y="118" key="RollbackChangesDialog/0.0.1536.832@0.0.1536.832" timestamp="1705250935908" />
-    <state x="93" y="93" width="1350" height="648" key="VCS.FileHistoryDialog" timestamp="1708801275074">
+    <state x="549" y="172" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1721145674841" />
+    <state x="513" y="140" key="NewPhpClassDialog" timestamp="1720090479405">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="93" y="93" width="1350" height="648" key="VCS.FileHistoryDialog/0.0.1536.834@0.0.1536.834" timestamp="1708801275074" />
-    <state x="361" y="149" key="Vcs.Push.Dialog.v2" timestamp="1709980103924">
+    <state x="513" y="140" key="NewPhpClassDialog/0.0.1536.834@0.0.1536.834" timestamp="1720090479405" />
+    <state x="361" y="149" key="Vcs.Push.Dialog.v2" timestamp="1719918999426">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="361" y="149" key="Vcs.Push.Dialog.v2/0.0.1536.832@0.0.1536.832" timestamp="1706262138518" />
-    <state x="361" y="149" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1709980103924" />
-    <state x="767" y="150" width="581" height="594" key="find.popup" timestamp="1710280778797">
+    <state x="361" y="149" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1719918999426" />
+    <state x="147" y="238" width="581" height="596" key="find.popup" timestamp="1721157526908">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="845" y="206" width="581" height="592" key="find.popup/0.0.1536.832@0.0.1536.832" timestamp="1706262821912" />
-    <state x="767" y="150" width="581" height="594" key="find.popup/0.0.1536.834@0.0.1536.834" timestamp="1710280778797" />
-    <state x="425" y="189" width="672" height="677" key="run.anything.popup" timestamp="1708800452083">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="425" y="189" width="672" height="677" key="run.anything.popup/0.0.1536.834@0.0.1536.834" timestamp="1708800452083" />
-    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup" timestamp="1708871945845">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup/0.0.1536.834@0.0.1536.834" timestamp="1708871945845" />
+    <state x="147" y="238" width="581" height="596" key="find.popup/0.0.1536.834@0.0.1536.834" timestamp="1721157526908" />
   </component>
 </project>

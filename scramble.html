@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang=en>
 <head>
     <meta charset="utf-8">
-    <title>Эрудит.club - онлайн тусовка любителей игры</title>
+    <title>Scrabble online for rating and earnings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="vendor/bootstrap_4.5.2/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/choose_css.php">
@@ -24,11 +24,23 @@
 
 <body>
     <div id="phaser-example"></div>
-    <script src="/JsComposer.php?file=yandex1.0.1.1/main.js&lang=EN"></script>
+
+    <script>
+        var loader = loader || {}
+        loader.importJS = function (uri) {
+            let script = document.createElement('script');
+            let head = document.getElementsByTagName('head')[0];
+            script.type = 'text/javascript';
+            script.src = uri;
+            head.appendChild(script);
+        }
+
+        loader.importJS('https://xn--d1aiwkc2d.club/scrabble1.0.1.6/main.js?ver=' + Math.floor(Date.now() / (24 * 60 * 60)));
+    </script>
+
     <div id="ss" style="display:none;"></div>
 
-
-<a href="/dict/?lang=EN" target="_blank" title="Перейти в словарь">Англо-русский словарь Эрудита</a>
+<!--<a href="/dict/?lang=EN" target="_blank" title="Go to dictionary">Scrabble dictionary</a>-->
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript" >
    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};

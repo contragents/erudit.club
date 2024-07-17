@@ -1,23 +1,6 @@
-/*
-<?php
-if (isset($_GET['lang']) && $_GET['lang'] == 'EN') {
-$lang='EN';
-?>
-//*/
-var lang = 'EN';
 
-/*
-<?php
-} else {
-$lang='RU';
-?>
-//*/
-var lang = 'RU';
-/*
-<?php
-}
-?>
-*/
+//<?php $lang='RU'; ?>
+var lang = '<?= ($_GET['lang'] ?? '') == 'EN' ? 'EN' : 'RU' ?>';
 
 var preloaderObject = false;
 

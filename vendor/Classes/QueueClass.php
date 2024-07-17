@@ -508,7 +508,7 @@ class Queue
 
         $this->caller->gameStatus['lang'] = ($this->lang == 'EN' ? 'EN' : 'RU');
         //Прописали Язык игры
-        $this->caller->gameStatus['lngClass'] = "\Lang\\" . ($this->lang == 'EN' ? 'Eng' : 'Ru');
+        $this->caller->gameStatus['lngClass'] = ($this->lang == 'EN' ? Eng::class : Ru::class);
         //Класс для работы с языком
 
         foreach ($game_users as $num => $user) {
