@@ -6,7 +6,7 @@
 <?php
 try {
     $topPlayers = PlayerModel::getTopPlayersCached(2, 10);
-    print ViewHelper::tag('pre', print_r($topPlayers, true)); exit;
+    //print ViewHelper::tag('pre', print_r($topPlayers, true)); exit;
     foreach ($topPlayers as $num => $playerArr) {
         foreach ($playerArr as $player) {
             print ViewHelper::tag(
@@ -25,7 +25,7 @@ try {
                 )
                 . ViewHelper::tag(
                     'a',
-                    $player['name'],
+                    ($player['name'] ?? '') . " ({$player['rating']})",
                     [
                         'href' => '/' . StatsController::getUrl('games', ['common_id' => $player['common_id']]),
                         'title' => 'Перейти в статистику игрока'

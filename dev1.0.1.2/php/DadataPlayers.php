@@ -121,16 +121,17 @@ class Players
         }
 
         $updateRes = UserModel::updateUrl($commonID, $url);
-        if ($updateRes >= 1) {
-            return json_encode(['result' => 'saved', 'url' => $url]);
-        } elseif($updateRes === 0) {
-            return json_encode(['result' => 'saved', 'message' => 'Файл перезаписан', 'url' => $url]);
+
+        if ($updateRes) {
+            return json_encode(['result' => 'saved', 'message' => 'Аватар обновлен', 'url' => $url]);
         } else {
             return json_encode(
                 [
                     'result' => 'error',
                     'message' => 'Ошибка сохранения нового URL'
                 ]
+                ,
+                JSON_UNESCAPED_UNICODE
             );
         }
     }

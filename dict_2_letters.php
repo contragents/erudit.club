@@ -1,4 +1,5 @@
 <?php
+include(__DIR__ . '/autoload_helper.php');
 
 if (isset($_GET['lang']) && $_GET['lang'] == 'EN') {
     $lng = '?lang=EN';
@@ -12,7 +13,7 @@ if (isset($_GET['lang']) && $_GET['lang'] == 'EN') {
     $table = 'gufo_me';
 }
 
-$title = "Игра {$titleENG}Эрудит.CLUB :: Слова из " . ((isset($_GET['strlen']) && ($_GET['strlen'] > 2)) ? $_GET['strlen'] : двух) . ' букв';
+$title = "Игра {$titleENG}Эрудит.CLUB :: Слова из " . ((isset($_GET['strlen']) && ($_GET['strlen'] > 2)) ? $_GET['strlen'] : 'двух') . ' букв';
 
 $descr = 'Эрудит - классическая настольная игра - теперь в онлайн-версии! Присоединяйтесь к Русскому или английскому столу с игрой. Не забудьте предварительно почитать основные словари, особенно слова из 2-х - 4-х букв';
 
@@ -38,13 +39,13 @@ for ($i = 2; $i <= 6; $i++) {
 }
 
 // todo refactor USE ORM+DB or ModelClass
-require_once('vendor/deprecated/xcache_functions.php');
+//require_once('private/deprecated/xcache_functions.php');
 
 
 $CONTENT_SELECT = "SELECT slovo FROM  $table where CHAR_LENGTH(slovo) = $strlen ;";
-$res = mysql_query($CONTENT_SELECT);
+$res = DB::queryArray($CONTENT_SELECT);
 $first_letter = '';
-while ($row = mysql_fetch_assoc($res)) {
+foreach ($res as $row) {
     if ($first_letter != mb_substr($row['slovo'], 0, 1, 'UTF-8')) {
         print "<br />";
         $first_letter = mb_substr($row['slovo'], 0, 1, 'UTF-8');

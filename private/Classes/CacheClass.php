@@ -199,7 +199,7 @@ class Cache
         }
 
         if (self::$_instance->redis->incr(self::LOCKS_KEY . $lockKey) == 1) {
-            self::$_instance->redis->setex(self::LOCKS_KEY . $lockKey, self::LOCK_RETRY_TIME * self::LOCK_TRIES / 1000000, 1);
+            self::$_instance->redis->setex(self::LOCKS_KEY . $lockKey, ceil(self::LOCK_RETRY_TIME * self::LOCK_TRIES / 1000000), 1);
             self::$locks[$lockKey] = true;
 
             return true;

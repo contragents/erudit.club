@@ -293,7 +293,7 @@ function savePlayerAvatar(url, commonID) {
             resp = JSON.parse(returndata);
 
             if (resp['result'] === 'saved') {
-                $('#playersAvatar').html('<img src="' + resp['url'] + '" width="100px" max-height = "100px"/>');
+                $('#playersAvatar').html('<img src="' + resp['url'] + '?ver=' + Math.floor(Date.now() / (24 * 60 * 60)) + '" width="100px" max-height = "100px"/>');
             }
 
             showCabinetActionResult(resp);

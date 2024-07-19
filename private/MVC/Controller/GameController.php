@@ -3,7 +3,7 @@
 class GameController extends BaseController
 {
     const COMMON_URL = 'game/';
-    const GAME_ID_BASE_INC = 300000; // ID игры в БД больше, чем ID в игре
+    const GAME_ID_BASE_INC = 0; // ID игры в БД больше, чем ID в игре
 
     public function indexAction(): string
     {

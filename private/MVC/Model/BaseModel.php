@@ -126,9 +126,9 @@ class BaseModel
         }
     }
 
-    public static function getLastID()
+    public static function getLastID(): int
     {
-        return DB::queryValue("SELECT max(id) as mx FROM " . static::TABLE_NAME) ?: 0;
+        return (int)(DB::queryValue("SELECT max(id) as mx FROM " . static::TABLE_NAME) ?: 0);
     }
 
     public static function findAll(array $fieldList = [])

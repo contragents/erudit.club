@@ -7,12 +7,12 @@ if (!empty($_GET['search'])) {
 }
 
 if ($_GET['word'] == '') {
-    include('dict_2_letters.php');
+    include(__DIR__ . '/dict_2_letters.php');
 
     exit();
 }
 
-include('yandex1.0.1.1/php/word.php');
+include(__DIR__ . '/yandex1.0.1.1/php/word.php');
 include (__DIR__ . '/private/MVC/View/Tpl/main_footer.php');
 
 exit();

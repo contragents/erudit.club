@@ -210,7 +210,7 @@ class AchievesModel extends BaseModel
         $gameStats = [];
 
         // todo сделать подгрузку классов централизованно
-        include_once('/var/www/erudit.club/yandex1.0.1.1/php/autoload.php');
+        include_once(__DIR__ . '/../../../autoload_helper.php');
 
         foreach($res as $row) {
             $opponentCommonId = $row[self::PLAYER1_ID_FIELD] != $commonId ? $row[self::PLAYER1_ID_FIELD] : $row[self::PLAYER2_ID_FIELD];
@@ -373,9 +373,11 @@ class AchievesModel extends BaseModel
     private static function getGameInstance()
     {
         if (!self::$instance) {
-            include_once('/var/www/erudit.club/yandex1.0.1.1/php/autoload.php');
+            include_once(__DIR__ . '/../../../autoload_helper.php');
             self::$instance = new Game();
-            self::$instance->gameStatus['lngClass'] = Ru::class;
+            self::$instance->gameStatus['lngClass'] = !strpos($_SERVER['HTTP_REFERER'] ?? '', 'scrabble.html')
+                ? Ru::class
+                : Eng::class;
         }
 
         return self::$instance;

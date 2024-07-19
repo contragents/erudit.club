@@ -33,7 +33,7 @@ spl_autoload_register(
             }
         }
 
-        $classFileName = __DIR__ . '/vendor/Classes/' . $Exploded_class[count($Exploded_class) - 1] . 'Class' . '.php';
+        $classFileName = __DIR__ . '/private/Classes/' . $Exploded_class[count($Exploded_class) - 1] . 'Class' . '.php';
         if (file_exists($classFileName)) {
             include $classFileName;
 

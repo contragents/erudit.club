@@ -1,5 +1,5 @@
 <?php
-require_once('/var/www/erudit.club/vendor/deprecated/xcache_functions.php');
+require_once(__DIR__ . '/../private/deprecated/xcache_functions.php');
 $time_to_work = 600;
 $start_script_time = date('U');
 

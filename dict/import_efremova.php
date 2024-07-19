@@ -1,5 +1,5 @@
 <?php
-require_once('../vendor/deprecated/xcache_functions.php');
+require_once(__DIR__ . '/../private/deprecated/xcache_functions.php');
 $f=fopen('efremova.txt','r');
 $i=0;
 $buf = [];
