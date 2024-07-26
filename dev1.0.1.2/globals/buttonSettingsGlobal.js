@@ -2,7 +2,7 @@
 var svgButtons = {
     checkButton: {filename: 'proveryt'},
     submitButton: {filename: 'otpravit'},
-    shareButton: {filename: 'instrukt'},
+    instructButton: {filename: 'instrukt'},
     newGameButton: {filename: 'new_game'},
     resetButton: {filename: 'steret'},
     changeButton: {filename: 'pomenyat'},
@@ -53,7 +53,7 @@ var buttons = {
             submitButtonFunction()
         }
     },
-    shareButton: {
+    instructButton: {
         filename: 'instrukt',
         x: 0,
         y: 0,
@@ -152,11 +152,11 @@ var buttons = {
 buttons['submitButton']['x'] = buttons['checkButton']['x'];
 buttons['submitButton']['y'] = buttons['checkButton']['y'] + buttonStepY;
 
-buttons['shareButton']['x'] = buttons['submitButton']['x'];
-buttons['shareButton']['y'] = buttons['submitButton']['y'] + buttonStepY;
+buttons['instructButton']['x'] = buttons['submitButton']['x'];
+buttons['instructButton']['y'] = buttons['submitButton']['y'] + buttonStepY;
 
-buttons['newGameButton']['x'] = buttons['shareButton']['x'];
-buttons['newGameButton']['y'] = buttons['shareButton']['y'] + buttonStepY;
+buttons['newGameButton']['x'] = buttons['instructButton']['x'];
+buttons['newGameButton']['y'] = buttons['instructButton']['y'] + buttonStepY;
 
 buttons['resetButton']['x'] = buttons['checkButton']['x'] + buttons['checkButton']['width'] + buttonStepY / 2 + (knopkiWidth - (buttons['checkButton']['x'] + buttons['checkButton']['width'] + buttons['resetButton']['width'])) / 2;
 buttons['resetButton']['y'] = buttons['checkButton']['y'];

@@ -24,7 +24,7 @@ var UIScene = new Phaser.Class({
     //<?php include('updateFunction.js')?>
 });
 
-//<?php include('globalVars.js')?>
+//<?php include('globalVars.js.php')?>
 
 //<?php include('config.js')?>
 

@@ -1,9 +1,9 @@
-        shareButton.on('pointerup', function () {
+        instructButton.on('pointerup', function () {
              if (bootBoxIsOpenedGlobal())
                 return;
             
             
-            /*Phaser.Actions.Call(shareButton.getAll(), function(elem) {
+            /*Phaser.Actions.Call(instructButton.getAll(), function(elem) {
                 elem.setVisible(false);        
             }, this);
             */
@@ -33,7 +33,7 @@
                 };
 
                 xhr.send(body);
-                Phaser.Actions.Call(shareButton.getAll(), function(elem) {
+                Phaser.Actions.Call(instructButton.getAll(), function(elem) {
                 elem.setVisible(true);        
                 }, this);
             },1000);
@@ -41,12 +41,12 @@
         
         });
         /*
-        shareButton.on('pointerover', function () {
-        shareButton.getRandom(0,0).tint = 0x00ff00;
+        instructButton.on('pointerover', function () {
+        instructButton.getRandom(0,0).tint = 0x00ff00;
         });
         */
         /*
-        shareButton.on('pointerout', function () {
-        shareButton.getRandom(0,0).tint = 0xff0000;
+        instructButton.on('pointerout', function () {
+        instructButton.getRandom(0,0).tint = 0xff0000;
         });
         */

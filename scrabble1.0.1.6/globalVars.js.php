@@ -3,6 +3,10 @@
 
 var lang = 'EN';
 
+const INVITE_FRIEND_PROMPT = '<?= T::getInviteFriendPrompt($lang) ?>';
+const GAME_BOT_URL = '<?= T::PHRASES['game_bot_url'][$lang] ?>';
+
+
 var preloaderObject = false;
 
 const DEFAULT_FISHKA_SET = 'default';
@@ -43,6 +47,9 @@ const PAGE_NOT_FOUND = 404;
 
 const CHECK_BUTTON_INACTIVE_CLASS = 'disable-check-button';
 const SUBMIT_BUTTON_INACTIVE_CLASS = 'disable-submit-button';
+const TOP_PERCENT = 0.15;
+const FISHKI_PERCENT = 0.15;
+const BOTTOM_PERCENT = 0.7;
 
 var commonId = false;
 
@@ -76,7 +83,8 @@ var chooseFishka = false;
 var fullscreenButtonSize = 64;
 var FullScreenButton = false;
 
-var buttonWidth = 240 * 2;
+var buttonWidth = 120 * 2;
+var buttonStepX = 10 * 2;
 var buttonStepY = 50 * 2;
 
 var requestSended = false;
@@ -87,13 +95,29 @@ var propKoef = 1;
 var buttonHeightKoef = 1;
 var fishkaScale = 1;
 
+var cells = [];
+var newCells = [];
+var fixedContainer = [];
+var container = [];
+var yacheikaWidth = 32 * 2;
+var correctionX = 6 * 2;
+var correctionY = -7 * 2;
+
 if (windowInnerWidth > windowInnerHeight) {
     var screenOrient = HOR;
     var gameWidth = standardHorizontalWidth;
     var gameHeight = standardHorizontalHeight;
     var knopkiWidth = gameWidth - gameHeight;
-    var lotokX = 30 * 2;
-    var lotokY = 30 * 2;
+
+    var topHeight = gameHeight * TOP_PERCENT;
+    var fishkiHeight = gameHeight * FISHKI_PERCENT;
+    var botHeight = gameHeight * BOTTOM_PERCENT;
+    var topXY = {x: 0, y: 0};
+    var fishkiXY = {x: 0, y: topHeight};
+    var botXY = {x: 0, y: topHeight + fishkiHeight};
+
+    var lotokX = fishkiXY.x + 30 * 2;
+    var lotokY = fishkiXY.y + 20 * 2;
     var lotokCellStep = 40 * 2;
     var lotokCellStepY = lotokCellStep;
     var lotokCapacityX = 10;
@@ -101,7 +125,6 @@ if (windowInnerWidth > windowInnerHeight) {
     var fullscreenXY = {x: gameWidth - gameHeight - fullscreenButtonSize / 2, y: fullscreenButtonSize / 2 + 16};
     var backY = (gameHeight - 2000) * Math.random();
     var backX = (gameWidth - 2000) * Math.random();
-
 } else {
     var screenOrient = VERT;
     if (isYandexAppGlobal()) {
@@ -111,19 +134,30 @@ if (windowInnerWidth > windowInnerHeight) {
     } else {
         const outerHeight = (window.screen.availHeight - window.outerHeight) / 2 + window.outerHeight;
         propKoef = outerHeight / window.outerWidth;
+
+        propKoef = window.innerHeight / window.innerWidth;
     }
 
     buttonHeightKoef = propKoef / (standardVerticalHeight / standardVerticalWidth);
     console.log(propKoef + '-' + buttonHeightKoef);
-    if (buttonHeightKoef < 1) {
+    /*if (buttonHeightKoef < 1) {
         buttonHeightKoef = 1;
-    }
+    }*/
     var gameWidth = standardVerticalWidth;
-    var gameHeight = buttonHeightKoef <= 1 ? standardVerticalHeight : (gameWidth * propKoef);
+    var gameHeight = /*buttonHeightKoef <= 1 ? standardVerticalHeight : */ (gameWidth * propKoef);
+
     console.log(gameHeight);
-    var knopkiWidth = gameWidth;
-    var lotokX = 30 * 2;
-    var lotokY = 530 * 2;
+    var knopkiWidth = gameWidth; // size of buttons block
+
+    var topHeight = (gameHeight - gameWidth) * TOP_PERCENT;
+    var fishkiHeight = (gameHeight - gameWidth) * FISHKI_PERCENT;
+    var botHeight = (gameHeight - gameWidth) * BOTTOM_PERCENT;
+    var topXY = {x: 0, y: 0};
+    var fishkiXY = {x: 0, y: topHeight + gameWidth};
+    var botXY = {x: 0, y: topHeight + gameWidth + fishkiHeight};
+
+    var lotokX = fishkiXY.x + 30 * 2;
+    var lotokY = fishkiXY.y + 20 * buttonHeightKoef * 2;
 
     if (buttonHeightKoef == 1) {
         var fishkaScale = 1.2;
@@ -143,24 +177,16 @@ if (windowInnerWidth > windowInnerHeight) {
     var backY = 100 + (gameWidth - 50) * Math.random();
     var backX = -1 * gameWidth * Math.random();
     var backScale = 1; // не используем, хз как работает setscale в Фазере
+
+    correctionY += topHeight;
 }
+
+var buttonHeight = topHeight;
 
 var lotokCells = [];
 
 var stepX = 0;
 var stepY = 0;
-
-var cells = [];
-
-var newCells = [];
-
-var fixedContainer = [];
-
-var container = [];
-
-var yacheikaWidth = 32 * 2;
-var correctionX = 6 * 2;
-var correctionY = -7 * 2;
 
 var gameScene = 0;
 

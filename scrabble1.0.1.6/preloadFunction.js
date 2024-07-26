@@ -7,33 +7,7 @@ function () {
     progressBox.fillRect(gameWidth / 2 - 320 / 2, gameHeight / 2 - 50 / 5, 320, 50);
 
     var showCaution = false;
-    /*
-    if (screenOrient == 'vertical' && !isYandexAppGlobal() && !isIOSDevice() && !isVkAppGlobal()) {
-        showCaution = true;
-        var textAPPWidth = this.cameras.main.width;
-        var textAPPHeight = this.cameras.main.height;
-        var androidText1 = this.make.text({
-            x: textAPPWidth / 2,
-            y: textAPPHeight / 2 - 150,
-            text: 'Внимание. Вышла новая версия Игры. Обновите ее, нажав shift-F5 в браузере',
-            style: {
-                font: '26px monospace',
-                fill: '#ff0000'
-            }
-        });
-        androidText1.setOrigin(0.5, 0.5);
-        var androidText2 = this.make.text({
-            x: textAPPWidth / 2,
-            y: textAPPHeight / 2 - 120,
-            text: 'или в Яндекс-Играх. В приложении Android Необходимо очистить кэш.',
-            style: {
-                font: '26px monospace',
-                fill: '#ff0000'
-            }
-        });
-        androidText2.setOrigin(0.5, 0.5);
-    }
-    */
+
     var textWidth = this.cameras.main.width;
     var textHeight = this.cameras.main.height;
     var loadingText = this.make.text({
@@ -77,17 +51,43 @@ function () {
     this.load.atlas('megaset_english', '//xn--d1aiwkc2d.club/img/letters_english.png', '//xn--d1aiwkc2d.club/img/letters_english.json');
     this.load.image('back', '//xn--d1aiwkc2d.club/img/background_test.jpg');
 
-    for (var k in buttons)
+    for (var k in buttons) {
         if ('modes' in buttons[k])
-            buttons[k]['modes'].forEach(mode => this.load.svg(k + mode, '//xn--d1aiwkc2d.club/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg', {
-                'width': buttons[k]['width'],
-                'height': 'height' in buttons[k] ? buttons[k].height : 32 * 2,
-            }));
+            buttons[k]['modes'].forEach(mode => this.load.svg(k + mode, '//xn--d1aiwkc2d.club/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg',
+                'width' in buttons[k]
+                    ? {
+                        'width': buttons[k]['width'],
+                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
+                    }
+                    : {
+                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
+                    }
+            ));
         else
-            modes.forEach(mode => this.load.svg(k + mode, '//xn--d1aiwkc2d.club/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg', {
-                'width': buttons[k]['width'],
-                'height': 'height' in buttons[k] ? buttons[k].height : 32 * 2,
-            }));
+            modes.forEach(mode => this.load.svg(k + mode, '//xn--d1aiwkc2d.club/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg',
+                'width' in buttons[k]
+                    ? {
+                        'width': buttons[k]['width'],
+                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
+                    }
+                    : {
+                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
+                    }
+            ));
+
+        modes.forEach(mode => console.log(
+            'width' in buttons[k]
+                ? {
+                    'width': buttons[k]['width'],
+                    'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
+                }
+                : {
+                    'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
+                }
+        ));
+    }
+
+
 
     this.load.svg('fullscreen', '//xn--d1aiwkc2d.club/img/fullscreen.svg', {
         'width': fullscreenButtonSize,

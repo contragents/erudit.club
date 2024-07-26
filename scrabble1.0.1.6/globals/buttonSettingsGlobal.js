@@ -2,7 +2,7 @@
 var svgButtons = {
     checkButton: {filename: 'proveryt'},
     submitButton: {filename: 'otpravit'},
-    shareButton: {filename: 'instrukt'},
+    instructButton: {filename: 'instrukt'},
     newGameButton: {filename: 'new_game'},
     resetButton: {filename: 'steret'},
     changeButton: {filename: 'pomenyat'},
@@ -11,39 +11,77 @@ var svgButtons = {
     playersButton: {filename: 'igroki'}
 };
 
+var topButtons = {newGameButton: {displayWidth: 0}, instructButton: {displayWidth: 0}, prizesButton: {displayWidth: 0}, inviteButton: {displayWidth: 0}};
+
 var modes = ['Otjat', 'Alarm', 'Inactive', 'Navedenie', 'Najatie'];
 
 var buttons = {
-    razdvButton: {
-        filename: 'razdv',
-        modes: ['Otjat', 'Navedenie', 'Najatie'],
-        x: fullscreenXY['x'],
-        y: fullscreenXY['y'],
-        caption: 'Во весь экран',
-        width: fullscreenButtonSize,
-        object: false, svgObject: false,
-        enableTint: 0x00ff00,
-        pointerupFunction: function () {
-            document.body.requestFullscreen();
-        }
-    },
-    checkButton: {
-        filename: 'proveryt',
-        x: lotokX + buttonWidth / 2 - lotokCellStep / 2 + 5,
-        y: lotokY + lotokCellStepY * lotokCapacityY,
-        caption: 'проверить',
+    newGameButton: {
+        filename: 'new_game2',
+        x: topXY.x + lotokX + buttonWidth / 2 - lotokCellStep / 2 + 5,
+        y: (topXY.y + topHeight) / 2,
+        caption: 'New#Game',
         width: buttonWidth,
         object: false, svgObject: false,
-        enableTint: 0x00ff00,
-        enabled: {myTurn: 1, preMyTurn: 1, otherTurn: 1},
         pointerupFunction: function () {
-            checkButtonFunction()
+            newGameButtonFunction()
+        }
+    },
+    instructButton: {
+        filename: 'instrukt2',
+        x: topXY.x + lotokX + buttonWidth / 2 - lotokCellStep / 2 + 5 + buttonWidth,
+        y: (topXY.y + topHeight) / 2,
+        caption: document.location.hostname == 'xn--d1aiwkc2d.club' ? 'поделиться' : 'инструкция',
+        //height:
+        width: buttonWidth / 2,
+        object: false, svgObject: false,
+        enableTint: 0x00ff00,
+        pointerupFunction: function () {
+            shareButtonFunction()
+        }
+    },
+    prizesButton: {
+        filename: 'prizes2',
+        modes: ['Otjat', 'Navedenie', 'Najatie'],
+        x: (topXY.x + knopkiWidth) / 2,
+        y: (topXY.y + topHeight) / 2,
+        caption: 'Prizes',
+        width: buttonWidth / 2,
+        //height: topHeight,
+        object: false,
+        svgObject: false,
+        enableTint: 0x00ff00,
+        pointerupFunction: function () {
+            return;
+        }
+    },
+    inviteButton: {
+        filename: 'invite2',
+        modes: ['Otjat', 'Navedenie', 'Najatie'],
+        x: topXY.x + knopkiWidth - buttonWidth,
+        y: topXY.y + topHeight / 2,
+        caption: 'Invite',
+        width: buttonWidth / 2,
+        object: false,
+        svgObject: false,
+        enableTint: 0x00ff00,
+        pointerupFunction: function () {
+            {
+                if (commonId) {
+                    botUrl = GAME_BOT_URL + '/?start=inv_' + commonId;
+                    shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(botUrl)
+                        + '&text=' + encodeURIComponent(INVITE_FRIEND_PROMPT);
+                    document.location = shareUrl;
+                }
+
+                return false;
+            }
         }
     },
     submitButton: {
-        filename: 'otpravit',
-        x: 0,
-        y: 0,
+        filename: 'otpravit2',
+        x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
+        y: botXY.y + botHeight * 0.125,
         caption: 'отправить',
         width: buttonWidth,
         object: false, svgObject: false,
@@ -53,35 +91,12 @@ var buttons = {
             submitButtonFunction()
         }
     },
-    shareButton: {
-        filename: 'instrukt',
-        x: 0,
-        y: 0,
-        caption: document.location.hostname == 'xn--d1aiwkc2d.club' ? 'поделиться' : 'инструкция',
-        width: buttonWidth,
-        object: false, svgObject: false,
-        enableTint: 0x00ff00,
-        pointerupFunction: function () {
-            shareButtonFunction()
-        }
-    },
-    newGameButton: {
-        filename: 'new_game',
-        x: 0,
-        y: 0,
-        caption: 'новая#игра',
-        width: buttonWidth,
-        object: false, svgObject: false,
-        pointerupFunction: function () {
-            newGameButtonFunction()
-        }
-    },
     resetButton: {
-        filename: 'steret',
-        x: 0,
-        y: 0,
+        filename: 'steret2',
+        x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
+        y: botXY.y + botHeight * (0.25 + 0.125),
         caption: 'стереть',
-        width: buttonWidth * 0.75,
+        width: buttonWidth,
         object: false, svgObject: false,
         enableTint: 0x00ff00,
         enabled: {myTurn: 1, preMyTurn: 1, otherTurn: 1},
@@ -90,11 +105,11 @@ var buttons = {
         }
     },
     changeButton: {
-        filename: 'pomenyat',
-        x: 0,
-        y: 0,
+        filename: 'pomenyat2',
+        x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
+        y: botXY.y + botHeight * (0.5 + 0.125),
         caption: 'поменять',
-        width: buttonWidth * 0.75,
+        width: buttonWidth,
         object: false, svgObject: false,
         enableTint: 0x00ff00,
         enabled: {myTurn: 1},
@@ -102,69 +117,69 @@ var buttons = {
             changeButtonFunction()
         }
     },
+    playersButton: {
+        filename: 'igroki2',
+        x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
+        y: botXY.y + botHeight * (0.75 + 0.125),
+        caption: 'игроки',
+        width: buttonWidth / 2,
+        object: false, svgObject: false,
+        pointerupFunction: function () {
+            playersButtonFunction()
+        }
+    },
+    checkButton: {
+        filename: 'proveryt2',
+        x: botXY.x + knopkiWidth / 2,
+        y: botXY.y + botHeight * 0.125,
+        caption: 'проверить',
+        width: buttonWidth,
+        object: false,
+        svgObject: false,
+        enableTint: 0x00ff00,
+        enabled: {myTurn: 1, preMyTurn: 1, otherTurn: 1},
+        pointerupFunction: function () {
+            checkButtonFunction()
+        }
+    },
     chatButton: {
         filename: 'chat2',
-        x: 0,
-        y: 0,
+        x: botXY.x + knopkiWidth / 2,
+        y: botXY.y + botHeight * (0.75 + 0.125),
         caption: 'чат',
-        width: 128,
-        height: 128,
+        width: buttonWidth / 2,
         object: false, svgObject: false,
         pointerupFunction: function () {
             chatButtonFunction()
         },
-        preCalc: function () {
-            this.x = buttons['changeButton']['x'] - buttons['changeButton']['svgObject'].width / 2 + buttons['changeButton']['svgObject'].width * this.width / buttons['changeButton']['width'] / 2;
-            this.y = buttons['changeButton']['y'] + buttonStepY;
-        }
     },
     logButton: {
-        filename: 'chat2',
-        x: 0,
-        y: 0,
+        filename: 'log2',
+        x: botXY.x + buttonStepX + buttonWidth / 2,
+        y: botXY.y + botHeight * (0.75 + 0.125),
         caption: 'лог',
-        width: 128,
-        height: 128,
+        width: buttonWidth / 2,
         object: false, svgObject: false,
         pointerupFunction: function () {
             logButtonFunction()
         },
-        preCalc: function () {
-            this.x = buttons['changeButton']['x'] + buttons['changeButton']['svgObject'].width / 2 - buttons['changeButton']['svgObject'].width * this.width / buttons['changeButton']['width'] / 2;
-            this.y = buttons['chatButton']['y'];
-        }
     },
-    playersButton: {
-        filename: 'igroki',
-        x: 0,
-        y: 0,
-        caption: 'игроки',
-        width: buttonWidth * 0.75,
-        object: false, svgObject: false,
+    razdvButton: {
+        filename: 'razdv2',
+        modes: ['Otjat', 'Navedenie', 'Najatie'],
+        x: fullscreenXY['x'],
+        y: fullscreenXY['y'],
+        caption: 'Во весь экран',
+        //width: fullscreenButtonSize,
+        object: false,
+        svgObject: false,
+        enableTint: 0x00ff00,
         pointerupFunction: function () {
-            playersButtonFunction()
-        },
-        preCalc: function () {
-            this.x = buttons['changeButton']['x'];
-            this.y = buttons['newGameButton']['y'];
+            document.body.requestFullscreen();
         }
     }
 };
 
-buttons['submitButton']['x'] = buttons['checkButton']['x'];
-buttons['submitButton']['y'] = buttons['checkButton']['y'] + buttonStepY;
-
-buttons['shareButton']['x'] = buttons['submitButton']['x'];
-buttons['shareButton']['y'] = buttons['submitButton']['y'] + buttonStepY;
-
-buttons['newGameButton']['x'] = buttons['shareButton']['x'];
-buttons['newGameButton']['y'] = buttons['shareButton']['y'] + buttonStepY;
-
-buttons['resetButton']['x'] = buttons['checkButton']['x'] + buttons['checkButton']['width'] + buttonStepY / 2 + (knopkiWidth - (buttons['checkButton']['x'] + buttons['checkButton']['width'] + buttons['resetButton']['width'])) / 2;
-buttons['resetButton']['y'] = buttons['checkButton']['y'];
-
-buttons['changeButton']['x'] = buttons['resetButton']['x'];
-buttons['changeButton']['y'] = buttons['resetButton']['y'] + buttonStepY;
 
 
 

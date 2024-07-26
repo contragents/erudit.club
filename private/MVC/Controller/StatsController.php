@@ -48,14 +48,26 @@ class StatsController extends BaseController
 
     public function Run()
     {
-        // ini_set("display_errors", 1);
-        // error_reporting(E_ALL);
+         ini_set("display_errors", 1);
+         error_reporting(E_ALL);
 
         return parent::Run();
     }
 
+    public function prizesAction(): string
+    {
+        $res = '';
+
+        foreach(AchievesModel::PRIZE_LINKS as $link) {
+            $res .= ViewHelper::img(['src' => '/' . $link]);
+        }
+
+        return $res;
+    }
+
     public function viewAction()
     {
+
         $baseUrl = self::getUrl('view', self::$Request, ['page']);
 
         $achievesCount = AchievesModel::getAchievesByCommonIdCount(self::$Request['common_id'], self::getViewFilters());
