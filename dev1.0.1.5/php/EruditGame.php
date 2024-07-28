@@ -101,7 +101,7 @@ class Game extends \Game
 								title=\"Кликните для увеличения изображения\" 
 								id=\"{$record['type']}\" 
 								onclick=\"showFullImage('{$record['type']}', 500, 100);\" 
-								src=\"https://xn--d1aiwkc2d.club/{$record['link']}\" width=\"100px\" />";
+								src=\"/{$record['link']}\" width=\"100px\" />";
                 $recordsShown++;
                 if ($recordsShown >= 3) {
                     break;

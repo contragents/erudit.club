@@ -1,10 +1,12 @@
 <?php
+include_once(__DIR__ . '/autoload.php');
+
 header("Content-type: text/css; charset: UTF-8");
 $json = file_get_contents('../img/letters.json');
 $arr = json_decode($json,true);
 //print_r($arr); exit();
 //Генерим json для английских букв
-$json = file_get_contents('https://xn--d1aiwkc2d.club/img/letters_english.json');
+$json = file_get_contents('../img/letters_english.json');
 $arr = json_decode($json,true);
 $resObj = "var coords = {";
 foreach($arr['textures'][0]['frames'] as $num => $frame) {
@@ -21,7 +23,7 @@ foreach($arr['textures'][0]['frames'] as $num => $frame)
         if ($num != 31)
             print ".letter_$num{
                 display: inline-block;
-                background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+                background: url(/img/letters.png);
                 background-color: grey;    
                 background-position: -".($frame['frame']['x']+3)."px -".$frame['frame']['y']."px; 
                 width:44px;
@@ -36,7 +38,7 @@ foreach($arr['textures'][0]['frames'] as $num => $frame)
         elseif ($num == 31)
             print ".letter_$num{
                 display: inline-block;
-                background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+                background: url(/img/letters.png);
                 background-color: grey;    
                 background-position: -".($frame['frame']['x']+3)."px -".($frame['frame']['y']-4)."px; 
                 width:44px;
@@ -60,7 +62,7 @@ foreach($arr['textures'][0]['frames'] as $num => $frame)
         if ($num == 53) 
             print ".letter_$num{
                 display: inline-block;
-                background: url(https://xn--d1aiwkc2d.club/img/letters_english.png);
+                background: url(/img/letters_english.png);
                 background-color: grey;    
                 background-position: -".round($frame['frame']['x']*$koef)."px -".round($frame['frame']['y']*$koef)."px; 
                 background-size: {$imgWidth}px;
@@ -76,7 +78,7 @@ foreach($arr['textures'][0]['frames'] as $num => $frame)
             elseif ($num == 43) 
                 print ".letter_$num{
                     display: inline-block;
-                    background: url(https://xn--d1aiwkc2d.club/img/letters_english.png);
+                    background: url(/img/letters_english.png);
                     background-color: grey;    
                     background-position: -".round($frame['frame']['x']*$koef)."px -".round(($frame['frame']['y']-8)*$koef)."px; 
                     background-size: {$imgWidth}px;
@@ -92,7 +94,7 @@ foreach($arr['textures'][0]['frames'] as $num => $frame)
             elseif ($num == 46) 
                 print ".letter_$num{
                     display: inline-block;
-                    background: url(https://xn--d1aiwkc2d.club/img/letters_english.png);
+                    background: url(/img/letters_english.png);
                     background-color: grey;    
                     background-position: -".round($frame['frame']['x']*$koef)."px -".round(($frame['frame']['y']+6)*$koef)."px; 
                     background-size: {$imgWidth}px;
@@ -108,7 +110,7 @@ foreach($arr['textures'][0]['frames'] as $num => $frame)
                 elseif ($num == 40) 
                     print ".letter_$num{
                         display: inline-block;
-                        background: url(https://xn--d1aiwkc2d.club/img/letters_english.png);
+                        background: url(/img/letters_english.png);
                         background-color: grey;    
                         background-position: -".round($frame['frame']['x']*$koef)."px -".round(($frame['frame']['y']-2)*$koef)."px; 
                         background-size: {$imgWidth}px;
@@ -124,7 +126,7 @@ foreach($arr['textures'][0]['frames'] as $num => $frame)
                 elseif ($num == 56) //w
                     print ".letter_$num{
                         display: inline-block;
-                        background: url(https://xn--d1aiwkc2d.club/img/letters_english.png);
+                        background: url(/img/letters_english.png);
                         background-color: grey;    
                         background-position: -".round($frame['frame']['x']*$koef*0.9)."px -".round(($frame['frame']['y']-2)*$koef*0.9)."px; 
                         background-size: ".round($imgWidth*0.9)."px;
@@ -140,7 +142,7 @@ foreach($arr['textures'][0]['frames'] as $num => $frame)
             else
                 print ".letter_$num{
                     display: inline-block;
-                    background: url(https://xn--d1aiwkc2d.club/img/letters_english.png);
+                    background: url(/img/letters_english.png);
                     background-color: grey;    
                     background-position: -".(round(($frame['frame']['x']+3)*$koef))."px -".round($frame['frame']['y']*$koef)."px; 
                     background-size: {$imgWidth}px;
@@ -158,7 +160,7 @@ foreach($arr['textures'][0]['frames'] as $num => $frame)
 
 print ".letter_999{
     display: inline-block;
-    background: url(https://xn--d1aiwkc2d.club/img/star_transparent.png);
+    background: url(/img/star_transparent.png);
     background-color: grey;    
     background-position: center center;
     background-size: 30px;
@@ -176,7 +178,7 @@ print ".letter_999{
 
 print ".letter_9999{
     display: inline-block;
-    background: url(https://xn--d1aiwkc2d.club/img/star_transparent.png);
+    background: url(/img/star_transparent.png);
     background-color: grey;    
     background-position: center center;
     background-size: contain;

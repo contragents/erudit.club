@@ -39,21 +39,21 @@ function () {
 
     preloaderObject = this;
 
-    this.load.image('no_network', '//xn--d1aiwkc2d.club/img/no_network_transparent.png');
-    this.load.svg('ground', 'img/field_source.svg', {'width': 513 * 2, 'height': 500 * 2});
-    this.load.svg('donate', '//xn--d1aiwkc2d.club/img/donate.svg');
-    this.load.image('zvezda', 'img/star_transparent.png');
-    this.load.svg('zvezdaVerh', 'img/star_transparent_2.svg', {scale: 0.025 * 2});
-    this.load.svg('zvezdaCenter', 'img/star_transparent_2.svg', {scale: 0.06 * 2});
-    this.load.atlas('fishka_empty', 'img/fishka_empty.png', 'img/fishka_empty.json');
-    this.load.atlas('megaset', 'img/letters.png', '//xn--d1aiwkc2d.club/img/letters.json');
-    this.load.atlas('digits', 'img/letters.png', '//xn--d1aiwkc2d.club/img/nums.json');
-    this.load.atlas('megaset_english', '//xn--d1aiwkc2d.club/img/letters_english.png', '//xn--d1aiwkc2d.club/img/letters_english.json');
-    this.load.image('back', '//xn--d1aiwkc2d.club/img/background_test.jpg');
+    this.load.image('no_network', '/img/no_network_transparent.png');
+    this.load.svg('ground', '/img/field_source.svg', {'width': 513 * 2, 'height': 500 * 2});
+    this.load.svg('donate', '/img/donate.svg');
+    this.load.image('zvezda', '/img/star_transparent.png');
+    this.load.svg('zvezdaVerh', '/img/star_transparent_2.svg', {scale: 0.025 * 2});
+    this.load.svg('zvezdaCenter', '/img/star_transparent_2.svg', {scale: 0.06 * 2});
+    this.load.atlas('fishka_empty', '/img/fishka_empty.png', '/img/fishka_empty.json');
+    this.load.atlas('megaset', '/img/letters.png', '/img/letters.json');
+    this.load.atlas('digits', '/img/letters.png', '/img/nums.json');
+    this.load.atlas('megaset_english', '/img/letters_english.png', '/img/letters_english.json');
+    this.load.image('back', '/img/background_test.jpg');
 
     for (var k in buttons) {
         if ('modes' in buttons[k])
-            buttons[k]['modes'].forEach(mode => this.load.svg(k + mode, '//xn--d1aiwkc2d.club/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg',
+            buttons[k]['modes'].forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg',
                 'width' in buttons[k]
                     ? {
                         'width': buttons[k]['width'],
@@ -64,7 +64,7 @@ function () {
                     }
             ));
         else
-            modes.forEach(mode => this.load.svg(k + mode, '//xn--d1aiwkc2d.club/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg',
+            modes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg',
                 'width' in buttons[k]
                     ? {
                         'width': buttons[k]['width'],
@@ -89,7 +89,7 @@ function () {
 
 
 
-    this.load.svg('fullscreen', '//xn--d1aiwkc2d.club/img/fullscreen.svg', {
+    this.load.svg('fullscreen', '/fullscreen.svg', {
         'width': fullscreenButtonSize,
         'height': fullscreenButtonSize
     });

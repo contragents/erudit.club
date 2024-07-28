@@ -24,7 +24,7 @@ return "<tr style='border-top:1px solid black !important;'>
         ? "Вы"
         : $this->gameStatus['users'][$this->gameStatus[$user['ID']]]['username'])
     . (!$rating['isActive']
-        ? '&nbsp;<img title="Игрок отключился" height="24px" src="https://xn--d1aiwkc2d.club/img/no-network-logo.png" />'
+        ? '&nbsp;<img title="Игрок отключился" height="24px" src="/img/no-network-logo.png" />'
         : '')
     . "<br />
       <span style='white-space: nowrap;color:forestgreen;cursor:pointer'" . ($user['ID'] == $this->User ? " id='playersNikname' " : '') . " title='Никнейм игрока'>
@@ -50,9 +50,9 @@ return "<tr style='border-top:1px solid black !important;'>
         : '')
     . (is_numeric($top = $rating['top'])
         ? '' . ($top <= 3
-            ? "<br /><img style=\"cursor: pointer;\" title=\"Кликните для увеличения изображения\" id=\"{$user['ID']}\" onclick=\"showFullImage('{$user['ID']}', 500);\" src=\"https://xn--d1aiwkc2d.club/img/prizes/top_$top.svg\" width = \"192px\"/>"
+            ? "<br /><img style=\"cursor: pointer;\" title=\"Кликните для увеличения изображения\" id=\"{$user['ID']}\" onclick=\"showFullImage('{$user['ID']}', 500);\" src=\"/img/prizes/top_$top.svg\" width = \"192px\"/>"
             : ($top <= 10
-                ? " <strong>№$top</strong><br /><img style=\"cursor: pointer;\" title=\"Кликните для увеличения изображения\" id=\"{$user['ID']}\" onclick=\"showFullImage('{$user['ID']}', 500);\" src=\"https://xn--d1aiwkc2d.club/img/prizes/top_10.svg\" width = \"192px\"/>"
+                ? " <strong>№$top</strong><br /><img style=\"cursor: pointer;\" title=\"Кликните для увеличения изображения\" id=\"{$user['ID']}\" onclick=\"showFullImage('{$user['ID']}', 500);\" src=\"/img/prizes/top_10.svg\" width = \"192px\"/>"
                 : " <br /><strong>№$top</strong>"))
         : '')
     . "</td>"

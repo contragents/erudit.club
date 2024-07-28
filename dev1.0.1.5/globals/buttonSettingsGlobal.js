@@ -57,7 +57,7 @@ var buttons = {
         filename: 'instrukt',
         x: 0,
         y: 0,
-        caption: document.location.hostname == 'xn--d1aiwkc2d.club' ? 'поделиться' : 'инструкция',
+        caption: 'инструкция',
         width: buttonWidth,
         object: false, svgObject: false,
         enableTint: 0x00ff00,

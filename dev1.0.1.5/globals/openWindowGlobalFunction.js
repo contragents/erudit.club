@@ -1,6 +1,6 @@
 //
 async function openWindowGlobal(word){
-    const response = await fetch('//xn--d1aiwkc2d.club/<?=$dir?>/php/word.php?ingame=yes&word='+word, {
+    const response = await fetch('/<?=$dir?>/php/word.php?ingame=yes&word='+word, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     mode: 'cors', // no-cors, *cors, same-origin
     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached

@@ -1,7 +1,7 @@
 
 .letter_0{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -73px -538px; 
             width:44px;
@@ -14,7 +14,7 @@
         }
         .letter_1{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -130px -538px; 
             width:44px;
@@ -27,7 +27,7 @@
         }
         .letter_2{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -186px -538px; 
             width:44px;
@@ -40,7 +40,7 @@
         }
         .letter_3{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -237px -538px; 
             width:44px;
@@ -53,7 +53,7 @@
         }
         .letter_4{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -294px -538px; 
             width:44px;
@@ -66,7 +66,7 @@
         }
         .letter_5{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -348px -538px; 
             width:44px;
@@ -79,7 +79,7 @@
         }
         .letter_6{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -409px -538px; 
             width:44px;
@@ -92,7 +92,7 @@
         }
         .letter_7{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -454px -538px; 
             width:44px;
@@ -105,7 +105,7 @@
         }
         .letter_8{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -513px -538px; 
             width:44px;
@@ -118,7 +118,7 @@
         }
         .letter_9{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -567px -538px; 
             width:44px;
@@ -131,7 +131,7 @@
         }
         .letter_10{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -621px -538px; 
             width:44px;
@@ -144,7 +144,7 @@
         }
         .letter_11{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -675px -538px; 
             width:44px;
@@ -157,7 +157,7 @@
         }
         .letter_12{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -24px -590px; 
             width:44px;
@@ -170,7 +170,7 @@
         }
         .letter_13{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -78px -590px; 
             width:44px;
@@ -183,7 +183,7 @@
         }
         .letter_14{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -131px -590px; 
             width:44px;
@@ -196,7 +196,7 @@
         }
         .letter_15{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -187px -590px; 
             width:44px;
@@ -209,7 +209,7 @@
         }
         .letter_16{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -239px -590px; 
             width:44px;
@@ -222,7 +222,7 @@
         }
         .letter_17{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -294px -590px; 
             width:44px;
@@ -235,7 +235,7 @@
         }
         .letter_18{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -347px -590px; 
             width:44px;
@@ -248,7 +248,7 @@
         }
         .letter_19{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -401px -590px; 
             width:44px;
@@ -261,7 +261,7 @@
         }
         .letter_20{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -462px -590px; 
             width:44px;
@@ -274,7 +274,7 @@
         }
         .letter_21{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -511px -590px; 
             width:44px;
@@ -287,7 +287,7 @@
         }
         .letter_22{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -567px -590px; 
             width:44px;
@@ -300,7 +300,7 @@
         }
         .letter_23{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -621px -590px; 
             width:44px;
@@ -313,7 +313,7 @@
         }
         .letter_24{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -682px -590px; 
             width:44px;
@@ -326,7 +326,7 @@
         }
         .letter_25{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -157px -640px; 
             width:44px;
@@ -339,7 +339,7 @@
         }
         .letter_26{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -205px -640px; 
             width:44px;
@@ -352,7 +352,7 @@
         }
         .letter_27{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -264px -640px; 
             width:44px;
@@ -365,7 +365,7 @@
         }
         .letter_28{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -313px -640px; 
             width:44px;
@@ -378,7 +378,7 @@
         }
         .letter_29{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -364px -640px; 
             width:44px;
@@ -391,7 +391,7 @@
         }
         .letter_30{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -430px -640px; 
             width:44px;
@@ -404,7 +404,7 @@
         }
         .letter_31{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -476px -641px; 
             width:44px;
@@ -417,7 +417,7 @@
         }
         .letter_32{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -529px -640px; 
             width:44px;
@@ -430,7 +430,7 @@
         }
         .letter_33{
             display: inline-block;
-            background: url(https://xn--d1aiwkc2d.club/img/letters.png);
+            background: url(/img/letters.png);
             background-color: grey;    
             background-position: -185px -24px; 
             width:44px;
@@ -443,7 +443,7 @@
         }
         .letter_999{
     display: inline-block;
-    background: url(https://xn--d1aiwkc2d.club/img/star_transparent.png);
+    background: url(/img/star_transparent.png);
     background-color: grey;    
     background-position: center center;
     background-size: 30px;

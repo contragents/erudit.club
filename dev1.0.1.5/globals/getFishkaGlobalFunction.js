@@ -126,40 +126,19 @@ function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = D
 async function loadFishkiSet(fishkaSet) {
     fishkiLoaded[fishkaSet] = [];
 
-    /*CODES['RU'].forEach(function (numLetter) {
-        imgName = fishkaSet + numLetter;
-        preloaderObject.load.svg(imgName, '//xn--d1aiwkc2d.club/img/fishki_sets/' + fishkaSet + '/' + numLetter + '.svg');
-
-        if (numLetter != 999) {
-            let numfishka = numLetter + 999 + 1;
-            imgName = fishkaSet + numfishka;
-            preloaderObject.load.svg(imgName, '//xn--d1aiwkc2d.club/img/fishki_sets/' + fishkaSet + '/' + numfishka + '.svg');
-        }
-    });*/
-
     CODES[lang].forEach(function (numLetter) {
         imgName = fishkaSet + numLetter;
-        preloaderObject.load.svg(imgName, '//xn--d1aiwkc2d.club/img/fishki_sets/' + fishkaSet + '/' + numLetter + '.svg');
+        preloaderObject.load.svg(imgName, '/img/fishki_sets/' + fishkaSet + '/' + numLetter + '.svg');
 
         if (numLetter != 999) {
             let numfishka = numLetter + 999 + 1;
             imgName = fishkaSet + numfishka;
-            preloaderObject.load.svg(imgName, '//xn--d1aiwkc2d.club/img/fishki_sets/' + fishkaSet + '/' + numfishka + '.svg');
+            preloaderObject.load.svg(imgName, '/img/fishki_sets/' + fishkaSet + '/' + numfishka + '.svg');
         }
     });
 
     preloaderObject.load.start();
     preloaderObject.load.on('complete', function () {
-        /*CODES['RU'].forEach(function (numLetter) {
-            imgName = fishkaSet + numLetter;
-            fishkiLoaded[fishkaSet][numLetter] = imgName;
-            if (numLetter != 999) {
-                let numfishka = numLetter + 999 + 1;
-                imgName = fishkaSet + numfishka;
-                fishkiLoaded[fishkaSet][numfishka] = imgName;
-            }
-        });*/
-
         CODES[lang].forEach(function (numLetter) {
             imgName = fishkaSet + numLetter;
             fishkiLoaded[fishkaSet][numLetter] = imgName;

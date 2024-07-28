@@ -1,8 +1,9 @@
 <?php
+include_once(__DIR__ . '/autoload_helper.php');
 
 if (!empty($_GET['search'])) {
     header("HTTP/1.1 301 Moved Permanently");
-    header("Location: https://xn--d1aiwkc2d.club/dict/".$_GET['search']);
+    header("Location: " . Config::$config['domain'] . "/dict/" . $_GET['search']);
     header("Connection: close");
 }
 
@@ -13,6 +14,6 @@ if ($_GET['word'] == '') {
 }
 
 include(__DIR__ . '/yandex1.0.1.1/php/word.php');
-include (__DIR__ . '/private/MVC/View/Tpl/main_footer.php');
+include(__DIR__ . '/private/MVC/View/Tpl/main_footer.php');
 
 exit();

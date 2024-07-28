@@ -24,13 +24,13 @@
                 var img = document.getElementById('strange');
                 var xhr = new XMLHttpRequest();
                 var body = 'png=' + encodeURIComponent(img.src);
-                xhr.open("POST", '//xn--d1aiwkc2d.club/snapshot.php', true);
+                xhr.open("POST", '/snapshot.php', true);
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
                 xhr.onreadystatechange = function (govno){
                     if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                         console.log(xhr.responseText);
-                        window.open('//xn--d1aiwkc2d.club/snapshots/'+xhr.responseText+'/');
+                        window.open('/snapshots/'+xhr.responseText+'/');
                     };
                 };
 

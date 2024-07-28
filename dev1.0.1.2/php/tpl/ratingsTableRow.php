@@ -31,7 +31,7 @@ return ViewHelper::tag(
                         ? "Вы"
                         : $this->gameStatus['users'][$this->gameStatus[$user['ID']]]['username'])
                     . (!$rating['isActive']
-                        ? '&nbsp;<img title="Игрок отключился" height="24px" src="https://xn--d1aiwkc2d.club/img/no-network-logo.png" />'
+                        ? '&nbsp;<img title="Игрок отключился" height="24px" src="/img/no-network-logo.png" />'
                         : '')
                     . ViewHelper::br()
                     . ViewHelper::tag(
@@ -111,7 +111,7 @@ return ViewHelper::tag(
                                 $user['ID'],
                                 500
                             ),
-                            'src' => "https://xn--d1aiwkc2d.club/img/prizes/top_$top.svg",
+                            'src' => "/img/prizes/top_$top.svg",
                             'width' => '192px'
                         ]
                     ))
@@ -128,7 +128,7 @@ return ViewHelper::tag(
                                     $user['ID'],
                                     500
                                 ),
-                                'src' => 'https://xn--d1aiwkc2d.club/img/prizes/top_10.svg',
+                                'src' => '/img/prizes/top_10.svg',
                                 'width' => '192px'
                             ]
                         ))

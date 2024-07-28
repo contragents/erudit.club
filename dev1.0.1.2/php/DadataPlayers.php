@@ -3,6 +3,7 @@
 namespace Dadata;
 
 use AvatarModel;
+use Config;
 use Erudit\Game;
 use ORM;
 use PlayerModel;
@@ -13,7 +14,7 @@ use \DB;
 class Players
 {
     const UPLOAD_DIR = '/img/upload/';
-    const BASE_UPLOAD_FILE_URL = 'https://xn--d1aiwkc2d.club/img/upload/';
+
     const ENABLE_UPLOAD_EXT = [
         'jpg' => 'jpg',
         'jpeg' => 'jpeg',
@@ -83,7 +84,7 @@ class Players
                 $_SERVER['DOCUMENT_ROOT'] . self::UPLOAD_DIR . $filename
             )) {
                 $avatarAddRes = self::addUserAvatarUrl(
-                    self::BASE_UPLOAD_FILE_URL . $filename,
+                    self::getBaseUploadFileURL() . $filename,
                     self::getCommonIDByCookie($cookie)
                 );
 
@@ -334,5 +335,10 @@ class Players
         }
 
         return false;
+    }
+
+    public static function getBaseUploadFileURL()
+    {
+        return Config::$config['domain'] . '/img/upload/';
     }
 }

@@ -13,21 +13,21 @@ instruction = `
                                 <h2 id="nav3">Словарь</h2>
                                 <p>Разрешается использовать все&nbsp;слова, приведенные в кэмбриджском англо-русском словаре (https://dictionary.cambridge.org/ru/ ), включая наиболее <a href="#" onclick="$('#abbr').css({ display: 'block' });return false;" style="cursor: pointer;" title="ad AGM AIDS ATM BA BBC BSc BSE CCTV CD CEO CFC Corp dab DIY DNA DVD EFL ELT er ESL FA FAQ FM GCSE GDP GMO GMT GNP GP GPS HIV HQ ICT IOU IPA IQ ISP it ITV IVF JP JPEG LAN LCD LPG MA MBA MEP MP MPV MRI MRSA Ms MSc MTV NATO OAP PC PDA PE pin POW PR pt QC ram RSI SARS SASE SATNAV SGML SIDS SMS SPF SUV TB TEFL TESOL TV UFO UK USA VAT VCR VDU VIP WC WMD www XML">употребительные аббревиатуры</a>.<span id="abbr" style="display:none;">ad AGM AIDS ATM BA BBC BSc BSE CCTV CD CEO CFC Corp dab DIY DNA DVD EFL ELT er ESL FA FAQ FM GCSE GDP GMO GMT GNP GP GPS HIV HQ ICT IOU IPA IQ ISP it ITV IVF JP JPEG LAN LCD LPG MA MBA MEP MP MPV MRI MRSA Ms MSc MTV NATO OAP PC PDA PE pin POW PR pt QC ram RSI SARS SASE SATNAV SGML SIDS SMS SPF SUV TB TEFL TESOL TV UFO UK USA VAT VCR VDU VIP WC WMD www XML</span></p>
                                 <p>Разрешено использовать только нарицательные имена существительные в единственном числе (либо во множественном при отсутствии у слова формы единственного числа).</p>
-                                <p>Чтобы посмотреть, какие слова составили игроки в предыдущих ходах, а также узнать их значение и &laquo;стоимость&raquo;, кликните на кнопку <img src="https://xn--d1aiwkc2d.club/img/otjat/log.svg" height="64"/></p>
+                                <p>Чтобы посмотреть, какие слова составили игроки в предыдущих ходах, а также узнать их значение и &laquo;стоимость&raquo;, кликните на кнопку <img src="/img/otjat/log.svg" height="64"/></p>
                             </div>
                             <div class="fon-right">
                                 <h2 id="nav4">Ход игры</h2>
                                 <p>В начале игры каждому дается по 7 фишек. За один ход можно выложить несколько&nbsp;слов. Каждое новое&nbsp;слово&nbsp;должно соприкасаться (иметь общую букву или буквы) с ранее выложенными&nbsp;словами.&nbsp;Слова&nbsp;читаются только по горизонтали слева направо и по вертикали сверху вниз.</p>
                                 <p>Первое выложенное&nbsp;слово&nbsp;должно проходить через центральную клетку.</p>
                                 <p>
-                                Отправить свою комбинацию можно, нажав кнопку <br /><img src="https://xn--d1aiwkc2d.club/img/otjat/otpravit.svg" width="80%"/>
+                                Отправить свою комбинацию можно, нажав кнопку <br /><img src="/img/otjat/otpravit.svg" width="80%"/>
                                 <br />
-                                Если в данный момент ход не Ваш - кнопка станет неактивной <br /><img src="https://xn--d1aiwkc2d.club/img/inactive/otpravit.svg" width="80%"/>
+                                Если в данный момент ход не Ваш - кнопка станет неактивной <br /><img src="/img/inactive/otpravit.svg" width="80%"/>
                                 <br />
                                 Если кнопка ОТПРАВИТЬ начала мигать красным - время Вашего хода заканчивается. Скорее отправляйте свою комбинацию!
                                 </p>
                                 <p>Если игрок не хочет или не может выложить ни одного слова, - он имеет право поменять любое количество своих букв, пропустив при этом ход.
-                                <br /><img src="https://xn--d1aiwkc2d.club/img/otjat/pomenyat.svg" width="80%"/>
+                                <br /><img src="/img/otjat/pomenyat.svg" width="80%"/>
                                 </p>
                                 <p>Любая последовательность букв по горизонтали и вертикали должна являться&nbsp;словом. Т.е. в игре не допускается появление на поле случайных буквосочетаний, не представляющих собою&nbsp;слов, соответствующих вышеприведенным критериям.</p>
                                 <p>После каждого хода необходимо добрать новых букв до 7.</p>

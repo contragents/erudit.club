@@ -35,7 +35,7 @@ var game = new Phaser.Game(config);
 document.body.style.backgroundColor = "#dddddd";
 // experiments with background
 // document.body.style.backgroundColor = "#b3b1ad";
-// document.body.style.backgroundImage="url('https://xn--d1aiwkc2d.club/img/background_repeat_small.jpg')";
+// document.body.style.backgroundImage="url('/img/background_repeat_small.jpg')";
 
 //<?php include('ysdk.js')?>
 

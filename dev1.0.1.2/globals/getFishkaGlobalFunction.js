@@ -132,24 +132,13 @@ async function loadFishkiSet(fishkaSet) {
 
     console.log(lang);
 
-    /*CODES['RU'].forEach(function (numLetter) {
-        imgName = fishkaSet + numLetter;
-        preloaderObject.load.svg(imgName, '//xn--d1aiwkc2d.club/img/fishki_sets/' + fishkaSet + '/' + numLetter + '.svg');
-
-        if (numLetter != 999) {
-            let numfishka = numLetter + 999 + 1;
-            imgName = fishkaSet + numfishka;
-            preloaderObject.load.svg(imgName, '//xn--d1aiwkc2d.club/img/fishki_sets/' + fishkaSet + '/' + numfishka + '.svg');
-        }
-    });*/
-
     CODES[lang].forEach(function (numLetter) {
         imgName = fishkaSet + numLetter;
-        preloaderObject.load.svg(imgName, '//xn--d1aiwkc2d.club/img/fishki_sets/' + fishkaSet + '/' + numLetter + '.svg');
+        preloaderObject.load.svg(imgName, '/img/fishki_sets/' + fishkaSet + '/' + numLetter + '.svg');
         if (numLetter != 999) {
             let numfishka = numLetter + 999 + 1;
             imgName = fishkaSet + numfishka;
-            preloaderObject.load.svg(imgName, '//xn--d1aiwkc2d.club/img/fishki_sets/' + fishkaSet + '/' + numfishka + '.svg');
+            preloaderObject.load.svg(imgName, '/img/fishki_sets/' + fishkaSet + '/' + numfishka + '.svg');
         }
     });
 

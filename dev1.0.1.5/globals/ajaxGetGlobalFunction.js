@@ -37,7 +37,7 @@ async function fetchGlobal(script, param_name, param_data) {
 
 async function fetchGlobalMVC(urlPart, param_name, param_data) {
     const response = await fetch(
-        '//xn--d1aiwkc2d.club/' + urlPart,
+        '/' + urlPart,
         {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors', // no-cors, *cors, same-origin
@@ -77,7 +77,7 @@ function commonParams() {
 }
 
 async function fetchGlobalNominal(script, param_name, param_data) {
-    const response = await fetch('//xn--d1aiwkc2d.club/<?=$dir?>/php/'
+    const response = await fetch('/<?=$dir?>/php/'
         + script
         + '?'
         + commonParams(),
@@ -110,7 +110,7 @@ async function fetchGlobalNominal(script, param_name, param_data) {
 }
 
 async function fetchGlobalYowser(script, param_name, param_data) {
-    const response = await fetch('//xn--d1aiwkc2d.club/<?=$dir?>/php/yowser/index.php'
+    const response = await fetch('/<?=$dir?>/php/yowser/index.php'
         + '?cooki='
         + localStorage.erudit_user_session_ID
         + '&script='

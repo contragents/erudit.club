@@ -347,7 +347,7 @@ var gameStates = {
                             //for avoiding errors in IDE
                             //<?php include('instruction_eng.js'); ?>
                             /** todo not working on yandex*/
-                            asyncCSS('https://xn--d1aiwkc2d.club/css/choose_css.css');
+                            asyncCSS('/css/choose_css.css');
                             fetchGlobal(INIT_GAME_SCRIPT, '', $(".bootbox-body #myGameForm").serialize())
                                 .then((data) => {
                                     if (data == '')
@@ -690,7 +690,7 @@ function commonCallback(data) {
         lang = data['lang'];
         if (lang == 'EN') {
             // ToDo not working under Yandex
-            asyncCSS('https://xn--d1aiwkc2d.club/css/choose_css.css');
+            asyncCSS('/css/choose_css.css');
             //for avoiding errors in IDE
             //<?php include('instruction_eng.js'); ?>
         }

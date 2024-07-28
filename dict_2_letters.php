@@ -1,5 +1,5 @@
 <?php
-include(__DIR__ . '/autoload_helper.php');
+include_once(__DIR__ . '/autoload_helper.php');
 
 if (isset($_GET['lang']) && $_GET['lang'] == 'EN') {
     $lng = '?lang=EN';
@@ -25,7 +25,7 @@ if (isset($_GET['strlen']) && $_GET['strlen'] > 2) {
     $strlen = 2;
 }
 
-if ($_SERVER['HTTP_REFERER'] != 'https://xn--d1aiwkc2d.club/') {
+if ($_SERVER['HTTP_REFERER'] != Config::$config['domain'] . '/') {
     $play_erudit = "&nbsp;<span style=\"white-space:nowrap\"><a style=\"color:#60b442; text-decoration:none;\" href=\"/\" title=\"ИГРАТЬ!\" target=\"_blank\">ИГРАТЬ В ЭРУДИТ!</a></span>";
 }
 

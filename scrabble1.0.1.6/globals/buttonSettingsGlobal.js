@@ -31,7 +31,7 @@ var buttons = {
         filename: 'instrukt2',
         x: topXY.x + lotokX + buttonWidth / 2 - lotokCellStep / 2 + 5 + buttonWidth,
         y: (topXY.y + topHeight) / 2,
-        caption: document.location.hostname == 'xn--d1aiwkc2d.club' ? 'поделиться' : 'инструкция',
+        caption: 'инструкция',
         //height:
         width: buttonWidth / 2,
         object: false, svgObject: false,
@@ -71,7 +71,9 @@ var buttons = {
                     botUrl = GAME_BOT_URL + '/?start=inv_' + commonId;
                     shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(botUrl)
                         + '&text=' + encodeURIComponent(INVITE_FRIEND_PROMPT);
-                    document.location = shareUrl;
+                    console.log(shareUrl);
+                    //location = shareUrl;
+                    document.querySelector('#invite_link').click();
                 }
 
                 return false;

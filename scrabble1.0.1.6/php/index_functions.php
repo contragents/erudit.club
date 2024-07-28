@@ -200,7 +200,7 @@ slovo = '" . urldecode($_GET['word']) . "';";
     $content .= str_replace(
         ["\r\n", "\n"],
         '<br />',
-        str_replace('href="', 'href="https://xn--d1aiwkc2d.club', $row['content'] . $row['content_perevod'])
+        str_replace('href="', 'href="' . Config::$config['domain'], $row['content'] . $row['content_perevod'])
     );
 
     $content = preg_replace('/googletag\.cmd\.push\(.{0,400}\}\);/','', $content);

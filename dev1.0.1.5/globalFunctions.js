@@ -59,8 +59,8 @@ function genDivGlobal(i, isChange = false) {
     };
     let koef = 44 / 76;
     let imgWidth = Math.round(1187 * koef);
-    let styleBeg = 'display: inline-block; background: url(https://xn--d1aiwkc2d.club/img/letters_english.png); background-color:grey;background-position:-';
-    let divTpl = '<div onmouseover="this.style.backgroundColor=\'green\';" onmouseout="this.style.backgroundColor=\'grey\';" style="display: inline-block; background: url(https://xn--d1aiwkc2d.club/img/letters_english.png); background-color:grey;background-position:-';
+    let styleBeg = 'display: inline-block; background: url(/img/letters_english.png); background-color:grey;background-position:-';
+    let divTpl = '<div onmouseover="this.style.backgroundColor=\'green\';" onmouseout="this.style.backgroundColor=\'grey\';" style="display: inline-block; background: url(/img/letters_english.png); background-color:grey;background-position:-';
     let styleEnd = ' background-size: ' + imgWidth + 'px;'
         + ' width: 44px;'
         + ' height: 54px;'
@@ -265,7 +265,7 @@ function savePlayerAvatar(url, commonID) {
 
     let URL = useLocalStorage
         ? (
-            '//xn--d1aiwkc2d.club/<?=$dir?>/php/yowser/index.php'
+            '/<?=$dir?>/php/yowser/index.php'
             + '?cooki='
             + localStorage.erudit_user_session_ID
             + '&script='
@@ -276,7 +276,7 @@ function savePlayerAvatar(url, commonID) {
             + (pageActive === 'hidden' ? '&page_hidden=true' : '')
         )
         : (
-            '//xn--d1aiwkc2d.club/<?=$dir?>/php/'
+            '/<?=$dir?>/php/'
             + AVATAR_UPLOAD_SCRIPT
             + '?queryNumber=' + (queryNumber++)
             + '&lang=' + lang

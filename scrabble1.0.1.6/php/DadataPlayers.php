@@ -3,6 +3,7 @@
 namespace Dadata;
 
 use AvatarModel;
+use Config;
 use Erudit\Game;
 use ORM;
 use PlayerModel;
@@ -13,7 +14,7 @@ use \DB;
 class Players
 {
     const UPLOAD_DIR = '/img/upload/';
-    const BASE_UPLOAD_FILE_URL = 'https://xn--d1aiwkc2d.club/img/upload/';
+
     const ENABLE_UPLOAD_EXT = [
         'jpg' => 'jpg',
         'jpeg' => 'jpeg',
@@ -83,7 +84,7 @@ class Players
                 $_SERVER['DOCUMENT_ROOT'] . self::UPLOAD_DIR . $filename
             )) {
                 $avatarAddRes = self::addUserAvatarUrl(
-                    self::BASE_UPLOAD_FILE_URL . $filename,
+                    self::getBaseUploadFileURL() . $filename,
                     self::getCommonIDByCookie($cookie)
                 );
 
@@ -110,7 +111,7 @@ class Players
     {
         $url = trim($url);
         $url = lcfirst($url);
-        
+
         if (!preg_match('/^https?:\/\//', $url)) {
             return json_encode(
                 [
@@ -121,16 +122,17 @@ class Players
         }
 
         $updateRes = UserModel::updateUrl($commonID, $url);
-        if ($updateRes >= 1) {
-            return json_encode(['result' => 'saved', 'url' => $url]);
-        } elseif($updateRes === 0) {
-            return json_encode(['result' => 'saved', 'message' => 'Файл перезаписан', 'url' => $url]);
+
+        if ($updateRes) {
+            return json_encode(['result' => 'saved', 'message' => 'Аватар обновлен', 'url' => $url]);
         } else {
             return json_encode(
                 [
                     'result' => 'error',
                     'message' => 'Ошибка сохранения нового URL'
                 ]
+                ,
+                JSON_UNESCAPED_UNICODE
             );
         }
     }
@@ -333,5 +335,10 @@ class Players
         }
 
         return false;
+    }
+
+    public static function getBaseUploadFileURL()
+    {
+        return Config::$config['domain'] . '/img/upload/';
     }
 }
