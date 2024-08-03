@@ -943,9 +943,33 @@ function commonCallback(data) {
 
 function userScores(data) {
     if ("score_arr" in data) {
+        for (let k in data['score_arr']) {
+            if (k == data['yourUserNum']) {
+                let youBlock = players.youBlock.svgObject;
+
+                if (!isUserBlockActive) {
+                    console.log(k, 'player' + (+k + 1) + 'Block');
+                    let changeBlock = players['player' + (+k + 1) + 'Block'].svgObject;
+                    if (changeBlock.visible) {
+                        changeBlock.setVisible(false);
+                    }
+
+                    youBlock.x = changeBlock.x;
+                    youBlock.y = changeBlock.y;
+                    youBlock.setVisible(true);
+
+                    isUserBlockActive = true;
+                }
+
+                displayScoreGlobal(data['score_arr'][k], 'youBlock', gameState === MY_TURN_STATE);
+            } else {
+                console.log(k, 'player' + (+k + 1) + 'Block');
+                displayScoreGlobal(data['score_arr'][k], 'player' + (+k + 1) + 'Block', k == data['activeUser']);
+            }
+        }
         if (ochki_arr === false) {
             ochki_arr = [];
-            for (k in data['score_arr']) {
+            for (let k in data['score_arr']) {
                 if (k == data['yourUserNum']) {
                     ochki_arr[k] = window.game.scene.scenes[gameScene].add.text(0, 0, '', {
                         color: 'black',
@@ -953,7 +977,6 @@ function userScores(data) {
                     });
                     ochki_arr[k].y = ochki.y;
                 } else {
-
                     fontSize = vremiaFontSize - vremiaFontSizeDelta;
                     ochki_arr[k] = window.game.scene.scenes[gameScene].add.text(0, 0, '', {
                         color: 'black',
@@ -985,7 +1008,6 @@ function userScores(data) {
             //ochki_arr[k].setFontSize(vremiaFontSizeDefault);
             ochki_arr[k].visible = true;
             x = ochki_arr[k].x + ochki_arr[k].width + 9 - Math.floor(data['score_arr'][k] / 100);
-
         }
     }
 }

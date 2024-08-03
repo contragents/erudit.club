@@ -12,12 +12,13 @@ function () {
     noNetworkImg.setDepth(10000);
     noNetworkImg.visible = false;
 
-    var back = this.add.image(backX, backY, 'back');
-    back.alpha = 0.3;
-    back.setOrigin(0, 0);
+    var back = this.add.sprite(gameWidth / 2, gameHeight / 2, 'back');
+    back.displayWidth = this.sys.canvas.width;
+    back.displayHeight = this.sys.canvas.height;
 
-    // back.setScale(backScale); // todo непонятно как работает, картинка съезжает хз куда
-
+    WebView.postEvent('web_app_set_header_color', false, {
+        color: '#2C3C6C',
+    });
 
     var ground = this.add.image(385, 375, 'ground');
     ground.setOrigin(0, 0);
@@ -26,13 +27,6 @@ function () {
         ? 0
         : topHeight;
     ground.setCrop(16 * 2, 3 * 2, 550 * 2, 550 * 2);
-
-    // Past-adjusting back-image
-    if (backY > ground.height) {
-        back.y = ground.height - 30;
-    } else if ((backY + ground.height) > game.config.height) {
-        back.y = game.config.height - back.height;
-    }
 
     stepX = game.config.width - ground.width;
     stepY = 0;
@@ -98,6 +92,16 @@ function () {
     if (buttons['submitButton']['svgObject'] !== false) {
         buttons['submitButton']['svgObject'].disableInteractive();
         buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
+    }
+
+    for (let k in players) {
+        players[k]['svgObject'] = getSVGBlock(players[k]['x'], players[k]['y'], k, this, players[k].scalable, 'numbers' in players[k]);
+        players[k]['svgObject'].bringToTop(players[k]['svgObject'].getByName(k + 'Otjat'));
+        players[k]['svgObject'].getByName(k + 'Alarm').setVisible(false);
+        if (players[k].numbers) {
+            let score = Math.floor(Math.random() * 500);
+            displayScoreGlobal(score, k, score >= 250);
+        }
     }
 
 //    <?php include('create/fishkaDragEvents.js')?>

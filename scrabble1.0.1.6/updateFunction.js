@@ -52,23 +52,23 @@ function (time, delta) {
         }
     }
 
-    if (ochki_arr !== false)
-        if ('activeUser' in responseData)
-            for (k in ochki_arr)
+    if (ochki_arr !== false) {
+        if ('activeUser' in responseData) {
+            for (k in ochki_arr) {
                 if ((k == responseData['activeUser']) && (responseData['userNames'][k] !== '')) {
                     let x = ochki_arr[k].x;
                     if (((flor % 2) === 0) && (flor > lastflor)) {
                         ochki_arr[k].visible = false;
-                        //ochki_arr[k].setFontSize(vremiaFontSizeDefault + 3);
-                        //ochki_arr[k].x = ochki_arr[k].x-13;
                     } else if (flor > lastflor) {
                         ochki_arr[k].visible = true;
-                        //ochki_arr[k].setFontSize(vremiaFontSizeDefault);
-                        //ochki_arr[k].x = ochki_arr[k].x+13;
                     }
                     lastflor = flor;
-                } else if (responseData['userNames'][k] === '')
+                } else if (responseData['userNames'][k] === '') {
                     ochki_arr[k].visible = false;
+                }
+            }
+        }
+    }
 
     if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'startGame')
         if (flor > lastTimeCorrection) {

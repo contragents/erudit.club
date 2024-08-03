@@ -42,6 +42,8 @@ const SET_AVATAR_SCRIPT = 'set_player_avatar_url.php';
 const HOR = 'horizontal';
 const VERT = 'vertical';
 
+const MY_TURN_STATE = 'myTurn';
+
 const BAD_REQUEST = 400;
 const PAGE_NOT_FOUND = 404;
 
@@ -52,6 +54,7 @@ const FISHKI_PERCENT = 0.15;
 const BOTTOM_PERCENT = 0.7;
 
 var commonId = false;
+var isUserBlockActive = false;
 
 var turnAutocloseDialog = false;
 var timeToCloseDilog = false;

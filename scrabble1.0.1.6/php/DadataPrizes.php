@@ -149,14 +149,16 @@ class Prizes
             return false;
         }
 
-        if (AchievesModel::add([
+        if (AchievesModel::add(
+            [
                 AchievesModel::COMMON_ID_FIELD => $commonID,
                 AchievesModel::DATE_ACHIEVED_FIELD => date('Y-m-d H:i:s', $arr['record_date']),
                 AchievesModel::EVENT_TYPE_FIELD => $eventType,
                 AchievesModel::EVENT_PERIOD_FIELD => $eventPeriod,
                 AchievesModel::WORD_FIELD => $arr['word'] ?: '',
                 AchievesModel::EVENT_VALUE_FIELD => $arr['value'],
-        ])) {
+            ]
+        )) {
             return true;
         }
 
@@ -656,7 +658,7 @@ class Prizes
         if (!$weekRecord) {
             $preWeekRecord = Cache::get(self::WORD_LEN_WEEKLY . (date('W') - 1));
             $weekRecord = $preWeekRecord
-                ? ['word' => $preWeekRecord['word'], 'length' => $preWeekRecord['word'] * self::WEEK_DISCOUNT]
+                ? ['word' => $preWeekRecord['word'], 'length' => mb_strlen($preWeekRecord['word'], 'UTF-8') * self::WEEK_DISCOUNT]
                 : ['word' => 'эра', 'length' => 3];
         }
 

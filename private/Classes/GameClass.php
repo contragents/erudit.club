@@ -10,7 +10,7 @@ class Game
     const GAME_STATUS_KEY = 'erudit.game_status_';
     const GAME_USER_KEY = 'erudit.user_';
     const CURRENT_GAME_KEY = 'erudit.current_game_';
-    protected $Queue = \Queue::class;
+    protected $Queue = Queue::class;
     const GAMES_KEY = 'erudit.games_';
     public static $configStatic;
     public $serverName;
@@ -116,13 +116,11 @@ class Game
         $this->User = $this->validateCookie($_COOKIE['erudit_user_session_ID']);
 
         // Если не удалось дождаться лока по текущему игроку, то посылаем ошибку и выходим
-        if(!Cache::waitLock($this->User)) {
-            Cache::unlock($this->User);
-            Cache::waitLock($this->User);
-            /*\BadRequest::sendBadRequest(
+        if(!Cache::waitLock($this->User, true)) {
+            BadRequest::sendBadRequest(
                 ['err_msg' => 'lock error'],
                 $this->isBot()
-            );*/
+            );
         }
 
         $this->currentGame = Cache::get($this->Queue::GET_GAME_KEY . $this->User);
@@ -130,7 +128,7 @@ class Game
         if (!$this->currentGame) {
             $this->currentGame = false;
 
-            return;
+            return $this;
         } else {
             $this->currentGameUsers = Cache::get($this->Queue::GET_GAME_KEY . "{$this->currentGame}_users");
 
@@ -154,11 +152,11 @@ class Game
 
                 if (isset($_GET['page_hidden']) && $_GET['page_hidden'] == 'true') {
                     if (isset($_GET['queryNumber']) && $_GET['queryNumber'] < ($this->gameStatus['users'][$this->numUser]['last_request_num'] ?? 0)) {
-                        throw new \BadRequest('Num packet error when returned from page_hidden state');
+                        throw new BadRequest('Num packet error when returned from page_hidden state');
                     }
                 }
-            } catch (\BadRequest $e) {
-                \BadRequest::sendBadRequest(
+            } catch (BadRequest $e) {
+                BadRequest::sendBadRequest(
                     [
                         'err_msg' => $e->getMessage(),
                         'err_file' => $e->getFile(),
@@ -171,7 +169,7 @@ class Game
 
             if (isset($_GET['queryNumber']) && $_GET['queryNumber'] > 5 && $_GET['queryNumber'] < ($this->gameStatus['users'][$this->numUser]['last_request_num'] ?? 0)) {
                 // todo  при возврате десинка в игре проблемы с получением фишек. обычно при перезагрузке страницы
-                \BadRequest::sendBadRequest(
+                BadRequest::sendBadRequest(
                     [
                         'message' => 'Потеря синхронизации с сервером',
                     ],
@@ -1282,7 +1280,7 @@ class Game
              */
             $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus);
         } catch (\Throwable $e) {
-            \BadRequest::logBadRequest(
+            BadRequest::logBadRequest(
                 [
                     'message' => 'Ошибка обработки данных!',
                     'err_msg' => $e->getMessage(),
@@ -1470,7 +1468,7 @@ class Game
                 }
             }
         } catch (\Throwable $e) {
-            \BadRequest::sendBadRequest(
+            BadRequest::sendBadRequest(
                 [
                     'message' => 'Ошибка обработки данных!',
                     'err_msg' => $e->getMessage(),
@@ -1559,7 +1557,7 @@ class Game
     {
         if (!$this->currentGame) {
             if ($this->Queue::isUserInQueue($this->User)) {
-                return $this->startGame();
+                return (new $this->Queue($this->User, $this, $_POST))->doSomethingWithThisStuff($_GET['lang'] ?? '');
             }
 
             $chooseGameParams = [
@@ -1932,16 +1930,6 @@ class Game
                 'usersInfo' => $this->currentGameUsers,//хз зачем этот ключ - нигде не используется
             ]
         );
-    }
-
-    public function startGame()
-    {
-        if ($this->currentGame && is_array($this->currentGameUsers)) {
-            return $this->gameStarted(false);
-            //Вернули статус начатой игры без обновления статусов в кеше
-        }
-
-        return (new $this->Queue($this->User, $this, $_POST))->doSomethingWithThisStuff($_GET['lang'] ?? '');
     }
 
     protected function processInvites(&$arr)

@@ -49,9 +49,10 @@ function () {
     this.load.atlas('megaset', '/img/letters.png', '/img/letters.json');
     this.load.atlas('digits', '/img/letters.png', '/img/nums.json');
     this.load.atlas('megaset_english', '/img/letters_english.png', '/img/letters_english.json');
-    this.load.image('back', '/img/background_test.jpg');
+    // this.load.image('back', '/img/background_test.jpg');
+    this.load.svg('back', '/img/back2.svg', {'height': 1980, 'width': 1080});
 
-    for (var k in buttons) {
+    for (let k in buttons) {
         if ('modes' in buttons[k])
             buttons[k]['modes'].forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg',
                 'width' in buttons[k]
@@ -74,23 +75,33 @@ function () {
                         'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
                     }
             ));
+    }
 
-        modes.forEach(mode => console.log(
-            'width' in buttons[k]
+    for (let k in players) {
+        playerBlockModes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + players[k]['filename'] + '.svg',
+            'width' in players[k]
                 ? {
-                    'width': buttons[k]['width'],
-                    'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
+                    'width': players[k]['width'],
+                    'height': 'height' in players[k] ? players[k].height : buttonHeight,
                 }
                 : {
-                    'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
+                    'height': 'height' in players[k] ? players[k].height : buttonHeight,
                 }
         ));
     }
 
 
+    playerBlockModes.forEach(mode => {
+        for (let k in digits.playerDigits[mode]) {
+            this.load.svg(mode + '_' + 'player_' + k, '/img/' + mode.toLowerCase() + '/' + digits.playerDigits[mode][k]['filename'] + '.svg',
+                {'height': buttonHeight * 0.5 / buttonHeightKoef, 'width': buttonHeight * 0.23 * 0.5 / buttonHeightKoef}
+            );
+        }
+    });
 
-    this.load.svg('fullscreen', '/fullscreen.svg', {
+
+    /*this.load.svg('fullscreen', '/fullscreen.svg', {
         'width': fullscreenButtonSize,
         'height': fullscreenButtonSize
-    });
+    });*/
 }

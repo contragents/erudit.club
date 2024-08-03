@@ -1,16 +1,4 @@
 //
-var svgButtons = {
-    checkButton: {filename: 'proveryt'},
-    submitButton: {filename: 'otpravit'},
-    instructButton: {filename: 'instrukt'},
-    newGameButton: {filename: 'new_game'},
-    resetButton: {filename: 'steret'},
-    changeButton: {filename: 'pomenyat'},
-    chatButton: {filename: 'chat'},
-    logButton: {filename: 'log'},
-    playersButton: {filename: 'igroki'}
-};
-
 var modes = ['Otjat', 'Alarm', 'Inactive', 'Navedenie', 'Najatie'];
 
 var buttons = {

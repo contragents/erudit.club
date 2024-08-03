@@ -171,7 +171,7 @@ class Cache
         unset(self::$locks[$lockKey]);
     }
 
-    public static function waitLock($lockKey): bool
+    public static function waitLock(string $lockKey, bool $force = false): bool
     {
         $lockTries = 0;
 
@@ -182,6 +182,11 @@ class Cache
 
             $lockTries++;
             usleep(self::LOCK_RETRY_TIME);
+        }
+
+        if($force) {
+            self::unlock($lockKey);
+            return self::waitLock($lockKey);
         }
 
         return false;
