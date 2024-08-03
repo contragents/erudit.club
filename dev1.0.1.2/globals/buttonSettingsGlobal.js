@@ -1,10 +1,10 @@
 //
-var modes = ['Otjat', 'Alarm', 'Inactive', 'Navedenie', 'Najatie'];
+var modes = [OTJAT_MODE, ALARM_MODE, 'Inactive', 'Navedenie', 'Najatie'];
 
 var buttons = {
     razdvButton: {
         filename: 'razdv',
-        modes: ['Otjat', 'Navedenie', 'Najatie'],
+        modes: [OTJAT_MODE, 'Navedenie', 'Najatie'],
         x: fullscreenXY['x'],
         y: fullscreenXY['y'],
         caption: 'Во весь экран',

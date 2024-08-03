@@ -410,7 +410,7 @@ var gameStates = {
         action: function (data) {
             gameStates['gameResults']['action'](data);
             buttons['submitButton']['svgObject'].setInteractive();
-            buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Otjat'));
+            buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
         },
         from_initRatingGame: function (data) {
             gameStates['startGame']['from_initGame']();
@@ -919,8 +919,8 @@ function commonCallback(data) {
                     ((data['chat'][k].indexOf('Новости') + 1) === 1))
             ) {
                 hasIncomingMessages = true;
-                buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm'));
-                buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', true);
+                buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE));
+                buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).setData('alarm', true);
             }
 
             chatLog.unshift(data['chat'][k]);

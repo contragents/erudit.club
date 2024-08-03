@@ -410,7 +410,7 @@ var gameStates = {
         action: function (data) {
             gameStates['gameResults']['action'](data);
             buttons['submitButton']['svgObject'].setInteractive();
-            buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Otjat'));
+            buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
         },
         from_initRatingGame: function (data) {
             gameStates['startGame']['from_initGame']();
@@ -919,8 +919,8 @@ function commonCallback(data) {
                     ((data['chat'][k].indexOf('Новости') + 1) === 1))
             ) {
                 hasIncomingMessages = true;
-                buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm'));
-                buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', true);
+                buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE));
+                buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).setData('alarm', true);
             }
 
             chatLog.unshift(data['chat'][k]);
@@ -957,14 +957,22 @@ function userScores(data) {
                     youBlock.x = changeBlock.x;
                     youBlock.y = changeBlock.y;
                     youBlock.setVisible(true);
+                    youBlock.setAlpha(1);
 
                     isUserBlockActive = true;
                 }
 
-                displayScoreGlobal(data['score_arr'][k], 'youBlock', gameState === MY_TURN_STATE);
+                displayScoreGlobal(data['score_arr'][k], 'youBlock', true);
+                buttonSetModeGlobal(players, 'youBlock', gameState === MY_TURN_STATE ? ALARM_MODE : OTJAT_MODE);
             } else {
-                console.log(k, 'player' + (+k + 1) + 'Block');
-                displayScoreGlobal(data['score_arr'][k], 'player' + (+k + 1) + 'Block', k == data['activeUser']);
+                let playerBlockName = 'player' + (+k + 1) + 'Block';
+
+                displayScoreGlobal(data['score_arr'][k], playerBlockName, false);
+                buttonSetModeGlobal(players, playerBlockName, k == data['activeUser'] ? ALARM_MODE : OTJAT_MODE);
+
+                if (players[playerBlockName].svgObject.alpha < 1) {
+                    players[playerBlockName].svgObject.setAlpha(1);
+                }
             }
         }
         if (ochki_arr === false) {

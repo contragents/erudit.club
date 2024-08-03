@@ -9,7 +9,7 @@ function submitButtonFunction() {
             .then((data) => {
                 if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
                     buttons['submitButton']['svgObject'].setInteractive();
-                    buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Otjat'));
+                    buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
                     dialog = bootbox.alert({
                         message: ('message' in data && data['message'] !== '')
                             ? (data['message'] + '<br /> Попробуйте отправить заново')
@@ -44,7 +44,7 @@ function checkButtonFunction() {
                 });
 
                 buttons['checkButton']['svgObject'].setInteractive();
-                buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + 'Otjat'));
+                buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + OTJAT_MODE));
             });
     }, 100);
 };
@@ -320,8 +320,8 @@ function chatButtonFunction() {
                     canOpenDialog = true;
                     canCloseDialog = true;
 
-                    buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Otjat'));
-                    buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', false);
+                    buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + OTJAT_MODE));
+                    buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).setData('alarm', false);
 
                     if ($(".bootbox-body #chattext").val() != '') {
 
@@ -362,8 +362,8 @@ function chatButtonFunction() {
                                     }
 
                                     buttons['chatButton']['svgObject'].setInteractive();
-                                    buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Otjat'));
-                                    buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').setData('alarm', false);
+                                    buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + OTJAT_MODE));
+                                    buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).setData('alarm', false);
                                 }
                             );
                     }
@@ -506,13 +506,13 @@ function playersButtonFunction() {
                     .find('img').css('background-color', 'rgba(0, 0, 0, 0)');
 
                 buttons['playersButton']['svgObject'].setInteractive();
-                buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + 'Otjat'));
+                buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
 
             });
     }, 100);
 
     setTimeout(function () {
         buttons['playersButton']['svgObject'].setInteractive();
-        buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + 'Otjat'));
+        buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
     }, 3000);
 }

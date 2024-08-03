@@ -45,9 +45,6 @@ function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits = false) {
                     .setName(mode + '_' + k.replace('digit_', '') + '_3')
                     .setVisible(false);
 
-                /*if(scalable) {
-                    elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
-                }*/
                 elementNumber++;
             }
         });
@@ -61,6 +58,7 @@ function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits = false) {
                 if(scalable) {
                     elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
                 }
+
                 elementNumber++;
             }
         });
@@ -74,6 +72,7 @@ function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits = false) {
                 if(scalable) {
                     elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
                 }
+
                 elementNumber++;
             }
         });
@@ -81,7 +80,10 @@ function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits = false) {
 
     let container = _this.add.container(X, Y, elements);
     container.setSize(elements[0].displayWidth, elements[0].displayHeight);
-    // container.setInteractive();
+
+    if (hasDigits) {
+        container.setAlpha(0.2);
+    }
 
     return container;
 }

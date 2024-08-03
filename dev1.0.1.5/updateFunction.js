@@ -109,12 +109,12 @@ function (time, delta) {
 
                 buttons['submitButton']['svgObject']
                     .bringToTop(buttons['submitButton']['svgObject']
-                        .getByName('submitButton' + 'Alarm'));
+                        .getByName('submitButton' + ALARM_MODE));
             } else {
 
                 buttons['submitButton']['svgObject']
                     .bringToTop(buttons['submitButton']['svgObject']
-                        .getByName('submitButton' + 'Otjat'));
+                        .getByName('submitButton' + OTJAT_MODE));
             }
 
 
@@ -123,12 +123,12 @@ function (time, delta) {
 
             buttons['newGameButton']['svgObject']
                 .bringToTop(buttons['newGameButton']['svgObject']
-                    .getByName('newGameButton' + 'Alarm'));
+                    .getByName('newGameButton' + ALARM_MODE));
         } else {
 
             buttons['newGameButton']['svgObject']
                 .bringToTop(buttons['newGameButton']['svgObject']
-                    .getByName('newGameButton' + 'Otjat'));
+                    .getByName('newGameButton' + OTJAT_MODE));
         }
 
 

@@ -444,7 +444,7 @@ function enableButtons() {
                     buttons[k]['svgObject'].setInteractive();
                     buttons[k]['svgObject']
                         .bringToTop(buttons[k]['svgObject']
-                            .getByName(k + 'Otjat'));
+                            .getByName(k + OTJAT_MODE));
                 }
 
             } else {

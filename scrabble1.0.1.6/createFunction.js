@@ -42,7 +42,7 @@ function () {
         buttons[k]['svgObject'] = getSVGButton(buttons[k]['x'], buttons[k]['y'], k, this);
 
         buttons[k]['svgObject'].on('pointerup', function () {
-            buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Otjat'));
+            buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
             if ('pointerupFunction' in buttons[k])
                 buttons[k]['pointerupFunction']();
         });
@@ -53,7 +53,7 @@ function () {
 
         buttons[k]['svgObject'].on('pointerover', function () {
             if (k == 'chatButton') {
-                if (buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').getData('alarm') !== true)
+                if (buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).getData('alarm') !== true)
                     buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Navedenie'));
             } else
                 buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Navedenie'));
@@ -61,13 +61,13 @@ function () {
 
         buttons[k]['svgObject'].on('pointerout', function () {
             if (k == 'chatButton') {
-                if (buttons['chatButton']['svgObject'].getByName('chatButton' + 'Alarm').getData('alarm') !== true)
-                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Otjat'));
+                if (buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).getData('alarm') !== true)
+                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
             } else if ('enabled' in buttons[k]) {
                 if (gameState in buttons[k]['enabled'])
-                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Otjat'));
+                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
             } else
-                buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Otjat'));
+                buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
         });
     }
 
@@ -96,12 +96,8 @@ function () {
 
     for (let k in players) {
         players[k]['svgObject'] = getSVGBlock(players[k]['x'], players[k]['y'], k, this, players[k].scalable, 'numbers' in players[k]);
-        players[k]['svgObject'].bringToTop(players[k]['svgObject'].getByName(k + 'Otjat'));
-        players[k]['svgObject'].getByName(k + 'Alarm').setVisible(false);
-        if (players[k].numbers) {
-            let score = Math.floor(Math.random() * 500);
-            displayScoreGlobal(score, k, score >= 250);
-        }
+        players[k]['svgObject'].bringToTop(players[k]['svgObject'].getByName(k + OTJAT_MODE));
+        players[k]['svgObject'].getByName(k + ALARM_MODE).setVisible(false);
     }
 
 //    <?php include('create/fishkaDragEvents.js')?>

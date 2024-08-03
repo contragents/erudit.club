@@ -1,7 +1,7 @@
 //
 var topButtons = {newGameButton: {displayWidth: 0}, instructButton: {displayWidth: 0}, prizesButton: {displayWidth: 0}, inviteButton: {displayWidth: 0}};
 
-var modes = ['Otjat', 'Alarm', 'Inactive', 'Navedenie', 'Najatie'];
+var modes = [OTJAT_MODE, ALARM_MODE, 'Inactive', 'Navedenie', 'Najatie'];
 
 var buttons = {
     newGameButton: {
@@ -30,7 +30,7 @@ var buttons = {
     },
     prizesButton: {
         filename: 'prizes2',
-        modes: ['Otjat', 'Navedenie', 'Najatie'],
+        modes: [OTJAT_MODE, 'Navedenie', 'Najatie'],
         x: (topXY.x + knopkiWidth) / 2,
         y: (topXY.y + topHeight) / 2,
         caption: 'Prizes',
@@ -44,7 +44,7 @@ var buttons = {
     },
     inviteButton: {
         filename: 'invite2',
-        modes: ['Otjat', 'Navedenie', 'Najatie'],
+        modes: [OTJAT_MODE, 'Navedenie', 'Najatie'],
         x: topXY.x + knopkiWidth - buttonWidth,
         y: topXY.y + topHeight / 2,
         caption: 'Invite',
@@ -156,7 +156,7 @@ var buttons = {
     },
     razdvButton: {
         filename: 'razdv2',
-        modes: ['Otjat', 'Navedenie', 'Najatie'],
+        modes: [OTJAT_MODE, 'Navedenie', 'Najatie'],
         x: fullscreenXY['x'],
         y: fullscreenXY['y'],
         caption: 'Во весь экран',
@@ -169,7 +169,7 @@ var buttons = {
     }
 };
 
-var playerBlockModes = ['Otjat', 'Alarm'];
+var playerBlockModes = [OTJAT_MODE, ALARM_MODE];
 var digitPositions = [3, 2, 1];
 
 var digits = {
@@ -269,7 +269,7 @@ var players = {
 
 function displayScoreGlobal(score, blockName, isActive = false)
 {
-    let mode = isActive ? 'Alarm' : 'Otjat';
+    let mode = isActive ? ALARM_MODE : OTJAT_MODE;
 
     let container = players[blockName].svgObject;
 
@@ -296,6 +296,19 @@ function displayScoreGlobal(score, blockName, isActive = false)
         container.getByName(mode + '_' + firstDigit + '_1').setVisible(true);
     }
 }
+
+function buttonSetModeGlobal(objectSet, objectName, mode)
+{
+    let svgObject = objectSet[objectName].svgObject;
+    svgObject.bringToTop(svgObject.getByName(objectName + mode));
+
+    if (mode === ALARM_MODE) {
+        svgObject.getByName(objectName + ALARM_MODE).setVisible(true);
+    } else {
+        svgObject.getByName(objectName + ALARM_MODE).setVisible(false);
+    }
+}
+
 
 
 

@@ -94,7 +94,7 @@ function () {
     playerBlockModes.forEach(mode => {
         for (let k in digits.playerDigits[mode]) {
             this.load.svg(mode + '_' + 'player_' + k, '/img/' + mode.toLowerCase() + '/' + digits.playerDigits[mode][k]['filename'] + '.svg',
-                {'height': buttonHeight * 0.5 / buttonHeightKoef, 'width': buttonHeight * 0.23 * 0.5 / buttonHeightKoef}
+                {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1), 'width': buttonHeight * 0.23 * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1)}
             );
         }
     });

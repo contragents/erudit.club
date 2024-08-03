@@ -53,6 +53,9 @@ const SET_AVATAR_SCRIPT = 'set_player_avatar_url.php';
 const HOR = 'horizontal';
 const VERT = 'vertical';
 
+const ALARM_MODE = 'Alarm';
+const OTJAT_MODE = 'Otjat';
+
 //params
 const NUM_BANK_FISHKI_PARAM = 'num_bank_fishki'
 var numBankFishki = false;
