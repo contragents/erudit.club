@@ -5,18 +5,18 @@
     <title>Контрольная панель Эрудит</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="refresh" content="20">
-    <link rel="stylesheet" type="text/css" href="/vendor/bootstrap_4.5.2/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap_4.5.2/bootstrap.min.css">
 
 
     <!-- JS dependencies -->
-    <script src="/vendor/jquery_1.12.4/jquery.min.js"></script>
+    <script src="/static/jquery_1.12.4/jquery.min.js"></script>
     <!-- Bootstrap 4 dependency -->
-    <script src="/vendor/popper_2.4.4/popper.min.js"></script>
-    <script src="/vendor/bootstrap_4.5.2/bootstrap.min.js"></script>
+    <script src="/static/popper_2.4.4/popper.min.js"></script>
+    <script src="/static/bootstrap_4.5.2/bootstrap.min.js"></script>
 
     <!-- bootbox code -->
-    <script src="/vendor/bootbox_5.4.0/bootbox.min.js"></script>
-    <script src="/vendor/bootbox_5.4.0/bootbox.locales.min.js"></script>
+    <script src="/static/bootbox_5.4.0/bootbox.min.js"></script>
+    <script src="/static/bootbox_5.4.0/bootbox.locales.min.js"></script>
 
 </head>
 

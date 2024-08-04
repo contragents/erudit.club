@@ -1,5 +1,6 @@
 
 //<?php $lang='RU'; ?>
+
 var lang = '<?= ($_GET['lang'] ?? '') == 'EN' ? 'EN' : 'RU' ?>';
 
 var preloaderObject = false;

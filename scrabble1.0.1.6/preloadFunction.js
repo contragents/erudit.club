@@ -65,7 +65,7 @@ function () {
                     }
             ));
         else
-            modes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg',
+            modes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg?ver=2',
                 'width' in buttons[k]
                     ? {
                         'width': buttons[k]['width'],

@@ -57,8 +57,6 @@ Config::makeEnvironment();
 // Проверяем режим дебага
 Config::checkDebugFlag();
 
-//include __DIR__ . '/vendor/autoload.php';
-
 /**
  * Глобальная функция вывода отладочной инфо, либо логирования (пока в keydb)
  * @param $data
