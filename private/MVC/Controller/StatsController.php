@@ -10,25 +10,6 @@ class StatsController extends BaseController
 
     const COMMON_URL = 'mvc/stats/';
 
-    /*public static function getUrl(string $action, array $params = [], array $excludedParams = [])
-    {
-        return self::COMMON_URL
-            . $action . '/'
-            . (!empty($params)
-                ? ('?' . implode(
-                        '&',
-                        array_filter(
-                            array_map(
-                                fn($param, $value) => !in_array($param, $excludedParams) ? "$param=$value" : null,
-                                array_keys($params),
-                                $params
-                            )
-                        )
-                    )
-                )
-                : '');
-    }*/
-
     private static function getViewFilters(): array
     {
         return [
