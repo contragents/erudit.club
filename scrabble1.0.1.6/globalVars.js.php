@@ -10,11 +10,11 @@ const GAME_BOT_URL = '<?= T::PHRASES['game_bot_url'][$lang] ?>';
 var preloaderObject = false;
 
 const DEFAULT_FISHKA_SET = 'default';
-const TEST_FISHKA_SET = 'MaxS';
-const FISHKA_AVAILABLE_SETS = {Gulnaraport: 30, MaxS: 30};
-const FISHKA_SET_NAMES = ['Gulnaraport', 'MaxS'];
+const TEST_FISHKA_SET = 'Girl'; // 'MaxS';
+const FISHKA_AVAILABLE_SETS = {Gulnaraport: 30, MaxS: 30, Girl: 30};
+const FISHKA_SET_NAMES = ['Gulnaraport', 'MaxS', 'Girl'];
 var fishkiLoaded = {};
-var userFishkaSet = 'MaxS';
+var userFishkaSet = 'Girl'; //'MaxS';
 const CODES = {
     'RU': [999, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
     'EN': [999, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]

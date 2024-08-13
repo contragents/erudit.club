@@ -9,27 +9,29 @@ class TonController extends BaseController
 
     public function Run()
     {
-         ini_set("display_errors", 1);
-         error_reporting(E_ALL);
+        ini_set("display_errors", 1);
+        error_reporting(E_ALL);
 
         return parent::Run();
     }
 
     public function cell_decodeAction(): string
     {
-        $strBin =  base64_decode(self::CELL_BASE64);
-        Cache::setex(self::DECODE_TMP_KEY, 5, $strBin);
+        $strBin = base64_decode(self::CELL_BASE64);
+        Cache::setex(self::DECODE_TMP_KEY, 5000, $strBin);
+        //return Cache::get(self::DECODE_TMP_KEY);
         $strlen = strlen($strBin);
-        $res = '';
+        $res = '<html><head><meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"></head><body>';
 
-        for ($i = 0; $i<=7; $i++ ) {
+        for ($i = 0; $i <= 7; $i++) {
             $res .= "Offset $i bits: <pre>";
-            for ($byteNum = 0; $byteNum <= $strlen; $byte++) {
-                $res .= chr(Cache::rawcommand('bitfield', [self::DECODE_TMP_KEY, 'get', 'u8', $byteNum*8 + $i])[0]);
+            for ($byteNum = 0; $byteNum <= $strlen; $byteNum++) {
+                $res .= chr(Cache::rawcommand('bitfield', [self::DECODE_TMP_KEY, 'get', 'u8', $byteNum * 8 + $i])[0] ?: 0);
             }
             $res .= "</pre>";
         }
 
+        $res .= '</body></html>';
         return $res;
     }
 }
