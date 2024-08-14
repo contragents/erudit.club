@@ -13,7 +13,7 @@ function () {
     var loadingText = this.make.text({
         x: textWidth / 2,
         y: textHeight / 2 - 50,
-        text: 'Загружаем игру...',
+        text: 'Scrabble is loading...',
         style: {
             font: '20px monospace',
             fill: '#000000'
@@ -96,7 +96,15 @@ function () {
             this.load.svg(mode + '_' + 'player_' + k, '/img/' + mode.toLowerCase() + '/' + digits.playerDigits[mode][k]['filename'] + '.svg',
                 {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1), 'width': buttonHeight * 0.23 * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1)}
             );
+
+            this.load.svg(mode + '_' + 'timer_' + k, '/img/' + mode.toLowerCase() + '/' + digits.playerDigits[mode][k]['filename'] + '.svg',
+                {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1), 'width': buttonHeight * 0.4 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)}
+            );
         }
+
+        this.load.svg(mode + '_' + 'dvoetoch', '/img/' + mode.toLowerCase() + '/numbers/' + 'dvoetoch' + '.svg',
+            {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1), 'width': buttonHeight * 0.15 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)}
+        );
     });
 
 

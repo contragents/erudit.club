@@ -256,6 +256,7 @@ var players = {
         svgObject: false,
     },
     timerBlock: {
+        // todo цифры таймера нужно загружать отдельно с учетом вертикального коэффициента
         filename: 'timer',
         x: botXY.x + knopkiWidth / 2,
         y: botXY.y + botHeight * 0.75 * 0.5 + buttonHeight / 2,
@@ -264,6 +265,12 @@ var players = {
         object: false,
         svgObject: false,
         scalable: false,
+        numbers: true,
+        numbersX1: 0 - buttonWidth * 2 / 2 * 0.15 * (buttonHeightKoef < 1 ? 1 : 1.4) + buttonWidth * 2 / 2 * 0.05,
+        dvoetochX: 0 - buttonWidth * 2 / 2 * 0.025 * (buttonHeightKoef < 1 ? 1 : 2.1),
+        numbersX2: 0 + buttonWidth * 2 / 2 * 0.05,
+        numbersX3: buttonWidth * 2 / 2 * 0.1 * (buttonHeightKoef < 1 ? 1 : 1.4) + buttonWidth * 2 / 2 * 0.035,
+        numbersY: buttonHeight * 2 / 5,
     },
 };
 
@@ -295,6 +302,40 @@ function displayScoreGlobal(score, blockName, isActive = false)
     if (firstDigit > 0) {
         container.getByName(mode + '_' + firstDigit + '_1').setVisible(true);
     }
+}
+
+function displayTimeGlobal(time, isActive = false)
+{
+    let mode = isActive ? ALARM_MODE : OTJAT_MODE;
+
+    let container = players.timerBlock.svgObject;
+
+    let thirdDigit = time % 10;
+
+    let secondDigit = ((time - thirdDigit) % 100) / 10;
+    let firstDigit = (time - secondDigit * 10 - thirdDigit) / 100;
+
+    if (!container.getByName(mode + '_' + 'dvoetoch').visible) {
+        container.getByName(mode + '_' + 'dvoetoch').setVisible(true);
+    }
+
+    for (let digit = 0; digit <= 9; digit++) {
+        for (let mod in playerBlockModes) {
+            for (let pos in digitPositions) {
+                console.log('timerBlock' + ': ' + playerBlockModes[mod] + '_' + digit + '_' + digitPositions[pos]);
+                container.getByName(playerBlockModes[mod] + '_' + digit + '_' + digitPositions[pos]).setVisible(false);
+            }
+        }
+    }
+
+    container.getByName(mode + '_' + thirdDigit + '_3').setVisible(true);
+    //if (secondDigit > 0 || firstDigit > 0) {
+        container.getByName(mode + '_' + secondDigit + '_2').setVisible(true);
+    //}
+
+    //if (firstDigit > 0) {
+        container.getByName(mode + '_' + firstDigit + '_1').setVisible(true);
+    //}
 }
 
 function buttonSetModeGlobal(objectSet, objectName, mode)

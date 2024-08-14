@@ -904,6 +904,8 @@ function commonCallback(data) {
         vremia.text = data['timeLeft'];
         vremiaMinutes = data['minutesLeft'];
         vremiaSeconds = data['secondsLeft'];
+
+        displayTimeGlobal(+vremiaMinutes * 100 + +vremiaSeconds);
     }
 
     if ('log' in data)
@@ -958,6 +960,7 @@ function userScores(data) {
                     youBlock.y = changeBlock.y;
                     youBlock.setVisible(true);
                     youBlock.setAlpha(1);
+                    players.timerBlock.svgObject.setAlpha(1);
 
                     isUserBlockActive = true;
                 }
