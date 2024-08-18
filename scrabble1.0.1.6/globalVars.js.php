@@ -71,8 +71,8 @@ var playerScores = {
 var timerState = {
     mode: OTJAT_MODE,
     digit3: 0,
-    digit2: false,
-    digit1: false
+    digit2: 0,
+    digit1: 0
 }
 
 var turnAutocloseDialog = false;

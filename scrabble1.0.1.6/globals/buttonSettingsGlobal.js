@@ -315,27 +315,15 @@ function displayScoreGlobal(score, blockName, isActive = false)
     let secondDigit = ((score - thirdDigit) % 100) / 10;
     let firstDigit = (score - secondDigit * 10 - thirdDigit) / 100;
 
-    /*for (let digit = 0; digit <= 9; digit++) {
-        for (let mod in playerBlockModes) {
-            for (let pos in digitPositions) {
-                container.getByName(playerBlockModes[mod] + '_' + digit + '_' + digitPositions[pos]).setVisible(false);
-            }
-        }
-    }*/
-
     if(thirdDigit !== playerScores[blockName].digit3 || mode !== playerScores[blockName].mode) {
-        console.log(playerScores[blockName].mode + '_' + playerScores[blockName].digit3 + '_' + '3');
         container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit3 + '_' + '3').setVisible(false);
     }
 
     if(secondDigit !== playerScores[blockName].digit2 || mode !== playerScores[blockName].mode) {
-        console.log(playerScores[blockName].mode + '_' + playerScores[blockName].digit2 + '_' + '2');
         container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit2 + '_' + '2').setVisible(false);
     }
 
     if(firstDigit !== playerScores[blockName].digit1 || mode !== playerScores[blockName].mode) {
-        console.log(playerScores[blockName].mode + '_' + playerScores[blockName].digit1 + '_' + '1');
-        container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit1 + '_' + '1').setVisible(false);
         container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit1 + '_' + '1').setVisible(false);
     }
 
@@ -346,6 +334,7 @@ function displayScoreGlobal(score, blockName, isActive = false)
 
 
     container.getByName(mode + '_' + thirdDigit + '_3').setVisible(true);
+
     if (secondDigit > 0 || firstDigit > 0) {
         container.getByName(mode + '_' + secondDigit + '_2').setVisible(true);
     }
@@ -375,22 +364,25 @@ function displayTimeGlobal(time)
         container.getByName(disabledMode + '_' + 'dvoetoch').setVisible(false);
     }
 
-    for (let digit = 0; digit <= 9; digit++) {
-        for (let mod in playerBlockModes) {
-            for (let pos in digitPositions) {
-                container.getByName(playerBlockModes[mod] + '_' + digit + '_' + digitPositions[pos]).setVisible(false);
-            }
-        }
+    if(thirdDigit !== timerState.digit3 || mode !== timerState.mode) {
+        container.getByName(timerState.mode + '_' + timerState.digit3 + '_' + '3').setVisible(false);
+        container.getByName(mode + '_' + thirdDigit + '_3').setVisible(true);
     }
 
-    container.getByName(mode + '_' + thirdDigit + '_3').setVisible(true);
-    //if (secondDigit > 0 || firstDigit > 0) {
+    if(secondDigit !== timerState.digit2 || mode !== timerState.mode) {
+        container.getByName(timerState.mode + '_' + timerState.digit2 + '_' + '2').setVisible(false);
         container.getByName(mode + '_' + secondDigit + '_2').setVisible(true);
-    //}
+    }
 
-    //if (firstDigit > 0) {
+    if(firstDigit !== timerState.digit1 || mode !== timerState.mode) {
+        container.getByName(timerState.mode + '_' + timerState.digit1 + '_' + '1').setVisible(false);
         container.getByName(mode + '_' + firstDigit + '_1').setVisible(true);
-    //}
+    }
+
+    timerState.mode = mode;
+    timerState.digit3 = thirdDigit;
+    timerState.digit2 = secondDigit;
+    timerState.digit1 = firstDigit;
 }
 
 function buttonSetModeGlobal(objectSet, objectName, mode)
