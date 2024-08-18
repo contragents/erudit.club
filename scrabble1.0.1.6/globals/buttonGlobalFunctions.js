@@ -287,11 +287,12 @@ function chatButtonFunction() {
         isSelectedPlaced = true;
     }
 
-    for (k in ochki_arr)
+    for (k in ochki_arr) {
         if (k != myUserNum) {
             radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_' + (k == 0 ? '0' : k) + '" name="chatTo" value="' + (k == 0 ? '0' : k) + '" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_' + (k == 0 ? '0' : k) + '">Игроку ' + (parseInt(k, 10) + 1) + '</label></div>';
             isSelectedPlaced = true;
         }
+    }
 
     radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_words" name="chatTo" value="words" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_words">Подбор слов</label></div>';
 

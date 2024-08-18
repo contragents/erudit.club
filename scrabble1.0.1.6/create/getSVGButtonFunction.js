@@ -108,7 +108,7 @@ function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits = false) {
     container.setSize(elements[0].displayWidth, elements[0].displayHeight);
 
     if (hasDigits) {
-        container.setAlpha(0.2);
+        container.setAlpha(INACTIVE_USER_ALPHA);
     }
 
     return container;

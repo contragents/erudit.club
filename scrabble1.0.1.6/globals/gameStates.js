@@ -507,11 +507,12 @@ var gameStates = {
         },
         refresh: 10,
         action: function (data) {
-            if ("desk" in data && data.desk.length > 0)
+            if ("desk" in data && data.desk.length > 0) {
                 parseDeskGlobal(data['desk']);
-            if ("score" in data)
-                ochki.text = data['score'];
-            userScores(data);
+            }
+            if ("score" in data) {
+                userScores(data);
+            }
         },
         results: function (data) {
             if (dialog && canCloseDialog)
@@ -950,7 +951,6 @@ function userScores(data) {
                 let youBlock = players.youBlock.svgObject;
 
                 if (!isUserBlockActive) {
-                    console.log(k, 'player' + (+k + 1) + 'Block');
                     let changeBlock = players['player' + (+k + 1) + 'Block'].svgObject;
                     if (changeBlock.visible) {
                         changeBlock.setVisible(false);
@@ -976,49 +976,20 @@ function userScores(data) {
                 if (players[playerBlockName].svgObject.alpha < 1) {
                     players[playerBlockName].svgObject.setAlpha(1);
                 }
+
+                if (('userNames' in data) && (k in data['userNames']) && (data['userNames'][k] === '')) {
+                    players[playerBlockName].svgObject.setAlpha(INACTIVE_USER_ALPHA);
+                }
             }
+
+
         }
+
         if (ochki_arr === false) {
             ochki_arr = [];
             for (let k in data['score_arr']) {
-                if (k == data['yourUserNum']) {
-                    ochki_arr[k] = window.game.scene.scenes[gameScene].add.text(0, 0, '', {
-                        color: 'black',
-                        font: 'bold ' + vremiaFontSize + 'px' + ' Courier'
-                    });
-                    ochki_arr[k].y = ochki.y;
-                } else {
-                    fontSize = vremiaFontSize - vremiaFontSizeDelta;
-                    ochki_arr[k] = window.game.scene.scenes[gameScene].add.text(0, 0, '', {
-                        color: 'black',
-                        font: 'bold ' + fontSize + 'px' + ' Courier'
-                    });
-                    ochki_arr[k].y = ochki.y + vremiaFontSizeDelta / 1.3;
-                }
+                ochki_arr[k] = data['score_arr'][k];
             }
-        }
-        ochki.text = '';
-        let x = ochki.x;
-        for (let k in data['score_arr']) {
-            if (k == data['yourUserNum'])
-                ochki_arr[k].text = 'Ваши очки:' + data['score_arr'][k];
-            else if (k == 0) {
-                ochki_arr[k].text = data['userNames'][k] + ':' + data['score_arr'][k];
-            } else if ((data['yourUserNum'] > 1 || k > 1) && data['score_arr'].length == 4) {
-                let num = Number(k) + 1;
-                ochki_arr[k].text = 'И' + num + ':' + data['score_arr'][k];
-            } else {
-                ochki_arr[k].text = data['userNames'][k] + ':' + data['score_arr'][k];
-            }
-            if (k == data['activeUser'])
-                ochki_arr[k].setColor('green');
-            else
-                ochki_arr[k].setColor('black');
-            ochki_arr[k].x = x;
-            //ochki_arr[k].y = ochki.y;
-            //ochki_arr[k].setFontSize(vremiaFontSizeDefault);
-            ochki_arr[k].visible = true;
-            x = ochki_arr[k].x + ochki_arr[k].width + 9 - Math.floor(data['score_arr'][k] / 100);
         }
     }
 }

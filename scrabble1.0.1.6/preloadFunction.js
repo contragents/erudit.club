@@ -97,12 +97,12 @@ function () {
                 {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1), 'width': buttonHeight * 0.23 * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1)}
             );
 
-            this.load.svg(mode + '_' + 'timer_' + k, '/img/' + mode.toLowerCase() + '/' + digits.playerDigits[mode][k]['filename'] + '.svg',
+            this.load.svg(mode + '_' + 'timer_' + k, '/img/' + mode.toLowerCase() + '/' + digits.timerDigits[mode][k]['filename'] + '_' + modesColors[mode] + '.svg',
                 {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1), 'width': buttonHeight * 0.4 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)}
             );
         }
 
-        this.load.svg(mode + '_' + 'dvoetoch', '/img/' + mode.toLowerCase() + '/numbers/' + 'dvoetoch' + '.svg',
+        this.load.svg(mode + '_' + 'dvoetoch', '/img/' + mode.toLowerCase() + '/numbers/' + 'dvoetoch'  + '_' + modesColors[mode]+ '.svg',
             {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1), 'width': buttonHeight * 0.15 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)}
         );
     });
@@ -112,4 +112,6 @@ function () {
         'width': fullscreenButtonSize,
         'height': fullscreenButtonSize
     });*/
+
+    loadFishkiSet(userFishkaSet);
 }

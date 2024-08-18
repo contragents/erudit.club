@@ -175,30 +175,60 @@ var digitPositions = [3, 2, 1];
 var digits = {
     playerDigits: {
         Otjat: {
-            digit_0: {filename: 'numbers/player_digit_0', object: false},
-            digit_1: {filename: 'numbers/player_digit_1', object: false},
-            digit_2: {filename: 'numbers/player_digit_2', object: false},
-            digit_3: {filename: 'numbers/player_digit_3', object: false},
-            digit_4: {filename: 'numbers/player_digit_4', object: false},
-            digit_5: {filename: 'numbers/player_digit_5', object: false},
-            digit_6: {filename: 'numbers/player_digit_6', object: false},
-            digit_7: {filename: 'numbers/player_digit_7', object: false},
-            digit_8: {filename: 'numbers/player_digit_8', object: false},
-            digit_9: {filename: 'numbers/player_digit_9', object: false}
+            digit_0: {filename: 'numbers/player_digit_0'},
+            digit_1: {filename: 'numbers/player_digit_1'},
+            digit_2: {filename: 'numbers/player_digit_2'},
+            digit_3: {filename: 'numbers/player_digit_3'},
+            digit_4: {filename: 'numbers/player_digit_4'},
+            digit_5: {filename: 'numbers/player_digit_5'},
+            digit_6: {filename: 'numbers/player_digit_6'},
+            digit_7: {filename: 'numbers/player_digit_7'},
+            digit_8: {filename: 'numbers/player_digit_8'},
+            digit_9: {filename: 'numbers/player_digit_9'}
         },
         Alarm: {
-            digit_0: {filename: 'numbers/player_digit_0', object: false},
-            digit_1: {filename: 'numbers/player_digit_1', object: false},
-            digit_2: {filename: 'numbers/player_digit_2', object: false},
-            digit_3: {filename: 'numbers/player_digit_3', object: false},
-            digit_4: {filename: 'numbers/player_digit_4', object: false},
-            digit_5: {filename: 'numbers/player_digit_5', object: false},
-            digit_6: {filename: 'numbers/player_digit_6', object: false},
-            digit_7: {filename: 'numbers/player_digit_7', object: false},
-            digit_8: {filename: 'numbers/player_digit_8', object: false},
-            digit_9: {filename: 'numbers/player_digit_9', object: false}
+            digit_0: {filename: 'numbers/player_digit_0'},
+            digit_1: {filename: 'numbers/player_digit_1'},
+            digit_2: {filename: 'numbers/player_digit_2'},
+            digit_3: {filename: 'numbers/player_digit_3'},
+            digit_4: {filename: 'numbers/player_digit_4'},
+            digit_5: {filename: 'numbers/player_digit_5'},
+            digit_6: {filename: 'numbers/player_digit_6'},
+            digit_7: {filename: 'numbers/player_digit_7'},
+            digit_8: {filename: 'numbers/player_digit_8'},
+            digit_9: {filename: 'numbers/player_digit_9'}
+        },
+    },
+    timerDigits: {
+        Otjat: {
+            digit_0: {filename: 'numbers/timer_digit_0'},
+            digit_1: {filename: 'numbers/timer_digit_1'},
+            digit_2: {filename: 'numbers/timer_digit_2'},
+            digit_3: {filename: 'numbers/timer_digit_3'},
+            digit_4: {filename: 'numbers/timer_digit_4'},
+            digit_5: {filename: 'numbers/timer_digit_5'},
+            digit_6: {filename: 'numbers/timer_digit_6'},
+            digit_7: {filename: 'numbers/timer_digit_7'},
+            digit_8: {filename: 'numbers/timer_digit_8'},
+            digit_9: {filename: 'numbers/timer_digit_9'}
+        },
+        Alarm: {
+            digit_0: {filename: 'numbers/timer_digit_0'},
+            digit_1: {filename: 'numbers/timer_digit_1'},
+            digit_2: {filename: 'numbers/timer_digit_2'},
+            digit_3: {filename: 'numbers/timer_digit_3'},
+            digit_4: {filename: 'numbers/timer_digit_4'},
+            digit_5: {filename: 'numbers/timer_digit_5'},
+            digit_6: {filename: 'numbers/timer_digit_6'},
+            digit_7: {filename: 'numbers/timer_digit_7'},
+            digit_8: {filename: 'numbers/timer_digit_8'},
+            digit_9: {filename: 'numbers/timer_digit_9'}
         },
     }
+}
+var modesColors = {
+    Alarm: 'red',
+    Otjat: 'yellow',
 }
 
 var players = {
@@ -285,14 +315,35 @@ function displayScoreGlobal(score, blockName, isActive = false)
     let secondDigit = ((score - thirdDigit) % 100) / 10;
     let firstDigit = (score - secondDigit * 10 - thirdDigit) / 100;
 
-    for (let digit = 0; digit <= 9; digit++) {
+    /*for (let digit = 0; digit <= 9; digit++) {
         for (let mod in playerBlockModes) {
             for (let pos in digitPositions) {
-                console.log(blockName + ': ' + playerBlockModes[mod] + '_' + digit + '_' + digitPositions[pos]);
                 container.getByName(playerBlockModes[mod] + '_' + digit + '_' + digitPositions[pos]).setVisible(false);
             }
         }
+    }*/
+
+    if(thirdDigit !== playerScores[blockName].digit3 || mode !== playerScores[blockName].mode) {
+        console.log(playerScores[blockName].mode + '_' + playerScores[blockName].digit3 + '_' + '3');
+        container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit3 + '_' + '3').setVisible(false);
     }
+
+    if(secondDigit !== playerScores[blockName].digit2 || mode !== playerScores[blockName].mode) {
+        console.log(playerScores[blockName].mode + '_' + playerScores[blockName].digit2 + '_' + '2');
+        container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit2 + '_' + '2').setVisible(false);
+    }
+
+    if(firstDigit !== playerScores[blockName].digit1 || mode !== playerScores[blockName].mode) {
+        console.log(playerScores[blockName].mode + '_' + playerScores[blockName].digit1 + '_' + '1');
+        container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit1 + '_' + '1').setVisible(false);
+        container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit1 + '_' + '1').setVisible(false);
+    }
+
+    playerScores[blockName].mode = mode;
+    playerScores[blockName].digit3 = thirdDigit;
+    playerScores[blockName].digit2 = secondDigit;
+    playerScores[blockName].digit1 = firstDigit;
+
 
     container.getByName(mode + '_' + thirdDigit + '_3').setVisible(true);
     if (secondDigit > 0 || firstDigit > 0) {
@@ -304,9 +355,10 @@ function displayScoreGlobal(score, blockName, isActive = false)
     }
 }
 
-function displayTimeGlobal(time, isActive = false)
+function displayTimeGlobal(time)
 {
-    let mode = isActive ? ALARM_MODE : OTJAT_MODE;
+    let mode = (time < 20) ? ALARM_MODE : OTJAT_MODE;
+    let disabledMode = (!(time < 20)) ? ALARM_MODE : OTJAT_MODE;
 
     let container = players.timerBlock.svgObject;
 
@@ -319,10 +371,13 @@ function displayTimeGlobal(time, isActive = false)
         container.getByName(mode + '_' + 'dvoetoch').setVisible(true);
     }
 
+    if (container.getByName(disabledMode + '_' + 'dvoetoch').visible) {
+        container.getByName(disabledMode + '_' + 'dvoetoch').setVisible(false);
+    }
+
     for (let digit = 0; digit <= 9; digit++) {
         for (let mod in playerBlockModes) {
             for (let pos in digitPositions) {
-                console.log('timerBlock' + ': ' + playerBlockModes[mod] + '_' + digit + '_' + digitPositions[pos]);
                 container.getByName(playerBlockModes[mod] + '_' + digit + '_' + digitPositions[pos]).setVisible(false);
             }
         }

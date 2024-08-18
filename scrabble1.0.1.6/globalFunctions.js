@@ -17,7 +17,6 @@ async function mobileShare() {
 
     try {
         await navigator.share(shareObj);
-        console.log('share SUCCESS!');
     } catch (err) {
         console.log('share ERROR! ' + err);
     }
@@ -453,7 +452,6 @@ function enableButtons() {
                     buttons[k]['svgObject']
                         .bringToTop(buttons[k]['svgObject']
                             .getByName(k + 'Inactive'));
-                    console.log('Inactive');
                 }
 
             }
@@ -469,7 +467,7 @@ function placeFishki(fishki) {
     for (var i in container) {
         if (i > maxI)
             maxI = i;
-        console.log('!!!!!!' + i);
+
         if (container[i].getData('cellX')) {
             cells[container[i].getData('cellX')][container[i].getData('cellY')][0] = false;
             cells[container[i].getData('cellX')][container[i].getData('cellY')][1] = false;

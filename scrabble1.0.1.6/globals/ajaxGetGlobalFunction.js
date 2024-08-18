@@ -1,12 +1,10 @@
 //
 async function fetchGlobal(script, param_name, param_data) {
     if (pageActive == 'hidden' && gameState == 'chooseGame' && script === STATUS_CHECKER_SCRIPT) {
-        console.log('Request to server forbidden');
         return {message: "Выберите параметры игры", http_status: BAD_REQUEST, status: "error"};
     }
 
     if (!requestToServerEnabled && script === STATUS_CHECKER_SCRIPT) {
-        console.log('Request to server forbidden');
         return {message: "Ошибка связи с сервером. Пожалуйста, повторите", http_status: BAD_REQUEST, status: "error"};
     }
 

@@ -38,6 +38,9 @@ function findPlaceGlobal(gameObject, oldX, oldY, cellX, cellY) {
     if (cells[cellX][cellY][0] === false) {
         gameObject.x = stepX + (cellX + 1) * yacheikaWidth + correctionX;
         gameObject.y = stepY + (cellY + 1) * yacheikaWidth + correctionY;
+
+        console.log('Found place: y ' + gameObject.y + ' StepY ' + stepY + ' cellY ' + cellY + ' correctionY ' + correctionY + ' yacheikaWidth ' + yacheikaWidth);
+
         gameObject.setData('cellX', cellX);
         gameObject.setData('cellY', cellY);
         cells[cellX][cellY][0] = true;

@@ -39,13 +39,37 @@ this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
 });
 
 this.input.on('dragend', function (pointer, gameObject) {
-    if (gameObject.x > stepX && gameObject.y < ground.height + topHeight && gameObject.y > topHeight) {
+    if (gameObject.x > stepX && gameObject.y < (ground.height + stepY)) {
+        let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
+        if (cellX < 0) {
+            cellX = 0;
+        }
+        if (cellX > 14) {
+            cellX = 14
+        }
+
+        let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
+        if (cellY < 0) {
+            cellY = 0;
+        }
+        if (cellY > 14) {
+            cellY = 14
+        }
+
+        console.log('x', gameObject.x, 'y', gameObject.y, 'cellX', cellX, 'cellY', cellY);
+        findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
+    } else {
+        console.log('x', gameObject.x, 'y', gameObject.y, 'stepX', stepX, 'stepY', stepY);
+        checkZvezdaGlobal(gameObject);
+    }
+
+    /*if (gameObject.x > stepX && gameObject.y < ground.height + topHeight && gameObject.y > topHeight) {
         let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
         let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
         findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
     } else {
         checkZvezdaGlobal(gameObject);
-    }
+    }*/
 
     gameObject.depth = 1;
 });

@@ -29,7 +29,7 @@ function () {
     ground.setCrop(16 * 2, 3 * 2, 550 * 2, 550 * 2);
 
     stepX = game.config.width - ground.width;
-    stepY = 0;
+    stepY = (screenOrient === HOR) ? 0 : topHeight;
     initLotok();
 
     initCellsGlobal();
@@ -111,11 +111,11 @@ function () {
         {
             color: 'black',
             font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
-        });
+        }).setVisible(false); // todo delete ochki
 
     vremia = this.add.text(ochki.x, ochki.y + ochki.height + 15, 'Время на ход 2:00',
         {
             color: 'black',
             font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
-        });
+        }).setVisible(false); // todo delete vremia
 }

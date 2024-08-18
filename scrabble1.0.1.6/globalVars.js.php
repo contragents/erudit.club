@@ -14,7 +14,7 @@ const TEST_FISHKA_SET = 'Girl'; // 'MaxS';
 const FISHKA_AVAILABLE_SETS = {Gulnaraport: 30, MaxS: 30, Girl: 30};
 const FISHKA_SET_NAMES = ['Gulnaraport', 'MaxS', 'Girl'];
 var fishkiLoaded = {};
-var userFishkaSet = 'Girl'; //'MaxS';
+var userFishkaSet = (lang === 'EN' ? 'Girl' : 'MaxS');
 const CODES = {
     'RU': [999, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
     'EN': [999, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]
@@ -56,8 +56,24 @@ const TOP_PERCENT = 0.15;
 const FISHKI_PERCENT = 0.15;
 const BOTTOM_PERCENT = 0.7;
 
+const INACTIVE_USER_ALPHA = 0.2;
+
 var commonId = false;
 var isUserBlockActive = false;
+var playerScores = {
+    youBlock: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+    player1Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+    player2Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+    player3Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+    player4Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+}
+
+var timerState = {
+    mode: OTJAT_MODE,
+    digit3: 0,
+    digit2: false,
+    digit1: false
+}
 
 var turnAutocloseDialog = false;
 var timeToCloseDilog = false;
@@ -145,14 +161,10 @@ if (windowInnerWidth > windowInnerHeight) {
     }
 
     buttonHeightKoef = propKoef / (standardVerticalHeight / standardVerticalWidth);
-    console.log(propKoef + '-' + buttonHeightKoef);
-    /*if (buttonHeightKoef < 1) {
-        buttonHeightKoef = 1;
-    }*/
-    var gameWidth = standardVerticalWidth;
-    var gameHeight = /*buttonHeightKoef <= 1 ? standardVerticalHeight : */ (gameWidth * propKoef);
 
-    console.log(gameHeight);
+    var gameWidth = standardVerticalWidth;
+    var gameHeight = (gameWidth * propKoef);
+
     var knopkiWidth = gameWidth; // size of buttons block
 
     var topHeight = (gameHeight - gameWidth) * TOP_PERCENT;
@@ -184,7 +196,7 @@ if (windowInnerWidth > windowInnerHeight) {
     var backX = -1 * gameWidth * Math.random();
     var backScale = 1; // не используем, хз как работает setscale в Фазере
 
-    correctionY += topHeight;
+    //correctionY += topHeight;
 }
 
 var buttonHeight = topHeight;
