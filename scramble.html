@@ -9,38 +9,6 @@
     <link rel="stylesheet" type="text/css" href="css/knopki.css">
     <link rel="stylesheet" type="text/css" href="css/tg_app_tuning.css">
 
-    <script>
-        function sessionStorageSet(key, value) {
-            try {
-                window.sessionStorage.setItem('__telegram__' + key, JSON.stringify(value));
-                return true;
-            } catch (e) {}
-            return false;
-        }
-
-        function sessionStorageGet(key) {
-            try {
-                return JSON.parse(window.sessionStorage.getItem('__telegram__' + key));
-            } catch (e) {}
-            return null;
-        }
-
-        var appTgVersion = 7.7;
-
-        var initParams = sessionStorageGet('initParams');
-        if (initParams) {
-            if (!initParams.tgWebAppVersion) {
-                initParams.tgWebAppVersion = appTgVersion;
-            }
-        } else {
-            initParams = {
-                tgWebAppVersion: appTgVersion
-            };
-        }
-
-        sessionStorageSet('initParams', initParams);
-    </script>
-
     <!-- TG web -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -60,14 +28,6 @@
 
 <body>
     <div id="phaser-example"></div>
-
-    <script>
-        var TG = window.Telegram.WebApp;
-        TG.expand();
-        TG.disableVerticalSwipes();
-
-        var WebView = window.Telegram.WebView;
-    </script>
 
     <script>
         var loader = loader || {}

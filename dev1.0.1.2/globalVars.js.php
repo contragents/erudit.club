@@ -1,16 +1,24 @@
 
-//<?php $lang='RU'; ?>
+//<?php $lang = T::$lang = T::EN_LANG; ?>
 
-var lang = '<?= ($_GET['lang'] ?? '') == 'EN' ? 'EN' : 'RU' ?>';
+var lang = '<?= T::$lang ?>';
+
+const INVITE_FRIEND_PROMPT = '<?= T::getInviteFriendPrompt() ?>';
+const GAME_BOT_URL = '<?= T::PHRASES['game_bot_url'][T::$lang] ?>';
+const LOADING_TEXT = '<?= T::PHRASES['loading_text'][T::$lang] ?>';
+
+var uniqID = false; // yandex compatibility
 
 var preloaderObject = false;
 
+const GROUND_FILE = 'field_source_scrabble.svg';
 const DEFAULT_FISHKA_SET = 'default';
-const TEST_FISHKA_SET = 'MaxS';//'Gulnaraport';
-const FISHKA_AVAILABLE_SETS = {Gulnaraport: 30, MaxS: 30};
-const FISHKA_SET_NAMES = ['Gulnaraport', 'MaxS'];
+const MAXS_FISHKA_SET = 'MaxS';
+const GIRL_FISHKA_SET = 'Girl';
+const FISHKA_AVAILABLE_SETS = {MaxS: 30, Girl: 30};
+const FISHKA_SET_NAMES = [MAXS_FISHKA_SET, GIRL_FISHKA_SET];
 var fishkiLoaded = {};
-var userFishkaSet = 'MaxS';//FISHKA_SET_NAMES[Math.random() * FISHKA_SET_NAMES.length | 0];//'MaxS';//'Gulnaraport';
+var userFishkaSet = (lang === 'EN' ? GIRL_FISHKA_SET : MAXS_FISHKA_SET);
 const CODES = {
     'RU': [999, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
     'EN': [999, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]
@@ -41,13 +49,35 @@ const VERT = 'vertical';
 const ALARM_MODE = 'Alarm';
 const OTJAT_MODE = 'Otjat';
 
+const MY_TURN_STATE = 'myTurn';
+
 const BAD_REQUEST = 400;
 const PAGE_NOT_FOUND = 404;
 
 const CHECK_BUTTON_INACTIVE_CLASS = 'disable-check-button';
 const SUBMIT_BUTTON_INACTIVE_CLASS = 'disable-submit-button';
+const TOP_PERCENT = 0.15;
+const FISHKI_PERCENT = 0.15;
+const BOTTOM_PERCENT = 0.7;
+
+const INACTIVE_USER_ALPHA = 0.2;
 
 var commonId = false;
+var isUserBlockActive = false;
+var playerScores = {
+    youBlock: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+    player1Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+    player2Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+    player3Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+    player4Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+}
+
+var timerState = {
+    mode: OTJAT_MODE,
+    digit3: 0,
+    digit2: 0,
+    digit1: 0
+}
 
 var turnAutocloseDialog = false;
 var timeToCloseDilog = false;
@@ -69,8 +99,6 @@ const standardVerticalHeight = 800 * 2;
 const standardHorizontalWidth = 960 * 2;
 const standardHorizontalHeight = standardVerticalWidth;
 
-const donateLink = 'https://pay.cloudtips.ru/p/9844e694';
-
 var gameNumber = false;
 var graphics;
 var letterMin = 0;
@@ -79,7 +107,8 @@ var chooseFishka = false;
 var fullscreenButtonSize = 64;
 var FullScreenButton = false;
 
-var buttonWidth = 240 * 2;
+var buttonWidth = 120 * 2;
+var buttonStepX = 10 * 2;
 var buttonStepY = 50 * 2;
 
 var requestSended = false;
@@ -90,13 +119,29 @@ var propKoef = 1;
 var buttonHeightKoef = 1;
 var fishkaScale = 1;
 
+var cells = [];
+var newCells = [];
+var fixedContainer = [];
+var container = [];
+var yacheikaWidth = 32 * 2;
+var correctionX = 6 * 2;
+var correctionY = -7 * 2;
+
 if (windowInnerWidth > windowInnerHeight) {
     var screenOrient = HOR;
     var gameWidth = standardHorizontalWidth;
     var gameHeight = standardHorizontalHeight;
     var knopkiWidth = gameWidth - gameHeight;
-    var lotokX = 30 * 2;
-    var lotokY = 30 * 2;
+
+    var topHeight = gameHeight * TOP_PERCENT;
+    var fishkiHeight = gameHeight * FISHKI_PERCENT;
+    var botHeight = gameHeight * BOTTOM_PERCENT;
+    var topXY = {x: 0, y: 0};
+    var fishkiXY = {x: 0, y: topHeight};
+    var botXY = {x: 0, y: topHeight + fishkiHeight};
+
+    var lotokX = fishkiXY.x + 30 * 2;
+    var lotokY = fishkiXY.y + 20 * 2;
     var lotokCellStep = 40 * 2;
     var lotokCellStepY = lotokCellStep;
     var lotokCapacityX = 10;
@@ -104,10 +149,8 @@ if (windowInnerWidth > windowInnerHeight) {
     var fullscreenXY = {x: gameWidth - gameHeight - fullscreenButtonSize / 2, y: fullscreenButtonSize / 2 + 16};
     var backY = (gameHeight - 2000) * Math.random();
     var backX = (gameWidth - 2000) * Math.random();
-
 } else {
     var screenOrient = VERT;
-    //alert(window.outerHeight + ' ' + window.screen.availHeight + ' ' + screen.height + "\n" + window.outerWidth + ' ' + window.screen.availWidth + ' ' + screen.width);
     if (isYandexAppGlobal()) {
         propKoef = window.outerHeight / window.outerWidth;
     } else if (isIOSDevice()) {
@@ -115,19 +158,26 @@ if (windowInnerWidth > windowInnerHeight) {
     } else {
         const outerHeight = (window.screen.availHeight - window.outerHeight) / 2 + window.outerHeight;
         propKoef = outerHeight / window.outerWidth;
+
+        propKoef = window.innerHeight / window.innerWidth;
     }
 
     buttonHeightKoef = propKoef / (standardVerticalHeight / standardVerticalWidth);
-    console.log(propKoef + '-' + buttonHeightKoef);
-    if (buttonHeightKoef < 1) {
-        buttonHeightKoef = 1;
-    }
+
     var gameWidth = standardVerticalWidth;
-    var gameHeight = buttonHeightKoef <= 1 ? standardVerticalHeight : (gameWidth * propKoef);
-    console.log(gameHeight);
-    var knopkiWidth = gameWidth;
-    var lotokX = 30 * 2;
-    var lotokY = 530 * 2;
+    var gameHeight = (gameWidth * propKoef);
+
+    var knopkiWidth = gameWidth; // size of buttons block
+
+    var topHeight = (gameHeight - gameWidth) * TOP_PERCENT;
+    var fishkiHeight = (gameHeight - gameWidth) * FISHKI_PERCENT;
+    var botHeight = (gameHeight - gameWidth) * BOTTOM_PERCENT;
+    var topXY = {x: 0, y: 0};
+    var fishkiXY = {x: 0, y: topHeight + gameWidth};
+    var botXY = {x: 0, y: topHeight + gameWidth + fishkiHeight};
+
+    var lotokX = fishkiXY.x + 30 * 2;
+    var lotokY = fishkiXY.y + 20 * buttonHeightKoef * 2;
 
     if (buttonHeightKoef == 1) {
         var fishkaScale = 1.2;
@@ -149,22 +199,12 @@ if (windowInnerWidth > windowInnerHeight) {
     var backScale = 1; // не используем, хз как работает setscale в Фазере
 }
 
+var buttonHeight = topHeight;
+
 var lotokCells = [];
 
 var stepX = 0;
 var stepY = 0;
-
-var cells = [];
-
-var newCells = [];
-
-var fixedContainer = [];
-
-var container = [];
-
-var yacheikaWidth = 32 * 2;
-var correctionX = 6 * 2;
-var correctionY = -7 * 2;
 
 var gameScene = 0;
 
@@ -209,7 +249,7 @@ var instruction = '';
 
 var soundPlayed = false;
 
-//<?php if (strtoupper(($lang ?? '')) == 'EN') include('globals/instruction_eng.js'); else include('globals/instruction.js'); ?>
+//<?php if (T::$lang === T::EN_LANG) include('globals/instruction_eng.js'); else include('globals/instruction.js'); ?>
 
 //<?php include('globals/buttonSettingsGlobal.js')?>
 //<?php include('globals/gameStates.js')?>

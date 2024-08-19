@@ -33,12 +33,6 @@ var tryCount = 5;
                     .then(_player => {
                         player = _player;
                         uniqID = player.getUniqueID();
-
-                        if (buttons['razdvButton']['svgObject'] !== false) {
-                            buttons['razdvButton']['svgObject'].disableInteractive();
-                            buttons['razdvButton']['svgObject'].visible = false;
-                        }
-
                     }).catch(err => {
                         console.log('USER_NOT_AUTHORIZED');
                     });

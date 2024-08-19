@@ -44,7 +44,7 @@ function (time, delta) {
     ) {
         if (requestToServerEnabled) {
             lastQueryTime = flor;
-            fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID === false) ? '0' : uniqID)
+            fetchGlobal(STATUS_CHECKER_SCRIPT)
                 .then((data) => {
                     commonCallback(data);
                 });

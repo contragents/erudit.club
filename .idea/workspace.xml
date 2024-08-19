@@ -17,134 +17,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="083cf621-0e75-4976-a3cb-6b5812dcdbdc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/local.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/checkButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/fishkaDragEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/getSVGButtonFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/newGameButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/shareButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/submitButtonEvents.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/createFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globalFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globalVars.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/ajaxGetGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/bootBoxIsOpenedGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonGlobalFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonSettingsGlobal.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/changeFishkiGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/findPlaceGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gagetTypeFunctions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gameStates.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/getFishkaGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/initCellsGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/instruction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/instruction_eng.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/letterPrices.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/openWindowGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/parseDeskGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/rusLetters.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/wav.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/initializeFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/main.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/BotEng.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/BotGenV3.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/BotGenV3ENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/BotRu.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/Cookie.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataCache.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataDB.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataHints.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataPlayers.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataPrizes.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataStats.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/EruditGame.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/autoload.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/avatar_upload.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bad_combinations.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/avatar_url_parser.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/clientLists.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/clientListsENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/games_statistics.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/newBotsGenV3.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/newBotsGenV3ENG.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/redisDailyCleaner.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/bots/topChecker.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/change_fishki.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/choose_css.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/complain.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/cookie_checker.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/cors.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/game_page.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/game_starter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/games_history.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/index.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/index_functions.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/init_game.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/invite_to_new_game.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/merge_the_ids.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/new_game.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/player_cabinet.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/players_ratings.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/send_chat_message.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/set_inactive.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/set_player_avatar_url.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/set_player_name.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/status_checker.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTableFooter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTableHeader.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTableNicknameFormRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTablePrizesRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTableRow.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/turn_submitter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/word.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/word_checker.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/youtube_videos.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/yowser/index.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/preloadFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/updateFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/ysdk.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/tgGlobalFunction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/tg.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JsComposer.php" beforeDir="false" afterPath="$PROJECT_DIR$/JsComposer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev1.0.1.2/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/BotEng.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/BotEng.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/BotRu.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/BotRu.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/DadataHints.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/DadataHints.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/DadataPlayers.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/DadataPlayers.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/DadataPrizes.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/DadataPrizes.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/DadataStats.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/DadataStats.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/LangEng.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/Classes/EngClass.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/LangRu.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bad_combinations.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bad_combinations.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/avatar_url_parser.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/avatar_url_parser.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/checkWordFishkiFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/checkWordFishkiFunctionENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSlevaFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSlevaFunctionENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSpravaFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSpravaFunctionENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSverhuFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordSverhuFunctionENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordVnizFunction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/findWordVnizFunctionENG.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/games_statistics.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/bots/games_statistics.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/bots/maxToFunctions.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/game_page.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/game_page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/php/games_history.php" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/php/games_history.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/bid-win.jfif" beforeDir="false" afterPath="$PROJECT_DIR$/img/bid-win.jfif" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/inactive/dups/otpravit.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/najatie/dups/new_game.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/najatie/dups/otpravit.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/navedenie/chat1.svg" beforeDir="false" afterPath="$PROJECT_DIR$/img/navedenie/chat1.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/otjat/chat_bak.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/private/MVC/Model/AchievesModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/MVC/Model/AchievesModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/preloadFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/preloadFunction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/field_source_nd_17.svg" beforeDir="false" afterPath="$PROJECT_DIR$/img/field_source_nd_17.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/private/Classes/TClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/Classes/TClass.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globalFunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globalFunctions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globalVars.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globalVars.js.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/ajaxGetGlobalFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/ajaxGetGlobalFunction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonSettingsGlobal.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonSettingsGlobal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gameStates.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gameStates.js.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/preloadFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/preloadFunction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/updateFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/updateFunction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/ysdk.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/ysdk.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scramble.html" beforeDir="false" afterPath="$PROJECT_DIR$/scramble.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/Classes/CacheClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/Classes/CacheClass.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/Classes/GameClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/Classes/GameClass.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/Classes/QueueClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/Classes/QueueClass.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/Classes/RuClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/Classes/RuClass.php" afterDir="false" />
     </list>
     <list id="493eaa45-d165-4bb4-bddd-131381b96e0a" name="ignore" comment="">
       <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
@@ -159,6 +49,13 @@
   </component>
   <component name="ComposerSettings">
     <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -182,29 +79,27 @@
     <file path="$PROJECT_DIR$/.idea/workspace.xml">
       <ranges>
         <range start1="13" end1="14" start2="13" end2="14" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="19" end1="19" start2="19" end2="106" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="20" end1="21" start2="107" end2="108" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="22" end1="23" start2="109" end2="110" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="24" end1="26" start2="111" end2="130" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="27" end1="32" start2="131" end2="147" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="49" end1="50" start2="164" end2="165" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="67" end1="189" start2="182" end2="206" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="202" end1="204" start2="219" end2="221" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="210" end1="210" start2="227" end2="234" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="213" end1="220" start2="237" end2="237" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="503" end1="587" start2="520" end2="553" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="847" end1="848" start2="813" end2="898" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="852" end1="852" start2="902" end2="912" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="864" end1="865" start2="924" end2="925" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="878" end1="890" start2="938" end2="938" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="903" end1="904" start2="951" end2="964" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="906" end1="915" start2="966" end2="967" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="917" end1="919" start2="969" end2="971" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="921" end1="924" start2="973" end2="975" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="926" end1="933" start2="977" end2="979" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="935" end1="937" start2="981" end2="983" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="939" end1="942" start2="985" end2="987" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="944" end1="954" start2="989" end2="990" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="19" end1="106" start2="19" end2="21" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="107" end1="109" start2="22" end2="23" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="110" end1="142" start2="24" end2="36" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="143" end1="147" start2="37" end2="37" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="162" end1="162" start2="52" end2="59" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="184" end1="207" start2="81" end2="102" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="220" end1="222" start2="115" end2="117" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="228" end1="235" start2="123" end2="123" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="238" end1="238" start2="126" end2="133" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="553" end1="659" start2="448" end2="466" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="898" end1="899" start2="705" end2="811" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="925" end1="926" start2="837" end2="838" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="939" end1="954" start2="851" end2="851" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="964" end1="965" start2="861" end2="877" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="967" end1="967" start2="879" end2="883" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="971" end1="972" start2="887" end2="888" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="974" end1="975" start2="890" end2="891" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="979" end1="980" start2="895" end2="908" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="982" end1="984" start2="910" end2="912" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="986" end1="988" start2="914" end2="916" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="990" end1="991" start2="918" end2="919" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
       </ranges>
     </file>
   </component>
@@ -218,23 +113,23 @@
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JavaScript&#10;JSON&#10;TEXT&#10;HTML" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/scrabble1.0.1.6" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JSON&#10;JavaScript&#10;TEXT&#10;HTML" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/private/MVC/Controller" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="php.override.implement.member.chooser.php.doc" value="COPY_ALWAYS" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\dev1.0.1.2" />
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\scrabble1.0.1.6" />
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club" />
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\yandex1.0.1.1" />
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\vendor\Classes" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ili\PhpstormProjects\erudit.club\dev1.0.1.2\php" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\private\MVC\Controller" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\private\Classes" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\css" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\dev1.0.1.2" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\private" />
     </key>
   </component>
   <component name="RestClientSettings">
@@ -551,112 +446,24 @@
       <workItem from="1720176309674" duration="3373000" />
       <workItem from="1720461872875" duration="10267000" />
       <workItem from="1720701110248" duration="2481000" />
-      <workItem from="1721042857306" duration="10178000" />
-    </task>
-    <task id="LOCAL-00069" summary="CLUB-283">
-      <created>1703011777329</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1703011777329</updated>
-    </task>
-    <task id="LOCAL-00070" summary="CLUB-284 done">
-      <created>1703587514061</created>
-      <option name="number" value="00070" />
-      <option name="presentableId" value="LOCAL-00070" />
-      <option name="project" value="LOCAL" />
-      <updated>1703587514061</updated>
-    </task>
-    <task id="LOCAL-00071" summary="CLUB-110 on prod">
-      <created>1703781944550</created>
-      <option name="number" value="00071" />
-      <option name="presentableId" value="LOCAL-00071" />
-      <option name="project" value="LOCAL" />
-      <updated>1703781944550</updated>
-    </task>
-    <task id="LOCAL-00072" summary="CLUB-286">
-      <created>1704626828832</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1704626828832</updated>
-    </task>
-    <task id="LOCAL-00073" summary="staging state machine hotfix">
-      <created>1704741256527</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
-      <option name="project" value="LOCAL" />
-      <updated>1704741256527</updated>
-    </task>
-    <task id="LOCAL-00074" summary="CLUB-287">
-      <created>1705175554780</created>
-      <option name="number" value="00074" />
-      <option name="presentableId" value="LOCAL-00074" />
-      <option name="project" value="LOCAL" />
-      <updated>1705175554780</updated>
-    </task>
-    <task id="LOCAL-00075" summary="CLUB-288">
-      <created>1705177073597</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1705177073597</updated>
-    </task>
-    <task id="LOCAL-00076" summary="CLUB-289">
-      <created>1705250979235</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1705250979235</updated>
-    </task>
-    <task id="LOCAL-00077" summary="CLUB-291">
-      <created>1705824959883</created>
-      <option name="number" value="00077" />
-      <option name="presentableId" value="LOCAL-00077" />
-      <option name="project" value="LOCAL" />
-      <updated>1705824959885</updated>
-    </task>
-    <task id="LOCAL-00078" summary="CLUB-292">
-      <created>1705836521087</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1705836521087</updated>
-    </task>
-    <task id="LOCAL-00079" summary="CLUB-293">
-      <created>1705848001045</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1705848001046</updated>
-    </task>
-    <task id="LOCAL-00080" summary="CLUB-294">
-      <created>1705853428864</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1705853428864</updated>
-    </task>
-    <task id="LOCAL-00081" summary="CLUB-294 fix">
-      <created>1705853472916</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
-      <option name="project" value="LOCAL" />
-      <updated>1705853472916</updated>
-    </task>
-    <task id="LOCAL-00082" summary="CLUB-290 Prizes cache keys fix">
-      <created>1705945649896</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1705945649896</updated>
-    </task>
-    <task id="LOCAL-00083" summary="CLUB-298">
-      <created>1706263733855</created>
-      <option name="number" value="00083" />
-      <option name="presentableId" value="LOCAL-00083" />
-      <option name="project" value="LOCAL" />
-      <updated>1706263733855</updated>
+      <workItem from="1721042857306" duration="27402000" />
+      <workItem from="1721642616750" duration="67000" />
+      <workItem from="1721642850863" duration="3146000" />
+      <workItem from="1721726089605" duration="3642000" />
+      <workItem from="1721735085867" duration="17847000" />
+      <workItem from="1721907868819" duration="14867000" />
+      <workItem from="1722160777636" duration="3770000" />
+      <workItem from="1722286204304" duration="13106000" />
+      <workItem from="1722449340894" duration="2320000" />
+      <workItem from="1722511833358" duration="4231000" />
+      <workItem from="1722533998285" duration="4358000" />
+      <workItem from="1722678659838" duration="498000" />
+      <workItem from="1722680073406" duration="20246000" />
+      <workItem from="1722933158557" duration="24686000" />
+      <workItem from="1723933910579" duration="3326000" />
+      <workItem from="1723978304009" duration="2590000" />
+      <workItem from="1724059951040" duration="11755000" />
+      <workItem from="1724092622328" duration="2818000" />
     </task>
     <task id="LOCAL-00084" summary="CLUB-295">
       <created>1706524141171</created>
@@ -896,7 +703,112 @@
       <option name="project" value="LOCAL" />
       <updated>1721218185031</updated>
     </task>
-    <option name="localTasksCounter" value="118" />
+    <task id="LOCAL-00118" summary="CLUB-353-in-progress with new buttons chat2 2">
+      <created>1721220936861</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1721220936861</updated>
+    </task>
+    <task id="LOCAL-00119" summary="CLUB-353-in-progress with new buttons avatar upload 3">
+      <created>1721393489831</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1721393489831</updated>
+    </task>
+    <task id="LOCAL-00120" summary="CLUB-535-in-progress avatar refresh">
+      <created>1721642677761</created>
+      <option name="number" value="00120" />
+      <option name="presentableId" value="LOCAL-00120" />
+      <option name="project" value="LOCAL" />
+      <updated>1721642677762</updated>
+    </task>
+    <task id="LOCAL-00121" summary="CLUB-353-in-progress invite button">
+      <created>1722012295711</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1722012295711</updated>
+    </task>
+    <task id="LOCAL-00122" summary="CLUB-353-in-progress kill domain where its possible">
+      <created>1722163887780</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1722163887780</updated>
+    </task>
+    <task id="LOCAL-00123" summary="CLUB-353-in-progress hamsters">
+      <created>1722163969581</created>
+      <option name="number" value="00123" />
+      <option name="presentableId" value="LOCAL-00123" />
+      <option name="project" value="LOCAL" />
+      <updated>1722163969581</updated>
+    </task>
+    <task id="LOCAL-00124" summary="СДГИ-353-in-progress очкии гроков">
+      <created>1722710164685</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1722710164685</updated>
+    </task>
+    <task id="LOCAL-00125" summary="СДГИ-353-in-progress очкии гроков 2">
+      <created>1722721996353</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1722721996353</updated>
+    </task>
+    <task id="LOCAL-00126" summary="СДГИ-353-in-progress очкии гроков to server">
+      <created>1722767797788</created>
+      <option name="number" value="00126" />
+      <option name="presentableId" value="LOCAL-00126" />
+      <option name="project" value="LOCAL" />
+      <updated>1722767797788</updated>
+    </task>
+    <task id="LOCAL-00127" summary="CLUB-353 in progress">
+      <created>1722858526401</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1722858526401</updated>
+    </task>
+    <task id="LOCAL-00128" summary="CLUB-353 scrabble fishki">
+      <created>1723590349850</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1723590349850</updated>
+    </task>
+    <task id="LOCAL-00129" summary="CLUB-353 scrabble timer">
+      <created>1723641056477</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1723641056477</updated>
+    </task>
+    <task id="LOCAL-00130" summary="CLUB-353 player score update">
+      <created>1724021166961</created>
+      <option name="number" value="00130" />
+      <option name="presentableId" value="LOCAL-00130" />
+      <option name="project" value="LOCAL" />
+      <updated>1724021166962</updated>
+    </task>
+    <task id="LOCAL-00131" summary="CLUB-353 timer update">
+      <created>1724022219360</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1724022219360</updated>
+    </task>
+    <task id="LOCAL-00132" summary="CLUB-353 before design merging">
+      <created>1724075897381</created>
+      <option name="number" value="00132" />
+      <option name="presentableId" value="LOCAL-00132" />
+      <option name="project" value="LOCAL" />
+      <updated>1724075897382</updated>
+    </task>
+    <option name="localTasksCounter" value="133" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -923,7 +835,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="CLUB-353" />
+                        <option value="CLUB-353-in-progress" />
                       </list>
                     </value>
                   </entry>
@@ -937,21 +849,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="CLUB-303 чтото сделал" />
-    <MESSAGE value="CLUB-304" />
-    <MESSAGE value="CLUB-305" />
-    <MESSAGE value="CLUB-310" />
-    <MESSAGE value="CLUB-308 + CLUB-309" />
-    <MESSAGE value="CLUB-313" />
-    <MESSAGE value="CLUB-311 check achieves table for new records after 2024-03-01 11:22:38" />
-    <MESSAGE value="CLUB-312 cron run - check top rating refresh" />
-    <MESSAGE value="CLUB-315 готово" />
-    <MESSAGE value="CLUB-318 готово" />
-    <MESSAGE value="CLUB-306 to test" />
-    <MESSAGE value="staging delete console.log" />
-    <MESSAGE value="CLUB-329 for testing" />
-    <MESSAGE value="CLUB-345" />
-    <MESSAGE value="CLUB-346 testing" />
     <MESSAGE value="CLUB-334 done" />
     <MESSAGE value="CLUB-347" />
     <MESSAGE value="staging small fix" />
@@ -962,32 +859,63 @@
     <MESSAGE value="CLUB-252 in progres + mvc href fix" />
     <MESSAGE value="CLUB-353 in progres 2" />
     <MESSAGE value="CLUB-353-in-progress with new buttons chat2" />
-    <option name="LAST_COMMIT_MESSAGE" value="CLUB-353-in-progress with new buttons chat2" />
+    <MESSAGE value="CLUB-353-in-progress with new buttons chat2 2" />
+    <MESSAGE value="CLUB-353-in-progress with new buttons avatar upload 3" />
+    <MESSAGE value="CLUB-535-in-progress avatar refresh" />
+    <MESSAGE value="CLUB-353-in-progress invite button" />
+    <MESSAGE value="CLUB-353-in-progress kill domain where its possible" />
+    <MESSAGE value="CLUB-353-in-progress hamsters" />
+    <MESSAGE value="СДГИ-353-in-progress очкии гроков" />
+    <MESSAGE value="СДГИ-353-in-progress очкии гроков 2" />
+    <MESSAGE value="СДГИ-353-in-progress очкии гроков to server" />
+    <MESSAGE value="CLUB-353 in progress" />
+    <MESSAGE value="CLUB-353 scrabble fishki" />
+    <MESSAGE value="CLUB-353 scrabble timer" />
+    <MESSAGE value="CLUB-353 player score update" />
+    <MESSAGE value="CLUB-353 timer update" />
+    <MESSAGE value="CLUB-353 before design merging" />
+    <option name="LAST_COMMIT_MESSAGE" value="CLUB-353 before design merging" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="138" y="66" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1722010619951">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="138" y="66" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.834@0.0.1536.834" timestamp="1722010619951" />
     <state x="499" y="172" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1720533343939">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="499" y="172" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1536.834@0.0.1536.834" timestamp="1720533343939" />
-    <state x="93" y="93" width="1350" height="649" key="DiffContextDialog" timestamp="1720537351930">
+    <state x="93" y="93" width="1350" height="649" key="DiffContextDialog" timestamp="1724078056743">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="93" y="93" width="1350" height="649" key="DiffContextDialog/0.0.1536.834@0.0.1536.834" timestamp="1720537351930" />
+    <state x="93" y="93" width="1350" height="649" key="DiffContextDialog/0.0.1536.834@0.0.1536.834" timestamp="1724078056743" />
     <state x="549" y="172" key="FileChooserDialogImpl" timestamp="1721145674841">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="549" y="172" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1721145674841" />
-    <state x="513" y="140" key="NewPhpClassDialog" timestamp="1720090479405">
+    <state x="513" y="140" key="NewPhpClassDialog" timestamp="1722009465749">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="513" y="140" key="NewPhpClassDialog/0.0.1536.834@0.0.1536.834" timestamp="1720090479405" />
-    <state x="361" y="149" key="Vcs.Push.Dialog.v2" timestamp="1719918999426">
+    <state x="513" y="140" key="NewPhpClassDialog/0.0.1536.834@0.0.1536.834" timestamp="1722009465749" />
+    <state x="604" y="340" key="NewPhpFileDialog" timestamp="1721300856836">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="361" y="149" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1719918999426" />
-    <state x="147" y="238" width="581" height="596" key="find.popup" timestamp="1721157526908">
+    <state x="604" y="340" key="NewPhpFileDialog/0.0.1536.834@0.0.1536.834" timestamp="1721300856836" />
+    <state x="520" y="119" key="RollbackChangesDialog" timestamp="1722710301751">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="147" y="238" width="581" height="596" key="find.popup/0.0.1536.834@0.0.1536.834" timestamp="1721157526908" />
+    <state x="520" y="119" key="RollbackChangesDialog/0.0.1536.834@0.0.1536.834" timestamp="1722710301751" />
+    <state x="361" y="149" key="Vcs.Push.Dialog.v2" timestamp="1722858549136">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="361" y="149" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1722858549136" />
+    <state x="551" y="136" width="818" height="596" key="find.popup" timestamp="1724094556507">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="551" y="136" width="818" height="596" key="find.popup/0.0.1536.834@0.0.1536.834" timestamp="1724094556507" />
+    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup" timestamp="1721736015373">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup/0.0.1536.834@0.0.1536.834" timestamp="1721736015373" />
   </component>
 </project>

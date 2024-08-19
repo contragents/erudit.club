@@ -1,9 +1,13 @@
 /*<?php
-preg_match('/((scrabble|release|yandex|dev)(\d\.\d\.\d\.\d))/',__DIR__,$matches);
-$dir=$matches[1];
+preg_match('/((scrabble|release|yandex|dev)(\d\.\d\.\d\.\d))/', __DIR__, $matches);
+$dir = $matches[1];
+$gameMode = $matches[2];
 //Определяем каталог версии разработки
 ?>*/
 //
+
+//<?php include('tg.js')?>
+
 var UIScene = new Phaser.Class({
    
     Extends: Phaser.Scene,
@@ -33,9 +37,3 @@ var UIScene = new Phaser.Class({
 var game = new Phaser.Game(config);
 
 document.body.style.backgroundColor = "#dddddd";
-// experiments with background
-// document.body.style.backgroundColor = "#b3b1ad";
-// document.body.style.backgroundImage="url('/img/background_repeat_small.jpg')";
-
-//<?php include('ysdk.js')?>
-

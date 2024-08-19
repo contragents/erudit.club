@@ -352,34 +352,27 @@ var gameStates = {
                             return true;
                         }
                     },
-                    ...(commonId == 26907 && { telegram: {
-                        label: 'Перейти на Telegram',
+                    ...(!isTgBot() && { telegram: {
+                            label: '<?= T::PHRASES['switch_tg_button'][T::$lang] ?>',
                             className: 'btn-danger',
-                            callback: function () {document.location='https://t.me/erudit_club_bot/?start='+commonId; return false;},
-                        } }),
-                    ...(commonId != 26907 && {engGame: {
-                        label: '&nbsp;&nbsp;In English!&nbsp;&nbsp;&nbsp;',
-                        className: 'btn-danger',
-                        callback: function () {
-                            activateFullScreenForMobiles();
-                            gameState = 'noGame';
-                            lang = 'EN';
-                            //for avoiding errors in IDE
-                            //<?php include('instruction_eng.js'); ?>
-                            /** todo not working on yandex*/
-                            asyncCSS('/css/choose_css.css');
-                            fetchGlobal(INIT_GAME_SCRIPT, '', $(".bootbox-body #myGameForm").serialize())
-                                .then((data) => {
-                                    if (data == '')
-                                        var responseText = 'Ошибка';
-                                    else {
-                                        commonCallback(data);
-                                    }
-                                });
+                            callback: function () {
+                                document.location = '<?= T::PHRASES['game_bot_url'][T::$lang] ?>' + '/?start='
+                                    + (commonId ? commonId : '');
 
-                            return true;
-                        }
-                    }})
+                                return false;
+                            }
+                    }}),
+                    ...(isTgBot() && { invite: {
+                            label: '<?= T::PHRASES['invite_tg_button'][T::$lang] ?>',
+                            className: 'btn-danger',
+                            callback: function () {
+                                // alert(webAppInitDataUnsafe.length + JSON.stringify(webAppInitDataUnsafe));
+
+                                shareTgGlobal();
+
+                                return false;
+                            }
+                    }}),
                 }
             });
         }
@@ -937,7 +930,7 @@ function commonCallback(data) {
     responseData = data;
 
     if (pageActive == 'hidden' && gameState != 'chooseGame') {
-        fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID === false) ? '0' : uniqID)
+        fetchGlobal(STATUS_CHECKER_SCRIPT)
             .then((data) => {
                 commonCallback(data);
             });

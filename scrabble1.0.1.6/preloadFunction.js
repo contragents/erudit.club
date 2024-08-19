@@ -13,7 +13,7 @@ function () {
     var loadingText = this.make.text({
         x: textWidth / 2,
         y: textHeight / 2 - 50,
-        text: 'Scrabble is loading...',
+        text: LOADING_TEXT,
         style: {
             font: '20px monospace',
             fill: '#000000'
@@ -40,8 +40,7 @@ function () {
     preloaderObject = this;
 
     this.load.image('no_network', '/img/no_network_transparent.png');
-    this.load.svg('ground', '/img/field_source_scrabble.svg', {'width': 513 * 2, 'height': 500 * 2});
-    //this.load.svg('ground', '/img/field_source_nd_20.svg', {'width': 513 * 2, 'height': 500 * 2});
+    this.load.svg('ground', '/img/' + GROUND_FILE, {'width': 513 * 2, 'height': 500 * 2});
     this.load.svg('donate', '/img/donate.svg');
     this.load.image('zvezda', '/img/star_transparent.png');
     this.load.svg('zvezdaVerh', '/img/star_transparent_2.svg', {scale: 0.025 * 2});
@@ -50,7 +49,6 @@ function () {
     this.load.atlas('megaset', '/img/letters.png', '/img/letters.json');
     this.load.atlas('digits', '/img/letters.png', '/img/nums.json');
     this.load.atlas('megaset_english', '/img/letters_english.png', '/img/letters_english.json');
-    // this.load.image('back', '/img/background_test.jpg');
     this.load.svg('back', '/img/back2.svg', {'height': 1980, 'width': 1080});
 
     for (let k in buttons) {
@@ -107,12 +105,6 @@ function () {
             {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1), 'width': buttonHeight * 0.15 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)}
         );
     });
-
-
-    /*this.load.svg('fullscreen', '/fullscreen.svg', {
-        'width': fullscreenButtonSize,
-        'height': fullscreenButtonSize
-    });*/
 
     loadFishkiSet(userFishkaSet);
 }

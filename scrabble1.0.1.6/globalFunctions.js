@@ -136,7 +136,7 @@ document.addEventListener("visibilitychange", function () {
         || gameState == 'initGame'
         || gameState == 'initRatingGame') {
         if (pageActive == 'hidden') {
-            fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID == false) ? '0' : uniqID)
+            fetchGlobal(STATUS_CHECKER_SCRIPT)
                 .then((data) => {
                     commonCallback(data);
                 });

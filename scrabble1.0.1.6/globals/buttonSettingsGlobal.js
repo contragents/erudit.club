@@ -53,16 +53,7 @@ var buttons = {
         svgObject: false,
         pointerupFunction: function () {
             {
-                if (commonId) {
-                    botUrl = GAME_BOT_URL + '/?start=inv_' + commonId;
-                    shareUrl = /*'https://t.me' + */'/share/url?url=' + encodeURIComponent(botUrl)
-                        + '&text=' + encodeURIComponent(INVITE_FRIEND_PROMPT);
-                    WebView.postEvent(
-                        'web_app_open_tg_link',
-                        false,
-                        {path_full: shareUrl,}
-                        );
-                }
+                shareTgGlobal();
 
                 return false;
             }

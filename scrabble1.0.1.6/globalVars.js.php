@@ -1,14 +1,15 @@
 
-//<?php $lang='EN'; ?>
+//<?php $lang = T::$lang = T::GAME_MODE_LANG[$gameMode]; ?>
 
-var lang = 'EN';
+var lang = '<?= T::$lang ?>';
 
-const INVITE_FRIEND_PROMPT = '<?= T::getInviteFriendPrompt($lang) ?>';
-const GAME_BOT_URL = '<?= T::PHRASES['game_bot_url'][$lang] ?>';
-
+const INVITE_FRIEND_PROMPT = '<?= T::getInviteFriendPrompt() ?>';
+const GAME_BOT_URL = '<?= T::PHRASES['game_bot_url'][T::$lang] ?>';
+const LOADING_TEXT = '<?= T::PHRASES['loading_text'][T::$lang] ?>';
 
 var preloaderObject = false;
 
+const GROUND_FILE = '<?= T::PHRASES['ground_file'][T::$lang] ?>';
 const DEFAULT_FISHKA_SET = 'default';
 const MAXS_FISHKA_SET = 'MaxS';
 const GIRL_FISHKA_SET = 'Girl';
@@ -95,8 +96,6 @@ const standardVerticalWidth = 500 * 2;
 const standardVerticalHeight = 800 * 2;
 const standardHorizontalWidth = 960 * 2;
 const standardHorizontalHeight = standardVerticalWidth;
-
-const donateLink = 'https://pay.cloudtips.ru/p/9844e694';
 
 var gameNumber = false;
 var graphics;
@@ -196,8 +195,6 @@ if (windowInnerWidth > windowInnerHeight) {
     var backY = 100 + (gameWidth - 50) * Math.random();
     var backX = -1 * gameWidth * Math.random();
     var backScale = 1; // не используем, хз как работает setscale в Фазере
-
-    //correctionY += topHeight;
 }
 
 var buttonHeight = topHeight;
@@ -250,10 +247,11 @@ var instruction = '';
 
 var soundPlayed = false;
 
-//<?php if (strtoupper(($lang ?? '')) == 'EN') include('globals/instruction_eng.js'); else include('globals/instruction.js'); ?>
+//<?php if (T::$lang === T::EN_LANG) include('globals/instruction_eng.js'); else include('globals/instruction.js'); ?>
 
+//<?php include('globals/tgGlobalFunction.js')?>
 //<?php include('globals/buttonSettingsGlobal.js')?>
-//<?php include('globals/gameStates.js')?>
+//<?php include('globals/gameStates.js.php')?>
 //<?php include('globals/letterPrices.js')?>
 //<?php include('globals/rusLetters.js')?>
 //<?php include('globals/wav.js')?>

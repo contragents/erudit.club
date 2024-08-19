@@ -1,5 +1,5 @@
 //
-async function fetchGlobal(script, param_name, param_data) {
+async function fetchGlobal(script, param_name = '', param_data = '') {
     if (pageActive == 'hidden' && gameState == 'chooseGame' && script === STATUS_CHECKER_SCRIPT) {
         return {message: "Выберите параметры игры", http_status: BAD_REQUEST, status: "error"};
     }
