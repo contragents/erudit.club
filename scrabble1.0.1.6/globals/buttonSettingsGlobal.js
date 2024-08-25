@@ -335,7 +335,7 @@ function displayScoreGlobal(score, blockName, isActive = false)
     }
 }
 
-function displayTimeGlobal(time)
+function displayTimeGlobal(time, forceShowAll = false)
 {
     let mode = (time < 20) ? ALARM_MODE : OTJAT_MODE;
     let disabledMode = (!(time < 20)) ? ALARM_MODE : OTJAT_MODE;
@@ -355,17 +355,17 @@ function displayTimeGlobal(time)
         container.getByName(disabledMode + '_' + 'dvoetoch').setVisible(false);
     }
 
-    if(thirdDigit !== timerState.digit3 || mode !== timerState.mode) {
+    if(thirdDigit !== timerState.digit3 || mode !== timerState.mode || forceShowAll) {
         container.getByName(timerState.mode + '_' + timerState.digit3 + '_' + '3').setVisible(false);
         container.getByName(mode + '_' + thirdDigit + '_3').setVisible(true);
     }
 
-    if(secondDigit !== timerState.digit2 || mode !== timerState.mode) {
+    if(secondDigit !== timerState.digit2 || mode !== timerState.mode || forceShowAll) {
         container.getByName(timerState.mode + '_' + timerState.digit2 + '_' + '2').setVisible(false);
         container.getByName(mode + '_' + secondDigit + '_2').setVisible(true);
     }
 
-    if(firstDigit !== timerState.digit1 || mode !== timerState.mode) {
+    if(firstDigit !== timerState.digit1 || mode !== timerState.mode || forceShowAll) {
         container.getByName(timerState.mode + '_' + timerState.digit1 + '_' + '1').setVisible(false);
         container.getByName(mode + '_' + firstDigit + '_1').setVisible(true);
     }
@@ -383,8 +383,10 @@ function buttonSetModeGlobal(objectSet, objectName, mode)
 
     if (mode === ALARM_MODE) {
         svgObject.getByName(objectName + ALARM_MODE).setVisible(true);
+        svgObject.getByName(objectName + OTJAT_MODE).setVisible(false);
     } else {
         svgObject.getByName(objectName + ALARM_MODE).setVisible(false);
+        svgObject.getByName(objectName + OTJAT_MODE).setVisible(true);
     }
 }
 

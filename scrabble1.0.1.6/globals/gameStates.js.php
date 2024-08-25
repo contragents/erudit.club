@@ -903,7 +903,7 @@ function commonCallback(data) {
         vremiaMinutes = data['minutesLeft'];
         vremiaSeconds = data['secondsLeft'];
 
-        displayTimeGlobal(+vremiaMinutes * 100 + +vremiaSeconds);
+        displayTimeGlobal(+vremiaMinutes * 100 + +vremiaSeconds, true);
     }
 
     if ('log' in data)
@@ -928,7 +928,11 @@ function commonCallback(data) {
     }
 
     if ('winScore' in data) {
-        winScore = data['winScore'];
+        if (!winScore) {
+            buttonSetModeGlobal(players, 'goalBlock', data.winScore == 200 ? OTJAT_MODE : ALARM_MODE);
+        }
+
+        winScore = data.winScore;
     }
 
     responseData = data;

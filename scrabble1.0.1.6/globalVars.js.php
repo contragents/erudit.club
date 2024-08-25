@@ -212,7 +212,7 @@ var submitButton = false;
 var dialog = false;
 var dialogResponse = false;
 
-var winScore = '';
+var winScore = false;
 var ochki = false;
 var ochki_arr = false;
 var myUserNum = false;
