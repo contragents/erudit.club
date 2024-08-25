@@ -4,6 +4,10 @@ function submitButtonFunction() {
         return;
     }
 
+    if (bootBoxIsOpenedGlobal()) {
+        return;
+    }
+
     buttons['submitButton']['svgObject'].disableInteractive();
     buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
@@ -380,6 +384,7 @@ function chatButtonFunction() {
                 callback: function () {
                     canOpenDialog = true;
                     canCloseDialog = true;
+
                     return true;
                 }
             },

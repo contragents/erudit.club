@@ -842,7 +842,7 @@ function commonCallback(data) {
                             }
                         }
 
-                        dialog = bootbox.confirm({
+                        dialogTurn = bootbox.confirm({
                             message: message,
                             size: 'medium',
                             buttons: {
@@ -870,7 +870,7 @@ function commonCallback(data) {
                                 activateFullScreenForMobiles();
                             }
                         });
-                        dialog
+                        dialogTurn
                             .find('.modal-content').css({'background-color': 'rgba(255, 255, 255, 0.7)'})
                             .find('img').css('background-color', 'rgba(0, 0, 0, 0)');
 
@@ -878,7 +878,7 @@ function commonCallback(data) {
                             setTimeout(
                                 function () {
                                     automaticDialogClosed = true;
-                                    dialog.find(".bootbox-close-button").trigger("click");
+                                    dialogTurn.find(".bootbox-close-button").trigger("click");
                                 }
                                 , timeToCloseDilog * 1000
                             );
