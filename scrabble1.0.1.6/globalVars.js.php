@@ -61,6 +61,7 @@ const BOTTOM_PERCENT = 0.7;
 const INACTIVE_USER_ALPHA = 0.2;
 
 var commonId = false;
+var commonIdHash = false;
 var isUserBlockActive = false;
 var playerScores = {
     youBlock: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},

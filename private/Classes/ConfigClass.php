@@ -21,6 +21,7 @@ class Config
     // Соответствие $config-параметров и .env-параметров для замены
     const REPLACE_PARAMS = [
         'domain' => ['key' => 'DOMAIN'],
+        'salt' =>  ['key' => 'SALT'],
         'env' => ['key' => 'YII_ENV', 'modify' => 'strtoupper'],
         'url' => [
             'RECEIVE_URL' => ['key' => 'TRACKER_RECEIVE_URL'],

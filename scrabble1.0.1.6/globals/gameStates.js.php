@@ -357,7 +357,7 @@ var gameStates = {
                             className: 'btn-danger',
                             callback: function () {
                                 document.location = '<?= T::PHRASES['game_bot_url'][T::$lang] ?>' + '/?start='
-                                    + (commonId ? commonId : '');
+                                    + ((commonId && commonIdHash ) ? (commonId + '_' + commonIdHash) : '');
 
                                 return false;
                             }
@@ -709,6 +709,10 @@ function commonCallback(data) {
 
     if ('common_id' in data && !commonId) {
         commonId = data.common_id;
+    }
+
+    if ('common_id_hash' in data && !commonIdHash) {
+        commonIdHash = data.common_id_hash;
     }
 
     if (myUserNum === false)

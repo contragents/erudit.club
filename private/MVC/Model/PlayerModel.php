@@ -75,7 +75,13 @@ class PlayerModel extends BaseModel
             if (self::add(
                 ['cookie' => $cookie, 'user_id' => new ORM("conv(substring(md5('$cookie'),1,16),16,10)")]
             )) {
-                return self::getPlayerID($cookie, false);
+                $id = self::getIdByCookie($cookie);
+                if ($id) {
+                    self::update($id, ['field' => self::COMMON_ID_FIELD, 'value' => $id, 'raw' => true]);
+                }
+
+                return $id;
+                //return self::getPlayerID($cookie, false);
             }
         }
 
@@ -446,5 +452,10 @@ class PlayerModel extends BaseModel
                 self::cacheDeltaRating($player['cookie'], $player['user_id'], ['delta' => -1,]);
             }
         }
+    }
+
+    private static function getIdByCookie(string $cookie): ?int
+    {
+        return self::getOneCustom(self::COOKIE_FIELD, $cookie)['id'] ?? null;
     }
 }

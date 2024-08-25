@@ -2,6 +2,9 @@
 
 namespace Dadata;
 
+use Config;
+use Exception;
+
 class Cache
 {
     public static $_instance = null;
@@ -11,7 +14,14 @@ class Cache
     public function __construct()
     {
         $this->redis = new \Redis;
-        $this->redis->pconnect("127.0.0.1", 6379);
+        try {
+            $this->redis->pconnect(Config::$config['cache']['HOST'], Config::$config['cache']['PORT'], 10);
+        } catch (Exception $e) {
+            $this->redis->connect(Config::$config['cache']['HOST'], Config::$config['cache']['PORT'], 10);
+        }
+
+        // $this->redis = new \Redis;
+        // $this->redis->pconnect("127.0.0.1", 6379);
     }
 
     /** Performing scan for HSET

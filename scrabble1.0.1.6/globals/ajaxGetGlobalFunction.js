@@ -12,6 +12,11 @@ async function fetchGlobal(script, param_name = '', param_data = '') {
         isSubmitResponseAwaining = true;
     }
 
+    if (!commonId && script === STATUS_CHECKER_SCRIPT && isTgBot()) {
+        param_name = '';
+        param_data = 'tg_authorize=true&' + TG.initData;
+    }
+
     requestToServerEnabled = false;
     requestToServerEnabledTimeout = setTimeout(
         function () {
@@ -74,7 +79,9 @@ function commonParams() {
         + (gameNumber ? gameNumber : 0)
         + '&gameState='
         + gameState
-        + (pageActive == 'hidden' ? '&page_hidden=true' : '');
+        + (pageActive == 'hidden' ? '&page_hidden=true' : '')
+        + ('hash' in webAppInitDataUnsafe ? ('&tg_hash=' + webAppInitDataUnsafe.hash) : '')
+        + ('user' in webAppInitDataUnsafe && 'id' in webAppInitDataUnsafe.user ? ('&tg_id=' + webAppInitDataUnsafe.user.id) : '') ;
 }
 
 async function fetchGlobalNominal(script, param_name, param_data) {

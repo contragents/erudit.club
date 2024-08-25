@@ -10,7 +10,7 @@ if (!isset($_COOKIE['erudit_user_session_ID'])) {
     $_COOKIE = Cookie::setGetCook($_COOKIE['erudit_user_session_ID']);
 }
 
-ob_clean();
+@ob_clean();
 
 if (file_exists($_GET['file'])) {
     include($_GET['file']);

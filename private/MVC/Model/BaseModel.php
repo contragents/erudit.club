@@ -10,6 +10,7 @@ class BaseModel
     const CREATED_AT_FIELD = 'created_at';
     const UPDATED_AT_FIELD = 'updated_at';
     const IS_DELETED_FIELD = 'is_deleted';
+    const COMMON_ID_FIELD = 'common_id';
 
     const CURRENT_TIMESTAMP = 'CURRENT_TIMESTAMP';
 

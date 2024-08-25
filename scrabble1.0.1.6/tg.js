@@ -29,31 +29,45 @@ if (initParams) {
 
 sessionStorageSet('initParams', initParams);
 
+function sleep(milliseconds) {
+    var t = (new Date()).getTime();
+    var i = 0;
+    while (((new Date()).getTime() - t) < milliseconds) {
+        i++;
+    }
+}
 
-var TG = window.Telegram.WebApp;
-TG.disableVerticalSwipes();
+if (window.Telegram == undefined) {
+    var webAppInitDataUnsafe = {};
+    var TG = {};
+    var WebView = {postEvent: function(p1,p2,p3){return;}};
+} else {
+    var TG = window.Telegram.WebApp;
+    TG.disableVerticalSwipes();
 
-var Utils = window.Telegram.Utils;
-var WebView = window.Telegram.WebView;
-var initParams = WebView.initParams;
-var isIframe = WebView.isIframe;
+    var Utils = window.Telegram.Utils;
+    var WebView = window.Telegram.WebView;
+    var initParams = WebView.initParams;
+    var isIframe = WebView.isIframe;
 
-WebView.postEvent('web_app_expand');
+    WebView.postEvent('web_app_expand');
 
-var webAppInitData = '';
-var webAppInitDataUnsafe = {};
+    var webAppInitData = '';
+    var webAppInitDataUnsafe = {};
 
-if (initParams.tgWebAppData && initParams.tgWebAppData.length) {
-    webAppInitData = initParams.tgWebAppData;
-    webAppInitDataUnsafe = Utils.urlParseQueryString(webAppInitData);
-    for (var key in webAppInitDataUnsafe) {
-        var val = webAppInitDataUnsafe[key];
-        try {
-            if (val.substr(0, 1) == '{' && val.substr(-1) == '}' ||
-                val.substr(0, 1) == '[' && val.substr(-1) == ']') {
-                webAppInitDataUnsafe[key] = JSON.parse(val);
+    if (initParams.tgWebAppData && initParams.tgWebAppData.length) {
+        webAppInitData = initParams.tgWebAppData;
+        webAppInitDataUnsafe = Utils.urlParseQueryString(webAppInitData);
+        for (var key in webAppInitDataUnsafe) {
+            var val = webAppInitDataUnsafe[key];
+            try {
+                if (val.substr(0, 1) == '{' && val.substr(-1) == '}' ||
+                    val.substr(0, 1) == '[' && val.substr(-1) == ']') {
+                    webAppInitDataUnsafe[key] = JSON.parse(val);
+                }
+            } catch (e) {
             }
-        } catch (e) {}
+        }
     }
 }
 
