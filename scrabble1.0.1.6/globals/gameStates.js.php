@@ -506,6 +506,9 @@ var gameStates = {
             if ("score" in data) {
                 userScores(data);
             }
+            if ('activeUser' in data) {
+                activeUser = data.activeUser;
+            }
         },
         results: function (data) {
             if (dialog && canCloseDialog)

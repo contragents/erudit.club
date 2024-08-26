@@ -48,6 +48,8 @@ const ALARM_MODE = 'Alarm';
 const OTJAT_MODE = 'Otjat';
 
 const MY_TURN_STATE = 'myTurn';
+const PRE_MY_TURN_STATE = 'preMyTurn';
+const OTHER_TURN_STATE = 'otherTurn';
 
 const BAD_REQUEST = 400;
 const PAGE_NOT_FOUND = 404;
@@ -60,6 +62,7 @@ const BOTTOM_PERCENT = 0.7;
 
 const INACTIVE_USER_ALPHA = 0.2;
 
+var activeUser = false;
 var commonId = false;
 var commonIdHash = false;
 var isUserBlockActive = false;

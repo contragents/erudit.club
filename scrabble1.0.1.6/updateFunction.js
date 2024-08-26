@@ -66,25 +66,33 @@ function (time, delta) {
         }
     }
 
-    if (gameState == 'myTurn') {
-        if ((vremiaMinutes === 0) && (vremiaSeconds <= 10) && buttons['submitButton']['svgObject'].input.enabled)
+    if (gameState == MY_TURN_STATE) {
+        if ((vremiaMinutes === 0) && (vremiaSeconds <= 10) && buttons['submitButton']['svgObject'].input.enabled) {
             if ((flor % 2) === 0) {
-
                 buttons['submitButton']['svgObject']
                     .bringToTop(buttons['submitButton']['svgObject']
                         .getByName('submitButton' + ALARM_MODE));
             } else {
-
                 buttons['submitButton']['svgObject']
                     .bringToTop(buttons['submitButton']['svgObject']
                         .getByName('submitButton' + OTJAT_MODE));
             }
+        }
     }
+
+    if (gameState == MY_TURN_STATE || gameState == PRE_MY_TURN_STATE || gameState == OTHER_TURN_STATE) {
+        let activeUserBlockName = (gameState == MY_TURN_STATE) ? 'youBlock' : ('player' + (+activeUser + 1) + 'Block');
+        if ((flor % 2) === 0) {
+            buttonSetModeGlobal(players, activeUserBlockName, ALARM_MODE);
+        } else {
+            buttonSetModeGlobal(players, activeUserBlockName, OTJAT_MODE);
+        }
+    }
+
 
 
     if (gameState == 'gameResults') {
         if ((flor % 2) === 0) {
-
             buttons['newGameButton']['svgObject']
                 .bringToTop(buttons['newGameButton']['svgObject']
                     .getByName('newGameButton' + ALARM_MODE));
