@@ -18,5 +18,15 @@ class QueuePrivate extends Queue
     const GAMES_COUNTER = 'erudit.private.num_games';
     const GET_GAME_KEY = 'erudit.private.get_game_';
     const GAME_KEY = 'erudit.private.game_';
+
+    protected static function getRuClass(): string
+    {
+        return RuPrivate::class;
+    }
+
+    protected static function getEngClass(): string
+    {
+        return EngPrivate::class;
+    }
 }
 

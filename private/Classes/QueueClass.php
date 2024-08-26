@@ -106,6 +106,16 @@ class Queue
         return false;
     }
 
+    protected static function getRuClass(): string
+    {
+        return Ru::class;
+    }
+
+    protected static function getEngClass(): string
+    {
+        return Eng::class;
+    }
+
     protected function chooseGame(): string
     {
         $chooseGameParams = [
@@ -516,7 +526,7 @@ class Queue
 
         $this->caller->gameStatus['lang'] = ($this->lang == 'EN' ? 'EN' : 'RU');
         //Прописали Язык игры
-        $this->caller->gameStatus['lngClass'] = ($this->lang == 'EN' ? Eng::class : Ru::class);
+        $this->caller->gameStatus['lngClass'] = ($this->lang == 'EN' ? static::getEngClass() : static::getRuClass());
         //Класс для работы с языком
 
         foreach ($game_users as $num => $user) {
