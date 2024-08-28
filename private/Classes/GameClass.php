@@ -11,10 +11,6 @@ class Game
     const GAME_USER_KEY = 'erudit.user_';
     const CURRENT_GAME_KEY = 'erudit.current_game_';
 
-    const TG_USER_INFO_ = 'tg_user_info_';
-    const TG_USER_CACHE_TTL = 7 * 24 * 60 * 60;
-    public static /*?array*/ $tgUser = null;
-
     protected $Queue = Queue::class;
     const GAMES_KEY = 'erudit.games_';
     public static $configStatic;
@@ -311,26 +307,10 @@ class Game
 
     protected function validateCookie($incomingCookie)
     {
-        // looking for tg authorization/ signature data
-        if ($_POST['tg_authorize'] ?? false) {
-            if (TgUserModel::checkUserDataUnsafe($_POST)) {
-                self::$tgUser = TgUserModel::tgInitDataDecode($_POST);
-
-                if (self::$tgUser['user']['id'] ?? false) {
-                    Cache::setex(self::TG_USER_INFO_ . self::$tgUser['hash'] . '_' . self::$tgUser['user']['id'], self::TG_USER_CACHE_TTL, self::$tgUser);
-                    PlayerModel::getPlayerID(self::$tgUser['user']['id'], true);
-                    TgUserModel::refresh(self::$tgUser);
-                    return self::$tgUser['user']['id'];
-                }
+        if (Tg::authorize()) {
+            if (Tg::$tgUser) {
+                return Tg::$tgUser['user']['id'];
             }
-        }
-        // looking hash+tg_id in cache
-        elseif (
-            !empty($_REQUEST['tg_hash'])
-            && !empty($_REQUEST['tg_id'])
-            && (self::$tgUser = Cache::get(self::TG_USER_INFO_ . $_REQUEST['tg_hash'] . '_' . $_REQUEST['tg_id']))
-        ) {
-            return self::$tgUser['user']['id'];
         }
 
         if (strpos($incomingCookie, 'bot') !== false) {

@@ -81,7 +81,6 @@ class PlayerModel extends BaseModel
                 }
 
                 return $id;
-                //return self::getPlayerID($cookie, false);
             }
         }
 
@@ -100,7 +99,7 @@ class PlayerModel extends BaseModel
     /**
      * Finds common_id by comparing user_id and cookies between different players
      * @param $cookie
-     * @return array|false
+     * @return int|false|string
      */
     public static function getCrossingCommonIdByCookie($cookie)
     {

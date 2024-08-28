@@ -267,17 +267,14 @@ function savePlayerAvatar(url, commonID) {
             + localStorage.erudit_user_session_ID
             + '&script='
             + AVATAR_UPLOAD_SCRIPT
-            + '&queryNumber='
-            + (queryNumber++)
-            + '&lang=' + lang
-            + (pageActive === 'hidden' ? '&page_hidden=true' : '')
+            + '&'
+            + commonParams()
         )
         : (
             '/<?=$dir?>/php/'
             + AVATAR_UPLOAD_SCRIPT
-            + '?queryNumber=' + (queryNumber++)
-            + '&lang=' + lang
-            + (pageActive === 'hidden' ? '&page_hidden=true' : '')
+            + '?'
+            + commonParams()
         );
 
     $.ajax({
