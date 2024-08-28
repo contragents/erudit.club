@@ -5,7 +5,7 @@ var modes = [OTJAT_MODE, ALARM_MODE, 'Inactive', 'Navedenie', 'Najatie'];
 
 var buttons = {
     newGameButton: {
-        filename: 'new_game2',
+        filename: 'new_game2' +  (lang === 'RU' ? '_ru' : ''),
         x: topXY.x + lotokX + buttonWidth / 2 - lotokCellStep / 2 + 5,
         y: (topXY.y + topHeight) / 2,
         caption: 'New#Game',
@@ -60,7 +60,7 @@ var buttons = {
         }
     },
     submitButton: {
-        filename: 'otpravit2',
+        filename: 'otpravit2' +  (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
         y: botXY.y + botHeight * 0.125,
         caption: 'отправить',
@@ -72,7 +72,7 @@ var buttons = {
         }
     },
     resetButton: {
-        filename: 'steret2',
+        filename: 'steret2' +  (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
         y: botXY.y + botHeight * (0.25 + 0.125),
         caption: 'стереть',
@@ -85,7 +85,7 @@ var buttons = {
         }
     },
     changeButton: {
-        filename: 'pomenyat2',
+        filename: 'pomenyat2' +  (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
         y: botXY.y + botHeight * (0.5 + 0.125),
         caption: 'поменять',
@@ -109,7 +109,7 @@ var buttons = {
         }
     },
     checkButton: {
-        filename: 'proveryt2',
+        filename: 'proveryt2' +  (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth / 2,
         y: botXY.y + botHeight * 0.125,
         caption: 'проверить',
