@@ -224,7 +224,7 @@ var modesColors = {
 
 var players = {
     youBlock: {
-        filename: 'you',
+        filename: 'you' +  (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * 0.1,
         width: buttonWidth,
@@ -233,7 +233,7 @@ var players = {
         numbers: true,
     },
     player1Block: {
-        filename: 'player1',
+        filename: 'player1' +  (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * 0.1,
         width: buttonWidth,
@@ -242,7 +242,7 @@ var players = {
         numbers: true,
     },
     player2Block: {
-        filename: 'player2',
+        filename: 'player2' +  (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * (0.2 + 0.1),
         width: buttonWidth,
@@ -251,7 +251,7 @@ var players = {
         numbers: true,
     },
     player3Block: {
-        filename: 'player3',
+        filename: 'player3' +  (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * (0.4 + 0.1),
         width: buttonWidth,
@@ -260,7 +260,7 @@ var players = {
         numbers: true,
     },
     player4Block: {
-        filename: 'player4',
+        filename: 'player4' +  (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * (0.6 + 0.1),
         width: buttonWidth,
