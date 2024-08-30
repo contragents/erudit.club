@@ -5,6 +5,7 @@ if (strpos(__DIR__, 'dev1.0.1.2')) {
     error_reporting(E_ALL);
 }
 
+
 if (!isset($scriptName)) {
     throw new BadRequest('Wrong query');
 }
@@ -14,6 +15,8 @@ include_once 'cors.php';
 require_once 'index_functions.php';
 
 if (function_exists(SCRIPTS[$scriptName])) {
+    Tg::authorize();
+
     $func = SCRIPTS[$scriptName];
     return $func();
 } else {

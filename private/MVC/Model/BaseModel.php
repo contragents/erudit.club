@@ -394,7 +394,28 @@ class BaseModel
 
     public static function exists(int $id)
     {
-        return !empty(static::getOne($id)) ? true : false;
+        return !empty(static::getOne($id));
+    }
+
+    /**
+     * if at least one record exists
+     * @param array $conditions [field=>value] list
+     * @return bool
+     */
+    public static function existsCustom(array $conditions): bool
+    {
+        $query = ORM::select(['count(1)'], static::TABLE_NAME)
+            . ORM::where(1, '=', 1, true)
+            . implode(
+                ' ',
+                array_map(
+                    fn($field, $value) => ORM::andWhere($field, '=', $value),
+                    array_keys($conditions),
+                    $conditions
+                )
+            );
+
+        return ((int)DB::queryValue($query) ?: 0) > 0;
     }
 
     public function __construct()

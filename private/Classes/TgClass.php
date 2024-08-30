@@ -10,6 +10,10 @@ class Tg
     public static function authorize(): bool
     {
         // looking for tg authorization/ signature data
+        if (self::$tgUser) {
+            return true;
+        }
+
         if ($_POST['tg_authorize'] ?? false) {
             if (self::checkUserDataUnsafe($_POST)) {
                 self::$tgUser = self::tgInitDataDecode($_POST);

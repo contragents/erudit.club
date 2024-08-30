@@ -480,14 +480,14 @@ class Game
 
         $userData = UserModel::getOne($message['common_id']);
 
-        $message['url'] = $userData['avatar_url'];
+        $message['url'] = $userData['avatar_url'] ?? false;
         if (!$message['url']) {
             $message['url'] = AvatarModel::getDefaultAvatar($message['common_id']);
             $message['img_title'] = "Используется аватар по умолчанию";
         } else {
             $message['img_title'] = "Аватар по предоставленной ссылке";
         }
-        $message['name'] = $userData['name'];
+        $message['name'] = $userData['name'] ?? '';
 
         $message['text'] = '';
         $message['form'][] = [
@@ -548,7 +548,7 @@ class Game
             'placeholder' => 'сохраненный ключ от старого аккаунта'
         ];
 
-        return $this->makeResponse(['message' => json_encode($message)]);
+        return $this->makeResponse(['message' => json_encode($message, JSON_UNESCAPED_UNICODE)]);
     }
 
     protected function genKeyForCommonID($ID)
@@ -1992,7 +1992,7 @@ class Game
     public function makeResponse(array $arr)
     {
         if (!isset($arr['gameState'])) {
-            return json_encode($arr);
+            return json_encode($arr, JSON_UNESCAPED_UNICODE);
         }
 
         $commonId = $this->gameStatus['users'][$this->numUser]['common_id'] ?? PlayerModel::getPlayerID(
@@ -2018,7 +2018,7 @@ class Game
 
             // Возвращаем Десинк без сохранения состояния игры - разлочка в __destruct
             if ($arr['gameState'] == 'desync') {
-                return json_encode($arr);
+                return json_encode($arr, JSON_UNESCAPED_UNICODE);
             }
 
             if (is_array($this->gameStatus['users'][$this->numUser]['fishki'])) {
