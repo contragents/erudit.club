@@ -7,6 +7,11 @@ class UserModel extends BaseModel
     const COMMON_ID_FIELD = self::ID_FIELD;
 
     public static function updateUrl(int $commonId, string $url): bool {
+        // Добавим версию для перекеширования
+        if (strpos($url, '?') === false) {
+            $url .= ('?ver=' . date('U'));
+        }
+
         if (self::existsCustom([self::COMMON_ID_FIELD => $commonId])) {
             $avatarUpdateQuery = ORM::update(self::TABLE_NAME)
                 . ORM::set(

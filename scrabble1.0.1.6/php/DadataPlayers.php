@@ -125,7 +125,11 @@ class Players
 
         if ($updateRes) {
             return json_encode(
-                ['result' => 'saved', 'message' => 'Аватар обновлен', 'url' => $url],
+                [
+                    'result' => 'saved',
+                    'message' => 'Аватар обновлен',
+                    'url' => UserModel::getOne($commonID)[UserModel::AVATAR_URL_FIELD]
+                ],
                 JSON_UNESCAPED_UNICODE
             );
         } else {
