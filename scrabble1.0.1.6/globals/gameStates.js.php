@@ -219,7 +219,7 @@ var gameStates = {
 
             dialog = bootbox.dialog({
                 title: gameStates['chooseGame']['message'],
-                message: gameform,
+                message: isVerstkaTestGlobal() ? ' ' : gameform,
                 size: 'medium',
                 onEscape: false,
                 closeButton: false,
