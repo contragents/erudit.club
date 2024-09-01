@@ -21,6 +21,17 @@ class BaseModel
     const TYPE_DATE = 'timestamp';
     const TEASERS_IN_CHUNK = 1000;
 
+    const ERUDIT = 'erudit';
+    const SCRABBLE = 'scrabble';
+    const SUDOKU = 'sudoku';
+    const GOMOKU = 'gomoku';
+    const GAME_IDS = [
+        self::ERUDIT => 1,
+        self::SCRABBLE => 2,
+        self::SUDOKU => 3,
+        self::GOMOKU => 4,
+    ];
+
     public static function select(array $fields = [], bool $skobki = false): string
     {
         return ($skobki ? '(' : '')

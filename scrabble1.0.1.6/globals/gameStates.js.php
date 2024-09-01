@@ -618,7 +618,6 @@ var gameStates = {
                                             callback: function () {
                                                 dialogResponse.modal('hide');
                                                 dataInvite['comments'] = data['comments'];
-                                                //gameStates['gameResults']['decision'](dataInvite);
                                             }
                                         });
 

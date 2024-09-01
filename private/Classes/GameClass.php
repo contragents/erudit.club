@@ -10,6 +10,7 @@ class Game
     const GAME_STATUS_KEY = 'erudit.game_status_';
     const GAME_USER_KEY = 'erudit.user_';
     const CURRENT_GAME_KEY = 'erudit.current_game_';
+    const NEW_PLAYER = 'new_player';
 
     protected $Queue = Queue::class;
     const GAMES_KEY = 'erudit.games_';
@@ -94,10 +95,13 @@ class Game
         self::PRE_MY_TURN_STATUS,
         self::START_GAME_STATUS,
     ];
+
     const MY_TURN_STATUS = 'myTurn';
     const OTHER_TURN_STATUS = 'otherTurn';
     const PRE_MY_TURN_STATUS = 'preMyTurn';
     const START_GAME_STATUS = 'startGame';
+    const GAME_RESULTS_STATUS = 'gameResults';
+
     protected $dir = __DIR__;
 
     public function __construct()
@@ -468,7 +472,7 @@ class Game
 
         $inviteStatus = ['inviteStatus' => $this->gameStatus['invite']];
 
-        return $this->makeResponse(array_merge(['gameState' => 'gameResults', 'message' => $message], $inviteStatus));
+        return $this->makeResponse(array_merge(['gameState' => self::GAME_RESULTS_STATUS, 'message' => $message], $inviteStatus));
     }
 
     public function playerCabinetInfo()
@@ -554,9 +558,9 @@ class Game
     protected function genKeyForCommonID($ID)
     {
         $messageToEncrypt = $ID;
-        $secretKey = 'eruditforever'; // todo move to .env somedays
+        $secretKey = Config::$envConfig['SALT'];
         $method = 'AES-128-CBC';
-        $iv = base64_decode('x/bazHpEqMpxpLfVWD9dhA==');
+        $iv = base64_decode(Config::$envConfig['IV'] . '==');
         $encrypted_message = openssl_encrypt($messageToEncrypt, $method, $secretKey, 0, $iv);
 
         return $encrypted_message;
@@ -564,9 +568,9 @@ class Game
 
     public function mergeTheIDs($encryptedMessage, $commonID)
     {
-        $secretKey = 'eruditforever';
-        $method = 'AES-128-CBC'; // todo move to .env somedays
-        $iv = base64_decode('x/bazHpEqMpxpLfVWD9dhA==');
+        $secretKey = Config::$envConfig['SALT'];
+        $method = 'AES-128-CBC';
+        $iv = base64_decode(Config::$envConfig['IV'] . '==');
         $decrypted_message = openssl_decrypt($encryptedMessage, $method, $secretKey, 0, $iv);
 
         if (!is_numeric($decrypted_message)) {
@@ -1002,7 +1006,7 @@ class Game
 
         $ratings = $this->getRatings($this->User);
 
-        $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings ? $ratings[0]['rating'] : 'new_player';
+        $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings ? $ratings[0]['rating'] : self::NEW_PLAYER;
 
         return 'Новая игра начата! <br />Набери <strong>' . $this->gameStatus['winScore'] . '</strong> очков' . '<br />' . $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
     }
@@ -1036,7 +1040,7 @@ class Game
         if ($this->gameStatus['turnNumber'] == 1 || !isset($this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'])) {
             $ratings = $this->getRatings($this->User);
 
-            $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings[0]['rating'] ?? 'new_player';
+            $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings[0]['rating'] ?? self::NEW_PLAYER;
 
             return 'Ваш ход! <br />Игра до <strong>' . $this->gameStatus['winScore'] . '</strong> очков' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
         } else {
@@ -1136,7 +1140,7 @@ class Game
         // Новая версия
 
         foreach ($this->gameStatus['users'] as $num => $user) {
-            $this->updateUserStatus('gameResults', $user['ID']);
+            $this->updateUserStatus(self::GAME_RESULTS_STATUS, $user['ID']);
 
             if (
                 !empty($user['ID'])
@@ -1151,6 +1155,25 @@ class Game
                 );
             }
         }
+
+        // todo CLUB-384 testing save rating to CommonIdRatingModel = rating history
+        try {
+            RatingService::processGameResult($this->gameStatus);
+            /*
+            CommonIdRatingModel::changeUserRating($user['common_id'], ((int)$user['rating']) ?: CommonIdRatingModel::INITIAL_RATING);
+            if ($transactionId = RatingHistoryModel::addRatingChange(
+                $user['common_id'],
+                25,
+                ((int)$user['rating']) ?: CommonIdRatingModel::INITIAL_RATING,
+                true,
+                $this->gameStatus['gameNumber']
+            )) {
+                CommonIdRatingModel::changeUserRating($user['common_id'], $transactionId, BaseModel::GOMOKU);
+            }*/
+        } catch(Throwable $e) {
+            Cache::setex(self::LOG_BOT_ERRORS_KEY . 'ratings', 3600, $e->__toString());
+        }
+
     }
 
     protected function getUserStatus($user = false): string
@@ -1591,7 +1614,7 @@ class Game
 
         $desk = Cache::get(static::CURRENT_GAME_KEY . $this->currentGame);
 
-        if ($this->getUserStatus() == 'gameResults') {
+        if ($this->getUserStatus() == self::GAME_RESULTS_STATUS) {
 
 
             $result = $this->gameStatus['results'];
@@ -1599,7 +1622,7 @@ class Game
                 if ($result['winner'] == $this->User) {
                     return $this->makeResponse(
                         [
-                            'gameState' => 'gameResults',
+                            'gameState' => self::GAME_RESULTS_STATUS,
                             'comments' => "<strong style=\"color:green;\">Вы выиграли!</strong><br/>Начните новую игру",
                             ($desk ? 'desk' : 'nothing') => $desk
                         ]
@@ -1607,7 +1630,7 @@ class Game
                 } else {
                     return $this->makeResponse(
                         [
-                            'gameState' => 'gameResults',
+                            'gameState' => self::GAME_RESULTS_STATUS,
                             'comments' => "<strong style=\"color:red;\">Вы проиграли!</strong><br/>Начните новую игру",
                             ($desk ? 'desk' : 'nothing') => $desk
                         ]
@@ -1645,7 +1668,7 @@ class Game
                     if ($result['winner'] == $this->User) {
                         return $this->makeResponse(
                             [
-                                'gameState' => 'gameResults',
+                                'gameState' => self::GAME_RESULTS_STATUS,
                                 'comments' => "<strong style=\"color:green;\">Вы выиграли!</strong><br/>Начните новую игру",
                                 ($desk ? 'desk' : 'nothing') => $desk
                             ]
@@ -1653,7 +1676,7 @@ class Game
                     } else {
                         return $this->makeResponse(
                             [
-                                'gameState' => 'gameResults',
+                                'gameState' => self::GAME_RESULTS_STATUS,
                                 'comments' => "<strong style=\"color:red;\">Вы проиграли!</strong><br/>Начните новую игру",
                                 ($desk ? 'desk' : 'nothing') => $desk
                             ]
@@ -1922,8 +1945,8 @@ class Game
                 $this->gameStatus['users'][$num]['inactiveTurn'] = 1000;
                 //Сделали невозможным значение терна инактив
 
-                $userRating = $this->getRatings($user['ID']);
-                $this->gameStatus['users'][$num]['rating'] = $userRating ? $userRating[0]['rating'] : 'new_player';
+                $userRating = $this->getRatings($user['ID']); // todo брать рейтинг из common_id_rating
+                $this->gameStatus['users'][$num]['rating'] = $userRating ? $userRating[0]['rating'] : self::NEW_PLAYER;
                 $this->gameStatus['users'][$num]['common_id'] = PlayerModel::getPlayerID($user['ID'], true);
                 //Прописали рейтинг и common_id игрока в статусе игры - только для games_statistic.php
             }
@@ -2093,7 +2116,7 @@ class Game
                 $arr = array_merge($arr, ['turnTime' => $this->gameStatus['turnTime']]);
             }
 
-            if ($arr['gameState'] == 'gameResults' && isset($this->gameStatus['invite'])) {
+            if ($arr['gameState'] == self::GAME_RESULTS_STATUS && isset($this->gameStatus['invite'])) {
                 $this->processInvites($arr);
             }
 

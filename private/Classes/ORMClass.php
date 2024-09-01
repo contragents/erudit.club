@@ -28,7 +28,7 @@ class ORM
      */
     public static function set(array $fieldsvals)
     {
-        if (!isset($fieldsvals[0])) {
+        if (!isset($fieldsvals[0]) && isset($fieldsvals['field']) && isset($fieldsvals['value'])) {
             return " SET {$fieldsvals['field']} = "
                 . (
                 $fieldsvals['value'] instanceof ORM
@@ -40,20 +40,24 @@ class ORM
                 . ' ';
         }
 
-        $fields = [];
-        foreach ($fieldsvals as $fv) {
-            $fields[] = " {$fv['field']} = "
-                . (
-                $fv['value'] instanceof ORM
-                    ? $fv['value']->rawExpression
-                    : ($fv['raw'] ?? false
-                        ? $fv['value']
-                        : "'{$fv['value']}'")
-                )
-                . ' ';
+        if (isset($fieldsvals[0]['field']) && isset($fieldsvals[0]['value'])) {
+            $fields = [];
+            foreach ($fieldsvals as $fv) {
+                $fields[] = " {$fv['field']} = "
+                    . (
+                    $fv['value'] instanceof ORM
+                        ? $fv['value']->rawExpression
+                        : ($fv['raw'] ?? false
+                            ? $fv['value']
+                            : "'{$fv['value']}'")
+                    )
+                    . ' ';
+            }
+
+            return ' SET ' . implode(',', $fields);
         }
 
-        return ' SET ' . implode(',', $fields);
+        return ' SET ' . implode(',', array_map(fn($field, $value) => " $field = '$value' ", array_keys($fieldsvals), $fieldsvals));
     }
 
     public static function whereIn(string $fieldName, array $values): string

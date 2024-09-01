@@ -82,7 +82,7 @@ class DB
 
     public static function insertID()
     {
-        return mysqli_insert_id(self::$DBConnect);
+        return (int)mysqli_insert_id(self::$DBConnect);
     }
 
     public static function queryArray($mysqlQuery)
