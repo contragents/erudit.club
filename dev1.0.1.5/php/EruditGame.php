@@ -302,7 +302,7 @@ class Game extends \Game
         return json_encode($result);
     }
 
-    public function submitTurnPrivate() // есть ли отличия от основного метода - проестить
+    public function submitTurnPrivate() // есть ли отличия от основного метода - протестить
     {
         if ($this->getUserStatus() != self::MY_TURN_STATUS) {
             $this->addToLog(

@@ -43,5 +43,26 @@ class T
             self::EN_LANG => 'Invite a friend',
             self::RU_LANG => 'Пригласить друга'
         ],
+        'you_lost' => [
+            self::EN_LANG => 'You lost!',
+            self::RU_LANG => 'Вы проиграли!'
+        ],
+        'you_won' => [
+            self::EN_LANG => 'You won!',
+            self::RU_LANG => 'Вы выиграли!'
+        ],
+        'start_new_game' => [
+            self::EN_LANG => 'Start a new game',
+            self::RU_LANG => 'Начните новую игру'
+        ],
+        'rating_changed' => [
+            self::EN_LANG => 'Rating change: ',
+            self::RU_LANG => 'Изменение рейтинга: '
+        ],
     ];
+
+    public static function S($keyPhrase): string
+    {
+        return self::PHRASES[$keyPhrase][self::$lang] ?? '';
+    }
 }

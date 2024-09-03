@@ -4,6 +4,7 @@ use Dadata\Hints;
 use Dadata\Players;
 use Dadata\Prizes;
 use Dadata\Stats;
+use ViewHelper as VH;
 
 class Game
 {
@@ -1158,18 +1159,10 @@ class Game
 
         // todo CLUB-384 testing save rating to CommonIdRatingModel = rating history
         try {
-            RatingService::processGameResult($this->gameStatus);
-            /*
-            CommonIdRatingModel::changeUserRating($user['common_id'], ((int)$user['rating']) ?: CommonIdRatingModel::INITIAL_RATING);
-            if ($transactionId = RatingHistoryModel::addRatingChange(
-                $user['common_id'],
-                25,
-                ((int)$user['rating']) ?: CommonIdRatingModel::INITIAL_RATING,
-                true,
-                $this->gameStatus['gameNumber']
-            )) {
-                CommonIdRatingModel::changeUserRating($user['common_id'], $transactionId, BaseModel::GOMOKU);
-            }*/
+            $resultRatings = RatingService::processGameResult($this->gameStatus);
+            foreach ($this->gameStatus['users'] as &$user) {
+                $user['result_ratings'] = $resultRatings[$user['common_id']];
+            }
         } catch(Throwable $e) {
             Cache::setex(self::LOG_BOT_ERRORS_KEY . 'ratings', 3600, $e->__toString());
         }
@@ -1619,23 +1612,18 @@ class Game
 
             $result = $this->gameStatus['results'];
             if (isset($result['winner'])) {
-                if ($result['winner'] == $this->User) {
-                    return $this->makeResponse(
-                        [
-                            'gameState' => self::GAME_RESULTS_STATUS,
-                            'comments' => "<strong style=\"color:green;\">Вы выиграли!</strong><br/>Начните новую игру",
-                            ($desk ? 'desk' : 'nothing') => $desk
-                        ]
-                    );
-                } else {
-                    return $this->makeResponse(
-                        [
-                            'gameState' => self::GAME_RESULTS_STATUS,
-                            'comments' => "<strong style=\"color:red;\">Вы проиграли!</strong><br/>Начните новую игру",
-                            ($desk ? 'desk' : 'nothing') => $desk
-                        ]
-                    );
-                }
+                $ratingsChanged = $this->gameStatus['users'][$this->numUser]['result_ratings'];
+
+                return $this->makeResponse(
+                    [
+                        'gameState' => self::GAME_RESULTS_STATUS,
+                        'comments' => self::playerGameResultsRendered(
+                            $result['winner'] == $this->User,
+                            $ratingsChanged
+                        ),
+                        ($desk ? 'desk' : 'nothing') => $desk
+                    ]
+                );
             }
         }
 
@@ -1662,27 +1650,22 @@ class Game
 
             if ($this->gameStatus['users'][$this->gameStatus['activeUser']]['lostTurns'] >= 3) {
                 $this->storeGameResults($this->lost3TurnsWinner($this->gameStatus['activeUser']));
-
                 $result = $this->gameStatus['results'];
+
                 if (isset($result['winner'])) {
-                    if ($result['winner'] == $this->User) {
+                    $ratingsChanged = $this->gameStatus['users'][$this->numUser]['result_ratings'];
+                    {
                         return $this->makeResponse(
                             [
                                 'gameState' => self::GAME_RESULTS_STATUS,
-                                'comments' => "<strong style=\"color:green;\">Вы выиграли!</strong><br/>Начните новую игру",
-                                ($desk ? 'desk' : 'nothing') => $desk
-                            ]
-                        );
-                    } else {
-                        return $this->makeResponse(
-                            [
-                                'gameState' => self::GAME_RESULTS_STATUS,
-                                'comments' => "<strong style=\"color:red;\">Вы проиграли!</strong><br/>Начните новую игру",
+                                'comments' => self::playerGameResultsRendered(
+                                    $result['winner'] == $this->User,
+                                    $ratingsChanged
+                                ),
                                 ($desk ? 'desk' : 'nothing') => $desk
                             ]
                         );
                     }
-                    //Конец фрагмента для объединения
                 }
             } else {
                 $this->nextTurn();
@@ -1701,6 +1684,27 @@ class Game
                 return $this->newGame();
             }
         }
+    }
+
+    protected function playerGameResultsRendered(bool $isWinner, array $ratingsChanged): string
+    {
+        return
+            VH::tag(
+                'strong',
+                $isWinner ? T::S('you_won') : T::S('you_lost'),
+                ['style' => 'color:' . ($isWinner ? 'green' : 'red') . ';']
+            )
+
+            . VH::br()
+            . T::S('rating_changed')
+            . "{$ratingsChanged['prev_rating']} -> "
+            . VH::tag(
+                'strong',
+                "{$ratingsChanged['new_rating']} (" . ($isWinner ? '+' : '') . "{$ratingsChanged['delta_rating']})",
+                ['style' => 'color:' . ($isWinner ? 'green' : 'red') . ';']
+            )
+            . VH::br()
+            . T::S('start_new_game');
     }
 
     protected function endOfFishki()
@@ -2022,7 +2026,7 @@ class Game
                 $this->User,
                 true
             );
-        $salt = Config::$config['salt'];
+        $salt = Config::$envConfig['SALT'];
         $arr = array_merge(
             $arr,
             [

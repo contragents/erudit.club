@@ -26,6 +26,11 @@ class RatingService
             return self::$playersUnchanged; // todo отдать рейтинги без изменений
         }
 
+        foreach ($players as $player) {
+            self::deleteRatingsFromCache($player);
+            self::addDeltaRatingsToCache($player, $Game);
+        }
+
         // todo запустить после отключения games_statistics
         // saveGame($Game, $players);
 
@@ -69,11 +74,6 @@ class RatingService
         }
 
         DB::transactionCommit();
-
-        foreach ($players as $player) {
-            deleteRatingsFromCache($player);
-            addDeltaRatingsToCache($player);
-        }
 
         return true;
     }
@@ -159,5 +159,47 @@ class RatingService
             return ($a['score'] > $b['score']) ? -1 : 1;
         }
     }
+
+    protected static function addDeltaRatingsToCache($player, &$Game)
+    {
+        $deltaArr = [
+            'delta' => $player['deltaRating'],
+            'time' => $Game['turnBeginTime'],
+            'game_number' => $Game['gameNumber']
+        ];
+
+
+
+        Cache::setex(PlayerModel::DELTA_RATING_KEY_PREFIX . $player['cookie'], PlayerModel::RATING_CACHE_TTL, $deltaArr);
+        Cache::setex(PlayerModel::DELTA_RATING_KEY_PREFIX . $player['found_cookie'], PlayerModel::RATING_CACHE_TTL, $deltaArr);
+        Cache::setex(PlayerModel::DELTA_RATING_KEY_PREFIX . $player['common_id'], PlayerModel::RATING_CACHE_TTL, $deltaArr);
+
+
+        if (isset($player['userID']) && $player['userID'] > 0) {
+            Cache::setex(
+                PlayerModel::DELTA_RATING_KEY_PREFIX . $player['cookie'] . $player['userID'],
+                PlayerModel::RATING_CACHE_TTL,
+                $deltaArr
+            );
+            Cache::setex(
+                PlayerModel::DELTA_RATING_KEY_PREFIX . $player['found_cookie'] . $player['userID'],
+                PlayerModel::RATING_CACHE_TTL,
+                $deltaArr
+            );
+        }
+    }
+
+    protected static function deleteRatingsFromCache($player)
+    {
+        Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['cookie']);
+        Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['found_cookie']);
+        Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['common_id']);
+
+        if (isset($player['userID']) && $player['userID'] > 0) {
+            Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['cookie'] . $player['userID']);
+            Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['found_cookie'] . $player['userID']);
+        }
+    }
+
 
 }
