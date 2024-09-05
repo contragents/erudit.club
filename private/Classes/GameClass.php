@@ -329,6 +329,22 @@ class Game
         return $incomingCookie;
     }
 
+    private static function unauthorized()
+    {
+        return json_encode(
+            [
+                'result' => 'error',
+                'message' => T::S('Authorization error')
+            ],
+            JSON_UNESCAPED_UNICODE
+        );
+    }
+
+    private function checkCommonIdUnsafe($commonId): bool
+    {
+        return $commonId == PlayerModel::getPlayerID($this->User);
+    }
+
     public function setInactive()
     {
         unset($this->gameStatus['users'][$this->numUser]['lastActiveTime']);
@@ -340,35 +356,23 @@ class Game
         );
     }
 
-    public function saveUserNameWithID($name, $commonID)
+    public function saveUserNameWithID($name, $commonId)
     {
-        if (!$commonID) {
-            $commonID = $this->getCommonID($this->User);
+        if (!$this->checkCommonIdUnsafe($commonId)) {
+            return self::unauthorized();
         }
 
         $name = trim($name, "'\"");
 
-        $setUserNameQuery = "UPDATE users
-                SET 
-                    name = '" . DB::escapeString($name) . "'
-                WHERE 
-                    id = $commonID";
+        $res = UserModel::updateNickname($commonId, $name);
 
-        if (DB::queryInsert($setUserNameQuery)) {
-            return json_encode(
-                [
-                    'result' => 'saved',
-                    'message' => 'Ник пользователя сохранен'
-                ]
-            );
-        } else {
-            return json_encode(
-                [
-                    'result' => 'error ' . $setUserNameQuery,
-                    'message' => 'Ошибка сохранения Ника!'
-                ]
-            );
-        }
+        return json_encode(
+            [
+                'result' => $res ? 'saved' : 'error',
+                'message' => $res ? T::S('Nickname updated') : T::S('Error saving Nick change')
+            ],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     /**
@@ -714,7 +718,7 @@ class Game
         $commonID = PlayerModel::getPlayerID($cookie, true);
 
         if ($commonID) {
-            return Players::getAvatarUrl($commonID);
+            return PlayerModel::getAvatarUrl($commonID); // Players::getAvatarUrl($commonID);
         }
 
         return ''; // Тут добавить стандартный аватар из коллекции какойнибудь

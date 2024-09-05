@@ -18,6 +18,12 @@ class T
         'dev' => self::EN_LANG,
     ];
 
+
+    public static function S($keyPhrase): string
+    {
+        return self::PHRASES[$keyPhrase][self::$lang] ?? $keyPhrase;
+    }
+
     const PHRASES = [
         'invite_friend_prompt' => [
             self::EN_LANG => 'Join the online game Scrabble on Telegram! Get the maximum rating, earn coins and withdraw tokens to your wallet',
@@ -59,10 +65,345 @@ class T
             self::EN_LANG => 'Rating change: ',
             self::RU_LANG => 'Изменение рейтинга: '
         ],
-    ];
+        'Authorization error' => [
+            self::RU_LANG => 'Ошибка авторизации'
+        ],
+        'Nickname updated' => [
+            self::RU_LANG => 'Ник пользователя сохранен',
+        ],
+        'Error saving Nick change' => [
+            self::RU_LANG => 'Ошибка сохранения Ника!',
+        ],
+        'Lost server synchronization' => [
+            'Потеря синхронизации с сервером',
+        ],
+        "Closed game window" => [
+            self::RU_LANG => "Закрыл вкладку с игрой"
+        ],
+        "You closed the game window and became inactive!" => [
+            self::RU_LANG => 'Вы закрыли вкладку с игрой и стали Неактивным!'
+        ],
+        "Request denied. Game is still ongoing." => [
+            self::RU_LANG => 'Запрос отклонен. Игра еще продолжается.'
+        ],
+        "New game request sent" => [
+            self::RU_LANG => 'Запрос на новую игру отправлен'
+        ],
+        "Your new game request awaits players' response" => [
+            self::RU_LANG => 'Ваш запрос на новую игру ожидает ответа игроков'
+        ],
+        "Request was aproved! Starting new game" => [
+            self::RU_LANG => 'Запрос принят! Начинаем новую игру'
+        ],
+        "Default avatar is used" => [
+            self::RU_LANG => "Используется аватар по умолчанию"
+        ],
+        "Avatar by provided link" => [
+            self::RU_LANG => "Аватар по предоставленной ссылке"
+        ],
+        "Set" => [
+            self::RU_LANG => 'Задать'
+        ],
+        "Loading Avatar" => [
+            self::RU_LANG => 'Загрузка Аватара'
+        ],
+        "Send" => [
+            self::RU_LANG => 'Отправить'
+        ],
+        "Avatar's URL" => [
+            self::RU_LANG => 'URL аватара'
+        ],
+        "Account key" => [
+            self::RU_LANG => 'Ключ учетной записи'
+        ],
+        "Main account key" => [
+            self::RU_LANG => 'Ключ основного аккаунта'
+        ],
+        "Link" => [
+            self::RU_LANG => 'Связать'
+        ],
+        "old account saved key" => [
+            self::RU_LANG => 'сохраненный ключ от старого аккаунта'
+        ],
+        "Key transcription error" => [
+            self::RU_LANG => 'Ошибка расшифровки ключа'
+        ],
+        "Player's ID NOT found by key" => [
+            self::RU_LANG => 'ID игрока по ключу НЕ найден'
+        ],
+        "Accounts linked" => [
+            self::RU_LANG => 'Учетные записи связаны'
+        ],
+        "Link error - accounts are already linked" => [
+            self::RU_LANG => 'Ошибка привязки - аккаунты уже связаны'
+        ],
+        "Game is not started" => [
+            self::RU_LANG => "Игра не начата"
+        ],
+        "Click to expand the image" => [
+            self::RU_LANG => "Кликните для увеличения изображения"
+        ],
+        "Report sent" => [
+            self::RU_LANG => 'Отправлена жалоба'
+        ],
+        "Report declined! Please choose a player from the list" => [
+            self::RU_LANG => 'Жалоба не принята! Пожалуйста, выберите игрока из списка'
+        ],
+        "From player" => [
+            self::RU_LANG => "От Игрока"
+        ],
+        "(to everyone):" => [
+            self::RU_LANG => " (всем):"
+        ],
+        "Message NOT sent - BAN until " => [
+            self::RU_LANG => 'Сообщение НЕ отправлено - БАН до '
+        ],
+        "Message NOT sent - BAN from Player" => [
+            self::RU_LANG => 'Сообщение НЕ отправлено - БАН от Игрока'
+        ],
+        "Message sent" => [
+            self::RU_LANG => 'Сообщение отправлено'
+        ],
+        "Your turn!" => [
+            self::RU_LANG => 'Ваш ход!'
+        ],
+        "Game until" => [
+            self::RU_LANG => 'Игра до'
+        ],
+        "score" => [
+            self::RU_LANG => 'очков'
+        ],
+        "Your current rank - " => [
+            self::RU_LANG => 'Ваш текущий рейтинг - '
+        ],
+        " making a turn." => [
+            self::RU_LANG => ' ходит.'
+        ],
+        "Your turn is next - get ready!" => [
+            self::RU_LANG => 'Ваш ход следующий - приготовьтесь!'
+        ],
+        "switches pieces and skips turn" => [
+            self::RU_LANG => 'меняет фишки и пропускает ход'
+        ],
+        "Game still hasn't started!" => [
+            self::RU_LANG => 'Игра еще не начата!'
+        ],
+        "Word wasn't found" => [
+            self::RU_LANG => 'Слово не найдено'
+        ],
+        "Correct" => [
+            self::RU_LANG => 'Корректно'
+        ],
+        "One-letter word" => [
+            self::RU_LANG => 'Слово из одной буквы'
+        ],
+        "Repeat" => [
+            self::RU_LANG => 'Повтор'
+        ],
+        "+15 for all pieces used " => [
+            self::RU_LANG => '+15 за все фишки '
+        ],
+        "You did not make any word" => [
+            self::RU_LANG => 'Вы не составили ни одного слова'
+        ],
+        "is attempting to make a turn out of his turn (turn #" => [
+            self::RU_LANG => 'пытается сделать ход не в свою очередь (ход #'
+        ],
+        "Data processing error!" => [
+            self::RU_LANG => 'Ошибка обработки данных!'
+        ],
+        "Turn processing error (turn #" => [
+            self::RU_LANG => ' - ошибка обработки хода (ход #'
+        ],
+        "didn't make any word (turn #" => [
+            self::RU_LANG => 'не составил ни одного слова (ход #'
+        ],
+        "set word lenght record for " => [
+            self::RU_LANG => "устанавливает рекорд по длине слова за "
+        ],
+        "set word cost record for " => [
+            self::RU_LANG => "устанавливает рекорд по стоимости слова за "
+        ],
+        "set record for turn cost for " => [
+            self::RU_LANG => "устанавливает рекорд по стоимости хода за "
+        ],
+        "gets " => [
+            self::RU_LANG => 'зарабатывает '
+        ],
+        " for turn #" => [
+            self::RU_LANG => ' за ход #'
+        ],
+        "For all pieces" => [
+            self::RU_LANG => "За все фишки"
+        ],
+        "Wins with score " => [
+            self::RU_LANG => 'Побеждает со счетом '
+        ],
+        "set record for gotten points in the game for " => [
+            self::RU_LANG => "устанавливает рекорд набранных очков в игре за "
+        ],
+        "pieces are finished - game ended!" => [
+            self::RU_LANG => 'закончились фишки - конец игры!'
+        ],
+        "set record for number of games played for " => [
+            self::RU_LANG => "устанавливает рекорд по числу сыгранных партий за "
+        ],
+        "is the only one left in the game - Victory!" => [
+            self::RU_LANG => 'остался в игре один - Победа!'
+        ],
+        "is the only one left in the game! Start a new game" => [
+            self::RU_LANG => 'остался в игре один! Начните новую игру'
+        ],
+        "Time for the turn ran out" => [
+            self::RU_LANG => 'Время хода истекло'
+        ],
+        "is left without any pieces! Winner - " => [
+            self::RU_LANG => 'остался без фишек! Победитель - '
+        ],
+        " with score " => [
+            self::RU_LANG => ' со счетом '
+        ],
+        "is left without any pieces! You won with score " => [
+            self::RU_LANG => 'остался без фишек! Вы победили со счетом '
+        ],
+        "gave up" => [
+            self::RU_LANG => 'сдался'
+        ],
+        "skipped 3 turns! Winner - " => [
+            self::RU_LANG => 'пропустил 3 хода! Победитель - '
+        ],
+        "New game has started!" => [
+            self::RU_LANG => 'Новая игра начата!'
+        ],
+        "Get" => [
+            self::RU_LANG => 'Набери'
+        ],
+        "score points" => [
+            self::RU_LANG => 'очков'
+        ],
 
-    public static function S($keyPhrase): string
-    {
-        return self::PHRASES[$keyPhrase][self::$lang] ?? '';
-    }
+        "Запрашиваем подтверждение соперников." => [
+            self::RU_LANG => "Asking for adversaries' approval."
+        ],
+        "Left in game:" => [
+            self::RU_LANG => 'В игре осталось:'
+        ],
+        "You got invited for a rematch! - Accept?" => [
+            self::RU_LANG => 'Вас пригласили на Реванш - Согласны?'
+        ],
+        "Your score" => [
+            self::RU_LANG => 'Ваши очки:'
+        ],
+        "Turn time " => [
+            self::RU_LANG => "Время на ход "
+        ],
+        "Player's ID" => [
+            self::RU_LANG => 'ID игрока'
+        ],
+        "Date" => [
+            self::RU_LANG => 'Дата'
+        ],
+        "Result" => [
+            self::RU_LANG => 'Результат'
+        ],
+        "Games in total" => [
+            self::RU_LANG => 'Всего партий'
+        ],
+        "Increase/decrease in rank" => [
+            self::RU_LANG => 'Прибавка/потеря в рейтинге'
+        ],
+        "GAME points - Year Record!" => [
+            self::RU_LANG => 'Очки за ИГРУ - Рекорд Года!'
+        ],
+        "GAME points - Month Record!" => [
+            self::RU_LANG => 'Очки за ИГРУ - Рекорд Месяца!'
+        ],
+        "GAME points - Week Record!" => [
+            self::RU_LANG => 'Очки за ИГРУ - Рекорд Недели!'
+        ],
+        "GAME points - Day Record!" => [
+            self::RU_LANG => 'Очки за ИГРУ - Рекорд Дня!'
+        ],
+        "TURN points - Year Record!" => [
+            self::RU_LANG => 'Очки за ХОД - Рекорд Года!'
+        ],
+        "TURN points - Month Record!" => [
+            self::RU_LANG => 'Очки за ХОД - Рекорд Месяца!'
+        ],
+        "TURN points - Week Record!" => [
+            self::RU_LANG => 'Очки за ХОД - Рекорд Недели!'
+        ],
+        "TURN points - Day Record!" => [
+            self::RU_LANG => 'Очки за ХОД - Рекорд Дня!'
+        ],
+        "WORD points - Year Record!" => [
+            self::RU_LANG => 'Очки за СЛОВО - Рекорд Года!'
+        ],
+        "WORD points - Month Record!" => [
+            self::RU_LANG => 'Очки за СЛОВО - Рекорд Месяца!'
+        ],
+        "WORD points - Week Record!" => [
+            self::RU_LANG => 'Очки за СЛОВО - Рекорд Недели!'
+        ],
+        "WORD points - Day Record!" => [
+            self::RU_LANG => 'Очки за СЛОВО - Рекорд Дня!'
+        ],
+        "Longest WORD - Year Record!" => [
+            self::RU_LANG => 'Самое длинное СЛОВО - Рекорд Года!'
+        ],
+        "Longest WORD - Month Record!" => [
+            self::RU_LANG => 'Самое длинное СЛОВО - Рекорд Месяца!'
+        ],
+        "Longest WORD - Week Record!" => [
+            self::RU_LANG => 'Самое длинное СЛОВО - Рекорд Недели!'
+        ],
+        "Longest WORD - Day Record!" => [
+            self::RU_LANG => 'Самое длинное СЛОВО - Рекорд Дня!'
+        ],
+        "GAMES played - Year Record!" => [
+            self::RU_LANG => 'Сыграно ПАРТИЙ - Рекорд Года!'
+        ],
+        "GAMES played - Month Record!" => [
+            self::RU_LANG => 'Сыграно ПАРТИЙ - Рекорд Месяца!'
+        ],
+        "GAMES played - Week Record!" => [
+            self::RU_LANG => 'Сыграно ПАРТИЙ - Рекорд Недели!'
+        ],
+        "GAMES played - Day Record!" => [
+            self::RU_LANG => 'Сыграно ПАРТИЙ - Рекорд Дня!'
+        ],
+        "Victory" => [
+            self::RU_LANG => 'Победа'
+        ],
+        "Go to player's stats" => [
+            self::RU_LANG => 'Перейти к статистике игрока'
+        ],
+        "Filter by player" => [
+            self::RU_LANG => 'Фильтровать по игроку'
+        ],
+        "File loading error!" => [
+            self::RU_LANG => 'Ошибка загрузки файла!'
+        ],
+        "Check:" => [
+            self::RU_LANG => 'Проверьте:'
+        ],
+        "file size (less than " => [
+            self::RU_LANG => 'размер файла (не более '
+        ],
+        "resolution - " => [
+            self::RU_LANG => 'разрешение - '
+        ],
+        "Incorrect URL format!" => [
+            self::RU_LANG => 'Неверный формат URL!'
+        ],
+        "Must begin with " => [
+            self::RU_LANG => 'Должно начинаться с '
+        ],
+        "Avatar updated" => [
+            self::RU_LANG => 'Аватар обновлен'
+        ],
+        "Error saving new URL" => [
+            self::RU_LANG => 'Ошибка сохранения нового URL'
+        ],
+    ];
 }

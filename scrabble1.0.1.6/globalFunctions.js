@@ -219,7 +219,7 @@ function deleteBan(commonID) {
         });
 }
 
-function savePlayerName(name, commonID = '') {
+function savePlayerName(name, commonIdParam = '') {
     if (name.trim() == '') {
         let resp = {result: 'error', message: 'Задано пустое значение'};
         showCabinetActionResult(resp);
@@ -227,7 +227,7 @@ function savePlayerName(name, commonID = '') {
         return;
     }
 
-    fetchGlobal(SET_PLAYER_NAME_SCRIPT, '', 'name=' + encodeURIComponent(name) + (commonID != '' ? '&commonID=' + commonID : ''))
+    fetchGlobal(SET_PLAYER_NAME_SCRIPT, '', 'name=' + encodeURIComponent(name) + '&commonID=' + (commonIdParam != '' ? commonIdParam : commonId))
         .then((resp) => {
             if (resp['result'] == 'saved') {
                 $('#playersNikname').text(name);
@@ -236,15 +236,10 @@ function savePlayerName(name, commonID = '') {
         });
 }
 
-function savePlayerAvatar(url, commonID) {
+function savePlayerAvatar(url, commonIdParam) {
     // складируем форму в ......форму))
     const checkElement = document.getElementById("player_avatar_file");
     if (!checkElement.checkValidity()) {
-        /*
-        <?php
-            // include_once 'php/PlayersLangProvider.php';
-        ?>
-        */
         showCabinetActionResult({
             result: 'error',
             message: 'Ошибка! Выберите файл-картинку размером не более <?= round(Dadata\Players::MAX_UPLOAD_SIZE / 1024 / 1024, 2); ?>MB'

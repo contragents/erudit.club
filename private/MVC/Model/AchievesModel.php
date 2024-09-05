@@ -255,7 +255,7 @@ class AchievesModel extends BaseModel
                         'img',
                         '',
                         [
-                            'src' => Players::getAvatarUrl($opponentCommonId),
+                            'src' => PlayerModel::getAvatarUrl($opponentCommonId),//Players::getAvatarUrl(),
                             //'width' => '50px',
                             'style' => 'border-radius: 5px 5px 5px 5px; margin-bottom: 9px;',
                             'height' => '75px',

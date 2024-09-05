@@ -64,7 +64,7 @@ class Players
                     'name' => $playerInfo['name'] ?: self::getPlayerName(
                         ['ID' => 'someID', 'common_id' => $playerInfo['common_id'], 'userID' => $playerInfo['user_id']]
                     ),
-                    'avatar_url' => $playerInfo['avatar_url'] ?: self::getAvatarUrl($playerInfo['common_id'])
+                    'avatar_url' => $playerInfo['avatar_url'] ?: PlayerModel::getAvatarUrl($playerInfo['common_id'])
                 ];
             },
             $res
@@ -174,21 +174,6 @@ class Players
             return $res;
         } else {
             return false;
-        }
-    }
-
-    public
-    static function getAvatarUrl(
-        int $commonID
-    ) {
-        return PlayerModel::getAvatarUrl($commonID);
-
-        $avatarUrl = UserModel::getOne($commonID)['avatar_url'] ?? false;
-
-        if (!empty($avatarUrl)) {
-            return $avatarUrl;
-        } else {
-            return AvatarModel::getDefaultAvatar($commonID);
         }
     }
 
