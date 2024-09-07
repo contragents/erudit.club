@@ -24,7 +24,8 @@ class RatingHistoryModel extends BaseModel
                 self::RATING_AFTER_FIELD => $newRating,
                 self::IS_WINNER_FIELD => $isWinner ? 1 : 0,
                 self::GAME_ID_FIELD => $gameId,
-                self::GAME_NAME_ID_FIELD => self::GAME_IDS[$gameName]
+                self::GAME_NAME_ID_FIELD => self::GAME_IDS[$gameName],
+                self::CREATED_AT_FIELD => date('U'),
             ]
         );
     }

@@ -35,4 +35,12 @@ class CommonIdRatingModel extends BaseModel
         }
     }
 
+    public static function getRating($commonId, string $gameName = BaseModel::ERUDIT): int
+    {
+        return (int)DB::queryValue(
+            ORM::select([self::RATING_FIELD_PREFIX . $gameName], self::TABLE_NAME)
+            . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
+        );
+    }
+
 }

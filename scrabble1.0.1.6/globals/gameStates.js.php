@@ -329,7 +329,7 @@ var gameStates = {
                                 locale: 'ru'
                             })
                                 .off("shown.bs.modal")
-                                .find('.modal-content').css({'background-color': 'rgba(230, 255, 230, 1)', 'min-height' : '700px'});
+                                .find('.modal-content').css({'background-color': 'rgba(230, 255, 230, 1)'/*, 'min-height' : '700px'*/});
 
                             return false;
                         }

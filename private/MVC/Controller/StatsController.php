@@ -88,7 +88,7 @@ class StatsController extends BaseController
         if (BaseController::isAjaxRequest()) {
             return StatsAchievesView::render($baseUrl, $baseUrlPage, $achieves, $achievesCount);
         } else {
-            return 'not AJAX' . StatsAchievesView::renderFull([$baseUrl, $baseUrlPage, $achieves, $achievesCount]);
+            return StatsAchievesView::renderFull([$baseUrl, $baseUrlPage, $achieves, $achievesCount]);
         }
     }
 
