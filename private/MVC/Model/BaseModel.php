@@ -434,4 +434,27 @@ class BaseModel
         return true;
     }
 
+    /**
+     * Mass update fields=>values by conditions
+     * @param array $fieldsVals ['f1'=>'v1', 'f2'=>'v2'...]
+     * @param array $whereArr [[$field, $condition, $value, $isRaw = false],[]...] OR [$field, $condition, $value, $isRaw = false]
+     */
+    public static function updateWhere(array $fieldsVals, array $whereArr): bool
+    {
+        $updateQuery = ORM::update(static::TABLE_NAME)
+            . ORM::set($fieldsVals)
+            . ORM::where(1,'=', 1, true)
+            . implode(' ', array_map(
+                fn($where) => ORM::andWhere($where[0], $where[1], $where[2], $where[3] ?? false),
+                is_array($whereArr[0]) ? $whereArr : [$whereArr]
+            ));
+
+        if (DB::queryInsert($updateQuery)) {
+            return true;
+        } else {
+            Cache::rpush(Game::STATS_FAILED, ['query' => $updateQuery]);
+
+            return false;
+        }
+    }
 }
