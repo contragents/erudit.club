@@ -218,14 +218,14 @@ var gameStates = {
             let gameform = formHead + '<form onsubmit="return false" id="myGameForm">' + radioButtons + wish + radioOchki + wishTime + radioTime + onlinePlayers + '</form>';
 
             dialog = bootbox.dialog({
-                title: gameStates['chooseGame']['message'],
-                message: isVerstkaTestGlobal() ? ' ' : gameform,
+                title: isVerstkaTestGlobal() ? 'Тут title' : gameStates['chooseGame']['message'],
+                message: isVerstkaTestGlobal() ? 'Тут message' : gameform,
                 size: 'medium',
                 onEscape: false,
                 closeButton: false,
                 buttons: {
                     cabinet: {
-                        label: 'Личный кабинет',
+                        label: 'Профиль',
                         className: 'btn-outline-success',
                         callback: function () {
                             setTimeout(function () {
@@ -309,7 +309,7 @@ var gameStates = {
                         }
                     },
                     instruction: {
-                        label: '&nbsp;Инструкция&nbsp;',
+                        label: isVerstkaTestGlobal() ? 'FAQ' : '&nbsp;Инструкция&nbsp;',
                         className: 'btn-outline-success',
                         callback: function () {
                             dialog = bootbox.alert({
@@ -335,7 +335,7 @@ var gameStates = {
                         }
                     },
                     beginGame: {
-                        label: 'Начать игру!',
+                        label: isVerstkaTestGlobal() ? 'Начать' : 'Начать игру!',
                         className: 'btn-primary',
                         callback: function () {
                             activateFullScreenForMobiles();
@@ -353,7 +353,7 @@ var gameStates = {
                         }
                     },
                     ...(!isTgBot() && { telegram: {
-                            label: '<?= T::PHRASES['switch_tg_button'][T::$lang] ?>',
+                            label: isVerstkaTestGlobal() ? 'Играть в TG' : '<?= T::PHRASES['switch_tg_button'][T::$lang] ?>',
                             className: 'btn-danger',
                             callback: function () {
                                 document.location = '<?= T::PHRASES['game_bot_url'][T::$lang] ?>' + '/?start='
