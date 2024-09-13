@@ -75,314 +75,519 @@ var gameStates = {
         }
     },
     chooseGame: {
-        1: 'choosing', 2: 'done',
+        1: 'choosing',
+        2: 'done',
         refresh: 1000000,
-        message: 'Начните игру',
+        message: '',
         noDialog: true,
         action: function (data) {
+            data = {
+                players: {0: 30, 1900: 25, 2000:20, 2100:15, thisUserRating: 2400},
+                prefs:{from_rating: 2100}
+            };
+
             let under1800 = 'Только для игроков с рейтингом 1800+';
             let noRatingPlayers = 'Недостаточно игроков с рейтингом 1900+ онлайн';
             let haveRatingPlayers = 'Выберите минимальный рейтинг соперников';
             let title = '';
             let onlinePlayers = '';
             let chooseDisabled = '';
-            if (('players' in data) && (lang != 'EN')) {
-                if (('thisUserRating' in data['players']) && (data['players']['thisUserRating'] < 1800)) {
-                    chooseDisabled = "disabled";
+            if ('players' in data /*&& lang != 'EN'*/
+            ) {
+                if (
+                    'thisUserRating' in data['players'] &&
+                    data['players']['thisUserRating'] < 1800
+                ) {
+                    chooseDisabled = 'disabled';
                     title = under1800;
                 } else {
                     title = haveRatingPlayers;
                 }
-                if (!(1900 in data['players']) || (data['players'][1900] == 0)) {
+
+                if (!(1900 in data['players']) || data['players'][1900] == 0) {
                     title = noRatingPlayers;
                 }
-                let colPlayers = "col-5";//screenOrient === HOR ? "col-3" : "col-4";
 
                 let checked_0 = 'checked';
-                let checked_1900 = '';
-                let checked_2000 = '';
-                let checked_2100 = '';
-                let checked_2200 = '';
-                let checked_2300 = '';
-                let checked_2400 = '';
-                let checked_2500 = '';
-                let checked_2600 = '';
-                let checked_2700 = '';
 
-                if ('prefs' in data && data['prefs'] !== false && 'from_rating' in data['prefs'] && data['prefs']['from_rating'] > 0) {
+                if (
+                    'prefs' in data &&
+                    data['prefs'] !== false &&
+                    'from_rating' in data['prefs'] &&
+                    data['prefs']['from_rating'] > 0
+                ) {
                     checked_0 = '';
-                    checked_1900 = (data['prefs']['from_rating'] == 1900) ? 'checked' : '';
-                    checked_2000 = (data['prefs']['from_rating'] == 2000) ? 'checked' : '';
-                    checked_2100 = (data['prefs']['from_rating'] == 2100) ? 'checked' : '';
-                    checked_2200 = (data['prefs']['from_rating'] == 2200) ? 'checked' : '';
-                    checked_2300 = (data['prefs']['from_rating'] == 2300) ? 'checked' : '';
-                    checked_2400 = (data['prefs']['from_rating'] == 2400) ? 'checked' : '';
-                    checked_2500 = (data['prefs']['from_rating'] == 2500) ? 'checked' : '';
-                    checked_2600 = (data['prefs']['from_rating'] == 2600) ? 'checked' : '';
-                    checked_2700 = (data['prefs']['from_rating'] == 2700) ? 'checked' : '';
-                }
-                onlinePlayers = '<br /><br /><strong>Искать игроков с рейтингом:</strong><br />';
-                onlinePlayers += '<div class="form-row">';
-                onlinePlayers += '<div title="' + title + '" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_0" name="from_rating" value="0" '
-                +  checked_0
-                    + '> <label style="cursor: pointer;" class="form-check-label" for="from_0">Любой (' + data['players'][0] + '&nbsp;онлайн)</label></div>';
-                if ((1900 in data['players']) && (data['players'][1900] > 0)) {
-                    onlinePlayers += '<div title="' + data['players'][1900] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_1900" name="from_rating" value="1900" ' + chooseDisabled.toString()
-                        + checked_1900
-                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_1900">ОТ 1900 (' + data['players'][1900] + ')</label></div>';
-                }
-                    onlinePlayers += '</div>';
-
-                if ((2000 in data['players']) && (data['players'][2000] > 0)) {
-                    onlinePlayers += '<div class="form-row">';
-                    onlinePlayers += '<div title="' + data['players'][2000] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2000" name="from_rating" value="2000"' + chooseDisabled.toString()
-                        + checked_2000
-                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2000">ОТ 2000 (' + data['players'][2000] + ')</label></div>';
-
-                    if ((2100 in data['players']) && (data['players'][2100] > 0))
-                        onlinePlayers += '<div title="' + data['players'][2100] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2100" name="from_rating" value="2100"' + chooseDisabled
-                            + checked_2100
-                            + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2100">ОТ 2100 (' + data['players'][2100] + ')</label></div>';
-                    onlinePlayers += '</div>';
                 }
 
-                if ((2200 in data['players']) && (data['players'][2200] > 0)) {
-                    onlinePlayers += '<div class="form-row">';
-                    onlinePlayers += '<div title="' + data['players'][2200] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2200" name="from_rating" value="2200"' + chooseDisabled
-                        + checked_2200
-                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2200">ОТ 2200 (' + data['players'][2200] + ')</label></div>';
-                    if ((2300 in data['players']) && (data['players'][2300] > 0)) {
-                        onlinePlayers += ('<div title="' + data['players'][2300] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2300" name="from_rating" value="2300"' + chooseDisabled
-                            + checked_2300
-                            + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2300">ОТ 2300 (' + data['players'][2300] + ')</label></div>');
-                    }
-                    onlinePlayers += '</div>';
+                /* ----------------------------------- NEW ---------------------------------- */
+                const ratingRadio = (props) => {
+                    const {
+                        title = '',
+                        text = '',
+                        inputValue = 0,
+                        inputId = '0',
+                        isChecked = false,
+                        isDisabled = false,
+                        extraClass = '',
+                        extraInputAttrString = '',
+                    } = props;
+
+                    const html = `
+									<div title="${title}"
+										class="form-check form-check-inline ${extraClass}">
+										<input class="form-check-input" type="radio" id="${inputId}" name="from_rating"
+										value="${inputValue}"
+										${isChecked ? `checked` : ''}
+										${isDisabled ? `disabled` : ''}
+										${extraInputAttrString ? extraInputAttrString : ''}
+											/>
+										<label class="form-check-label" for="${inputId}">${text}</label>
+									</div>`;
+
+                    return html;
+                };
+
+                // ratingValues: number[] ([2000, 2100, 2200, ...])
+                const getRatingList = (ratingValues = [], data = {}) => {
+                    let resultHtml = '';
+                    ratingValues.forEach((ratingValue) => {
+                        if (
+                            'players' in data &&
+                            ratingValue in data['players'] &&
+                            data['players'][ratingValue] > 0
+                        ) {
+                            let isChecked = false;
+                            if (
+                                'prefs' in data &&
+                                data['prefs'] !== false &&
+                                'from_rating' in data['prefs'] &&
+                                data['prefs']['from_rating'] == ratingValue
+                            ) {
+                                isChecked = true;
+                            }
+                            resultHtml += ratingRadio({
+                                title: data['players'][ratingValue] + ' в игре',
+                                text: `OT ${ratingValue} (${data['players'][ratingValue]})`,
+                                inputValue: ratingValue,//0,
+                                inputId: `from_${ratingValue}`,
+                                isChecked,
+                                isDisabled: chooseDisabled.toString(),
+                            });
+                        }
+                    });
+
+                    return resultHtml;
+                };
+
+                onlinePlayers = `<div class="box-title-wrap">
+												<span>Рейтинг соперника</span>
+											</div>`;
+
+                onlinePlayers += `<div class="label-row">
+												<div class="form-check">`;
+                onlinePlayers += ratingRadio({
+                    title: title,
+                    text: 'Любой (' +  (0 in data['players'] ? data['players'][0] : '0') + '&nbsp;онлайн)',
+                    inputValue: 0,
+                    inputId: 'from_0',
+                    isChecked: checked_0,
+                    isDisabled: chooseDisabled.toString(),
+                });
+
+                const ratings = Object.keys(data.players).filter(
+                    (item) => !isNaN(Number(item)) && data.players[item] > 0
+                );
+                // console.log(Object.keys(data.players), ratings);
+
+                ratings.shift();
+                onlinePlayers += getRatingList(
+                    ratings.slice(0, ratings.length / 2),
+                    data
+                );
+
+                onlinePlayers += `</div>`; // end col
+                onlinePlayers += `	<div class="form-check">`;
+
+                if (ratings.slice(ratings.length / 2).length > 0) {
+                    // console.log(ratings.slice(ratings.length / 2));
+                    onlinePlayers += getRatingList(
+                        ratings.slice(ratings.length / 2),
+                        data
+                    );
                 }
 
-                if ((2400 in data['players']) && (data['players'][2400] > 0)) {
-                    onlinePlayers += '<div class="form-row">';
-                    onlinePlayers += '<div title="' + data['players'][2400] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2400" name="from_rating" value="2400"' + chooseDisabled
-                        + checked_2400
-                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2400">ОТ 2400 (' + data['players'][2400] + ')</label></div>';
-                    if ((2500 in data['players']) && (data['players'][2500] > 0))
-                        onlinePlayers += '<div title="' + data['players'][2500] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2500" name="from_rating" value="2500"' + chooseDisabled
-                            + checked_2500
-                            + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2500">ОТ 2500 (' + data['players'][2500] + ')</label></div>';
-                    onlinePlayers += '</div>';
-                }
+                onlinePlayers += `	</div>`; // end col
+                onlinePlayers += `</div>`; // end label-row
 
-                if ((2600 in data['players']) && (data['players'][2600] > 0)) {
-                    onlinePlayers += '<div class="form-row">';
-                    onlinePlayers += '<div title="' + data['players'][2600] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2600" name="from_rating" value="2600"' + chooseDisabled
-                        + checked_2600
-                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2600">ОТ 2600 (' + data['players'][2600] + ')</label></div>';
-                    if ((2700 in data['players']) && (data['players'][2700] > 0))
-                        onlinePlayers += '<div title="' + data['players'][2700] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2700" name="from_rating" value="2700"' + chooseDisabled
-                            + checked_2700
-                            + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2700">ОТ 2700 (' + data['players'][2700] + ')</label></div>';
-                    onlinePlayers += '</div>';
-                }
-            }
+                onlinePlayers = `<div class="box box-rating">${onlinePlayers}</div>`;
 
-            let radioButtons = '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly">Только два игрока</label></div>';
-            radioButtons += '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore">До четырех игроков</label></div>';
+                /* --------------------------------- END NEW -------------------------------- */
+            } // end if 'players'
 
-            let wish = ''; //'<br /><br /><h6>Желательно:</h6>';
-            let colOchki = screenOrient === HOR ? "col-5" : "col-5";
-            let colOchkiRow = screenOrient === HOR ? "col-5" : "col-5";
+            let radioButtons =
+                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly">Только два игрока</label></div>';
+            radioButtons +=
+                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore">До четырех игроков</label></div>';
+
+            let wish = '';
 
             let checked_200 = 'checked';
             let checked_300 = '';
 
-            if ('prefs' in data && data['prefs'] !== false && 'ochki_num' in data['prefs']) {
-                checked_200 = (data['prefs']['ochki_num'] == 200) ? 'checked' : '';
-                checked_300 = (data['prefs']['ochki_num'] == 300) ? 'checked' : '';
+            if (
+                'prefs' in data &&
+                data['prefs'] !== false &&
+                'ochki_num' in data['prefs']
+            ) {
+                checked_200 = data['prefs']['ochki_num'] == 200 ? 'checked' : '';
+                checked_300 = data['prefs']['ochki_num'] == 300 ? 'checked' : '';
             }
 
-            let radioOchki = '<br /><strong>Играем до:</strong><br /><div class="' + colOchkiRow + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="dvesti" name="ochki_num" value="200" ' + checked_200 + '> <label class="form-check-label" for="dvesti">200 очков</label></div>';
-            radioOchki += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="trista" name="ochki_num" value="300" ' + checked_300 + '> <label class="form-check-label" for="trista">300 очков</label></div>';
+            /* ----------------------------------- NEW ---------------------------------- */
+            let radioOchki = `
+                            <div class="box">
+                                <div class="box-title-wrap">
+                                    <span>Игра до</span>
+                                </div>
+                                <div class="label-row">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" id="dvesti" name="ochki_num"
+                                            value="200" ${checked_200} />
+                                        <label class="form-check-label text-accent" for="dvesti">
+                                            <div class="d-inline-flex align-items-center align-middle">
+                                                <i class="icon icon-arrow"></i>200
+                                            </div>
+                                        </label>
+                                    </div>
 
-            let wishTime = '<br /><br /><strong>Время на ход:</strong><br />';
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" id="trista" name="ochki_num"
+                                            value="300" ${checked_300}/>
+                                        <label class="form-check-label text-accent" for="trista">
+                                            <div class="d-inline-flex align-items-center align-middle">
+                                                <i class="icon icon-arrow"></i>300
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+			`;
+
+            /* --------------------------------- END NEW -------------------------------- */
+
+            // let wishTime = '<br /><br /><strong>Время на ход:</strong><br />';
             let wish_120 = 'checked';
             let wish_60 = '';
 
-            if ('prefs' in data && data['prefs'] !== false && 'turn_time' in data['prefs']) {
-                wish_120 = (data['prefs']['turn_time'] == 120) ? 'checked' : '';
-                wish_60 = (data['prefs']['turn_time'] == 60) ? 'checked' : '';
+            if (
+                'prefs' in data &&
+                data['prefs'] !== false &&
+                'turn_time' in data['prefs']
+            ) {
+                wish_120 = data['prefs']['turn_time'] == 120 ? 'checked' : '';
+                wish_60 = data['prefs']['turn_time'] == 60 ? 'checked' : '';
             }
 
-            let radioTime = '<div class="' + colOchki + '  form-check form-check-inline"><input class="form-check-input" type="radio" id="dve" name="turn_time" value="120" ' + wish_120 + '> <label class="form-check-label" for="dve">2 минуты</label></div>';
-            radioTime += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="odna" name="turn_time" value="60" ' + wish_60 + '> <label class="form-check-label" for="odna">1 минута</label></div>';
+            /* ----------------------------------- NEW ---------------------------------- */
+            let wishTime = `
+				            <div class="box pb-1">
+                                <div class="box-title-wrap mb-0">
+                                    <span>Время на ход</span>
+                                </div>
 
-            let formHead = '<h5>Параметры игры (будут учтены при подборе)</h5>';
-            let gameform = formHead + '<form onsubmit="return false" id="myGameForm">' + radioButtons + wish + radioOchki + wishTime + radioTime + onlinePlayers + '</form>';
+                                <div class="label-row">
+									<div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" type="radio" id="dve" name="turn_time"
+                                            value="120" ${wish_120} />
+                                        <label class="form-check-label text-accent" for="dve">2 минуты</label>
+                                    </div>
+
+									<div class="time-img-wrap">
+                                        <img src="./images/time.png" class="d-block img-fluid" alt="">
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" type="radio" id="odna" name="turn_time"
+                                            value="60" ${wish_60} />
+                                        <label class="form-check-label text-accent" for="odna">1 минута</label>
+                                    </div>
+                                </div>
+                            </div>
+			`;
+
+            let formHead = `<div class="box">
+                            <div class="d-flex flex-row align-items-center">
+
+                                <span>ПОДБОР ИГРЫ ПО ПАРАМЕТРАМ</span>
+
+                                <div class="ml-auto"><a href="#" id="btn-faq" class="btn">FAQ</a>
+                                </div>
+                            </div>
+                        </div>
+			`;
+
+            const btnFAQClickHandler = () => {
+                dialog = bootbox
+                    .alert({
+                        message: instruction,
+                        locale: 'ru',
+                    })
+                    .off('shown.bs.modal');
+
+                return false;
+            };
+
+            document.addEventListener('click', (e) => {
+                if (e.target && e.target.matches('#btn-faq')) {
+                    e.preventDefault();
+                    btnFAQClickHandler();
+                }
+            });
+            /* --------------------------------- END NEW -------------------------------- */
+
+            // let formHead = '<h5>Параметры игры (будут учтены при подборе)</h5>';
+
+            let gameform =
+                formHead +
+                '<form onsubmit="return false" id="myGameForm">' +
+                radioButtons +
+                wish +
+                radioOchki +
+                wishTime +
+                onlinePlayers +
+                '</form>';
 
             dialog = bootbox.dialog({
-                title: gameStates['chooseGame']['message'],
-                message: gameform,
+                title: isVerstkaTestGlobal()
+                    ? 'Тут title'
+                    : gameStates['chooseGame']['message'],
+                message: isVerstkaTestGlobal() ? 'Тут message' : gameform,
+                className: 'modal-settings',
                 size: 'medium',
                 onEscape: false,
                 closeButton: false,
                 buttons: {
                     cabinet: {
-                        label: 'Личный кабинет',
+                        label: 'Профиль',
                         className: 'btn-outline-success',
                         callback: function () {
                             setTimeout(function () {
-                                fetchGlobal(CABINET_SCRIPT, '', 12)
-                                    .then((dataCabinet) => {
+                                fetchGlobal(CABINET_SCRIPT, '', 12).then(
+                                    (dataCabinet) => {
                                         if (dataCabinet == '')
                                             var responseText = 'Ошибка';
                                         else
-                                            var responseArr = JSON.parse(dataCabinet['message']);
-                                            var message = '<form id="superForm" >';
+                                            var responseArr = JSON.parse(
+                                                dataCabinet['message']
+                                            );
+                                        var message = '<form id="superForm" >';
                                         for (k in responseArr['form']) {
-                                            message += '<div class="form-group"'
-                                                + (('type' in responseArr['form'][k] && responseArr['form'][k]['type'] === 'hidden')
+                                            message +=
+                                                '<div class="form-group"' +
+                                                ('type' in responseArr['form'][k] &&
+                                                responseArr['form'][k]['type'] ===
+                                                'hidden'
                                                     ? ' style="display:none" '
-                                                    : '')
-                                                + '><div class="col-sm-6">' +
-                                                '<label for="' + responseArr['form'][k]['inputId'] + '">'
-                                                + responseArr['form'][k]['prompt']
-                                                + '</label>'
-                                                + '</div>';
-                                            message += '<div class="form-row align-items-center">'
-                                                + '<div class="col-sm-8">'
-                                                + '<input ';
+                                                    : '') +
+                                                '><div class="col-sm-6">' +
+                                                '<label for="' +
+                                                responseArr['form'][k]['inputId'] +
+                                                '">' +
+                                                responseArr['form'][k]['prompt'] +
+                                                '</label>' +
+                                                '</div>';
+                                            message +=
+                                                '<div class="form-row align-items-center">' +
+                                                '<div class="col-sm-8">' +
+                                                '<input ';
 
                                             if ('value' in responseArr['form'][k]) {
-                                                message += 'value="' + responseArr['form'][k]['value'] + '"';
-                                                if ('readonly' in responseArr['form'][k]) {
+                                                message +=
+                                                    'value="' +
+                                                    responseArr['form'][k][
+                                                        'value'
+                                                        ] +
+                                                    '"';
+                                                if (
+                                                    'readonly' in
+                                                    responseArr['form'][k]
+                                                ) {
                                                     message += ' readonly ';
                                                 }
                                             } else {
-                                                message += 'placeholder="' + responseArr['form'][k]['placeholder'] + '"';
+                                                message +=
+                                                    'placeholder="' +
+                                                    responseArr['form'][k][
+                                                        'placeholder'
+                                                        ] +
+                                                    '"';
                                             }
 
-                                            message += (('type' in responseArr['form'][k])
-                                                ? 'type="' + responseArr['form'][k]['type'] + '"'
-                                                : 'type="text"')
-                                                + ' class="form-control" name="'
-                                                + responseArr['form'][k]['inputName']
-                                                + '" id="'
-                                                + responseArr['form'][k]['inputId']
-                                                + '" '
-                                                + ('required' in responseArr['form'][k]
+                                            message +=
+                                                ('type' in responseArr['form'][k]
+                                                    ? 'type="' +
+                                                    responseArr['form'][k][
+                                                        'type'
+                                                        ] +
+                                                    '"'
+                                                    : 'type="text"') +
+                                                ' class="form-control" name="' +
+                                                responseArr['form'][k][
+                                                    'inputName'
+                                                    ] +
+                                                '" id="' +
+                                                responseArr['form'][k]['inputId'] +
+                                                '" ' +
+                                                ('required' in
+                                                responseArr['form'][k]
                                                     ? ' required '
-                                                    : '')
-                                                + '></div>';
-                                            message += !('type' in responseArr['form'][k] && responseArr['form'][k]['type'] === 'hidden')
-                                                ? (
-                                                    '<div class="col-sm-4 col-form-label">'
-                                                    + '<button type="submit" class="form-control btn btn-outline-secondary" onclick="'
-                                                    + responseArr['form'][k]['onclick']
-                                                    + '($(\'#' + responseArr['form'][k]['inputId']
-                                                    + '\').val(),'
-                                                    + responseArr['common_id']
-                                                    + ');return false;">'
-                                                    + responseArr['form'][k]['buttonCaption']
-                                                    + '</button></div>'
-                                                )
-                                                : ('')
-                                                +
-                                                '</div>';
+                                                    : '') +
+                                                '></div>';
+                                            message += !(
+                                                'type' in responseArr['form'][k] &&
+                                                responseArr['form'][k]['type'] ===
+                                                'hidden'
+                                            )
+                                                ? '<div class="col-sm-4 col-form-label">' +
+                                                '<button type="submit" class="form-control btn btn-outline-secondary" onclick="' +
+                                                responseArr['form'][k][
+                                                    'onclick'
+                                                    ] +
+                                                "($('#" +
+                                                responseArr['form'][k][
+                                                    'inputId'
+                                                    ] +
+                                                "').val()," +
+                                                responseArr['common_id'] +
+                                                ');return false;">' +
+                                                responseArr['form'][k][
+                                                    'buttonCaption'
+                                                    ] +
+                                                '</button></div>'
+                                                : '' + '</div>';
                                             message += '</div>';
                                         }
                                         message += '</form>';
                                         dialog = bootbox.alert({
-                                            title: 'Ваш личный кабинет, <span id="playersNikname">' +
+                                            title:
+                                                'Ваш личный кабинет, <span id="playersNikname">' +
                                                 responseArr['name'] +
                                                 '</span>' +
                                                 '<span id="playersAvatar">&nbsp;' +
-                                                '<img style="cursor: pointer;" title="' + responseArr['img_title'] + '" src="' + responseArr['url'] + '" width="100px" max-height = "100px" />' +
+                                                '<img style="cursor: pointer;" title="' +
+                                                responseArr['img_title'] +
+                                                '" src="' +
+                                                responseArr['url'] +
+                                                '" width="100px" max-height = "100px" />' +
                                                 '</span>',
                                             message: responseArr['text'] + message,
                                             locale: 'ru',
                                             size: 'large',
                                             callback: function () {
-                                                gameStates['chooseGame']['action'](data);
-                                            }
+                                                gameStates['chooseGame']['action'](
+                                                    data
+                                                );
+                                            },
                                         });
                                         return false;
-                                    });
+                                    }
+                                );
                             }, 100);
-                        }
+                        },
                     },
+                    // пока скроем через d-none
                     instruction: {
-                        label: '&nbsp;Инструкция&nbsp;',
-                        className: 'btn-outline-success',
+                        label: isVerstkaTestGlobal()
+                            ? 'FAQ'
+                            : '&nbsp;Инструкция&nbsp;',
+                        className: 'btn-outline-success d-none',
                         callback: function () {
-                            dialog = bootbox.alert({
-                                message: instruction,
-                                locale: 'ru'
-                            }).off("shown.bs.modal");
+                            dialog = bootbox
+                                .alert({
+                                    message: instruction,
+                                    locale: 'ru',
+                                })
+                                .off('shown.bs.modal');
 
                             return false;
-                        }
+                        },
                     },
-                    stats: {
-                        label: '&nbsp;Статистика&nbsp;',
-                        className: 'btn-outline-success',
-                        callback: function () {
-                            dialog = bootbox.alert({
-                                message: getStatPageGlobal(),
-                                locale: 'ru'
-                            })
-                                .off("shown.bs.modal")
-                                .find('.modal-content').css({'background-color': 'rgba(230, 255, 230, 1)', 'min-height' : '700px'});
 
-                            return false;
-                        }
-                    },
                     beginGame: {
-                        label: 'Начать игру!',
+                        // label: isVerstkaTestGlobal() ? 'Начать' : 'Начать игру!',
+                        label: 'Начать',
                         className: 'btn-primary',
                         callback: function () {
                             activateFullScreenForMobiles();
                             gameState = 'noGame';
-                            fetchGlobal(INIT_GAME_SCRIPT, '', $(".bootbox-body #myGameForm").serialize())
-                                .then((data) => {
-                                    if (data == '')
-                                        var responseText = 'Ошибка';
-                                    else {
-                                        commonCallback(data);
-                                    }
-                                });
+                            fetchGlobal(
+                                INIT_GAME_SCRIPT,
+                                '',
+                                $('.bootbox-body #myGameForm').serialize()
+                            ).then((data) => {
+                                if (data == '') var responseText = 'Ошибка';
+                                else {
+                                    commonCallback(data);
+                                }
+                            });
 
                             return true;
-                        }
+                        },
                     },
-                    ...(commonId == 26907 && { telegram: {
-                        label: 'Перейти на Telegram',
-                            className: 'btn-danger',
-                            callback: function () {document.location='https://t.me/erudit_club_bot/?start='+commonId; return false;},
-                        } }),
-                    ...(commonId != 26907 && {engGame: {
-                        label: '&nbsp;&nbsp;In English!&nbsp;&nbsp;&nbsp;',
-                        className: 'btn-danger',
+                    stats: {
+                        label: 'Статистика',
+                        className: 'btn-outline-success',
                         callback: function () {
-                            activateFullScreenForMobiles();
-                            gameState = 'noGame';
-                            lang = 'EN';
-                            //for avoiding errors in IDE
-                            //<?php include('instruction_eng.js'); ?>
-                            /** todo not working on yandex*/
-                            asyncCSS('/css/choose_css.css');
-                            fetchGlobal(INIT_GAME_SCRIPT, '', $(".bootbox-body #myGameForm").serialize())
-                                .then((data) => {
-                                    if (data == '')
-                                        var responseText = 'Ошибка';
-                                    else {
-                                        commonCallback(data);
-                                    }
+                            dialog = bootbox
+                                .alert({
+                                    message: getStatPageGlobal(),
+                                    locale: 'ru',
+                                })
+                                .off('shown.bs.modal')
+                                .find('.modal-content')
+                                .css({
+                                    'background-color':
+                                        'rgba(230, 255, 230, 1)' /*, 'min-height' : '700px'*/,
                                 });
 
-                            return true;
-                        }
-                    }})
-                }
+                            return false;
+                        },
+                    },
+                    ...(!isTgBot() && {
+                        telegram: {
+                            // label: isVerstkaTestGlobal() ? 'Играть в TG' : 'Перейти на Telegram',
+                            label: 'Играть в',
+                            className: 'btn-tg',
+                            callback: function () {
+                                document.location =
+                                    'https://t.me/erudit_club_bot' +
+                                    '/?start=' +
+                                    (commonId && commonIdHash
+                                        ? commonId + '_' + commonIdHash
+                                        : '');
+
+                                return false;
+                            },
+                        },
+                    }),
+                    ...(isTgBot() && {
+                        invite: {
+                            label: 'Пригласить друга',
+                            className: 'btn-danger',
+                            callback: function () {
+                                // alert(webAppInitDataUnsafe.length + JSON.stringify(webAppInitDataUnsafe));
+
+                                shareTgGlobal();
+
+                                return false;
+                            },
+                        },
+                    }),
+                },
             });
-        }
+        },
     },
     initGame: {
         1: 'waiting', 2: 'done',
@@ -507,11 +712,15 @@ var gameStates = {
         },
         refresh: 10,
         action: function (data) {
-            if ("desk" in data && data.desk.length > 0)
+            if ("desk" in data && data.desk.length > 0) {
                 parseDeskGlobal(data['desk']);
-            if ("score" in data)
-                ochki.text = data['score'];
-            userScores(data);
+            }
+            if ("score" in data) {
+                userScores(data);
+            }
+            if ('activeUser' in data) {
+                activeUser = data.activeUser;
+            }
         },
         results: function (data) {
             if (dialog && canCloseDialog)
@@ -621,7 +830,6 @@ var gameStates = {
                                             callback: function () {
                                                 dialogResponse.modal('hide');
                                                 dataInvite['comments'] = data['comments'];
-                                                //gameStates['gameResults']['decision'](dataInvite);
                                             }
                                         });
 
@@ -715,6 +923,10 @@ function commonCallback(data) {
 
     if ('common_id' in data && !commonId) {
         commonId = data.common_id;
+    }
+
+    if ('common_id_hash' in data && !commonIdHash) {
+        commonIdHash = data.common_id_hash;
     }
 
     if (myUserNum === false)
@@ -844,7 +1056,7 @@ function commonCallback(data) {
                             }
                         }
 
-                        dialog = bootbox.confirm({
+                        dialogTurn = bootbox.confirm({
                             message: message,
                             size: 'medium',
                             buttons: {
@@ -872,7 +1084,7 @@ function commonCallback(data) {
                                 activateFullScreenForMobiles();
                             }
                         });
-                        dialog
+                        dialogTurn
                             .find('.modal-content').css({'background-color': 'rgba(255, 255, 255, 0.7)'})
                             .find('img').css('background-color', 'rgba(0, 0, 0, 0)');
 
@@ -880,7 +1092,7 @@ function commonCallback(data) {
                             setTimeout(
                                 function () {
                                     automaticDialogClosed = true;
-                                    dialog.find(".bootbox-close-button").trigger("click");
+                                    dialogTurn.find(".bootbox-close-button").trigger("click");
                                 }
                                 , timeToCloseDilog * 1000
                             );
@@ -904,6 +1116,8 @@ function commonCallback(data) {
         vremia.text = data['timeLeft'];
         vremiaMinutes = data['minutesLeft'];
         vremiaSeconds = data['secondsLeft'];
+
+        displayTimeGlobal(+vremiaMinutes * 100 + +vremiaSeconds, true);
     }
 
     if ('log' in data)
@@ -928,13 +1142,17 @@ function commonCallback(data) {
     }
 
     if ('winScore' in data) {
-        winScore = data['winScore'];
+        if (!winScore) {
+            buttonSetModeGlobal(players, 'goalBlock', data.winScore == 200 ? OTJAT_MODE : ALARM_MODE);
+        }
+
+        winScore = data.winScore;
     }
 
     responseData = data;
 
     if (pageActive == 'hidden' && gameState != 'chooseGame') {
-        fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID === false) ? '0' : uniqID)
+        fetchGlobal(STATUS_CHECKER_SCRIPT)
             .then((data) => {
                 commonCallback(data);
             });
@@ -943,49 +1161,50 @@ function commonCallback(data) {
 
 function userScores(data) {
     if ("score_arr" in data) {
-        if (ochki_arr === false) {
-            ochki_arr = [];
-            for (k in data['score_arr']) {
-                if (k == data['yourUserNum']) {
-                    ochki_arr[k] = window.game.scene.scenes[gameScene].add.text(0, 0, '', {
-                        color: 'black',
-                        font: 'bold ' + vremiaFontSize + 'px' + ' Courier'
-                    });
-                    ochki_arr[k].y = ochki.y;
-                } else {
+        for (let k in data['score_arr']) {
+            if (k == data['yourUserNum']) {
+                let youBlock = players.youBlock.svgObject;
 
-                    fontSize = vremiaFontSize - vremiaFontSizeDelta;
-                    ochki_arr[k] = window.game.scene.scenes[gameScene].add.text(0, 0, '', {
-                        color: 'black',
-                        font: 'bold ' + fontSize + 'px' + ' Courier'
-                    });
-                    ochki_arr[k].y = ochki.y + vremiaFontSizeDelta / 1.3;
+                if (!isUserBlockActive) {
+                    let changeBlock = players['player' + (+k + 1) + 'Block'].svgObject;
+                    if (changeBlock.visible) {
+                        changeBlock.setVisible(false);
+                    }
+
+                    youBlock.x = changeBlock.x;
+                    youBlock.y = changeBlock.y;
+                    youBlock.setVisible(true);
+                    youBlock.setAlpha(1);
+                    players.timerBlock.svgObject.setAlpha(1);
+
+                    isUserBlockActive = true;
+                }
+
+                displayScoreGlobal(data['score_arr'][k], 'youBlock', true);
+                buttonSetModeGlobal(players, 'youBlock', gameState === MY_TURN_STATE ? ALARM_MODE : OTJAT_MODE);
+            } else {
+                let playerBlockName = 'player' + (+k + 1) + 'Block';
+
+                displayScoreGlobal(data['score_arr'][k], playerBlockName, false);
+                buttonSetModeGlobal(players, playerBlockName, k == data['activeUser'] ? ALARM_MODE : OTJAT_MODE);
+
+                if (players[playerBlockName].svgObject.alpha < 1) {
+                    players[playerBlockName].svgObject.setAlpha(1);
+                }
+
+                if (('userNames' in data) && (k in data['userNames']) && (data['userNames'][k] === '')) {
+                    players[playerBlockName].svgObject.setAlpha(INACTIVE_USER_ALPHA);
                 }
             }
-        }
-        ochki.text = '';
-        let x = ochki.x;
-        for (let k in data['score_arr']) {
-            if (k == data['yourUserNum'])
-                ochki_arr[k].text = 'Ваши очки:' + data['score_arr'][k];
-            else if (k == 0) {
-                ochki_arr[k].text = data['userNames'][k] + ':' + data['score_arr'][k];
-            } else if ((data['yourUserNum'] > 1 || k > 1) && data['score_arr'].length == 4) {
-                let num = Number(k) + 1;
-                ochki_arr[k].text = 'И' + num + ':' + data['score_arr'][k];
-            } else {
-                ochki_arr[k].text = data['userNames'][k] + ':' + data['score_arr'][k];
-            }
-            if (k == data['activeUser'])
-                ochki_arr[k].setColor('green');
-            else
-                ochki_arr[k].setColor('black');
-            ochki_arr[k].x = x;
-            //ochki_arr[k].y = ochki.y;
-            //ochki_arr[k].setFontSize(vremiaFontSizeDefault);
-            ochki_arr[k].visible = true;
-            x = ochki_arr[k].x + ochki_arr[k].width + 9 - Math.floor(data['score_arr'][k] / 100);
 
+
+        }
+
+        if (ochki_arr === false) {
+            ochki_arr = [];
+            for (let k in data['score_arr']) {
+                ochki_arr[k] = data['score_arr'][k];
+            }
         }
     }
 }

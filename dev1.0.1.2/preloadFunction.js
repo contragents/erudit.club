@@ -41,6 +41,7 @@ function () {
 
     this.load.image('no_network', '/img/no_network_transparent.png');
     this.load.svg('ground', '/img/' + GROUND_FILE, {'width': 513 * 2, 'height': 500 * 2});
+    this.load.svg('donate', '/img/donate.svg');
     this.load.image('zvezda', '/img/star_transparent.png');
     this.load.svg('zvezdaVerh', '/img/star_transparent_2.svg', {scale: 0.025 * 2});
     this.load.svg('zvezdaCenter', '/img/star_transparent_2.svg', {scale: 0.06 * 2});

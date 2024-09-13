@@ -17,7 +17,6 @@ async function mobileShare() {
 
     try {
         await navigator.share(shareObj);
-        console.log('share SUCCESS!');
     } catch (err) {
         console.log('share ERROR! ' + err);
     }
@@ -137,7 +136,7 @@ document.addEventListener("visibilitychange", function () {
         || gameState == 'initGame'
         || gameState == 'initRatingGame') {
         if (pageActive == 'hidden') {
-            fetchGlobal(STATUS_CHECKER_SCRIPT, 'g', (uniqID == false) ? '0' : uniqID)
+            fetchGlobal(STATUS_CHECKER_SCRIPT)
                 .then((data) => {
                     commonCallback(data);
                 });
@@ -220,7 +219,7 @@ function deleteBan(commonID) {
         });
 }
 
-function savePlayerName(name, commonID = '') {
+function savePlayerName(name, commonIdParam = '') {
     if (name.trim() == '') {
         let resp = {result: 'error', message: 'Задано пустое значение'};
         showCabinetActionResult(resp);
@@ -228,7 +227,7 @@ function savePlayerName(name, commonID = '') {
         return;
     }
 
-    fetchGlobal(SET_PLAYER_NAME_SCRIPT, '', 'name=' + encodeURIComponent(name) + (commonID != '' ? '&commonID=' + commonID : ''))
+    fetchGlobal(SET_PLAYER_NAME_SCRIPT, '', 'name=' + encodeURIComponent(name) + '&commonID=' + (commonIdParam != '' ? commonIdParam : commonId))
         .then((resp) => {
             if (resp['result'] == 'saved') {
                 $('#playersNikname').text(name);
@@ -237,15 +236,10 @@ function savePlayerName(name, commonID = '') {
         });
 }
 
-function savePlayerAvatar(url, commonID) {
+function savePlayerAvatar(url, commonIdParam) {
     // складируем форму в ......форму))
     const checkElement = document.getElementById("player_avatar_file");
     if (!checkElement.checkValidity()) {
-        /*
-        <?php
-            // include_once 'php/PlayersLangProvider.php';
-        ?>
-        */
         showCabinetActionResult({
             result: 'error',
             message: 'Ошибка! Выберите файл-картинку размером не более <?= round(Dadata\Players::MAX_UPLOAD_SIZE / 1024 / 1024, 2); ?>MB'
@@ -268,17 +262,14 @@ function savePlayerAvatar(url, commonID) {
             + localStorage.erudit_user_session_ID
             + '&script='
             + AVATAR_UPLOAD_SCRIPT
-            + '&queryNumber='
-            + (queryNumber++)
-            + '&lang=' + lang
-            + (pageActive === 'hidden' ? '&page_hidden=true' : '')
+            + '&'
+            + commonParams()
         )
         : (
             '/<?=$dir?>/php/'
             + AVATAR_UPLOAD_SCRIPT
-            + '?queryNumber=' + (queryNumber++)
-            + '&lang=' + lang
-            + (pageActive === 'hidden' ? '&page_hidden=true' : '')
+            + '?'
+            + commonParams()
         );
 
     $.ajax({
@@ -293,7 +284,7 @@ function savePlayerAvatar(url, commonID) {
             resp = JSON.parse(returndata);
 
             if (resp['result'] === 'saved') {
-                $('#playersAvatar').html('<img src="' + resp['url'] + '?ver=' + Date.now() + '" width="100px" max-height = "100px"/>');
+                $('#playersAvatar').html('<img src="' + resp['url'] + '" width="100px" max-height = "100px"/>');
             }
 
             showCabinetActionResult(resp);
@@ -453,7 +444,6 @@ function enableButtons() {
                     buttons[k]['svgObject']
                         .bringToTop(buttons[k]['svgObject']
                             .getByName(k + 'Inactive'));
-                    console.log('Inactive');
                 }
 
             }
@@ -469,7 +459,7 @@ function placeFishki(fishki) {
     for (var i in container) {
         if (i > maxI)
             maxI = i;
-        console.log('!!!!!!' + i);
+
         if (container[i].getData('cellX')) {
             cells[container[i].getData('cellX')][container[i].getData('cellY')][0] = false;
             cells[container[i].getData('cellX')][container[i].getData('cellY')][1] = false;
@@ -492,15 +482,7 @@ function placeFishki(fishki) {
     for (let i = 0; i < fishki.length; i++) {
         let lotokXY = lotokFindSlotXY();
 
-        container.push(
-            getFishkaGlobal(
-                fishki[i],
-                lotokGetX(lotokXY[0], lotokXY[1]),
-                lotokGetY(lotokXY[0], lotokXY[1]),
-                this.game.scene.scenes[gameScene],
-                true,
-                userFishkaSet
-            ).setData('lotokX', lotokXY[0]).setData('lotokY', lotokXY[1]));
+        container.push(getFishkaGlobal(fishki[i], lotokGetX(lotokXY[0], lotokXY[1]), lotokGetY(lotokXY[0], lotokXY[1]), this.game.scene.scenes[gameScene], true, userFishkaSet).setData('lotokX', lotokXY[0]).setData('lotokY', lotokXY[1]));
     }
 }
 

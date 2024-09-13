@@ -64,7 +64,7 @@ class Players
                     'name' => $playerInfo['name'] ?: self::getPlayerName(
                         ['ID' => 'someID', 'common_id' => $playerInfo['common_id'], 'userID' => $playerInfo['user_id']]
                     ),
-                    'avatar_url' => $playerInfo['avatar_url'] ?: self::getAvatarUrl($playerInfo['common_id'])
+                    'avatar_url' => $playerInfo['avatar_url'] ?: PlayerModel::getAvatarUrl($playerInfo['common_id'])
                 ];
             },
             $res
@@ -111,7 +111,7 @@ class Players
     {
         $url = trim($url);
         $url = lcfirst($url);
-        
+
         if (!preg_match('/^https?:\/\//', $url)) {
             return json_encode(
                 [
@@ -124,14 +124,20 @@ class Players
         $updateRes = UserModel::updateUrl($commonID, $url);
 
         if ($updateRes) {
-            return json_encode(['result' => 'saved', 'message' => 'Аватар обновлен', 'url' => $url]);
+            return json_encode(
+                [
+                    'result' => 'saved',
+                    'message' => 'Аватар обновлен',
+                    'url' => UserModel::getOne($commonID)[UserModel::AVATAR_URL_FIELD]
+                ],
+                JSON_UNESCAPED_UNICODE
+            );
         } else {
             return json_encode(
                 [
                     'result' => 'error',
                     'message' => 'Ошибка сохранения нового URL'
-                ]
-                ,
+                ],
                 JSON_UNESCAPED_UNICODE
             );
         }
@@ -168,21 +174,6 @@ class Players
             return $res;
         } else {
             return false;
-        }
-    }
-
-    public
-    static function getAvatarUrl(
-        int $commonID
-    ) {
-        return PlayerModel::getAvatarUrl($commonID);
-
-        $avatarUrl = UserModel::getOne($commonID)['avatar_url'] ?? false;
-
-        if (!empty($avatarUrl)) {
-            return $avatarUrl;
-        } else {
-            return AvatarModel::getDefaultAvatar($commonID);
         }
     }
 

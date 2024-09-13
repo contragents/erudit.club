@@ -5,6 +5,7 @@ namespace Dadata;
 use \Cache;
 use AchievesModel;
 use Erudit\Game;
+use PlayerModel;
 
 class Hints
 {
@@ -400,7 +401,7 @@ class Hints
                 ? ['ID' => $record['cookie'], 'common_id' => $recorderCommonID,]
                 : ['ID' => $record['cookie'], 'common_id' => $recorderCommonID, 'userID' => $recorderPlayerID]
         );
-        $recordPlayerAvatarUrl = Players::getAvatarUrl($recorderCommonID);
+        $recordPlayerAvatarUrl = PlayerModel::getAvatarUrl($recorderCommonID);//Players::getAvatarUrl();
 
 
         return self::renderRecordsView(

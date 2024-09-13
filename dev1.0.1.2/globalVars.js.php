@@ -1,5 +1,5 @@
 
-//<?php $lang = T::$lang = T::EN_LANG; ?>
+//<?php $lang = T::$lang = T::GAME_MODE_LANG[$gameMode]; ?>
 
 var lang = '<?= T::$lang ?>';
 
@@ -7,11 +7,9 @@ const INVITE_FRIEND_PROMPT = '<?= T::getInviteFriendPrompt() ?>';
 const GAME_BOT_URL = '<?= T::PHRASES['game_bot_url'][T::$lang] ?>';
 const LOADING_TEXT = '<?= T::PHRASES['loading_text'][T::$lang] ?>';
 
-var uniqID = false; // yandex compatibility
-
 var preloaderObject = false;
 
-const GROUND_FILE = 'field_source_scrabble.svg';
+const GROUND_FILE = '<?= T::PHRASES['ground_file'][T::$lang] ?>';
 const DEFAULT_FISHKA_SET = 'default';
 const MAXS_FISHKA_SET = 'MaxS';
 const GIRL_FISHKA_SET = 'Girl';
@@ -50,6 +48,8 @@ const ALARM_MODE = 'Alarm';
 const OTJAT_MODE = 'Otjat';
 
 const MY_TURN_STATE = 'myTurn';
+const PRE_MY_TURN_STATE = 'preMyTurn';
+const OTHER_TURN_STATE = 'otherTurn';
 
 const BAD_REQUEST = 400;
 const PAGE_NOT_FOUND = 404;
@@ -62,7 +62,9 @@ const BOTTOM_PERCENT = 0.7;
 
 const INACTIVE_USER_ALPHA = 0.2;
 
+var activeUser = false;
 var commonId = false;
+var commonIdHash = false;
 var isUserBlockActive = false;
 var playerScores = {
     youBlock: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
@@ -213,7 +215,7 @@ var submitButton = false;
 var dialog = false;
 var dialogResponse = false;
 
-var winScore = '';
+var winScore = false;
 var ochki = false;
 var ochki_arr = false;
 var myUserNum = false;
@@ -251,8 +253,9 @@ var soundPlayed = false;
 
 //<?php if (T::$lang === T::EN_LANG) include('globals/instruction_eng.js'); else include('globals/instruction.js'); ?>
 
+//<?php include('globals/tgGlobalFunction.js')?>
 //<?php include('globals/buttonSettingsGlobal.js')?>
-//<?php include('globals/gameStates.js')?>
+//<?php include('globals/gameStates.js.php')?>
 //<?php include('globals/letterPrices.js')?>
 //<?php include('globals/rusLetters.js')?>
 //<?php include('globals/wav.js')?>

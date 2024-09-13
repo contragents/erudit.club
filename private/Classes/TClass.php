@@ -15,7 +15,7 @@ class T
     const GAME_MODE_LANG = [
         'scrabble' => self::EN_LANG,
         'yandex' => self::RU_LANG,
-        'dev' => self::EN_LANG,
+        'dev' => self::RU_LANG,
     ];
 
 
@@ -45,8 +45,7 @@ class T
             self::EN_LANG => 'Switch to Telegram',
             self::RU_LANG => 'Перейти на Telegram'
         ],
-        'invite_tg_button' => [
-            self::EN_LANG => 'Invite a friend',
+        'Invite a friend' => [
             self::RU_LANG => 'Пригласить друга'
         ],
         'you_lost' => [
@@ -167,8 +166,59 @@ class T
         "Your turn!" => [
             self::RU_LANG => 'Ваш ход!'
         ],
-        "Game until" => [
+        'Game goal' => [
             self::RU_LANG => 'Игра до'
+        ],
+        'CHOOSE GAME OPTIONS' => [
+            self::RU_LANG => 'ПОДБОР ИГРЫ ПО ПАРАМЕТРАМ'
+        ],
+        'Profile' => [
+            self::RU_LANG => 'Профиль'
+        ],
+        'Error' => [
+            self::RU_LANG => 'Ошибка'
+        ],
+        'Your profile' => [
+            self::RU_LANG => 'Ваш профиль'
+        ],
+        'Start' => [
+            self::RU_LANG => 'Начать'
+        ],
+        'Stats' => [
+            self::RU_LANG => 'Статистика'
+        ],
+        'Play on' => [
+            self::RU_LANG => 'Играть в'
+        ],
+        "Opponent's rating" => [
+            self::RU_LANG => 'Рейтинг соперника'
+        ],
+        'Any' => [
+            self::RU_LANG => 'Любой'
+        ],
+        'online' => [
+            self::RU_LANG => 'онлайн'
+        ],
+        'Above' => [
+            self::RU_LANG => 'OT'
+        ],
+        'minutes' => [
+            self::RU_LANG => 'минуты'
+        ],
+        'minute' => [
+            self::RU_LANG => 'минута'
+        ],
+        'Select the minimum opponent rating' => [
+            self::RU_LANG => 'Выберите минимальный рейтинг соперников'
+        ],
+        'Not enough 1900+ rated players online' => [
+            self::RU_LANG => 'Недостаточно игроков с рейтингом 1900+ онлайн'
+        ],
+        'Only for players rated 1800+' => [
+            self::RU_LANG => 'Только для игроков с рейтингом 1800+'
+        ],
+        'in game' => [
+            self::RU_LANG => 'в игре'
         ],
         "score" => [
             self::RU_LANG => 'очков'
@@ -294,8 +344,8 @@ class T
         "Your score" => [
             self::RU_LANG => 'Ваши очки:'
         ],
-        "Turn time " => [
-            self::RU_LANG => "Время на ход "
+        "Turn time" => [
+            self::RU_LANG => "Время на ход"
         ],
         "Player's ID" => [
             self::RU_LANG => 'ID игрока'

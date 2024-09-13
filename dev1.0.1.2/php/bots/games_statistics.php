@@ -23,9 +23,9 @@ while ((date('U') - $start_script_time) < $script_work_time) {
 
     getRatings($results, $Game);
     changeRatings($results);
-    saveGameStats($Game, $results);
-    saveRatings($results);
-    saveGame($Game, $results);
+    // saveGameStats($Game, $results); //done in CLUB-384
+    // saveRatings($results); //done in CLUB-384
+    // saveGame($Game, $results); //done in CLUB-384
 }
 
 function saveGame(&$Game, &$results)

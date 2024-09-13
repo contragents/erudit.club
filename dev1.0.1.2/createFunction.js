@@ -12,28 +12,24 @@ function () {
     noNetworkImg.setDepth(10000);
     noNetworkImg.visible = false;
 
-    var back = this.add.image(backX, backY, 'back');
-    back.alpha = 0.3;
-    back.setOrigin(0, 0);
+    var back = this.add.sprite(gameWidth / 2, gameHeight / 2, 'back');
+    back.displayWidth = this.sys.canvas.width;
+    back.displayHeight = this.sys.canvas.height;
 
-    // back.setScale(backScale); // todo непонятно как работает, картинка съезжает хз куда
-
+    WebView.postEvent('web_app_set_header_color', false, {
+        color: '#2C3C6C',
+    });
 
     var ground = this.add.image(385, 375, 'ground');
     ground.setOrigin(0, 0);
     ground.x = game.config.width - ground.width;
-    ground.y = 0;
+    ground.y = screenOrient === HOR
+        ? 0
+        : topHeight;
     ground.setCrop(16 * 2, 3 * 2, 550 * 2, 550 * 2);
 
-    // Past-adjusting back-image
-    if (backY > ground.height) {
-        back.y = ground.height - 30;
-    } else if ((backY + ground.height) > game.config.height) {
-        back.y = game.config.height - back.height;
-    }
-
     stepX = game.config.width - ground.width;
-    stepY = 0;
+    stepY = (screenOrient === HOR) ? 0 : topHeight;
     initLotok();
 
     initCellsGlobal();
@@ -75,9 +71,33 @@ function () {
         });
     }
 
+    let numTopButtons = 0;
+    let sumWidth = 0;
+    for (let tbK in topButtons) {
+        numTopButtons++;
+        topButtons[tbK].displayWidth = buttons[tbK]['svgObject'].displayWidth;
+        sumWidth += topButtons[tbK].displayWidth;
+    }
+    let stepXTopButtons = (knopkiWidth - sumWidth) / (numTopButtons + 1);
+
+    let currentWidth = 0;
+    for (let tbK in topButtons) {
+        buttons[tbK]['svgObject'].x = stepXTopButtons + currentWidth + buttons[tbK]['svgObject'].displayWidth / 2;
+        currentWidth += stepXTopButtons + buttons[tbK]['svgObject'].displayWidth;
+    }
+
+    buttons['razdvButton']['svgObject'].disableInteractive();
+    buttons['razdvButton']['svgObject'].visible = false;
+
     if (buttons['submitButton']['svgObject'] !== false) {
         buttons['submitButton']['svgObject'].disableInteractive();
         buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
+    }
+
+    for (let k in players) {
+        players[k]['svgObject'] = getSVGBlock(players[k]['x'], players[k]['y'], k, this, players[k].scalable, 'numbers' in players[k]);
+        players[k]['svgObject'].bringToTop(players[k]['svgObject'].getByName(k + OTJAT_MODE));
+        players[k]['svgObject'].getByName(k + ALARM_MODE).setVisible(false);
     }
 
 //    <?php include('create/fishkaDragEvents.js')?>
@@ -91,56 +111,11 @@ function () {
         {
             color: 'black',
             font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
-        });
+        }).setVisible(false); // todo delete ochki
 
     vremia = this.add.text(ochki.x, ochki.y + ochki.height + 15, 'Время на ход 2:00',
         {
             color: 'black',
             font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
-        });
-
-    var donate = this.add.image(ochki.x, ochki.y + ochki.height + 15 + 20, 'donate');
-
-    let wid = donate.width;
-    donate.setCrop(32, 32, donate.height - 60, donate.height - 60);
-
-    let scale = (gameHeight - donate.y) / donate.height;
-
-    if (scale > 0.07) {
-        donate.setOrigin(0, 0);
-        donate.x = ochki.x - 32 * scale;
-        donate.y = ochki.y + ochki.height + 15 + 40 + 20 * scale;
-        donate.setScale((gameHeight - donate.y) / donate.height);
-    } else {
-        donate.setScale(64 / (donate.height));
-        donate.x = buttons['razdvButton'].x - buttons['razdvButton'].width * 1.2;
-        donate.y = buttons['razdvButton'].y;
-        //donate.y = ochki.y + ochki.height + 15 + 40 + 20 * scale;
-    }
-
-    if (isYandexAppGlobal()) {
-        donate.visible = false;
-    } else {
-
-        donate.setInteractive();
-        donate.on('pointerup', function () {
-            donate.disableInteractive();
-            copyDonateLinkDialog = bootbox.alert(
-                {
-                    message: 'Ссылка на страницу донатов скопирована в буфер <br /><input size="36" type="text" name="donate" id="donate_id" value="' + donateLink + '" />',
-                }
-            );
-
-            setTimeout(
-                function () {
-                    copyDonateKey();
-                    copyDonateLinkDialog.find(".bootbox-close-button").trigger("click");
-                    donate.setInteractive();
-                }
-                , 2000
-            );
-        });
-    }
-
-
+        }).setVisible(false); // todo delete vremia
 }

@@ -11,6 +11,11 @@ function isAndroidAppGlobal() {
     return window.location.href.indexOf('app=1') > -1;
 }
 
+
+function isVerstkaTestGlobal() {
+    return window.location.href.indexOf('verstka=1') > -1;
+}
+
 function isMobileDeviceGlobal() {
     const ua = navigator.userAgent;
     if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {

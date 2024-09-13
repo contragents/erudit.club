@@ -62,7 +62,7 @@ class Queue
 
     protected function checkPlayerInitStatus(): bool
     {
-        $initGame = ($this->POST['init_game']) || self::isUserInQueue($this->User);
+        $initGame = ($this->POST['init_game'] ?? false) || self::isUserInQueue($this->User);
 
         if ($initGame) {
             self::setPlayerInitStatus($this->User); // todo возможно не надо помещать в кеш

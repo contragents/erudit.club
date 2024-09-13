@@ -163,7 +163,7 @@ class PlayerModel extends BaseModel
             return 0;
         }
 
-        return CommonIdRatingModel::getRating($player[self::COMMON_ID_FIELD]) ?: $player[self::RATING_FIELD];
+        return CommonIdRatingModel::getRating($player[self::COMMON_ID_FIELD]) ?: ($player[self::RATING_FIELD] ?? CommonIdRatingModel::INITIAL_RATING);
     }
 
     public static function getRating($commonID = false, $cookie = false, $userID = false)

@@ -75,307 +75,507 @@ var gameStates = {
         }
     },
     chooseGame: {
-        1: 'choosing', 2: 'done',
+        1: 'choosing',
+        2: 'done',
         refresh: 1000000,
-        message: 'Начните игру',
+        message: '',
         noDialog: true,
         action: function (data) {
-            let under1800 = 'Только для игроков с рейтингом 1800+';
-            let noRatingPlayers = 'Недостаточно игроков с рейтингом 1900+ онлайн';
-            let haveRatingPlayers = 'Выберите минимальный рейтинг соперников';
+            /*data = {
+                players: {0: 30, 1900: 25, 2000:20, 2100:15, thisUserRating: 2400},
+                prefs:{from_rating: 2100}
+            };*/
+
+            let under1800 = '<?= T::S('Only for players rated 1800+') ?>';
+            let noRatingPlayers = '<?= T::S('Not enough 1900+ rated players online') ?>';
+            let haveRatingPlayers = '<?= T::S('Select the minimum opponent rating') ?>';
             let title = '';
             let onlinePlayers = '';
             let chooseDisabled = '';
-            if (('players' in data) && (lang != 'EN')) {
-                if (('thisUserRating' in data['players']) && (data['players']['thisUserRating'] < 1800)) {
-                    chooseDisabled = "disabled";
+            if ('players' in data
+            ) {
+                if (
+                    'thisUserRating' in data['players'] &&
+                    data['players']['thisUserRating'] < 1800
+                ) {
+                    chooseDisabled = 'disabled';
                     title = under1800;
                 } else {
                     title = haveRatingPlayers;
                 }
-                if (!(1900 in data['players']) || (data['players'][1900] == 0)) {
+
+                if (!(1900 in data['players']) || data['players'][1900] == 0) {
                     title = noRatingPlayers;
                 }
-                let colPlayers = "col-5";//screenOrient === HOR ? "col-3" : "col-4";
 
                 let checked_0 = 'checked';
-                let checked_1900 = '';
-                let checked_2000 = '';
-                let checked_2100 = '';
-                let checked_2200 = '';
-                let checked_2300 = '';
-                let checked_2400 = '';
-                let checked_2500 = '';
-                let checked_2600 = '';
-                let checked_2700 = '';
 
-                if ('prefs' in data && data['prefs'] !== false && 'from_rating' in data['prefs'] && data['prefs']['from_rating'] > 0) {
+                if (
+                    'prefs' in data &&
+                    data['prefs'] !== false &&
+                    'from_rating' in data['prefs'] &&
+                    data['prefs']['from_rating'] > 0
+                ) {
                     checked_0 = '';
-                    checked_1900 = (data['prefs']['from_rating'] == 1900) ? 'checked' : '';
-                    checked_2000 = (data['prefs']['from_rating'] == 2000) ? 'checked' : '';
-                    checked_2100 = (data['prefs']['from_rating'] == 2100) ? 'checked' : '';
-                    checked_2200 = (data['prefs']['from_rating'] == 2200) ? 'checked' : '';
-                    checked_2300 = (data['prefs']['from_rating'] == 2300) ? 'checked' : '';
-                    checked_2400 = (data['prefs']['from_rating'] == 2400) ? 'checked' : '';
-                    checked_2500 = (data['prefs']['from_rating'] == 2500) ? 'checked' : '';
-                    checked_2600 = (data['prefs']['from_rating'] == 2600) ? 'checked' : '';
-                    checked_2700 = (data['prefs']['from_rating'] == 2700) ? 'checked' : '';
-                }
-                onlinePlayers = '<br /><br /><strong>Искать игроков с рейтингом:</strong><br />';
-                onlinePlayers += '<div class="form-row">';
-                onlinePlayers += '<div title="' + title + '" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_0" name="from_rating" value="0" '
-                +  checked_0
-                    + '> <label style="cursor: pointer;" class="form-check-label" for="from_0">Любой (' + data['players'][0] + '&nbsp;онлайн)</label></div>';
-                if ((1900 in data['players']) && (data['players'][1900] > 0)) {
-                    onlinePlayers += '<div title="' + data['players'][1900] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_1900" name="from_rating" value="1900" ' + chooseDisabled.toString()
-                        + checked_1900
-                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_1900">ОТ 1900 (' + data['players'][1900] + ')</label></div>';
-                }
-                    onlinePlayers += '</div>';
-
-                if ((2000 in data['players']) && (data['players'][2000] > 0)) {
-                    onlinePlayers += '<div class="form-row">';
-                    onlinePlayers += '<div title="' + data['players'][2000] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2000" name="from_rating" value="2000"' + chooseDisabled.toString()
-                        + checked_2000
-                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2000">ОТ 2000 (' + data['players'][2000] + ')</label></div>';
-
-                    if ((2100 in data['players']) && (data['players'][2100] > 0))
-                        onlinePlayers += '<div title="' + data['players'][2100] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2100" name="from_rating" value="2100"' + chooseDisabled
-                            + checked_2100
-                            + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2100">ОТ 2100 (' + data['players'][2100] + ')</label></div>';
-                    onlinePlayers += '</div>';
                 }
 
-                if ((2200 in data['players']) && (data['players'][2200] > 0)) {
-                    onlinePlayers += '<div class="form-row">';
-                    onlinePlayers += '<div title="' + data['players'][2200] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2200" name="from_rating" value="2200"' + chooseDisabled
-                        + checked_2200
-                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2200">ОТ 2200 (' + data['players'][2200] + ')</label></div>';
-                    if ((2300 in data['players']) && (data['players'][2300] > 0)) {
-                        onlinePlayers += ('<div title="' + data['players'][2300] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2300" name="from_rating" value="2300"' + chooseDisabled
-                            + checked_2300
-                            + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2300">ОТ 2300 (' + data['players'][2300] + ')</label></div>');
-                    }
-                    onlinePlayers += '</div>';
+                /* ----------------------------------- NEW ---------------------------------- */
+                const ratingRadio = (props) => {
+                    const {
+                        title = '',
+                        text = '',
+                        inputValue = 0,
+                        inputId = '0',
+                        isChecked = false,
+                        isDisabled = false,
+                        extraClass = '',
+                        extraInputAttrString = '',
+                    } = props;
+
+                    const html = `
+									<div title="${title}"
+										class="form-check form-check-inline ${extraClass}">
+										<input class="form-check-input" type="radio" id="${inputId}" name="from_rating"
+										value="${inputValue}"
+										${isChecked ? `checked` : ''}
+										${isDisabled ? `disabled` : ''}
+										${extraInputAttrString ? extraInputAttrString : ''}
+											/>
+										<label class="form-check-label" for="${inputId}">${text}</label>
+									</div>`;
+
+                    return html;
+                };
+
+                // ratingValues: number[] ([2000, 2100, 2200, ...])
+                const getRatingList = (ratingValues = [], data = {}) => {
+                    let resultHtml = '';
+                    ratingValues.forEach((ratingValue) => {
+                        if (
+                            'players' in data &&
+                            ratingValue in data['players'] &&
+                            data['players'][ratingValue] > 0
+                        ) {
+                            let isChecked = false;
+                            if (
+                                'prefs' in data &&
+                                data['prefs'] !== false &&
+                                'from_rating' in data['prefs'] &&
+                                data['prefs']['from_rating'] == ratingValue
+                            ) {
+                                isChecked = true;
+                            }
+                            resultHtml += ratingRadio({
+                                title: data['players'][ratingValue] + ' <?= T::S('in game') ?>',
+                                text: `<?= T::S('Above') ?> ${ratingValue} (${data['players'][ratingValue]})`,
+                                inputValue: ratingValue,
+                                inputId: `from_${ratingValue}`,
+                                isChecked,
+                                isDisabled: chooseDisabled.toString(),
+                            });
+                        }
+                    });
+
+                    return resultHtml;
+                };
+
+                onlinePlayers = `<div class="box-title-wrap">
+												<span><?= T::S("Opponent's rating") ?></span>
+											</div>`;
+
+                onlinePlayers += `<div class="label-row">
+												<div class="form-check">`;
+                onlinePlayers += ratingRadio({
+                    title: title,
+                    text: '<?= T::S('Any') ?> (' +  (0 in data['players'] ? data['players'][0] : '0') + '&nbsp;<?= T::S('online')?>)',
+                    inputValue: 0,
+                    inputId: 'from_0',
+                    isChecked: checked_0,
+                    isDisabled: chooseDisabled.toString(),
+                });
+
+                const ratings = Object.keys(data.players).filter(
+                    (item) => !isNaN(Number(item)) && data.players[item] > 0
+                );
+                // console.log(Object.keys(data.players), ratings);
+
+                ratings.shift();
+                onlinePlayers += getRatingList(
+                    ratings.slice(0, ratings.length / 2),
+                    data
+                );
+
+                onlinePlayers += `</div>`; // end col
+                onlinePlayers += `	<div class="form-check">`;
+
+                if (ratings.slice(ratings.length / 2).length > 0) {
+                    // console.log(ratings.slice(ratings.length / 2));
+                    onlinePlayers += getRatingList(
+                        ratings.slice(ratings.length / 2),
+                        data
+                    );
                 }
 
-                if ((2400 in data['players']) && (data['players'][2400] > 0)) {
-                    onlinePlayers += '<div class="form-row">';
-                    onlinePlayers += '<div title="' + data['players'][2400] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2400" name="from_rating" value="2400"' + chooseDisabled
-                        + checked_2400
-                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2400">ОТ 2400 (' + data['players'][2400] + ')</label></div>';
-                    if ((2500 in data['players']) && (data['players'][2500] > 0))
-                        onlinePlayers += '<div title="' + data['players'][2500] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2500" name="from_rating" value="2500"' + chooseDisabled
-                            + checked_2500
-                            + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2500">ОТ 2500 (' + data['players'][2500] + ')</label></div>';
-                    onlinePlayers += '</div>';
-                }
+                onlinePlayers += `	</div>`; // end col
+                onlinePlayers += `</div>`; // end label-row
 
-                if ((2600 in data['players']) && (data['players'][2600] > 0)) {
-                    onlinePlayers += '<div class="form-row">';
-                    onlinePlayers += '<div title="' + data['players'][2600] + ' в игре" class="' + colPlayers + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2600" name="from_rating" value="2600"' + chooseDisabled
-                        + checked_2600
-                        + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2600">ОТ 2600 (' + data['players'][2600] + ')</label></div>';
-                    if ((2700 in data['players']) && (data['players'][2700] > 0))
-                        onlinePlayers += '<div title="' + data['players'][2700] + ' в игре" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="from_2700" name="from_rating" value="2700"' + chooseDisabled
-                            + checked_2700
-                            + ' > <label style="cursor: pointer;" class="form-check-label" for="from_2700">ОТ 2700 (' + data['players'][2700] + ')</label></div>';
-                    onlinePlayers += '</div>';
-                }
-            }
+                onlinePlayers = `<div class="box box-rating">${onlinePlayers}</div>`;
 
-            let radioButtons = '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly">Только два игрока</label></div>';
-            radioButtons += '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore">До четырех игроков</label></div>';
+                /* --------------------------------- END NEW -------------------------------- */
+            } // end if 'players'
 
-            let wish = ''; //'<br /><br /><h6>Желательно:</h6>';
-            let colOchki = screenOrient === HOR ? "col-5" : "col-5";
-            let colOchkiRow = screenOrient === HOR ? "col-5" : "col-5";
+            let radioButtons =
+                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly">Только два игрока</label></div>';
+            radioButtons +=
+                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore">До четырех игроков</label></div>';
+
+            let wish = '';
 
             let checked_200 = 'checked';
             let checked_300 = '';
 
-            if ('prefs' in data && data['prefs'] !== false && 'ochki_num' in data['prefs']) {
-                checked_200 = (data['prefs']['ochki_num'] == 200) ? 'checked' : '';
-                checked_300 = (data['prefs']['ochki_num'] == 300) ? 'checked' : '';
+            if (
+                'prefs' in data &&
+                data['prefs'] !== false &&
+                'ochki_num' in data['prefs']
+            ) {
+                checked_200 = data['prefs']['ochki_num'] == 200 ? 'checked' : '';
+                checked_300 = data['prefs']['ochki_num'] == 300 ? 'checked' : '';
             }
 
-            let radioOchki = '<br /><strong>Играем до:</strong><br /><div class="' + colOchkiRow + ' form-check form-check-inline"><input class="form-check-input" type="radio" id="dvesti" name="ochki_num" value="200" ' + checked_200 + '> <label class="form-check-label" for="dvesti">200 очков</label></div>';
-            radioOchki += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="trista" name="ochki_num" value="300" ' + checked_300 + '> <label class="form-check-label" for="trista">300 очков</label></div>';
+            /* ----------------------------------- NEW ---------------------------------- */
+            let radioOchki = `
+                            <div class="box">
+                                <div class="box-title-wrap">
+                                    <span><?= T::S('Game goal') ?></span>
+                                </div>
+                                <div class="label-row">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" id="dvesti" name="ochki_num"
+                                            value="200" ${checked_200} />
+                                        <label class="form-check-label text-accent" for="dvesti">
+                                            <div class="d-inline-flex align-items-center align-middle">
+                                                <i class="icon icon-arrow"></i>200
+                                            </div>
+                                        </label>
+                                    </div>
 
-            let wishTime = '<br /><br /><strong>Время на ход:</strong><br />';
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" id="trista" name="ochki_num"
+                                            value="300" ${checked_300}/>
+                                        <label class="form-check-label text-accent" for="trista">
+                                            <div class="d-inline-flex align-items-center align-middle">
+                                                <i class="icon icon-arrow"></i>300
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+			`;
+
+            /* --------------------------------- END NEW -------------------------------- */
+
+            // let wishTime = '<br /><br /><strong>Время на ход:</strong><br />';
             let wish_120 = 'checked';
             let wish_60 = '';
 
-            if ('prefs' in data && data['prefs'] !== false && 'turn_time' in data['prefs']) {
-                wish_120 = (data['prefs']['turn_time'] == 120) ? 'checked' : '';
-                wish_60 = (data['prefs']['turn_time'] == 60) ? 'checked' : '';
+            if (
+                'prefs' in data &&
+                data['prefs'] !== false &&
+                'turn_time' in data['prefs']
+            ) {
+                wish_120 = data['prefs']['turn_time'] == 120 ? 'checked' : '';
+                wish_60 = data['prefs']['turn_time'] == 60 ? 'checked' : '';
             }
 
-            let radioTime = '<div class="' + colOchki + '  form-check form-check-inline"><input class="form-check-input" type="radio" id="dve" name="turn_time" value="120" ' + wish_120 + '> <label class="form-check-label" for="dve">2 минуты</label></div>';
-            radioTime += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="odna" name="turn_time" value="60" ' + wish_60 + '> <label class="form-check-label" for="odna">1 минута</label></div>';
+            /* ----------------------------------- NEW ---------------------------------- */
+            let wishTime = `
+				            <div class="box pb-1">
+                                <div class="box-title-wrap mb-0">
+                                    <span><?= T::S('Turn time') ?></span>
+                                </div>
 
-            let formHead = '<h5>Параметры игры (будут учтены при подборе)</h5>';
-            let gameform = formHead + '<form onsubmit="return false" id="myGameForm">' + radioButtons + wish + radioOchki + wishTime + radioTime + onlinePlayers + '</form>';
+                                <div class="label-row">
+									<div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" type="radio" id="dve" name="turn_time"
+                                            value="120" ${wish_120} />
+                                        <label class="form-check-label text-accent" for="dve">2 <?= T::S('minutes') ?></label>
+                                    </div>
+
+									<div class="time-img-wrap">
+                                        <img src="./images/time.png" class="d-block img-fluid" alt="">
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" type="radio" id="odna" name="turn_time"
+                                            value="60" ${wish_60} />
+                                        <label class="form-check-label text-accent" for="odna">1 <?= T::S('minute') ?></label>
+                                    </div>
+                                </div>
+                            </div>
+			`;
+
+            let formHead = `<div class="box">
+                            <div class="d-flex flex-row align-items-center">
+
+                                <span><?= T::S('CHOOSE GAME OPTIONS') ?></span>
+
+                                <div class="ml-auto"><a href="#" id="btn-faq" class="btn">FAQ</a>
+                                </div>
+                            </div>
+                        </div>
+			`;
+
+            const btnFAQClickHandler = () => {
+                dialog = bootbox
+                    .alert({
+                        message: instruction,
+                        locale: 'ru',
+                    })
+                    .off('shown.bs.modal');
+
+                return false;
+            };
+
+            document.addEventListener('click', (e) => {
+                if (e.target && e.target.matches('#btn-faq')) {
+                    e.preventDefault();
+                    btnFAQClickHandler();
+                }
+            });
+            /* --------------------------------- END NEW -------------------------------- */
+
+            // let formHead = '<h5>Параметры игры (будут учтены при подборе)</h5>';
+
+            let gameform =
+                formHead +
+                '<form onsubmit="return false" id="myGameForm">' +
+                radioButtons +
+                wish +
+                radioOchki +
+                wishTime +
+                onlinePlayers +
+                '</form>';
 
             dialog = bootbox.dialog({
-                title: isVerstkaTestGlobal() ? 'Тут title' : gameStates['chooseGame']['message'],
-                message: isVerstkaTestGlobal() ? 'Тут message' : gameform,
+                title: gameStates['chooseGame']['message'],
+                message: gameform,
+                className: 'modal-settings',
                 size: 'medium',
                 onEscape: false,
                 closeButton: false,
                 buttons: {
                     cabinet: {
-                        label: 'Профиль',
+                        label: '<?= T::S('Profile') ?>',
                         className: 'btn-outline-success',
                         callback: function () {
                             setTimeout(function () {
-                                fetchGlobal(CABINET_SCRIPT, '', 12)
-                                    .then((dataCabinet) => {
+                                fetchGlobal(CABINET_SCRIPT, '', 12).then(
+                                    (dataCabinet) => {
                                         if (dataCabinet == '')
-                                            var responseText = 'Ошибка';
+                                            var responseText = '<?= T::S('Error') ?>';
                                         else
-                                            var responseArr = JSON.parse(dataCabinet['message']);
-                                            var message = '<form id="superForm" >';
+                                            var responseArr = JSON.parse(
+                                                dataCabinet['message']
+                                            );
+                                        var message = '<form id="superForm" >';
                                         for (k in responseArr['form']) {
-                                            message += '<div class="form-group"'
-                                                + (('type' in responseArr['form'][k] && responseArr['form'][k]['type'] === 'hidden')
+                                            message +=
+                                                '<div class="form-group"' +
+                                                ('type' in responseArr['form'][k] &&
+                                                responseArr['form'][k]['type'] ===
+                                                'hidden'
                                                     ? ' style="display:none" '
-                                                    : '')
-                                                + '><div class="col-sm-6">' +
-                                                '<label for="' + responseArr['form'][k]['inputId'] + '">'
-                                                + responseArr['form'][k]['prompt']
-                                                + '</label>'
-                                                + '</div>';
-                                            message += '<div class="form-row align-items-center">'
-                                                + '<div class="col-sm-8">'
-                                                + '<input ';
+                                                    : '') +
+                                                '><div class="col-sm-6">' +
+                                                '<label for="' +
+                                                responseArr['form'][k]['inputId'] +
+                                                '">' +
+                                                responseArr['form'][k]['prompt'] +
+                                                '</label>' +
+                                                '</div>';
+                                            message +=
+                                                '<div class="form-row align-items-center">' +
+                                                '<div class="col-sm-8">' +
+                                                '<input ';
 
                                             if ('value' in responseArr['form'][k]) {
-                                                message += 'value="' + responseArr['form'][k]['value'] + '"';
-                                                if ('readonly' in responseArr['form'][k]) {
+                                                message +=
+                                                    'value="' +
+                                                    responseArr['form'][k][
+                                                        'value'
+                                                        ] +
+                                                    '"';
+                                                if (
+                                                    'readonly' in
+                                                    responseArr['form'][k]
+                                                ) {
                                                     message += ' readonly ';
                                                 }
                                             } else {
-                                                message += 'placeholder="' + responseArr['form'][k]['placeholder'] + '"';
+                                                message +=
+                                                    'placeholder="' +
+                                                    responseArr['form'][k][
+                                                        'placeholder'
+                                                        ] +
+                                                    '"';
                                             }
 
-                                            message += (('type' in responseArr['form'][k])
-                                                ? 'type="' + responseArr['form'][k]['type'] + '"'
-                                                : 'type="text"')
-                                                + ' class="form-control" name="'
-                                                + responseArr['form'][k]['inputName']
-                                                + '" id="'
-                                                + responseArr['form'][k]['inputId']
-                                                + '" '
-                                                + ('required' in responseArr['form'][k]
+                                            message +=
+                                                ('type' in responseArr['form'][k]
+                                                    ? 'type="' +
+                                                    responseArr['form'][k][
+                                                        'type'
+                                                        ] +
+                                                    '"'
+                                                    : 'type="text"') +
+                                                ' class="form-control" name="' +
+                                                responseArr['form'][k][
+                                                    'inputName'
+                                                    ] +
+                                                '" id="' +
+                                                responseArr['form'][k]['inputId'] +
+                                                '" ' +
+                                                ('required' in
+                                                responseArr['form'][k]
                                                     ? ' required '
-                                                    : '')
-                                                + '></div>';
-                                            message += !('type' in responseArr['form'][k] && responseArr['form'][k]['type'] === 'hidden')
-                                                ? (
-                                                    '<div class="col-sm-4 col-form-label">'
-                                                    + '<button type="submit" class="form-control btn btn-outline-secondary" onclick="'
-                                                    + responseArr['form'][k]['onclick']
-                                                    + '($(\'#' + responseArr['form'][k]['inputId']
-                                                    + '\').val(),'
-                                                    + responseArr['common_id']
-                                                    + ');return false;">'
-                                                    + responseArr['form'][k]['buttonCaption']
-                                                    + '</button></div>'
-                                                )
-                                                : ('')
-                                                +
-                                                '</div>';
+                                                    : '') +
+                                                '></div>';
+                                            message += !(
+                                                'type' in responseArr['form'][k] &&
+                                                responseArr['form'][k]['type'] ===
+                                                'hidden'
+                                            )
+                                                ? '<div class="col-sm-4 col-form-label">' +
+                                                '<button type="submit" class="form-control btn btn-outline-secondary" onclick="' +
+                                                responseArr['form'][k][
+                                                    'onclick'
+                                                    ] +
+                                                "($('#" +
+                                                responseArr['form'][k][
+                                                    'inputId'
+                                                    ] +
+                                                "').val()," +
+                                                responseArr['common_id'] +
+                                                ');return false;">' +
+                                                responseArr['form'][k][
+                                                    'buttonCaption'
+                                                    ] +
+                                                '</button></div>'
+                                                : '' + '</div>';
                                             message += '</div>';
                                         }
                                         message += '</form>';
                                         dialog = bootbox.alert({
-                                            title: 'Ваш личный кабинет, <span id="playersNikname">' +
+                                            title:
+                                                '<?= T::S('Your profile') ?>, <span id="playersNikname">' +
                                                 responseArr['name'] +
                                                 '</span>' +
                                                 '<span id="playersAvatar">&nbsp;' +
-                                                '<img style="cursor: pointer;" title="' + responseArr['img_title'] + '" src="' + responseArr['url'] + '" width="100px" max-height = "100px" />' +
+                                                '<img style="cursor: pointer;" title="' +
+                                                responseArr['img_title'] +
+                                                '" src="' +
+                                                responseArr['url'] +
+                                                '" width="100px" max-height = "100px" />' +
                                                 '</span>',
                                             message: responseArr['text'] + message,
                                             locale: 'ru',
                                             size: 'large',
                                             callback: function () {
-                                                gameStates['chooseGame']['action'](data);
-                                            }
+                                                gameStates['chooseGame']['action'](
+                                                    data
+                                                );
+                                            },
                                         });
                                         return false;
-                                    });
+                                    }
+                                );
                             }, 100);
-                        }
+                        },
                     },
+                    // пока скроем через d-none
                     instruction: {
-                        label: isVerstkaTestGlobal() ? 'FAQ' : '&nbsp;Инструкция&nbsp;',
-                        className: 'btn-outline-success',
+                        label: 'FAQ',
+                        className: 'btn-outline-success d-none',
                         callback: function () {
-                            dialog = bootbox.alert({
-                                message: instruction,
-                                locale: 'ru'
-                            }).off("shown.bs.modal");
+                            dialog = bootbox
+                                .alert({
+                                    message: instruction,
+                                    locale: 'ru',
+                                })
+                                .off('shown.bs.modal');
 
                             return false;
-                        }
+                        },
                     },
-                    stats: {
-                        label: '&nbsp;Статистика&nbsp;',
-                        className: 'btn-outline-success',
-                        callback: function () {
-                            dialog = bootbox.alert({
-                                message: getStatPageGlobal(),
-                                locale: 'ru'
-                            })
-                                .off("shown.bs.modal")
-                                .find('.modal-content').css({'background-color': 'rgba(230, 255, 230, 1)'/*, 'min-height' : '700px'*/});
 
-                            return false;
-                        }
-                    },
                     beginGame: {
-                        label: isVerstkaTestGlobal() ? 'Начать' : 'Начать игру!',
+                        label: '<?= T::S('Start') ?>',
                         className: 'btn-primary',
                         callback: function () {
                             activateFullScreenForMobiles();
                             gameState = 'noGame';
-                            fetchGlobal(INIT_GAME_SCRIPT, '', $(".bootbox-body #myGameForm").serialize())
-                                .then((data) => {
-                                    if (data == '')
-                                        var responseText = 'Ошибка';
-                                    else {
-                                        commonCallback(data);
-                                    }
-                                });
+                            fetchGlobal(
+                                INIT_GAME_SCRIPT,
+                                '',
+                                $('.bootbox-body #myGameForm').serialize()
+                            ).then((data) => {
+                                if (data == '') var responseText = '<?= T::S('Error') ?>';
+                                else {
+                                    commonCallback(data);
+                                }
+                            });
 
                             return true;
-                        }
+                        },
                     },
-                    ...(!isTgBot() && { telegram: {
-                            label: isVerstkaTestGlobal() ? 'Играть в TG' : '<?= T::PHRASES['switch_tg_button'][T::$lang] ?>',
-                            className: 'btn-danger',
+                    stats: {
+                        label: '<?= T::S('Stats') ?>',
+                        className: 'btn-outline-success',
+                        callback: function () {
+                            dialog = bootbox
+                                .alert({
+                                    message: getStatPageGlobal(),
+                                    locale: lang === 'RU' ? 'ru' : 'en',
+                                })
+                                .off('shown.bs.modal')
+                                .find('.modal-content')
+                                .css({
+                                    'background-color':
+                                        'rgba(230, 255, 230, 1)' /*, 'min-height' : '700px'*/,
+                                });
+
+                            return false;
+                        },
+                    },
+                    ...(!isTgBot() && {
+                        telegram: {
+                            label: '<?= T::S('Play on') ?>',
+                            className: 'btn-tg',
                             callback: function () {
-                                document.location = '<?= T::PHRASES['game_bot_url'][T::$lang] ?>' + '/?start='
-                                    + ((commonId && commonIdHash ) ? (commonId + '_' + commonIdHash) : '');
+                                document.location = GAME_BOT_URL + '/?start='
+                                    + ((commonId && commonIdHash) ? (commonId + '_' + commonIdHash) : '');
 
                                 return false;
-                            }
-                    }}),
-                    ...(isTgBot() && { invite: {
-                            label: '<?= T::PHRASES['invite_tg_button'][T::$lang] ?>',
+                            },
+                        },
+                    }),
+                    ...(isTgBot() && {
+                        invite: {
+                            label: '<?= T::S('Invite a friend') ?>',
                             className: 'btn-danger',
                             callback: function () {
-                                // alert(webAppInitDataUnsafe.length + JSON.stringify(webAppInitDataUnsafe));
-
                                 shareTgGlobal();
 
                                 return false;
-                            }
-                    }}),
-                }
+                            },
+                        },
+                    }),
+                },
             });
-        }
+        },
     },
     initGame: {
         1: 'waiting', 2: 'done',

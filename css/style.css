@@ -1,0 +1,283 @@
+@font-face {
+  font-family: 'Gilroy';
+  src: url('fonts/Gilroy-Bold.woff') format('woff'),
+    url('fonts/Gilroy-Bold.ttf') format('ttf');
+  src: url('fonts/Gilroy-Regular.woff') format('woff'),
+    url('fonts/Gilroy-Regular.ttf') format('ttf');
+  src: url('fonts/Gilroy-ExtraBold.woff') format('woff'),
+    url('fonts/Gilroy-ExtraBold.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.page_body {
+  padding: 10px;
+}
+
+.divider {
+
+  margin: 10px auto;
+  width: 90%;
+}
+
+
+.card_list {
+  font-family: 'Gilroy', sans-serif;
+  color: rgb(255, 255, 255);
+  margin-top: 45px;
+  display: flex;
+  list-style-type: none;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 45px;
+  word-break: break-all;
+}
+
+
+.card_item {
+  border: 4px solid rgb(70, 66, 66);
+  padding: 16px 20px 16px 20px;
+  max-width: 398px;
+  height: 100%;
+  width: 100%;
+  border-radius: 30px;
+}
+
+.gold_card {
+  background: url('./images/gold.png') center center no-repeat;
+  background-size: cover;
+}
+
+
+
+.silver_card {
+  background: url('./images/silver.png') center center no-repeat;
+  background-size: cover;
+}
+
+.bronze_card {
+  background: url('./images/bronze.png') center center no-repeat;
+  background-size: cover;
+
+}
+
+.stone_card {
+  background: url('./images/moreTexturedStone.png') center center no-repeat;
+  background-size: cover;
+
+}
+
+.card_record {
+  font-size: 30px;
+  color: rgb(255, 255, 255);
+  font-family: Gilroy;
+  font-weight: 900;
+  line-height: 38px;
+  text-align: center;
+  padding: 10px 10px 10px 10px;
+  border-radius: 22px;
+  background: url('./images/record.png') no-repeat center center;
+  background-size: cover;
+}
+
+.card_points {
+  margin-top: 14px;
+  background: url('./images/points.png') no-repeat center center;
+  background-size: cover;
+  border-radius: 16px;
+  width: 100%;
+  height: fit-content;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.card_get {
+  text-align: center;
+  background: url('./images/reward.png') no-repeat center center;
+  background-size: cover;
+  border-radius: 38px;
+  min-height: 173px;
+  margin-top: 14px;
+  padding: 19px 0 19px 0;
+  font-size: 23px;
+  font-weight: 900;
+  line-height: 29px;
+  outline: #B28C1D solid 2px;
+  outline-offset: -6px;
+}
+
+.card_rewardImage {
+  width: 97px;
+  height: 97px;
+}
+
+.card_rewardInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 10px;
+}
+
+
+
+/* .card_rewardImage::before {
+  content: '';
+  width: 28px;
+  height: 49px;
+  display: block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -25%;
+  background: url('./images/plus.png') center center no-repeat;
+} */
+
+.card_moneyCount {
+  font-size: 40px;
+  line-height: 40px;
+}
+
+.card_passive {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 23px;
+}
+
+.card_hour {
+  text-align: center;
+  margin-top: 10px;
+  background: url('./images/hourImage.png') center center no-repeat no-repeat;
+  background-size: cover;
+  min-width: 143px;
+  padding: 5px 10px 5px 10px;
+  width: fit-content;
+  margin: 5px auto;
+  justify-items: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 23px;
+  font-weight: 900;
+  display: flex;
+  border-radius: 40px;
+}
+
+.card_effect {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 23px;
+}
+
+.divider {
+  color: #B28C1D;
+}
+
+
+.lightCard {
+  height: 100%;
+}
+
+
+.lightCard .card_get {
+  min-height: auto;
+  padding: 0px;
+}
+
+/* 
+@media (min-width: 360px) and (max-width: 400px) {
+  .page_body {
+    padding: 10px;
+  }
+
+  .full_cards>.card_item {
+    padding: 5px;
+    max-width: 206px;
+  }
+
+  .card_list {
+    margin-top: 10px;
+    gap: 10px;
+  }
+
+  .card_points {
+    margin-top: 10px;
+  }
+
+  .card_get {
+    margin-top: 10px;
+    padding: 0;
+    line-height: 0%;
+    min-height: auto;
+  }
+
+  .card_record {
+    font-size: 11px;
+    line-height: 22px;
+    padding: 10px;
+  }
+
+
+  .card_points {
+    font-size: 12px;
+  }
+
+  .card_get {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .card_moneyCount {
+    font-size: 20px;
+  }
+
+  .card_rewardImage {
+    width: 37px;
+    height: 37px;
+  }
+
+  .card_plus img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .card_passive {
+    font-size: 10px;
+  }
+
+  .card_hour {
+    font-size: 10px;
+  }
+
+  .card_hourImage {
+    width: 20px;
+    height: 20px;
+  }
+
+  .card_effect {
+    font-size: 10px;
+  }
+
+  .lightCard {
+    font-size: 22px;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .lightCard>.card_record,
+  .lightCard>.card_record>.card_points {
+    font-size: 22px;
+
+  }
+} */

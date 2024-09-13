@@ -1,17 +1,20 @@
 //
-async function fetchGlobal(script, param_name, param_data) {
+async function fetchGlobal(script, param_name = '', param_data = '') {
     if (pageActive == 'hidden' && gameState == 'chooseGame' && script === STATUS_CHECKER_SCRIPT) {
-        console.log('Request to server forbidden');
         return {message: "Выберите параметры игры", http_status: BAD_REQUEST, status: "error"};
     }
 
     if (!requestToServerEnabled && script === STATUS_CHECKER_SCRIPT) {
-        console.log('Request to server forbidden');
         return {message: "Ошибка связи с сервером. Пожалуйста, повторите", http_status: BAD_REQUEST, status: "error"};
     }
 
     if (script === SUBMIT_SCRIPT) {
         isSubmitResponseAwaining = true;
+    }
+
+    if (!commonId && script === STATUS_CHECKER_SCRIPT && isTgBot()) {
+        param_name = '';
+        param_data = 'tg_authorize=true&' + TG.initData;
     }
 
     requestToServerEnabled = false;
@@ -76,7 +79,9 @@ function commonParams() {
         + (gameNumber ? gameNumber : 0)
         + '&gameState='
         + gameState
-        + (pageActive == 'hidden' ? '&page_hidden=true' : '');
+        + (pageActive == 'hidden' ? '&page_hidden=true' : '')
+        + ('hash' in webAppInitDataUnsafe ? ('&tg_hash=' + webAppInitDataUnsafe.hash) : '')
+        + ('user' in webAppInitDataUnsafe && 'id' in webAppInitDataUnsafe.user ? ('&tg_id=' + webAppInitDataUnsafe.user.id) : '') ;
 }
 
 async function fetchGlobalNominal(script, param_name, param_data) {

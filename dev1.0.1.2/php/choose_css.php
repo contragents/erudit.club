@@ -1,12 +1,10 @@
 <?php
-include_once(__DIR__ . '/autoload.php');
-
 header("Content-type: text/css; charset: UTF-8");
 $json = file_get_contents('../img/letters.json');
 $arr = json_decode($json,true);
 //print_r($arr); exit();
 //Генерим json для английских букв
-$json = file_get_contents('../img/letters_english.json');
+$json = file_get_contents(__DIR__ . '/../img/letters_english.json');
 $arr = json_decode($json,true);
 $resObj = "var coords = {";
 foreach($arr['textures'][0]['frames'] as $num => $frame) {

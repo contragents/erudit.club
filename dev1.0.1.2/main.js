@@ -1,30 +1,34 @@
 /*<?php
-preg_match('/((scrabble|yandex|dev)(\d\.\d\.\d\.\d))/', __DIR__, $matches);
-$dir=$matches[1];
+preg_match('/((scrabble|release|yandex|dev)(\d\.\d\.\d\.\d))/', __DIR__, $matches);
+$dir = $matches[1];
+$gameMode = $matches[2];
 //Определяем каталог версии разработки
 ?>*/
 //
-var UIScene = new Phaser.Class({
 
+//<?php include('tg.js')?>
+
+var UIScene = new Phaser.Class({
+   
     Extends: Phaser.Scene,
 
     initialize:
-    //<?php include('initializeFunction.js')?>+
+    //<?php include('initializeFunction.js')?>
     ,
 
-    preload:
-    //<?php include('preloadFunction.js')?>+
+    preload: 
+    //<?php include('preloadFunction.js')?>
     ,
 
-    create:
+    create: 
     //<?php include('createFunction.js')?>
     ,
-
-    update :
+    
+    update : 
     //<?php include('updateFunction.js')?>
 });
 
-//<?php include('globalVars.js.php')?>+
+//<?php include('globalVars.js.php')?>
 
 //<?php include('config.js')?>
 
