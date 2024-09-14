@@ -677,7 +677,7 @@ class Game
             $message .= include($this->dir . '/tpl/ratingsTableRow.php');
 
             $recImgs = '';
-            $records = Prizes::playerCurrentRecords($user['ID'], $rating['playerName']);
+            $records = Prizes::playerCurrentRecords($user['ID']);
             $recordsShown = 0;
             foreach ($records as $record) {
                 // todo переделать на ViewHelper
@@ -1407,7 +1407,7 @@ class Game
                     $this->gameStatus['wordsAccepted'][$word] = $word;
                     //Добавили слово в список сыгранных слов
 
-                    $arr = Prizes::checkDayWordLenRecord($word);
+                    $arr = Prizes::checkDayWordLenRecord($word, $this->User);
                     foreach ($arr as $period => $value) {
                         $this->addToLog(
                             "устанавливает рекорд по длине слова за $period - <strong>$word</strong>",
@@ -1415,7 +1415,7 @@ class Game
                         );
                     }
 
-                    $arr = Prizes::checkDayWordPriceRecord($word, $price);
+                    $arr = Prizes::checkDayWordPriceRecord($word, $price, $this->User);
                     foreach ($arr as $period => $value) {
                         $this->addToLog(
                             "устанавливает рекорд по стоимости слова за $period - <strong>$word - $price</strong>",
@@ -1429,7 +1429,7 @@ class Game
             if ($ochkiZaHod == 0) {
                 $this->gameStatus['users'][$this->numUser]['lostTurns']++;
             } else {
-                $arr = Prizes::checkDayTurnPriceRecord($ochkiZaHod);
+                $arr = Prizes::checkDayTurnPriceRecord($ochkiZaHod, $this->User);
                 foreach ($arr as $period => $value) {
                     $this->addToLog(
                         "устанавливает рекорд по стоимости хода за $period - <strong>$ochkiZaHod</strong>",
@@ -1451,7 +1451,7 @@ class Game
                     $this->numUser
                 );
 
-                $arr = Prizes::checkDayGamePriceRecord($this->gameStatus['users'][$this->numUser]['score']);
+                $arr = Prizes::checkDayGamePriceRecord($this->gameStatus['users'][$this->numUser]['score'], $this->User);
                 foreach ($arr as $period => $value) {
                     $this->addToLog(
                         "устанавливает рекорд набранных очков в игре за $period - <strong>{$this->gameStatus['users'][$this->numUser]['score']}</strong>",

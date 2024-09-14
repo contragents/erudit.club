@@ -51,7 +51,7 @@ class Prizes
     private const GAMES_PLAYED_MONTHLY = 'erudit_games_played_monthly_';
     private const GAMES_PLAYED_YEARLY = 'erudit_games_played_yearly_';
 
-    public static function playerCurrentRecords($cookie = false, $playerName = false)
+    public static function playerCurrentRecords($cookie = false)
     {
         $cookie = $cookie ?: $_COOKIE['erudit_user_session_ID'];
         $allRecords = Cache::hgetall(self::ALL_RECORDS);
@@ -329,7 +329,7 @@ class Prizes
 
     public static function checkDayGamePriceRecord(
         $price,
-        $cookie = false
+        $cookie
     ) {
         $todayRecord = Cache::get(self::GAME_PRICE_DAILY . strtotime('today'));
 
@@ -423,7 +423,7 @@ class Prizes
     public
     static function checkDayTurnPriceRecord(
         $price,
-        $cookie = false
+        $cookie
     ) {
         $todayRecord = Cache::get(self::TURN_PRICE_DAILY . strtotime('today'));
 
@@ -518,7 +518,7 @@ class Prizes
     static function checkDayWordPriceRecord(
         $word,
         $price,
-        $cookie = false
+        $cookie
     ) {
         $todayRecord = Cache::get(self::WORD_PRICE_DAILY . strtotime('today'));
 
@@ -620,7 +620,7 @@ class Prizes
     public
     static function checkDayWordLenRecord(
         $word,
-        $cookie = false
+        $cookie
     ) {
         $wordLen = mb_strlen($word, 'UTF-8');
         $todayRecord = Cache::get(self::WORD_LEN_DAILY . strtotime('today'));

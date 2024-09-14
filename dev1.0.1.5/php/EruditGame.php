@@ -88,7 +88,7 @@ class Game extends \Game
             $message .= include(__DIR__ . '/tpl/ratingsTableRow.php');
 
             $recImgs = '';
-            $records = Prizes::playerCurrentRecords($user['ID'], $rating['playerName']);
+            $records = Prizes::playerCurrentRecords($user['ID']);
             $recordsShown = 0;
             foreach ($records as $record) {
                 $recImgs .= "<img 

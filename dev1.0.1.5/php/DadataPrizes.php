@@ -102,7 +102,7 @@ class Prizes
         'games_played-day' => 'Сыграно ПАРТИЙ - Рекорд Дня!',
     ];
 
-    public static function playerCurrentRecords($cookie = false, $playerName = false)
+    public static function playerCurrentRecords($cookie = false)
     {
         $cookie = $cookie ?: $_COOKIE['erudit_user_session_ID'];
         $allRecords = Cache::hgetall(self::ALL_RECORDS);
