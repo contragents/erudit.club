@@ -35,12 +35,22 @@ class CommonIdRatingModel extends BaseModel
         }
     }
 
-    public static function getRating($commonId, string $gameName = BaseModel::ERUDIT): int
+    public static function getRating(int $commonId, string $gameName = BaseModel::ERUDIT): int
     {
         return (int)DB::queryValue(
             ORM::select([self::RATING_FIELD_PREFIX . $gameName], self::TABLE_NAME)
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
         );
+    }
+
+    public static function getTopByRating(int $rating, string $gameName = BaseModel::ERUDIT): int
+    {
+        $topQuery = ORM::select(
+            ['case when sum(num) IS NULL THEN 1 ELSE sum(num) + 1 END as top'],
+            "(select 1 as num from " . self::TABLE_NAME . " where rating_" . $gameName . " > $rating group by id, rating_" . $gameName . ") dd"
+        );
+
+        return (int)DB::queryValue($topQuery);
     }
 
 }

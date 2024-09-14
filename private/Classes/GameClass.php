@@ -18,7 +18,8 @@ class Game
     public static $configStatic;
     public $serverName;
     public $config;
-    public $User;
+    public $User; // user cookie
+    public $commonId; // user verified commonId
     public $currentGame;
     public $currentGameUsers = false;
     protected $gamePlayersWaiting = false; // Количество игроков, ожидающих начала игры
@@ -122,6 +123,9 @@ class Game
         T::$lang = $_GET['lang'] ?? T::RU_LANG;
 
         $this->User = $this->validateCookie($_COOKIE['erudit_user_session_ID']);
+
+        $this->commonId = Tg::$commonId // авторизован через Телеграм или...
+            ?? PlayerModel::getPlayerID($this->User, true);
 
         // Если не удалось дождаться лока по текущему игроку, то посылаем ошибку и выходим
         if(!Cache::waitLock($this->User, true)) {
@@ -484,8 +488,34 @@ class Game
     {
         $message = [];
 
-        $message['common_id'] = $this->gameStatus['users'][$this->numUser]['common_id']
-            ?? PlayerModel::getPlayerID($this->User, false);
+        /*1.3. Рейтинг, Место в рейтинге
+
+        Имеются сейчас в базе, но в кабинет не передается. Добавим позже.
+        Нужно отобразить любой рейтинг, любое место.
+        Обработку ответа сервера потом сделаем. - добавить в ответе сервера при вызове профиля
+
+        1.4. Баланс, Рейтинг по монетам - пока нет в базе,
+        предусмотреть поля для вывода данных из базы - добавить в ответ сервера рандомные фейковые данные
+
+        3 Описание блока "Рефералы"
+        Пока в разработке, фразу об этом включаем.
+        Предусмотреть отражение множества строк по кол-ву фактических рефералов текущего пользователя,
+        одна строка = один реферал с его именем и бонусом.
+        - выводим массив фейковых рефов (3 штуки)
+        */
+        /*ini_set("display_errors", 1);
+        error_reporting(E_ALL);*/
+        $message['summary'] = [];
+        $message['summary']['rating'] = CommonIdRatingModel::getRating($this->commonId);
+        $message['summary']['top'] = CommonIdRatingModel::getTopByRating($message['summary']['rating']);
+        $message['summary']['SUDOKU_BALANCE'] = 100500;
+        $message['summary']['SUDOKU_TOP'] = 365;
+
+        $message['refs'] = [['Peter Pervyy', 10], ['Nickolay Vtoroy', 10], ['Aleksey Tretiy', 10]];
+
+        $message['common_id'] = $this->commonId;
+        // нахуй
+        // $this->gameStatus['users'][$this->numUser]['common_id'] ?? PlayerModel::getPlayerID($this->User, false);
 
         $userData = UserModel::getOne($message['common_id']);
 
