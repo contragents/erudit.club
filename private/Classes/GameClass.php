@@ -626,7 +626,7 @@ class Game
             return json_encode(
                 [
                     'result' => 'error_update ' . $oldCommonID . '->' . $commonID,
-                    'message' => 'Ошибка привязки - аккаунты уже связаны'
+                    'message' => 'Аккаунты уже связаны'
                 ]
             );
         }
@@ -1953,9 +1953,12 @@ class Game
                 $this->gameStatus['users'][$num]['inactiveTurn'] = 1000;
                 //Сделали невозможным значение терна инактив
 
-                $userRating = $this->getRatings($user['ID']); // todo брать рейтинг из common_id_rating
-                $this->gameStatus['users'][$num]['rating'] = $userRating ? $userRating[0]['rating'] : self::NEW_PLAYER;
+
                 $this->gameStatus['users'][$num]['common_id'] = PlayerModel::getPlayerID($user['ID'], true);
+                if (!($this->gameStatus['users'][$num]['rating'] = CommonIdRatingModel::getRating($this->gameStatus['users'][$num]['common_id']))) {
+                    $userRating = $this->getRatings($user['ID']);
+                    $this->gameStatus['users'][$num]['rating'] = $userRating ? $userRating[0]['rating'] : self::NEW_PLAYER;
+                }
                 //Прописали рейтинг и common_id игрока в статусе игры - только для games_statistic.php
             }
 
