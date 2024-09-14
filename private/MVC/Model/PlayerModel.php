@@ -400,34 +400,23 @@ class PlayerModel extends BaseModel
         }
     }
 
-    private static function cacheDeltaRating(string $cookie = null, $userID, array $deltaArr)
+    private static function cacheDeltaRating(string $commonId, array $deltaArr)
     {
-        if ($cookie) {
-            Cache::setex(self::DELTA_RATING_KEY_PREFIX . $cookie, self::RATING_CACHE_TTL, $deltaArr);
-        }
-
-
-        if (($userID ?? 0 > 0)) {
-            Cache::setex(self::DELTA_RATING_KEY_PREFIX . $userID, self::RATING_CACHE_TTL, $deltaArr);
-        }
+        Cache::setex(self::DELTA_RATING_KEY_PREFIX . $commonId, self::RATING_CACHE_TTL, $deltaArr);
     }
 
-    public static function getDeltaRating($key1, $key2)
+    /**
+     * Получает какойто массив изменений рейтинга их кеша или false
+     * @param $commonId
+     * @return array|false
+     */
+    public static function getDeltaRating($commonId)
     {
-        if ($key1) {
-            $key = Game::hash_str_2_int($key1);
-            if ($delta = Cache::get(PlayerModel::DELTA_RATING_KEY_PREFIX . $key)) {
-                return $delta;
-            }
-        }
-
-        $key = $key2;
-
-        if ($delta = Cache::get(PlayerModel::DELTA_RATING_KEY_PREFIX . $key)) {
+        if ($delta = Cache::get(PlayerModel::DELTA_RATING_KEY_PREFIX . $commonId)) {
             return $delta;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public
@@ -439,21 +428,16 @@ class PlayerModel extends BaseModel
             [24 * 60 * 60, 2300],
             true,
             false,
-            ['user_id', 'cookie']
+            ['common_id']
         );
 
         foreach ($notPlayedPlayers as $player) {
             $ratingDecreaseQuery = ORM::update(self::TABLE_NAME)
                 . ORM::set(['field' => 'rating', 'value' => 'rating-1', 'raw' => true])
-                . ORM::where('cookie', '=', $player['cookie'])
-                . (
-                    $player['user_id'] ?? 0 > 0
-                        ? ORM::orWhere('user_id', '=', $player['user_id'], true)
-                        : ''
-                );
+                . ORM::where('common_id', '=', $player['common_id'], true);
 
             if (DB::queryInsert($ratingDecreaseQuery)) {
-                self::cacheDeltaRating($player['cookie'], $player['user_id'], ['delta' => -1,]);
+                self::cacheDeltaRating($player['common_id'], ['delta' => -1,]);
             }
         }
     }

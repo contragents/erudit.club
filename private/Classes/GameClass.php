@@ -634,19 +634,17 @@ class Game
 
     public function playersInfo()
     {
-        $ratings = $this->getRatings();
+        $ratings = $this->getRatings(); // todo рейтинги получать через модель CommonIdRating
         $message = include($this->dir . '/tpl/ratingsTableHeader.php'); // todo переделать include на классы - а то не работает так
         if (!isset($this->gameStatus['users'])) {
             return $this->makeResponse(['message' => "Игра не начата"]);
         }
 
-        $commonId = PlayerModel::getCommonID($this->User);
-        if ($commonId) {
-            $thisPlayerHasBanned = BanModel::hasBanned($commonId);
-        }
+        $commonId = $this->gameStatus['users'][$this->numUser]['common_id'];
+        $thisPlayerHasBanned = BanModel::hasBanned($commonId);
 
         foreach ($this->gameStatus['users'] as $num => $user) {
-            $deltaRating = PlayerModel::getDeltaRating($user['userID'] ?? false, $user['ID']);
+            $deltaRating = PlayerModel::getDeltaRating($user['common_id']);
 
             $ratingFound = false;
             foreach ($ratings as $rating) {

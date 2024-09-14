@@ -288,25 +288,7 @@ class RatingService
             'game_number' => $Game['gameNumber']
         ];
 
-
-
-        Cache::setex(PlayerModel::DELTA_RATING_KEY_PREFIX . $player['cookie'], PlayerModel::RATING_CACHE_TTL, $deltaArr);
-        Cache::setex(PlayerModel::DELTA_RATING_KEY_PREFIX . $player['found_cookie'], PlayerModel::RATING_CACHE_TTL, $deltaArr);
         Cache::setex(PlayerModel::DELTA_RATING_KEY_PREFIX . $player['common_id'], PlayerModel::RATING_CACHE_TTL, $deltaArr);
-
-
-        if (isset($player['userID']) && $player['userID'] > 0) {
-            Cache::setex(
-                PlayerModel::DELTA_RATING_KEY_PREFIX . $player['cookie'] . $player['userID'],
-                PlayerModel::RATING_CACHE_TTL,
-                $deltaArr
-            );
-            Cache::setex(
-                PlayerModel::DELTA_RATING_KEY_PREFIX . $player['found_cookie'] . $player['userID'],
-                PlayerModel::RATING_CACHE_TTL,
-                $deltaArr
-            );
-        }
     }
 
     protected static function deleteRatingsFromCache($player)
@@ -320,6 +302,4 @@ class RatingService
             Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['found_cookie'] . $player['userID']);
         }
     }
-
-
 }
