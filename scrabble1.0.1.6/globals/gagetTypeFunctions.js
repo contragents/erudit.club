@@ -77,4 +77,101 @@ function isIOSDevice() {
     return false;
 }
 
+// CLUB-383 Верстка профиля. пихнуть куданибудь
+// для копирования из input в буфер
+function copyToClipboard(selector) {
+    const element = document.querySelector(selector);
+    element.select();
+    element.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+}
+
+(function profileModal() {
+    // on modal loaded
+    // document.addEventListener("DOMContentLoaded", onProfileModalLoaded);
+
+    const selectors = {
+        profileTabsId: 'profile-tabs',
+        tabLink: '#profile-tabs a',
+        tabContent: '.tab-content',
+        tabContentWrap: '.tab-content-wrap',
+        tabPane: '.tab-pane',
+        copyBtn: '.js-btn-copy',
+    };
+
+    const setTabContentOffset = (tabsSelector) => {
+        const targetId = document
+            .querySelectorAll(`${selectors.tabLink}.active`)[0]
+            .getAttribute('href');
+        const tabContent = document.querySelector(targetId).closest(selectors.tabContent);
+        const tabContentWrap = tabContent.closest(selectors.tabContentWrap);
+        const tabPane = document.querySelector(targetId);
+        tabContentWrap.style.height = tabContent.getBoundingClientRect().height + 'px';
+
+        const index = [...tabContent.querySelectorAll(selectors.tabPane)].findIndex(
+            (item) => {
+                return item === tabPane;
+            },
+        );
+        const width = tabContentWrap.getBoundingClientRect().width;
+
+        const translateValue = index * -width;
+
+        tabContent.style.cssText = `transform: translate(${translateValue}px, 0);`;
+    };
+
+    document.addEventListener('click', (event) => {
+        if (event.target && event.target.closest(selectors.tabLink)) {
+            event.preventDefault();
+            document
+                .querySelectorAll(selectors.tabLink)
+                .forEach((item) => item.classList.remove('active'));
+            event.target.classList.add('active');
+            const targetId = event.target.getAttribute('href');
+
+            setTabContentOffset(`#${selectors.profileTabsId}`);
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        if (event.target && event.target.closest(selectors.copyBtn)) {
+            event.preventDefault();
+            copyToClipboard(event.target.closest(selectors.copyBtn).getAttribute('href'));
+        }
+    });
+
+    const onProfileModalLoaded = () => {
+        document
+            .querySelectorAll(selectors.tabPane)
+            .forEach(
+                (item) =>
+                    (item.style.width =
+                        item.closest(selectors.tabContentWrap).getBoundingClientRect()
+                            .width + 'px'),
+            );
+
+        if (!window.profileTabslistenerAttached) {
+            window.addEventListener('resize', (event) => {
+                document.querySelectorAll(selectors.tabPane).forEach((item) => {
+                    const width =
+                        item.closest(selectors.tabContentWrap).getBoundingClientRect()
+                            .width + 'px';
+                    item.style.width = width;
+                });
+                setTabContentOffset(`#${selectors.profileTabsId}`);
+            });
+            window.profileTabslistenerAttached = true;
+        }
+
+        window.dispatchEvent(new Event('resize'));
+    };
+
+    window.profileModal = { onProfileModalLoaded };
+
+    // return {
+    //     onProfileModalLoaded
+    // }
+})();
+
+
 

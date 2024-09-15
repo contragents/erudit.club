@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Эрудит.club - онлайн сообщество любителей игры</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" type="text/css" href="static/bootstrap_4.5.2/bootstrap.min.css">
+    <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />-->
+    <link rel="stylesheet" type="text/css" href="css/choose_css_new2.css" />
+    <link rel="stylesheet" type="text/css" href="css/knopki.css" />
+    <link rel="stylesheet" type="text/css" href="css/tg_app_tuning.css" />
+
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Эрудит.club - онлайн сообщество любителей игры" />
+    <meta property="og:site_name" content="Эрудит.Club" />
+    <meta property="og:url" content="https://xn--d1aiwkc2d.club/" />
+    <meta property="og:description"
+        content="Эрудит — настольная игра со словами, в которую могут играть от 2 до 4 человек, выкладывая слова из имеющихся у них букв в поле размером 15x15 квадратов." />
+    <meta property="og:image" content="images/hor_640_360.png" />
+
+    <meta name="description"
+        content="Эрудит — настольная игра со словами, в которую могут играть от 2 до 4 человек, выкладывая слова из имеющихся у них букв в поле размером 15x15 квадратов" />
+
+    <!-- TG web -->
+    <!--<script async="" src="js/tag.js"></script>-->
+    <!-- TG web -->
+    <script src="public/js/telegram-web-app.js"></script>
+
+    <script src="static/phaser_3/phaser.min.js"></script>
+
+    <!-- JS dependencies -->
+    <script src="static/jquery_1.12.4/jquery.min.js"></script>
+    <!-- Bootstrap 4 dependency -->
+    <script src="static/popper_2.4.4/popper.min.js"></script>
+    <script src="static/bootstrap_4.5.2/bootstrap.min.js"></script>
+
+    <!-- bootbox code -->
+    <script src="static/bootbox_5.4.0/bootbox.min.js"></script>
+    <script src="static/bootbox_5.4.0/bootbox.locales.min.js"></script>
+
+    <script>
+
+
+
+        function copyToClipboard(selector) {
+            const element = document.querySelector(selector);
+            element.select();
+            element.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+        }
+
+
+        // 
+        const profileData = {
+            name: 'nameq', // responseArr.name ? responseArr.name : 'Nickname',
+            common_id: 4123123, // responseArr.common_id, // id игрока
+            imageUrl: 'https://placehold.co/120x120', // responseArr.img_title, // url картинки
+            imageTitle: '235234234', // responseArr.img_title, // альт картинки
+            rating: 41231, // рейтинг
+            placement: 22, // место в рейтинге
+            balance: 999, // баланс
+            ratingByCoins: 33, // рейтинг по монетам
+            tgWallet: '', // telegram wallet
+            bonusAccrual: 124512, // начисление бонусов
+            balanceSudoku: 124512, // баланс SUDOKU
+            referrals: [
+                // рефералы
+                ['Имя пользователя 1', 123],
+                ['Имя пользователя 2', 123],
+                ['Имя пользователя 3', 5345],
+                ['Имя пользователя 4', 474],
+                ['Имя пользователя 5', 123],
+                ['Имя пользователя 6', 5785],
+                ['Имя пользователя 7', 67078],
+                ['Имя пользователя 8', 123],
+                ['Имя пользователя 9', 74],
+                ['Имя пользователя 10', 123],
+                ['Имя пользователя 11', 9],
+                ['Имя пользователя 12', 1623],
+                ['Имя пользователя 13', 54],
+                ['Имя пользователя 14', 422],
+                ['Имя пользователя 15', 59],
+                ['Имя пользователя 16', 5],
+            ],
+        };
+
+        profileData.cookie = '123123123';
+        profileData.MAX_FILE_SIZE = 12312312323;
+
+        // делаем верстку из массива referrals
+        let referralList = '';
+        if ('referrals' in profileData && profileData.referrals.length > 0) {
+            referralList = profileData.referrals
+                .map(
+                    (ref) => `
+								<li class="box">
+									<span class="name d-block">${ref[0]}</span>
+									<div class="pill-wrap"><span class="pill">${ref[1]}</span></div>
+								</li>
+						`,
+                )
+                .join('');
+
+            referralList = `
+								<ul class="referral-list">
+									${referralList}
+								</ul>
+						`;
+        }
+
+
+        function getProfileModal(profileData) {
+            return fetch('/profile-modal-tpl.html')
+                .then(response => response.text())
+                .then(template => {
+                    // Заменяем маркеры в шаблоне реальными данными
+                    let message = template
+                        .replace('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
+                        .replace('{{cookie}}', profileData.cookie)
+                        .replace('{{common_id}}', profileData.common_id)
+                        .replace('{{name}}', profileData.name)
+                        .replace('{{imageUrl}}', profileData.imageUrl)
+                        .replace('{{imageTitle}}', profileData.imageTitle)
+                        .replace('{{rating}}', profileData.rating)
+                        .replace('{{placement}}', profileData.placement)
+                        .replace('{{balance}}', profileData.balance)
+                        .replace('{{ratingByCoins}}', profileData.ratingByCoins)
+                        .replace('{{tgWallet}}', profileData.tgWallet)
+                        .replace('{{bonusAccrual}}', profileData.bonusAccrual)
+                        .replace('{{bonusAccrual}}', profileData.bonusAccrual)
+                        .replace('{{balanceSudoku}}', profileData.balanceSudoku)
+                        .replace('{{referralList}}', referralList);
+
+                    return message;
+                })
+                .catch(error => console.error('Ошибка загрузки profile-modal:', error));
+        }
+
+        document.addEventListener("DOMContentLoaded", (e) => {
+
+            getProfileModal(profileData).then(html => {
+                document.getElementById('test-tpl').innerHTML = html;
+                profileModal.onProfileModalLoaded();
+                // document.addEventListener("DOMContentLoaded", profileModal.onProfileModalLoaded);
+            });
+        });
+
+
+
+        (function profileModal() {
+
+            // on modal loaded
+            // document.addEventListener("DOMContentLoaded", onProfileModalLoaded);
+
+            const selectors = {
+                profileTabsId: 'profile-tabs',
+                tabLink: '#profile-tabs a',
+                tabContent: '.tab-content',
+                tabContentWrap: '.tab-content-wrap',
+                tabPane: '.tab-pane',
+                copyBtn: '.js-btn-copy'
+            };
+
+            const setTabContentOffset = (tabsSelector) => {
+
+                const targetId = document.querySelectorAll(`${selectors.tabLink}.active`)[0].getAttribute('href');
+                const tabContent = document.querySelector(targetId).closest(selectors.tabContent);
+                const tabContentWrap = tabContent.closest(selectors.tabContentWrap);
+                const tabPane = document.querySelector(targetId);
+                tabContentWrap.style.height = tabContent.getBoundingClientRect().height + 'px';
+
+                const index = [...tabContent.querySelectorAll(selectors.tabPane)].findIndex(item => {
+                    return item === tabPane
+                });
+                const width = tabContentWrap.getBoundingClientRect().width;
+
+                const translateValue = index * -width;
+
+                tabContent.style.cssText = `transform: translate(${translateValue}px, 0);`;
+            }
+
+
+
+
+
+            document.addEventListener("click", event => {
+                if (event.target && event.target.closest(selectors.tabLink)) {
+                    event.preventDefault();
+                    document.querySelectorAll(selectors.tabLink).forEach(item => item.classList.remove('active'));
+                    event.target.classList.add('active');
+                    const targetId = event.target.getAttribute('href');
+
+                    setTabContentOffset(`#${selectors.profileTabsId}`);
+                }
+            });
+
+
+            document.addEventListener('click', event => {
+                if (event.target && event.target.closest(selectors.copyBtn)) {
+                    event.preventDefault();
+                    copyToClipboard(event.target.closest(selectors.copyBtn).getAttribute('href'));
+                }
+            });
+
+            const onProfileModalLoaded = () => {
+                document.querySelectorAll(selectors.tabPane).forEach(item => item.style.width = item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px');
+
+                if (!window.profileTabslistenerAttached) {
+                    window.addEventListener('resize', (event) => {
+                        document.querySelectorAll(selectors.tabPane).forEach(item => {
+                            const width = item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px';
+                            item.style.width = width;
+                        });
+                        setTabContentOffset(`#${selectors.profileTabsId}`)
+                    });
+                    window.profileTabslistenerAttached = true;
+                }
+
+                window.dispatchEvent(new Event('resize'));
+            }
+
+
+            window.profileModal = { onProfileModalLoaded };
+
+            // return {
+            //     onProfileModalLoaded
+            // }
+
+        })();
+
+    </script>
+
+
+     <script type="text/javascript" src="js/main.js"></script>
+</head>
+
+<body>
+    <div>
+        <!-- <div id="phaser-example"></div> -->
+        <script>
+            var loader = loader || {};
+            loader.importJS = function (uri) {
+                let script = document.createElement('script');
+                let head = document.getElementsByTagName('head')[0];
+                script.type = 'text/javascript';
+                script.src = uri;
+                head.appendChild(script);
+            };
+
+            //loader.importJS('/yandex1.0.1.1/main.js?ver=' + Date.now());
+        </script>
+        <!-- <div id="ss" style="display: none"></div> -->
+
+
+
+        <div class="modal-dialog modal-settings modal-profile">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <h5 class="modal-title">Начните игру</h5> -->
+                </div>
+                <div class="modal-body">
+
+                    <div class="bootbox-body">
+
+                        <div id="test-tpl"></div>
+                    </div>
+
+
+                </div>
+                <!-- end .modal-body -->
+
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm ml-auto mr-0">
+                        Назад</button>
+                    <!-- <button type="button" class="btn btn-outline-success">
+				                                                &nbsp;Инструкция&nbsp;</button> -->
+                </div>
+            </div>
+            <!-- end .modal-content -->
+        </div>
+
+    </div>
+</body>
+
+</html>
