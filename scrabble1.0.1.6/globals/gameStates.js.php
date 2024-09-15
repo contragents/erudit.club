@@ -1166,6 +1166,12 @@ function userScores(data) {
                     players.timerBlock.svgObject.setAlpha(1);
 
                     isUserBlockActive = true;
+
+                    noNetworkImg.setScale(youBlock.height / 232 / 4);
+                    noNetworkImg.x = youBlock.x + youBlock.width / 2 + noNetworkImg.displayWidth / 2;
+                    noNetworkImg.y = youBlock.y;
+                    noNetworkImg.setDepth(10000);
+                    noNetworkImg.visible = false;
                 }
 
                 displayScoreGlobal(data['score_arr'][k], 'youBlock', true);

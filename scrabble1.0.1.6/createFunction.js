@@ -5,12 +5,8 @@ function () {
 
     var frames = atlasTexture.getFrameNames();
 
+
     noNetworkImg = this.add.image(200, 200, 'no_network');
-    noNetworkImg.setScale(2);
-    noNetworkImg.x = game.config.width / 2;
-    noNetworkImg.y = game.config.height / 2;
-    noNetworkImg.setDepth(10000);
-    noNetworkImg.visible = false;
 
     var back = this.add.sprite(gameWidth / 2, gameHeight / 2, 'back');
     back.displayWidth = this.sys.canvas.width;

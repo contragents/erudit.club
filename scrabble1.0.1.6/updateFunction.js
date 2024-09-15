@@ -2,12 +2,16 @@
 function (time, delta) {
 
     if (requestSended && ((new Date()).getTime() - requestTimestamp > normalRequestTimeout)) {
+        if (noNetworkImg !== false) {
         noNetworkImg.visible = true;
         noNetworkImg.alpha = ((new Date()).getTime() - requestTimestamp) < (normalRequestTimeout * 2)
             ? ((new Date()).getTime() - requestTimestamp - normalRequestTimeout) / 1000
             : 1;
+        }
     } else {
-        noNetworkImg.visible = false;
+        if (noNetworkImg !== false) {
+            noNetworkImg.visible = false;
+        }
     }
 
     if (gameState == 'chooseGame' && (queryNumber > 1))

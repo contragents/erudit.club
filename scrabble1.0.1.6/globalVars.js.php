@@ -81,6 +81,8 @@ var timerState = {
     digit1: 0
 }
 
+var dialogTurn = false;
+
 var turnAutocloseDialog = false;
 var timeToCloseDilog = false;
 var automaticDialogClosed = false;
@@ -182,7 +184,7 @@ if (windowInnerWidth > windowInnerHeight) {
     var lotokY = fishkiXY.y + 20 * buttonHeightKoef * 2;
 
     if (buttonHeightKoef == 1) {
-        var fishkaScale = 1.2;
+        fishkaScale = 1.2;
         var lotokCellStep = 40 * 2;
         var lotokCapacityX = 9;
     } else {
