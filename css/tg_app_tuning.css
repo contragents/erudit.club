@@ -1,5 +1,7 @@
 .modal-body {
-    max-height: calc(var(--tg-viewport-height) - 250px);
+    /*max-height: calc(var(--tg-viewport-height) - 250px);*/
+    height: 70vh; /* Fallback for browsers that do not support Custom Properties */
+    height: calc(var(--vh, 1vh) * 70);
     overflow-y: scroll;
 }
 

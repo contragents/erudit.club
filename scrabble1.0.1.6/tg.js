@@ -29,14 +29,6 @@ if (initParams) {
 
 sessionStorageSet('initParams', initParams);
 
-function sleep(milliseconds) {
-    var t = (new Date()).getTime();
-    var i = 0;
-    while (((new Date()).getTime() - t) < milliseconds) {
-        i++;
-    }
-}
-
 if (window.Telegram == undefined) {
     var webAppInitDataUnsafe = {};
     var TG = {};
@@ -74,3 +66,15 @@ if (window.Telegram == undefined) {
 function isTgBot() {
     return ('user' in webAppInitDataUnsafe) && ('id' in webAppInitDataUnsafe.user);
 }
+
+// First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+let vh = window.innerHeight * 0.01;
+// Then we set the value in the --vh custom property to the root of the document
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+// We listen to the resize event
+window.addEventListener('resize', () => {
+    // We execute the same script as before
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+});
