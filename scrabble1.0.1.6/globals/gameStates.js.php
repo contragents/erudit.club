@@ -384,8 +384,8 @@ var gameStates = {
                                         imageTitle: responseArr.img_title, // альт картинки
                                         rating: responseArr.summary.rating ? responseArr.summary.rating : 0, // рейтинг
                                         placement: responseArr.summary.top, // место в рейтинге
-                                        balance: 999, // баланс
-                                        ratingByCoins: 33, // рейтинг по монетам
+                                        balance: responseArr.summary.SUDOKU_BALANCE, // баланс
+                                        ratingByCoins: responseArr.summary.SUDOKU_TOP, // рейтинг по монетам
                                         tgWallet: '', // telegram wallet
                                         bonusAccrual: 124512, // начисление бонусов
                                         balanceSudoku: responseArr.summary.SUDOKU_BALANCE, // баланс SUDOKU
@@ -426,21 +426,21 @@ var gameStates = {
                                             .then((template) => {
                                                 // Заменяем маркеры в шаблоне реальными данными
                                                 let message = template
-                                                    .replace('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
-                                                    .replace('{{cookie}}', profileData.cookie)
-                                                    .replace('{{common_id}}', profileData.common_id)
-                                                    .replace('{{name}}', profileData.name)
-                                                    .replace('{{imageUrl}}', profileData.imageUrl)
-                                                    .replace('{{imageTitle}}', profileData.imageTitle)
-                                                    .replace('{{rating}}', profileData.rating)
-                                                    .replace('{{placement}}', profileData.placement)
-                                                    .replace('{{balance}}', profileData.balance)
-                                                    .replace('{{ratingByCoins}}', profileData.ratingByCoins)
-                                                    .replace('{{tgWallet}}', profileData.tgWallet)
-                                                    .replace('{{bonusAccrual}}', profileData.bonusAccrual)
-                                                    .replace('{{bonusAccrual}}', profileData.bonusAccrual)
-                                                    .replace('{{balanceSudoku}}', profileData.balanceSudoku)
-                                                    .replace('{{referralList}}', referralList);
+                                                    .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
+                                                    .replaceAll('{{cookie}}', profileData.cookie)
+                                                    .replaceAll('{{common_id}}', profileData.common_id)
+                                                    .replaceAll('{{name}}', profileData.name)
+                                                    .replaceAll('{{imageUrl}}', profileData.imageUrl)
+                                                    .replaceAll('{{imageTitle}}', profileData.imageTitle)
+                                                    .replaceAll('{{rating}}', profileData.rating)
+                                                    .replaceAll('{{placement}}', profileData.placement)
+                                                    .replaceAll('{{balance}}', profileData.balance)
+                                                    .replaceAll('{{ratingByCoins}}', profileData.ratingByCoins)
+                                                    .replaceAll('{{tgWallet}}', profileData.tgWallet)
+                                                    .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
+                                                    .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
+                                                    .replaceAll('{{balanceSudoku}}', profileData.balanceSudoku)
+                                                    .replaceAll('{{referralList}}', referralList);
 
                                                 return message;
                                             })

@@ -1908,7 +1908,7 @@ var gameStates = {
 										rating: responseArr.summary.rating ? responseArr.summary.rating : 0, // рейтинг
 										placement: responseArr.summary.top, // место в рейтинге
 										balance: 999, // баланс
-										ratingByCoins: 33, // рейтинг по монетам
+										ratingByCoins: responseArr.summary.SUDOKU_TOP, // рейтинг по монетам
 										tgWallet: '', // telegram wallet
 										bonusAccrual: 124512, // начисление бонусов
 										balanceSudoku: responseArr.summary.SUDOKU_BALANCE, // баланс SUDOKU
@@ -1953,39 +1953,39 @@ var gameStates = {
 											.then((template) => {
 												// Заменяем маркеры в шаблоне реальными данными
 												let message = template
-													.replace(
+													.replaceAll(
 														'{{MAX_FILE_SIZE}}',
 														profileData.MAX_FILE_SIZE,
 													)
-													.replace('{{cookie}}', profileData.cookie)
-													.replace('{{common_id}}', profileData.common_id)
-													.replace('{{name}}', profileData.name)
-													.replace('{{imageUrl}}', profileData.imageUrl)
-													.replace(
+													.replaceAll('{{cookie}}', profileData.cookie)
+													.replaceAll('{{common_id}}', profileData.common_id)
+													.replaceAll('{{name}}', profileData.name)
+													.replaceAll('{{imageUrl}}', profileData.imageUrl)
+													.replaceAll(
 														'{{imageTitle}}',
 														profileData.imageTitle,
 													)
-													.replace('{{rating}}', profileData.rating)
-													.replace('{{placement}}', profileData.placement)
-													.replace('{{balance}}', profileData.balance)
-													.replace(
+													.replaceAll('{{rating}}', profileData.rating)
+													.replaceAll('{{placement}}', profileData.placement)
+													.replaceAll('{{balance}}', profileData.balance)
+													.replaceAll(
 														'{{ratingByCoins}}',
 														profileData.ratingByCoins,
 													)
-													.replace('{{tgWallet}}', profileData.tgWallet)
-													.replace(
+													.replaceAll('{{tgWallet}}', profileData.tgWallet)
+													.replaceAll(
 														'{{bonusAccrual}}',
 														profileData.bonusAccrual,
 													)
-													.replace(
+													.replaceAll(
 														'{{bonusAccrual}}',
 														profileData.bonusAccrual,
 													)
-													.replace(
+													.replaceAll(
 														'{{balanceSudoku}}',
 														profileData.balanceSudoku,
 													)
-													.replace('{{referralList}}', referralList);
+													.replaceAll('{{referralList}}', referralList);
 
 												return message;
 											})
@@ -3341,7 +3341,7 @@ function savePlayerAvatar(url, commonIdParam) {
             resp = JSON.parse(returndata);
 
             if (resp['result'] === 'saved') {
-                $('#playersAvatar').html('<img src="' + resp['url'] + '" width="100px" max-height = "100px"/>');
+                $('#playersAvatar').html('<img class="main-info-image" src="' + resp['url'] + '" alt="" />');
             }
 
             showCabinetActionResult(resp);
@@ -4768,13 +4768,18 @@ function copyToClipboard(selector) {
     // document.addEventListener("DOMContentLoaded", onProfileModalLoaded);
 
     const selectors = {
-        profileTabsId: 'profile-tabs',
-        tabLink: '#profile-tabs a',
-        tabContent: '.tab-content',
-        tabContentWrap: '.tab-content-wrap',
-        tabPane: '.tab-pane',
-        copyBtn: '.js-btn-copy',
-    };
+		profileTabsId: 'profile-tabs',
+		tabLink: '#profile-tabs a',
+		tabContent: '.tab-content',
+		tabContentWrap: '.tab-content-wrap',
+		tabPane: '.tab-pane',
+		copyBtn: '.js-btn-copy',
+		setNicknameBtn: '.js-btn-set-nickname',
+		setProfileImageBtn: '.js-btn-set-profile-image',
+		nicknameInput: '#player_name',
+		profileImageInput: '#player_avatar_file',
+		userIdInput: '#user_id',
+	};
 
     const setTabContentOffset = (tabsSelector) => {
         const targetId = document
@@ -4796,6 +4801,26 @@ function copyToClipboard(selector) {
 
         tabContent.style.cssText = `transform: translate(${translateValue}px, 0);`;
     };
+
+    document.addEventListener('click', (event) => {
+		if (event.target && event.target.closest(selectors.setNicknameBtn)) {
+			event.preventDefault();
+			const userId = document.querySelector(selectors.userIdInput).value;
+			const value = document.querySelector(selectors.nicknameInput).value;
+			savePlayerName(value, userId);
+			return false;
+		}
+	});
+
+	document.addEventListener('click', (event) => {
+		if (event.target && event.target.closest(selectors.setProfileImageBtn)) {
+			event.preventDefault();
+			const userId = document.querySelector(selectors.userIdInput).value;
+			const value = document.querySelector(selectors.profileImageInput).value;
+			savePlayerAvatar(value, userId);
+			return false;
+		}
+	});
 
     document.addEventListener('click', (event) => {
         if (event.target && event.target.closest(selectors.tabLink)) {

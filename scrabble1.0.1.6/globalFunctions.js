@@ -284,7 +284,8 @@ function savePlayerAvatar(url, commonIdParam) {
             resp = JSON.parse(returndata);
 
             if (resp['result'] === 'saved') {
-                $('#playersAvatar').html('<img src="' + resp['url'] + '" width="100px" max-height = "100px"/>');
+                //$('#playersAvatar').html('<img src="' + resp['url'] + '" width="100px" max-height = "100px"/>');
+                $('#playersAvatar').html('<img class="main-info-image" src="' + resp['url'] + '" alt="" />');
             }
 
             showCabinetActionResult(resp);

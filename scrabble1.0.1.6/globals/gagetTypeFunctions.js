@@ -78,6 +78,28 @@ function isIOSDevice() {
 }
 
 // CLUB-383 Верстка профиля. пихнуть куданибудь
+
+document.addEventListener('click', (event) => {
+    if (event.target && event.target.closest(selectors.setNicknameBtn)) {
+        event.preventDefault();
+        const userId = document.querySelector(selectors.userIdInput).value;
+        const value = document.querySelector(selectors.nicknameInput).value;
+        savePlayerName(value, userId);
+        return false;
+    }
+});
+
+document.addEventListener('click', (event) => {
+    if (event.target && event.target.closest(selectors.setProfileImageBtn)) {
+        event.preventDefault();
+        const userId = document.querySelector(selectors.userIdInput).value;
+        const value = document.querySelector(selectors.profileImageInput).value;
+        savePlayerAvatar(value, userId);
+        return false;
+    }
+});
+
+
 // для копирования из input в буфер
 function copyToClipboard(selector) {
     const element = document.querySelector(selector);
@@ -97,6 +119,11 @@ function copyToClipboard(selector) {
         tabContentWrap: '.tab-content-wrap',
         tabPane: '.tab-pane',
         copyBtn: '.js-btn-copy',
+        setNicknameBtn: '.js-btn-set-nickname',
+        setProfileImageBtn: '.js-btn-set-profile-image',
+        nicknameInput: '#player_name',
+        profileImageInput: '#player_avatar_file',
+        userIdInput: '#user_id',
     };
 
     const setTabContentOffset = (tabsSelector) => {
@@ -119,6 +146,26 @@ function copyToClipboard(selector) {
 
         tabContent.style.cssText = `transform: translate(${translateValue}px, 0);`;
     };
+
+    document.addEventListener('click', (event) => {
+        if (event.target && event.target.closest(selectors.setNicknameBtn)) {
+            event.preventDefault();
+            const userId = document.querySelector(selectors.userIdInput).value;
+            const value = document.querySelector(selectors.nicknameInput).value;
+            savePlayerName(value, userId);
+            return false;
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        if (event.target && event.target.closest(selectors.setProfileImageBtn)) {
+            event.preventDefault();
+            const userId = document.querySelector(selectors.userIdInput).value;
+            const value = document.querySelector(selectors.profileImageInput).value;
+            savePlayerAvatar(value, userId);
+            return false;
+        }
+    });
 
     document.addEventListener('click', (event) => {
         if (event.target && event.target.closest(selectors.tabLink)) {
