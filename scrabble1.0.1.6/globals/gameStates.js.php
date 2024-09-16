@@ -328,23 +328,8 @@ var gameStates = {
                         </div>
 			`;
 
-            const btnFAQClickHandler = () => {
-                dialog = bootbox
-                    .alert({
-                        message: instruction,
-                        locale: 'ru',
-                    })
-                    .off('shown.bs.modal');
+            window.modalData = { instruction };
 
-                return false;
-            };
-
-            document.addEventListener('click', (e) => {
-                if (e.target && e.target.matches('#btn-faq')) {
-                    e.preventDefault();
-                    btnFAQClickHandler();
-                }
-            });
             /* --------------------------------- END NEW -------------------------------- */
 
             // let formHead = '<h5>Параметры игры (будут учтены при подборе)</h5>';

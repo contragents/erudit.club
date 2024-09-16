@@ -220,5 +220,23 @@ function copyToClipboard(selector) {
     // }
 })();
 
+const btnFAQClickHandler = () => {
+    dialog = bootbox
+        .alert({
+            message: instruction,
+            locale: 'ru',
+        })
+        .off('shown.bs.modal');
+
+    return false;
+};
+
+document.addEventListener('click', (e) => {
+    if (e.target && e.target.matches('#btn-faq')) {
+        e.preventDefault();
+        btnFAQClickHandler();
+    }
+});
+
 
 
