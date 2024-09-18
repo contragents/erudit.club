@@ -16,6 +16,10 @@ class BaseController
         static::$Request = $request;
 
         $this->Action = $action . 'Action';
+
+        if (!empty(self::$Request['lang'])) {
+            T::$lang = self::$Request['lang'];
+        }
     }
 
     public static function isAjaxRequest(): bool

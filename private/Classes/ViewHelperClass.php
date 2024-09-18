@@ -59,6 +59,17 @@ class ViewHelper
         return "</$tag>";
     }
 
+    public static function paginationArr(int $curentPage, int $pageQuantity, string $baseUrl): array
+    {
+        $res = [];
+        for ($i = 1; $i <= $pageQuantity && $i <= self::MAX_PAGE_LINKS; $i++) {
+            $res[$i] = ['is_link' => $i != $curentPage, 'value' => $i != $curentPage ? "$baseUrl&page=$i" : $i];
+        }
+
+        return $res;
+    }
+
+
     /**
      * @param int $curentPage
      * @param int $pageQuantity

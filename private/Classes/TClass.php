@@ -68,6 +68,62 @@ class T
         'Authorization error' => [
             self::RU_LANG => 'Ошибка авторизации'
         ],
+        // Рекорды
+        'rank position' => [
+            self::RU_LANG => 'место в рейтинге'
+        ],
+        'record of the year' => [
+            self::RU_LANG => 'рекорд года'
+        ],
+        'record of the month' => [
+            self::RU_LANG => 'рекорд месяца'
+        ],
+        'record of the week' => [
+            self::RU_LANG => 'рекорд недели'
+        ],
+        'record of the day' => [
+            self::RU_LANG => 'рекорд дня'
+        ],
+        'game_price' => [
+            self::EN_LANG => 'game points',
+            self::RU_LANG => 'очки за игру'
+        ],
+        'games_played' => [
+            self::EN_LANG => 'games played',
+            self::RU_LANG => 'сыграно партий'
+        ],
+        'top' => [
+            self::RU_LANG => 'топ'
+        ],
+        'turn_price' => [
+            self::EN_LANG => 'turn points',
+            self::RU_LANG => 'очки за ход'
+        ],
+        'word_len' => [
+            self::EN_LANG => 'word length',
+            self::RU_LANG => 'длинное слово'
+        ],
+        'word_price' => [
+            self::EN_LANG => 'word points',
+            self::RU_LANG => 'очки за слово'
+        ],
+        'top_year' => [
+            self::EN_LANG => 'TOP 1',
+            self::RU_LANG => 'ТОП 1'
+        ],
+        'top_month' => [
+            self::EN_LANG => 'TOP 2',
+            self::RU_LANG => 'ТОП 2'
+        ],
+        'top_week' => [
+            self::EN_LANG => 'TOP 3',
+            self::RU_LANG => 'ТОП 3'
+        ],
+        'top_day' => [
+            self::EN_LANG => 'BEST 10',
+            self::RU_LANG => 'В десятке лучших'
+        ],
+        // Рекорды конец
 
         // Профиль игрока
         'Back' => [
@@ -105,7 +161,7 @@ class T
         ],
         'Bonuses accrued' => [
             self::RU_LANG => 'Начислено бонусов'
-        ], // Начислено бонусов
+        ],
         'SUDOKU Balance' => [
             self::RU_LANG => 'Баланс SUDOKU'
         ],
@@ -472,11 +528,17 @@ class T
         "Victory" => [
             self::RU_LANG => 'Победа'
         ],
+        'Losing' => [
+            self::RU_LANG => 'Проигрыш'
+        ],
         "Go to player's stats" => [
             self::RU_LANG => 'Перейти к статистике игрока'
         ],
         "Filter by player" => [
             self::RU_LANG => 'Фильтровать по игроку'
+        ],
+        "Remove the filter" => [
+            self::RU_LANG => 'Снять фильтр'
         ],
         "File loading error!" => [
             self::RU_LANG => 'Ошибка загрузки файла!'
