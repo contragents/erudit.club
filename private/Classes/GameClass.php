@@ -505,17 +505,17 @@ class Game
         */
         /*ini_set("display_errors", 1);
         error_reporting(E_ALL);*/
-        $message['summary'] = [];
-        $message['summary']['rating'] = CommonIdRatingModel::getRating($this->commonId);
-        $message['summary']['top'] = CommonIdRatingModel::getTopByRating($message['summary']['rating']);
-        $message['summary']['SUDOKU_BALANCE'] = 100500;
-        $message['summary']['SUDOKU_TOP'] = 365;
+
+        $message['info'] = [];
+        $message['info']['rating'] = CommonIdRatingModel::getRating($this->commonId);
+        $message['info']['top'] = CommonIdRatingModel::getTopByRating($message['info']['rating']);
+        $message['info']['SUDOKU_BALANCE'] = 100500;
+        $message['info']['SUDOKU_TOP'] = 365;
+        $message['info']['rewards'] = 15.356;
 
         $message['refs'] = [['Peter Pervyy', 10], ['Nickolay Vtoroy', 10], ['Aleksey Tretiy', 10]];
 
         $message['common_id'] = $this->commonId;
-        // нахуй
-        // $this->gameStatus['users'][$this->numUser]['common_id'] ?? PlayerModel::getPlayerID($this->User, false);
 
         $userData = UserModel::getOne($message['common_id']);
 
@@ -568,6 +568,7 @@ class Game
                 'placeholder' => 'https://'
             ];
 
+        /*
         $message['form'][] = [
             'prompt' => 'Ключ учетной записи',
             'inputName' => 'keyForID',
@@ -586,6 +587,7 @@ class Game
             'buttonCaption' => 'Связать',
             'placeholder' => 'сохраненный ключ от старого аккаунта'
         ];
+        */
 
         return $this->makeResponse(['message' => json_encode($message, JSON_UNESCAPED_UNICODE)]);
     }

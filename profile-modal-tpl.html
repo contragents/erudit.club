@@ -8,15 +8,15 @@
 			<ul class="tabs nav nav-tabs" role="tablist" id="profile-tabs">
 				<li class="nav-item">
 					<a class="nav-link active" id="main-info-tab" href="#main-info-tab-pane" role="tab"
-						aria-selected="true">Профиль</a>
+						aria-selected="true">{{Profile}}</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" id="wallet-tab" href="#wallet-tab-pane" role="tab"
-						aria-selected="false">Кошелек</a>
+						aria-selected="false">{{Wallet}}</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" id="referrals-tab" href="#referrals-tab-pane" role="tab"
-						aria-selected="false">Рефералы</a>
+						aria-selected="false">{{Referrals}}</a>
 				</li>
 			</ul>
 		</div>
@@ -33,7 +33,7 @@
 							<img class="main-info-image" src="{{imageUrl}}" alt="{{imageTitle}}">
 						</div>
 						<div class="d-flex flex-column flex-grow-1 flex-shrink-1 pl-2">
-							<p class="main-info-id flex-fill">ID Игрока <span>{{common_id}}</span></p>
+							<p class="main-info-id flex-fill">{{Player ID}} <span>{{common_id}}</span></p>
 							<div class="flex-grow-0">
 								<label class="file-label">
 
@@ -44,7 +44,7 @@
 							<div class="d-flex flex-fill">
 								<button type="submit" class="btn btn-sm ml-auto"
 									onclick="savePlayerAvatar($('#player_avatar_file').val(),{{common_id}});return false;">
-									Сохранить</button>
+                                    {{Save}}</button>
 							</div>
 						</div>
 
@@ -56,26 +56,25 @@
 						<div class="flex-eq"></div>
 						<div class="nickname-inpit-wrap">
 							<input id="player_name" type="text" name="name" class="form-control"
-								placeholder="Введите новый ник" maxlength="16">
+								placeholder="{{Input new nickname}}" maxlength="16">
 						</div>
 						<div class="flex-eq d-flex">
 							<button type="submit" class="btn btn-sm ml-auto"
 								onclick="savePlayerName($('#player_name').val(),{{common_id}});return false;">
-								Сохранить
+                                {{Save}}
 							</button>
 						</div>
 					</div>
 					<div class="rating-list-wrap">
 						<ul class="rating-list d-flex flex-column">
-							<li class="d-flex"><span class="label">Рейтинг</span><span class="pill">{{rating}}</span>
+							<li class="d-flex"><span class="label">{{Your rank}}</span><span class="pill">{{rating}}</span>
 							</li>
-							<li class="d-flex"><span class="label">Место в рейтинге</span><span
+							<li class="d-flex"><span class="label">{{Ranking number}}</span><span
 									class="pill">{{placement}}</span></li>
-							<li class="account-balance d-flex position-relative"><span class="label">Баланс</span><i
+							<li class="account-balance d-flex position-relative"><span class="label">{{Balance}}</span><i
 									class="icon icon-coin"></i><span class="pill">{{balance}}</span>
 							</li>
-							<li class="d-flex"><span class="label">Рейтинг по
-									монетам</span><span class="pill">{{ratingByCoins}}</span></li>
+							<li class="d-flex"><span class="label">{{Rating by coins}}</span><span class="pill">{{ratingByCoins}}</span></li>
 						</ul>
 					</div>
 				</div>
@@ -93,31 +92,30 @@
 
 
 						<div class="btn-wrap ml-auto">
-							<a href="https://t.me" target="_blank" class="btn btn-sm flex-shrink-0">
-								Привязать
+							<!--<a href="https://t.me" target="_blank" class="btn btn-sm flex-shrink-0">-->
+                            <a href="#" class="btn btn-sm flex-shrink-0">
+                                {{Link}}
 							</a>
 						</div>
 					</div>
 
-					<span class="d-block text-danger text-uppercase text-center mt-1">Раздел
-						находится в
-						разработке</span>
+					<span class="d-block text-danger text-uppercase text-center mt-1">Under construction</span>
 				</div>
 				<div class="box py-3">
 					<div class="d-flex">
 						<div class="wallet-info-wrap">
 							<div class="d-flex">
-								<span class="label">Начисление бонусов </span>
+								<span class="label">{{Bonuses accrued}} </span>
 								<span class="pill">{{bonusAccrual}}</span>
 							</div>
 							<div class="d-flex">
-								<span class="label">Баланс SUDOKU</span>
+								<span class="label">{{SUDOKU Balance}}</span>
 								<span class="pill">{{balanceSudoku}}</span>
 							</div>
 						</div>
 						<div class="btn-wrap ml-auto">
 							<button type="button" class="btn btn-sm flex-shrink-0 ">
-								Забрать
+                                {{Claim}}
 							</button>
 						</div>
 					</div>
@@ -129,27 +127,15 @@
 			<div class="referrals-tab-pane tab-pane" id="referrals-tab-pane">
 				<div class="box pb-2 box-bottom">
 					<div class="d-flex justify-content-between text-uppercase">
-						<span class="table-heading d-block">Имя</span>
-						<span class="table-heading d-block ml-a">Начислено бонусов</span>
+						<span class="table-heading d-block">{{Name}}</span>
+						<span class="table-heading d-block ml-a">{{Bonuses accrued}}</span>
 					</div>
 
-					<span class="d-block text-danger text-uppercase text-center mt-1">Раздел
-						находится в
-						разработке</span>
+					<span class="d-block text-danger text-uppercase text-center mt-1">Under construction</span>
 				</div>
 
 				<!-- .referral-list -->
 				{{referralList}}
-
-
-				<!-- 				
-				<ul class="referral-list">
-					<li class="box">
-						<span class="name d-block">REF_NAME</span>
-						<div class="pill-wrap"><span class="pill">REF_BONUS</span></div>
-					</li>
-				</ul>
- 				-->
 				<!-- end .referral-list -->
 
 			</div>
@@ -159,6 +145,4 @@
 	<!-- end .tab-content-wrap -->
 	<!-- END MY MODAL CONTENT -->
 </form>
-
-
 <!-- END MY MODAL CONTENT -->

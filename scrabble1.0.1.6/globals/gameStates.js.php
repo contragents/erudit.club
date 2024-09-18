@@ -353,12 +353,12 @@ var gameStates = {
                 closeButton: false,
                 buttons: {
                     cabinet: {
-                        label: 'Профиль',
+                        label: '<?= T::S('Profile') ?>',
                         className: 'btn-outline-success',
                         callback: function () {
                             setTimeout(function () {
                                 fetchGlobal(CABINET_SCRIPT, '', 12).then((dataCabinet) => {
-                                    if (dataCabinet == '') var responseText = 'Ошибка';
+                                    if (dataCabinet == '') var responseText = '<?= T::S('Error') ?>';
                                     else var responseArr = JSON.parse(dataCabinet['message']);
 
                                     /* ------------------------------ PROFILE DATA ------------------------------ */
@@ -367,13 +367,13 @@ var gameStates = {
                                         common_id: responseArr.common_id, // id игрока
                                         imageUrl: responseArr.url, // url картинки
                                         imageTitle: responseArr.img_title, // альт картинки
-                                        rating: responseArr.summary.rating ? responseArr.summary.rating : 0, // рейтинг
-                                        placement: responseArr.summary.top, // место в рейтинге
-                                        balance: responseArr.summary.SUDOKU_BALANCE, // баланс
-                                        ratingByCoins: responseArr.summary.SUDOKU_TOP, // рейтинг по монетам
+                                        rating: responseArr.info.rating ? responseArr.info.rating : 0, // рейтинг
+                                        placement: responseArr.info.top, // место в рейтинге
+                                        balance: responseArr.info.SUDOKU_BALANCE, // баланс
+                                        ratingByCoins: responseArr.info.SUDOKU_TOP, // рейтинг по монетам
                                         tgWallet: '', // telegram wallet
-                                        bonusAccrual: 124512, // начисление бонусов
-                                        balanceSudoku: responseArr.summary.SUDOKU_BALANCE, // баланс SUDOKU
+                                        bonusAccrual: responseArr.info.rewards, // начисление бонусов
+                                        balanceSudoku: responseArr.info.SUDOKU_BALANCE, // баланс SUDOKU
                                         referrals: responseArr.refs ? responseArr.refs : [],
                                     };
 
@@ -406,11 +406,30 @@ var gameStates = {
                                     }
 
                                     function getProfileModal(profileData) {
-                                        return fetch('/profile-modal-tpl.html')
+                                        return fetch('/profile-modal-tpl.html'+ '?ver=' + Math.floor(Date.now()))
                                             .then((response) => response.text())
                                             .then((template) => {
                                                 // Заменяем маркеры в шаблоне реальными данными
                                                 let message = template
+                                                    .replaceAll('{{Profile}}', '<?= T::S('Profile') ?>')
+                                                    .replaceAll('{{Wallet}}', '<?= T::S('Wallet') ?>')
+                                                    .replaceAll('{{Referrals}}', '<?= T::S('Referrals') ?>')
+                                                    .replaceAll('{{Player ID}}', '<?= T::S('Player ID') ?>')
+                                                    .replaceAll('{{Save}}', '<?= T::S('Save') ?>')
+                                                    .replaceAll('{{Input new nickname}}', '<?= T::S('Input new nickname') ?>')
+                                                    .replaceAll('{{Your rank}}', '<?= T::S('Your rank') ?>')
+                                                    .replaceAll('{{Ranking number}}', '<?= T::S('Ranking number') ?>')
+                                                    .replaceAll('{{Balance}}', '<?= T::S('Balance') ?>')
+                                                    .replaceAll('{{Rating by coins}}', '<?= T::S('Rating by coins') ?>')
+                                                    .replaceAll('{{Link}}', '<?= T::S('Link') ?>') // Привязать
+                                                    .replaceAll('{{Bonuses accrued}}', '<?= T::S('Bonuses accrued') ?>') // Начислено бонусов
+                                                    .replaceAll('{{SUDOKU Balance}}', '<?= T::S('SUDOKU Balance') ?>') // Баланс SUDOKU
+                                                    .replaceAll('{{Claim}}', '<?= T::S('Claim') ?>') // Забрать
+                                                    .replaceAll('{{Name}}', '<?= T::S('Name') ?>')
+                                                    //.replaceAll('{{Profile}}', '<?= T::S('Profile') ?>')
+
+
+
                                                     .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
                                                     .replaceAll('{{cookie}}', profileData.cookie)
                                                     .replaceAll('{{common_id}}', profileData.common_id)
@@ -446,7 +465,7 @@ var gameStates = {
                                             className: 'modal-settings modal-profile',
                                             buttons: {
                                                 ok: {
-                                                    label: 'Назад',
+                                                    label: '<?= T::S('Back') ?>',
                                                     className: 'btn-sm ml-auto mr-0',
                                                 },
                                             },

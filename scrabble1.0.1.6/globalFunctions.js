@@ -315,7 +315,7 @@ function refreshId(element_id, url) {
 }
 
 function getStatPageGlobal() {
-    let urlPart = STATS_URL + commonId;
+    let urlPart = STATS_URL + commonId + '&lang=' + lang;
     let respMessage = 'Ошибка загрузки статистики';
 
     if (commonId) {
@@ -497,3 +497,4 @@ function placeFishki(fishki) {
 //<?php include('globals/openWindowGlobalFunction.js')?>
 //<?php include('globals/buttonGlobalFunctions.js')?>
 //<?php include('globals/gagetTypeFunctions.js')?>
+//<?php include('globals/verstkaFunctions.js')?>

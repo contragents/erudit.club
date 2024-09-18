@@ -12,6 +12,7 @@ class T
         return self::PHRASES['invite_friend_prompt'][self::$lang];
     }
 
+    // Здесь задается язык и режим игры для папки запуска скрипта
     const GAME_MODE_LANG = [
         'scrabble' => self::EN_LANG,
         'yandex' => self::RU_LANG,
@@ -67,6 +68,55 @@ class T
         'Authorization error' => [
             self::RU_LANG => 'Ошибка авторизации'
         ],
+
+        // Профиль игрока
+        'Back' => [
+            self::RU_LANG => 'Назад'
+        ],
+        'Wallet' => [
+            self::RU_LANG => 'Кошелек'
+        ],
+        'Referrals' => [
+            self::RU_LANG => 'Рефералы'
+        ],
+        'Player ID' => [
+            self::RU_LANG => 'ID Игрока'
+        ],
+        'Save' => [
+            self::RU_LANG => 'Сохранить'
+        ],
+        'Input new nickname' => [
+            self::RU_LANG => 'Задайте новый ник'
+        ],
+        'Your rank' => [
+            self::RU_LANG => 'Ваш Рейтинг'
+        ],
+        'Ranking number' => [
+            self::RU_LANG => 'Позиция в ТОП'
+        ],
+        'Balance' => [
+            self::RU_LANG => 'Баланс'
+        ],
+        'Rating by coins' => [
+            self::RU_LANG => 'Рейтинг по монетам'
+        ],
+        'Link' => [
+            self::RU_LANG => 'Привязать'
+        ],
+        'Bonuses accrued' => [
+            self::RU_LANG => 'Начислено бонусов'
+        ], // Начислено бонусов
+        'SUDOKU Balance' => [
+            self::RU_LANG => 'Баланс SUDOKU'
+        ],
+        'Claim' => [
+            self::RU_LANG => 'Забрать'
+        ],
+        'Name' => [
+            self::RU_LANG => 'Имя'
+        ],
+        // Профиль игрока конец
+
         'Nickname updated' => [
             self::RU_LANG => 'Ник пользователя сохранен',
         ],
@@ -117,9 +167,6 @@ class T
         ],
         "Main account key" => [
             self::RU_LANG => 'Ключ основного аккаунта'
-        ],
-        "Link" => [
-            self::RU_LANG => 'Связать'
         ],
         "old account saved key" => [
             self::RU_LANG => 'сохраненный ключ от старого аккаунта'
