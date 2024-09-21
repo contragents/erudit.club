@@ -29,4 +29,13 @@ class RatingHistoryModel extends BaseModel
             ]
         );
     }
+
+    public static function getNumGamesPlayed($commonId, string $gameName): int
+    {
+        return DB::queryValue(
+            ORM::select(['count(1)'], self::TABLE_NAME)
+            . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
+            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', self::GAME_IDS[$gameName], true)
+        ) ?: 0;
+    }
 }

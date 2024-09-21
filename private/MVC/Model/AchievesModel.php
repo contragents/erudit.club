@@ -9,7 +9,6 @@ class AchievesModel extends BaseModel
 
     const LIMIT = 10;
 
-    const ID_FIELD = 'id_achieve';
     const COMMON_ID_FIELD = 'common_id';
     const DATE_ACHIEVED_FIELD = 'date_achieved';
     const EVENT_TYPE_FIELD = 'event_type';

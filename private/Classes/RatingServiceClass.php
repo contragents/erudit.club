@@ -172,7 +172,7 @@ class RatingService
                 $player['rating'] + $player['deltaRating'],
                 $player['is_winner'],
                 $gameId,
-                BaseModel::GAME_IDS[$gameName]
+                $gameName
             )) {
                 DB::transactionRollback();
 

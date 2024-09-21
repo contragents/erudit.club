@@ -20,6 +20,7 @@ class Game
     public $config;
     public $User; // user cookie
     public $commonId; // user verified commonId
+    public string $gameName;
     public $currentGame;
     public $currentGameUsers = false;
     protected $gamePlayersWaiting = false; // Количество игроков, ожидающих начала игры
@@ -936,24 +937,34 @@ class Game
         return $result;
     }
 
-    protected function getRatingWithCommonID($commonID = false, $cookie = false, $userID = false)
+    protected function getRatingWithCommonID($commonId)
     {
-        if (!($ratingInfo = PlayerModel::getRating($commonID, $cookie, $userID))) {
+        $rating = CommonIdRatingModel::getRating($commonId);
+
+        /*'max(cookie) as cookie',
+                    'max(rating) as rating',
+                    'max(games_played) as games_played',
+                    'case when max(win_percent) is null then 0 else max(win_percent) END as win_percent',
+                    'avg(inactive_percent) as inactive_percent',
+                    'case when max(rating) >= 1700 then('
+                    . ORM::select(
+                        ['case when sum(num) IS null THEN 1 else sum(num) + 1 END'],
+                        '(select 1 as num from players where rating > ps . rating group by user_id, rating) dd'
+                    )
+                    . ') else \'Не в ТОПе\' END as top'*/
+        if (!$rating/* = PlayerModel::getRating($commonId))*/) {
             return false;
         }
+        $ratingInfo = [];
+        $ratingInfo[0] = [
+            'rating' => $rating,
+            'top' => $rating >= 1700 ? CommonIdRatingModel::getTopByRating($rating) : 'Не в ТОПе',
+            'games_played' => RatingHistoryModel::getNumGamesPlayed($commonId, $this->gameName),
+            'win_percent' => 50,
+            'inactive_percent' => 0,
+        ];
 
-        if ($ratingInfo[0]['rating'] >= 1700) {
-            // Коррекция для ТОП
-            $ratingInfo[0]['top'] = PlayerModel::getTop($ratingInfo[0]['rating']);
-        }
-
-        $cacheValues = array_merge(
-            $commonID ? [$commonID] : [],
-            $cookie ? [$cookie] : [],
-            $userID ? [$userID] : []
-        );
-
-        PlayerModel::saveRatingToCache($cacheValues, $ratingInfo);
+        PlayerModel::saveRatingToCache([$commonId], $ratingInfo);
 
         return $ratingInfo;
     }
@@ -969,16 +980,7 @@ class Game
         if (!$userCookie) {
             if (isset($this->gameStatus['users'])) {
                 foreach ($this->gameStatus['users'] as $user) {
-                    $ratings[$user['ID']] = $this->getRatingWithCommonID(
-                        $this->getCommonID(
-                            $user['ID'],
-                            isset($user['userID']) ? self::hash_str_2_int($user['userID']) : false
-                        ),
-                        $user['ID'],
-                        isset($user['userID'])
-                            ? self::hash_str_2_int($user['userID'])
-                            : false
-                    );
+                    $ratings[$user['ID']] = $this->getRatingWithCommonID($user['common_id']);
                 }
 
                 return $this->normalizeRatings($ratings);
@@ -987,14 +989,7 @@ class Game
 
         if (!$userCookie) {
             if (!($ratings[$this->User] = PlayerModel::getRatingFromCache($this->User))) {
-                $ratings[$this->User] = $this->getRatingWithCommonID(
-                    $this->getCommonID(
-                        $this->User,
-                        false
-                    ),
-                    $this->User,
-                    false
-                );
+                $ratings[$this->User] = $this->getRatingWithCommonID($this->commonId);
             }
 
             return $this->normalizeRatings($ratings);
@@ -1004,32 +999,12 @@ class Game
             $ratings = [];
             $ratings[$userCookie] = false;
             if (!$ratings[$userCookie]) {
-                $userID = isset($this->gameStatus) &&
-                isset($this->gameStatus[$userCookie]) &&
-                isset($this->gameStatus['users'][$this->gameStatus[$userCookie]]['userID'])
-                    ? self::hash_str_2_int($this->gameStatus['users'][$this->gameStatus[$userCookie]]['userID'])
-                    : false;
-
-                $ratings[$userCookie] = $this->getRatingWithCommonID(
-                    $this->getCommonID(
-                        $userCookie,
-                        $userID
-                    ),
-                    $userCookie,
-                    $userID
-                );
+                $ratings[$userCookie] = $this->getRatingWithCommonID(PlayerModel::getPlayerID($userCookie, true));
             }
 
             return $this->normalizeRatings($ratings);
         } else {
-            $ratings = $this->getRatingWithCommonID(
-                $this->getCommonID(
-                    $userCookie['cookie'],
-                    isset($userCookie['userID']) ? self::hash_str_2_int($userCookie['userID']) : false
-                ),
-                $userCookie['cookie'],
-                isset($userCookie['userID']) ? self::hash_str_2_int($userCookie['userID']) : false
-            );
+            $ratings = $this->getRatingWithCommonID(PlayerModel::getPlayerID($userCookie['cookie'], true));
 
             return count($ratings ?: []) ? $ratings[0] : false;
         }

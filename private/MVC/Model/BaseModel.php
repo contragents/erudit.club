@@ -69,12 +69,13 @@ class BaseModel
      * @param $id
      * @param $field
      * @param $value
+     * @param bool $raw
      * @return bool
      */
-    public static function setParam($id, $field, $value)
+    public static function setParam($id, $field, $value, bool $raw = false)
     {
         $updateQuery = ORM::update(static::TABLE_NAME)
-            . ORM::set(['field' => $field, 'value' => DB::escapeString($value)])
+            . ORM::set(['field' => $field, 'value' => $raw ? $value : DB::escapeString($value)])
             . ORM::where('id', '=', $id);
 
         if (DB::queryInsert($updateQuery)) {
@@ -109,15 +110,33 @@ class BaseModel
             ];
         }
 
-        return DB::queryInsert(
-            ORM::update(static::TABLE_NAME)
+        $ormWhere = '';
+
+        if (isset($where['field_name'])) {
+            $ormWhere = ORM::where($where['field_name'], $where['condition'], $where['value'], $where['raw'] ?? false);
+        } elseif(isset($where[0]['field_name'])) {
+            $ormWhere = ORM::where('1', '=', 1, true)
+                . implode(
+                    ' ',
+                    array_map(
+                        fn($andWhere) => ORM::andWhere(
+                            $andWhere['field_name'],
+                            $andWhere['condition'],
+                            $andWhere['value'],
+                            $andWhere['raw'] ?? false
+                        ),
+                        $where
+                    )
+                );
+        }
+
+        $query = ORM::update(static::TABLE_NAME)
             . ORM::set($setValues)
-            . (
-            empty($where)
-                ? ''
-                : ORM::where($where['field_name'], $where['condition'], $where['value'], $where['raw'] ?? false)
-            )
-        );
+            . $ormWhere;
+
+        Cache::hset('parammass_query', $query, $query);
+
+        return DB::queryInsert($query);
     }
 
     /**
