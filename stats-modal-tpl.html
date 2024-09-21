@@ -1,0 +1,109 @@
+<!-- MY MODAL CONTENT -->
+<!-- tabs -->
+<div class="box d-flex align-items-center p-2 mb-2">
+	<div class="box-heading text-center mx-auto fs-4">Статистика</div>
+</div>
+<div class="box box-top">
+	<div>
+		<ul class="tabs nav nav-tabs" role="tablist" id="stats-tabs">
+			<li class="nav-item">
+				<a class="nav-link" id="active-awards-tab" href="#active-awards-tab-pane" role="tab"
+					aria-selected="false" data-toggle="tab">Активные награды</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="past-awards-tab" href="#past-awards-tab-pane" role="tab" aria-selected="false"
+					data-toggle="tab">Прошлые
+					награды</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link active" id="match-history-tab" href="#match-history-tab-pane" role="tab"
+					aria-selected="true" data-toggle="tab">Партии</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<!-- end tabs -->
+
+<div class="tab-content-wrap">
+	<div class="tab-content justify-content-start" id="stats-tabs-content">
+		<div class="tab-pane" id="active-awards-tab-pane">
+
+			<div class="box box-bottom">
+				<div class="fw-medium">
+					<div class="awards-title d-block h6 ml-1 hid">Награды игрока <span
+							class="text-accent pl-1 h4">{{name}}</span>
+					</div>
+					<div class="card-list-wrap">
+						{{activeAwards}}
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+		<!-- end .tab-pane #active-awards-tab-pane -->
+
+		<div class="tab-pane" id="past-awards-tab-pane">
+			<div class="box box-bottom">
+				<div class="fw-medium">
+					<div class="awards-title d-block h6 ml-1">Награды игрока <span
+							class="text-accent pl-1 h4">{{name}}</span>
+					</div>
+					<div class="card-list-wrap">
+						{{pastAwards}}
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end .tab-pane -->
+
+		<div class="match-history-tab-pane tab-pane active" id="match-history-tab-pane">
+			<div class="box pb-1 pt-1 mb-0 box-bottom">
+
+
+				<div class="player-info d-flex fw-medium">
+
+					<div class="left-col pt-3">
+						<div class="d-flex ml-1"><span>Игрок</span><span class="text-accent">{{name}}</span>
+						</div>
+						<div class="d-flex ml-1 invisible"><span>Против</span><span
+								class="opponent-name text-accent">NicknameNickname</span>
+						</div>
+					</div>
+					<div class="img-col">
+						<div class="img-wrap rounded-1">
+							<img src="{{imageUrl}}" class="img-fluid rounded-1" alt="" />
+
+						</div>
+					</div>
+
+
+					<div class="card-list-wrap d-flex">
+
+					</div>
+				</div>
+
+				{{pagination}}
+
+
+			</div>
+
+			<div class="match-history-table">
+				<div class="match-history-thead d-flex">
+					<div class="th">Дата</div>
+					<div class="th">Результат</div>
+					<div class="th">Рейтинг</div>
+					<div class="th">Соперник</div>
+				</div>
+				{{gameList}}
+
+			</div>
+
+			<div class="opponent-stats"></div>
+
+		</div>
+		<!-- end .tab-pane -->
+	</div>
+</div>
+<!-- end .tab-content-wrap -->
+<!-- END MY MODAL CONTENT -->
