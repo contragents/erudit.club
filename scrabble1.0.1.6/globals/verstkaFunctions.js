@@ -171,7 +171,7 @@ function StatsPage({ json, BASE_URL }) {
                     return `
                 <li>
                 
-      <p class="card_effect">Effect last till your beaten</p>
+      <p class="card_effect">Effect lasts until beaten</p>
     </li>
     
                     <div class="card_item full_card ${types[event_period]}">
@@ -197,7 +197,7 @@ function StatsPage({ json, BASE_URL }) {
                             <span>x${income}/hour</span>
                         </div>
 
-                        <p class="card_effect">Effect last till your beaten</p>
+                        <p class="card_effect">Effect lasts until beaten</p>
                     </div>
                     <span class="date">${strDate}</span>
                 </li>

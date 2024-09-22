@@ -2,8 +2,10 @@
 
 namespace Dadata;
 
+use BaseModel;
 use \Cache;
 use AchievesModel;
+use ORM;
 
 class Prizes
 {
@@ -143,20 +145,23 @@ class Prizes
         $eventType,
         $eventPeriod,
         array $arr
-    ) {
-        $commonID = Players::getPlayerID($arr['cookie'], true);
-        if (!$commonID) {
+    ): bool {
+        $commonId = $arr['common_id'] ?? Players::getPlayerID($arr['cookie']);
+        if (!$commonId) {
             return false;
         }
 
         if (AchievesModel::add(
             [
-                AchievesModel::COMMON_ID_FIELD => $commonID,
+                AchievesModel::COMMON_ID_FIELD => $commonId,
                 AchievesModel::DATE_ACHIEVED_FIELD => date('Y-m-d H:i:s', $arr['record_date']),
                 AchievesModel::EVENT_TYPE_FIELD => $eventType,
                 AchievesModel::EVENT_PERIOD_FIELD => $eventPeriod,
                 AchievesModel::WORD_FIELD => $arr['word'] ?: '',
                 AchievesModel::EVENT_VALUE_FIELD => $arr['value'],
+                AchievesModel::IS_ACTIVE_FIELD => 1,
+                AchievesModel::REWARD_FIELD => \MonetizationService::REWARD[$eventPeriod],
+                AchievesModel::INCOME_FIELD => \MonetizationService::INCOME[$eventPeriod],
             ]
         )) {
             return true;
@@ -172,13 +177,56 @@ class Prizes
         $eventPeriod,
         $eventValue,
         $word = false
-    ) {
-        self::saveHistory($eventType, $eventPeriod, [
-            'cookie' => $cookie ? $cookie : $_COOKIE['erudit_user_session_ID'],
-            'value' => $eventValue,
-            'word' => $word,
-            'record_date' => date('U'),
-        ]);
+    ): bool {
+        $commonId = Players::getPlayerID($cookie);
+        if (!$commonId) {
+            return false;
+        }
+
+        \DB::transactionStart();
+
+        AchievesModel::setParamMass(AchievesModel::IS_ACTIVE_FIELD,
+                                    new ORM(0),
+                                    [
+                                        [
+                                            'field_name' => AchievesModel::EVENT_TYPE_FIELD,
+                                            'condition' => BaseModel::CONDITIONS['='],
+                                            'value' => $eventType,
+                                            'raw' => false,
+                                        ],
+                                        [
+                                            'field_name' => AchievesModel::EVENT_PERIOD_FIELD,
+                                            'condition' => BaseModel::CONDITIONS['='],
+                                            'value' => $eventPeriod,
+                                            'raw' => false,
+                                        ],
+                                        [
+                                            'field_name' => AchievesModel::IS_ACTIVE_FIELD,
+                                            'condition' => BaseModel::CONDITIONS['='],
+                                            'value' => 1,
+                                            'raw' => true,
+                                        ],
+                                    ]);
+
+        if(!self::saveHistory(
+            $eventType,
+            $eventPeriod,
+            [
+                'common_id' => $commonId,
+                'cookie' => $cookie ?: $_COOKIE['erudit_user_session_ID'],
+                'value' => $eventValue,
+                'word' => $word,
+                'record_date' => date('U'),
+            ]
+        )) {
+            \DB::transactionRollback();
+
+            return false;
+        };
+
+        // todo здесь начислить reward на баланс монет
+
+        \DB::transactionCommit();
 
         Cache::hset(
             self::ALL_RECORDS,
