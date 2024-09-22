@@ -46,11 +46,10 @@ class CommonIdRatingModel extends BaseModel
     public static function getTopByRating(int $rating, string $gameName = BaseModel::ERUDIT): int
     {
         $topQuery = ORM::select(
-            ['case when sum(num) IS NULL THEN 1 ELSE sum(num) + 1 END as top'],
-            "(select 1 as num from " . self::TABLE_NAME . " where rating_" . $gameName . " > $rating group by id, rating_" . $gameName . ") dd"
+            ['count(1) + 1 as top'],
+            "(select 1 as num from " . self::TABLE_NAME . " where rating_" . $gameName . " > $rating group by rating_" . $gameName . ") dd"
         );
 
         return (int)DB::queryValue($topQuery);
     }
-
 }

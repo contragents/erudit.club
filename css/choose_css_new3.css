@@ -2048,7 +2048,7 @@ label.file-label:active:before {
 		font-size: 10px;
 
 		border-radius: 12px;
-		outline: none;
+		/*outline: none;*/
 		padding: 7px;
 	}
 

@@ -29,7 +29,8 @@ print 'Чистим лог ходов на 0 очков' . PHP_EOL;
 Cache::del(Game::BAD_COMBINATIONS_HSET);
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
-print 'Уменьшаем рейтинг игрокам, которые не играли сутки' . PHP_EOL;
-PlayerModel::decreaseRatings();
+//print 'Уменьшаем рейтинг игрокам, которые не играли сутки' . PHP_EOL;
+// todo уменьшать рейтинг через модель CommonIdRating
+//PlayerModel::decreaseRatings();
 
 exit();

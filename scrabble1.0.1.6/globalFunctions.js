@@ -314,28 +314,45 @@ function refreshId(element_id, url) {
     });
 }
 
-function getStatPageGlobal() {
+async function getStatPageGlobal() {
     let urlPart = STATS_URL + commonId + '&lang=' + lang;
     let respMessage = 'Ошибка загрузки статистики';
 
     if (commonId) {
-        $.ajax({
-            url: '/' + urlPart,
-            type: 'GET',
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (returndata) {
-                resp = JSON.parse(returndata);
-                respMessage = resp.message + resp.pagination;
-            }
-        });
-    } else {
-        respMessage = 'Для просмотра статистики сыграйте хотя бы одну партию';
-    }
+        try {
+            const response = await fetch('/' + urlPart, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                cache: 'no-cache',
+            });
 
-    return respMessage;
+            // Проверяем успешность запроса
+            if (!response.ok) {
+                throw new Error(`Ошибка запроса: ${response.status}`);
+            }
+
+            const returndata = await response.json(); // Получаем JSON
+
+            const s = StatsPage({ json: returndata, BASE_URL: '' });
+            const message = await s.buildHtml();
+
+            return {
+                message,
+                onLoad: s.onLoad,
+            };
+        } catch (error) {
+            console.error('Ошибка при загрузке статистики:', error.message);
+            return {
+                message: respMessage,
+            };
+        }
+    } else {
+        return {
+            message: 'Для просмотра статистики сыграйте хотя бы одну партию',
+        };
+    }
 }
 
 function savePlayerAvatarUrl(url, commonID) {

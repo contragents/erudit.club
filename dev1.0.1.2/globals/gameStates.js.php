@@ -539,20 +539,54 @@ var gameStates = {
                     stats: {
                         label: 'Статистика',
                         className: 'btn-outline-success',
-                        callback: function () {
-                            dialog = bootbox
-                                .alert({
-                                    message: getStatPageGlobal(),
-                                    locale: 'ru',
-                                })
-                                .off('shown.bs.modal')
-                                .find('.modal-content')
-                                .css({
-                                    'background-color':
-                                        'rgba(230, 255, 230, 1)' /*, 'min-height' : '700px'*/,
-                                });
+                        callback: function() {
 
-                            return false;
+                            getStatPageGlobal().then(data => {
+                                console.log(data);
+                                dialog = bootbox
+                                    .dialog({
+                                        message: data.message,
+                                        locale: lang === 'RU' ? 'ru' : 'en',
+                                        className: 'modal-settings  modal-stats',
+                                        callback: function () {
+                                            console.log('stats loaded');
+                                        },
+                                        buttons: {
+                                            removeFilter: {
+                                                label: 'Снять фильтр',
+                                                className: 'js-remove-filter btn btn-sm btn-auto mr-0 d-none',
+                                                callback: function (e) {
+                                                    e.preventDefault();
+                                                    return false;
+                                                },
+                                            },
+                                            ok: {
+                                                label: 'Назад',
+                                                className: 'btn-sm ml-auto mr-0',
+                                                callback: function () {
+                                                    gameStates['chooseGame']['action'](data);
+                                                }
+                                            },
+
+                                        }
+                                    })
+                                    .off('shown.bs.modal')
+                                    .on('shown.bs.modal', function() {
+                                        // Вызовите onLoad после того, как модальное окно будет показано
+                                        if (data.onLoad && typeof data.onLoad === 'function') {
+                                            data.onLoad();
+                                        }
+                                    })
+                                    .find('.modal-content')
+                                    .css({
+                                        'background-color': 'rgba(230, 255, 230, 1)',
+                                    });
+
+                                return false;
+                            }).catch(error => {
+                                console.error(error);
+                            });
+
                         },
                     },
                     ...(!isTgBot() && {

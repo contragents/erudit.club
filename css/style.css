@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'Gilroy';
-  src: url('fonts/Gilroy-Bold.woff') format('woff'),
-    url('fonts/Gilroy-Bold.ttf') format('ttf');
-  src: url('fonts/Gilroy-Regular.woff') format('woff'),
-    url('fonts/Gilroy-Regular.ttf') format('ttf');
-  src: url('fonts/Gilroy-ExtraBold.woff') format('woff'),
-    url('fonts/Gilroy-ExtraBold.ttf') format('ttf');
+  src: url(/fonts/Gilroy-Bold.woff') format('woff'),
+    url('/fonts/Gilroy-Bold.ttf') format('ttf');
+  src: url('/fonts/Gilroy-Regular.woff') format('woff'),
+    url('/fonts/Gilroy-Regular.ttf') format('ttf');
+  src: url('/fonts/Gilroy-ExtraBold.woff') format('woff'),
+    url('/fonts/Gilroy-ExtraBold.ttf') format('ttf');
   font-weight: normal;
   font-style: normal;
 }
@@ -17,13 +17,17 @@
   box-sizing: border-box;
 }
 
+
 .page_body {
-  padding: 10px;
+  padding: 0 16px 0 16px;
 }
 
 .divider {
-
-  margin: 10px auto;
+  border: none;
+  height: 1px;
+  margin: 0 auto;
+  color: #B28C1D;
+  background-color: #B28C1D;
   width: 90%;
 }
 
@@ -43,54 +47,53 @@
 
 
 .card_item {
-  border: 4px solid rgb(70, 66, 66);
+  border: 2px solid rgb(70, 66, 66);
   padding: 16px 20px 16px 20px;
-  max-width: 398px;
   height: 100%;
   width: 100%;
+  max-width: 398px;
   border-radius: 30px;
 }
 
 .gold_card {
-  background: url('./images/gold.png') center center no-repeat;
+  background: url('/images/gold.png') center center no-repeat;
   background-size: cover;
 }
 
 
 
 .silver_card {
-  background: url('./images/silver.png') center center no-repeat;
+  background: url('/images/silver.png') center center no-repeat;
   background-size: cover;
 }
 
 .bronze_card {
-  background: url('./images/bronze.png') center center no-repeat;
+  background: url('/images/bronze.png') center center no-repeat;
   background-size: cover;
 
 }
 
 .stone_card {
-  background: url('./images/moreTexturedStone.png') center center no-repeat;
+  background: url('/images/moreTexturedStone.png') center center no-repeat;
   background-size: cover;
 
 }
 
 .card_record {
-  font-size: 30px;
+  font-size: 28px;
   color: rgb(255, 255, 255);
   font-family: Gilroy;
   font-weight: 900;
-  line-height: 38px;
+
   text-align: center;
   padding: 10px 10px 10px 10px;
   border-radius: 22px;
-  background: url('./images/record.png') no-repeat center center;
+  background: url('/images/record.png') no-repeat center center;
   background-size: cover;
 }
 
 .card_points {
-  margin-top: 14px;
-  background: url('./images/points.png') no-repeat center center;
+  background: url('/images/points.png') no-repeat center center;
   background-size: cover;
   border-radius: 16px;
   width: 100%;
@@ -100,18 +103,22 @@
   font-weight: 900;
 }
 
+.full_cards .card_points {
+  margin-top: 14px;
+}
+
 .card_get {
   text-align: center;
-  background: url('./images/reward.png') no-repeat center center;
+  background: url('/images/reward.png') no-repeat center center;
   background-size: cover;
   border-radius: 38px;
-  min-height: 173px;
+  height: 100%;
   margin-top: 14px;
   padding: 19px 0 19px 0;
   font-size: 23px;
   font-weight: 900;
-  line-height: 29px;
-  outline: #B28C1D solid 2px;
+
+  outline: #B28C1D solid 1px;
   outline-offset: -6px;
 }
 
@@ -125,25 +132,12 @@
   justify-content: center;
   align-items: center;
   column-gap: 10px;
+  padding: 10px 10px 10px 10px;
 }
-
-
-
-/* .card_rewardImage::before {
-  content: '';
-  width: 28px;
-  height: 49px;
-  display: block;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: -25%;
-  background: url('./images/plus.png') center center no-repeat;
-} */
 
 .card_moneyCount {
   font-size: 40px;
-  line-height: 40px;
+
 }
 
 .card_passive {
@@ -151,17 +145,16 @@
   margin-top: 14px;
   font-size: 18px;
   font-weight: 900;
-  line-height: 23px;
+
 }
 
 .card_hour {
   text-align: center;
   margin-top: 10px;
-  background: url('./images/hourImage.png') center center no-repeat no-repeat;
+  background: url('/images/hourImage.png') center center no-repeat no-repeat;
   background-size: cover;
-  min-width: 143px;
   padding: 5px 10px 5px 10px;
-  width: fit-content;
+  width: 50%;
   margin: 5px auto;
   justify-items: center;
   align-items: center;
@@ -177,12 +170,9 @@
   margin-top: 10px;
   font-size: 18px;
   font-weight: 900;
-  line-height: 23px;
+
 }
 
-.divider {
-  color: #B28C1D;
-}
 
 
 .lightCard {
@@ -195,89 +185,142 @@
   padding: 0px;
 }
 
-/* 
-@media (min-width: 360px) and (max-width: 400px) {
-  .page_body {
-    padding: 10px;
-  }
 
-  .full_cards>.card_item {
-    padding: 5px;
-    max-width: 206px;
-  }
-
-  .card_list {
-    margin-top: 10px;
-    gap: 10px;
-  }
-
-  .card_points {
-    margin-top: 10px;
-  }
-
-  .card_get {
-    margin-top: 10px;
-    padding: 0;
-    line-height: 0%;
-    min-height: auto;
-  }
-
-  .card_record {
-    font-size: 11px;
-    line-height: 22px;
-    padding: 10px;
-  }
-
-
-  .card_points {
-    font-size: 12px;
-  }
-
-  .card_get {
-    font-size: 12px;
-    padding: 10px;
-  }
-
-  .card_moneyCount {
-    font-size: 20px;
-  }
-
-  .card_rewardImage {
-    width: 37px;
-    height: 37px;
-  }
-
-  .card_plus img {
-    width: 20px;
-    height: 20px;
-  }
-
-  .card_passive {
-    font-size: 10px;
-  }
-
-  .card_hour {
-    font-size: 10px;
-  }
-
-  .card_hourImage {
-    width: 20px;
-    height: 20px;
-  }
-
-  .card_effect {
-    font-size: 10px;
-  }
+@media (min-width: 360px) and (max-width: 500px) {
 
   .lightCard {
-    font-size: 22px;
-    padding: 10px;
-    width: 100%;
+    padding: 15px 10px 15px 10px;
+    max-width: 45%;
   }
 
   .lightCard>.card_record,
   .lightCard>.card_record>.card_points {
-    font-size: 22px;
+    font-size: 11px;
+    border-radius: 12px;
+    line-height: 17px;
 
   }
-} */
+
+  .lightCard .card_points {
+    margin-top: 0px;
+
+  }
+
+
+
+  .lightCard .card_plus {
+    width: 15px;
+    height: 15px;
+  }
+
+  .lightCard .card_rewardInfo {
+    gap: 10px;
+
+  }
+
+  .lightCard .card_rewardImage {
+    width: 26px;
+    height: 26px;
+  }
+
+  .lightCard .card_get {
+
+    margin-top: 8px;
+    border-radius: 12px;
+    padding: 11px 0px 11px 0px;
+  }
+
+  .lightCard .card_moneyCount {
+    font-size: 11px;
+  }
+
+
+  .light_cards {
+    row-gap: 16px;
+    margin-top: 40px;
+  }
+
+
+  .full_cards {
+    gap: 15px;
+  }
+
+  .full_card {
+    border-radius: 12px;
+    width: 156px;
+    font-size: 10px;
+    padding: 7px;
+  }
+
+  .full_card .card_rewardInfo {
+    gap: 7px;
+
+  }
+
+  .full_card .card_points {
+    margin-top: 5px;
+    font-size: 10px;
+  }
+
+  .full_card .card_get {
+    margin-top: 6px;
+    font-size: 10px;
+
+    border-radius: 12px;
+    /*outline: none;*/
+    padding: 7px;
+  }
+
+  .full_card .card_plus {
+    width: 12px;
+    height: 12px;
+  }
+
+  .full_card .card_rewardImage {
+    width: 27px;
+    height: 27px;
+  }
+
+  .full_card .card_hourImage {
+    width: 16px;
+    height: 16px;
+  }
+
+  .full_card .card_moneyCount {
+    font-size: 12px;
+  }
+
+
+
+  .full_card .card_record {
+    border-radius: 12px;
+    font-size: 10px;
+
+  }
+
+  .full_card .card_passive,
+  .card_effect {
+    font-size: 10px;
+    margin-top: 5px;
+
+  }
+
+  .full_card .card_hour {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 10px;
+    margin-top: 5px;
+    gap: 0;
+    padding: 5px;
+  }
+
+  .light_cards .card_rewardInfo {
+    margin-top: 5px;
+    padding: 0px;
+  }
+
+  .light_cards {
+    gap: 10px;
+  }
+}
