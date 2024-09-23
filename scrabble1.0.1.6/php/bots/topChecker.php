@@ -24,7 +24,7 @@ class TopChecker {
 */
         foreach(self::TOP_PARAMS as $period => $params) {
             // todo переделать на CommonIdRating
-            $topPlayersNow = PlayerModel::getTopPlayers(... $params);
+            $topPlayersNow = CommonIdRatingModel::getTopPlayers(...$params);
 
             print_r($topPlayersNow);
 
@@ -35,9 +35,10 @@ class TopChecker {
                         . ORM::andWhere(
                             AchievesModel::COMMON_ID_FIELD,
                             '=',
-                            $player[PlayerModel::COMMON_ID_FIELD],
+                            $player[CommonIdRatingModel::COMMON_ID_FIELD],
                             true
                         )
+                        . ORM::andWhere(AchievesModel::IS_ACTIVE_FIELD, '=', 1, true)
                         . ORM::orderBy(AchievesModel::ID_FIELD, false)
                         . ORM::limit(1);
 
@@ -45,10 +46,10 @@ class TopChecker {
                         print 'Inserting ' . print_r($player, true);
                         if ($newId = AchievesModel::add(
                             [
-                                AchievesModel::COMMON_ID_FIELD => $player[PlayerModel::COMMON_ID_FIELD],
+                                AchievesModel::COMMON_ID_FIELD => $player[CommonIdRatingModel::COMMON_ID_FIELD],
                                 AchievesModel::EVENT_TYPE_FIELD => AchievesModel::TOP_TYPE,
                                 AchievesModel::EVENT_PERIOD_FIELD => $period,
-                                AchievesModel::EVENT_VALUE_FIELD => $player[PlayerModel::RATING_FIELD],
+                                AchievesModel::EVENT_VALUE_FIELD => $player[CommonIdRatingModel::RATING_FIELD_PREFIX . CommonIdRatingModel::ERUDIT],
                                 AchievesModel::DATE_ACHIEVED_FIELD => date('Y-m-d H:i:s'),
                                 AchievesModel::WORD_FIELD => '',
                                 AchievesModel::IS_ACTIVE_FIELD => 1,
@@ -56,6 +57,10 @@ class TopChecker {
                                 AchievesModel::INCOME_FIELD => MonetizationService::INCOME[$period],
                             ]
                         )) {
+                            // Начисляем reward
+                            BalanceModel::changeBalance($player[CommonIdRatingModel::COMMON_ID_FIELD], MonetizationService::REWARD[$period], AchievesModel::getDescription(AchievesModel::TOP_TYPE, $period));
+                            // todo начислить income за первый час
+
                             // Ставим игроку is_active=0 для других его топов
                             AchievesModel::setParamMass(
                                 AchievesModel::IS_ACTIVE_FIELD,
@@ -88,7 +93,7 @@ class TopChecker {
                                     [
                                         'field_name' => AchievesModel::COMMON_ID_FIELD,
                                         'condition' => BaseModel::CONDITIONS['='],
-                                        'value' => $player[PlayerModel::COMMON_ID_FIELD],
+                                        'value' => $player[CommonIdRatingModel::COMMON_ID_FIELD],
                                         'raw' => true,
                                     ],
                                 ]
@@ -127,18 +132,42 @@ class TopChecker {
                                     ]
                                 );
                             } else {
-                                // Для ТОП 10 делаем неактивными всех, у кого рейтинг
-                                $top11Rows = DB::queryArray(ORM::select(['*'], AchievesModel::TABLE_NAME)
+                                // Для ТОП 10 делаем неактивными всех, у кого рейтинг соответствует топ11 и ниже
+                                $top11Rows = DB::queryArray( $query =
+                                    ORM::select(
+                                        [
+                                            AchievesModel::ID_FIELD,
+                                            AchievesModel::COMMON_ID_FIELD,
+                                            CommonIdRatingModel::select(
+                                                [CommonIdRatingModel::RATING_FIELD_PREFIX . CommonIdRatingModel::ERUDIT],
+                                                true,
+                                                ORM::where(
+                                                    CommonIdRatingModel::COMMON_ID_FIELD,
+                                                    '=',
+                                                    AchievesModel::COMMON_ID_FIELD,
+                                                    true
+                                                ),
+                                                'rating'
+                                            )
+                                        ],
+                                        AchievesModel::TABLE_NAME
+                                    )
                                     . ORM::where(AchievesModel::IS_ACTIVE_FIELD,'=', 1, true)
                                     . ORM::andWhere(AchievesModel::EVENT_TYPE_FIELD,'=', AchievesModel::TOP_TYPE)
                                     . ORM::andWhere(AchievesModel::EVENT_PERIOD_FIELD, '=', AchievesModel::DAY_PERIOD)
-                                    . ORM::orderBy(AchievesModel::EVENT_VALUE_FIELD, false)
+                                    . ORM::orderBy('rating', false)
                                     ) ?: [];
 
+                                print $query;
                                 $currentRating = 0;
                                 $numRatingChanges = 0;
                                 foreach($top11Rows as $row) {
-                                    if ($numRatingChanges >= 7) {
+                                    if($row['rating'] != $currentRating) {
+                                        $currentRating = $row['rating'];
+                                        $numRatingChanges++;
+                                    }
+
+                                    if ($numRatingChanges >= 8) {
                                         AchievesModel::setParam(
                                             $row[AchievesModel::ID_FIELD],
                                             AchievesModel::IS_ACTIVE_FIELD,
@@ -147,11 +176,6 @@ class TopChecker {
                                         );
 
                                         continue;
-                                    }
-
-                                    if($row[AchievesModel::EVENT_VALUE_FIELD] != $currentRating) {
-                                        $currentRating = $row[AchievesModel::EVENT_VALUE_FIELD];
-                                        $numRatingChanges++;
                                     }
                                 }
                             }

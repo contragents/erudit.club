@@ -52,4 +52,40 @@ class CommonIdRatingModel extends BaseModel
 
         return (int)DB::queryValue($topQuery);
     }
+
+    /**
+     * @param int $top Номер в рейтинге - 1,2,3 ...
+     * @param int $topMax Максимальный номер в рейтинге (для поиска ТОП10 задать 4,10)
+     * @return array
+     */
+    public static function getTopPlayers(int $top, ?int $topMax = null): array
+    {
+        if ($top >= ($topMax ?? PlayerModel::TOP_10)) {
+            return [];
+        }
+
+        $topRatingsQuery = self::select([self::RATING_FIELD_PREFIX . self::ERUDIT])
+            . ORM::where(self::RATING_FIELD_PREFIX . self::ERUDIT, '>', PlayerModel::MIN_TOP_RATING, true)
+            . ORM::groupBy([self::RATING_FIELD_PREFIX . self::ERUDIT])
+            . ORM::orderBy(self::RATING_FIELD_PREFIX . self::ERUDIT, false)
+            . ORM::limit($topMax ? $topMax - $top + 1 : 1, $top - 1);
+
+        $topRatings = DB::queryArray($topRatingsQuery) ?: [];
+
+        $resultRatings = [];
+
+        for ($i = $top; $i <= $topMax ?: $top; $i++) {
+            $currentRating = $topRatings[$i - $top][self::RATING_FIELD_PREFIX . self::ERUDIT] ?? false;
+            if (!$currentRating) {
+                break;
+            }
+
+            $resultRatings[$i] = DB::queryArray(
+                self::select([self::COMMON_ID_FIELD, self::RATING_FIELD_PREFIX . self::ERUDIT])
+                . ORM::where(self::RATING_FIELD_PREFIX . self::ERUDIT, '=', $currentRating, true)
+            ) ?: [];
+        }
+
+        return $resultRatings;
+    }
 }

@@ -32,11 +32,13 @@ class BaseModel
         self::GOMOKU => 4,
     ];
 
-    public static function select(array $fields = [], bool $skobki = false): string
+    public static function select(array $fields = [], bool $skobki = false, string $where = '', string $as = ''): string
     {
-        return ($skobki ? '(' : '')
+        return ($skobki ? ' ( ' : '')
             . ORM::select($fields, static::TABLE_NAME)
-            . ($skobki ? ')' : '');
+                . $where
+            . ($skobki ? ' ) ' : '')
+            . ($as ? " as $as" : '');
     }
 
     public static function getFieldWithTable(string $field): string
@@ -58,7 +60,7 @@ class BaseModel
             );
 
         if (DB::queryInsert($query)) {
-            return DB::insertID();
+            return DB::insertID() ?: true;
         } else {
             return false;
         }
@@ -72,11 +74,17 @@ class BaseModel
      * @param bool $raw
      * @return bool
      */
-    public static function setParam($id, $field, $value, bool $raw = false)
+    public static function setParam($id, $field, $value, bool $raw = false): bool
     {
         $updateQuery = ORM::update(static::TABLE_NAME)
-            . ORM::set(['field' => $field, 'value' => $raw ? $value : DB::escapeString($value)])
-            . ORM::where('id', '=', $id);
+            . ORM::set(
+                [
+                    'field' => $field,
+                    'value' => ($raw || ($value instanceof ORM)) ? $value : DB::escapeString($value),
+                    'raw' => $raw
+                ]
+            )
+            . ORM::where('id', '=', $id, true);
 
         if (DB::queryInsert($updateQuery)) {
             return true;

@@ -2,6 +2,8 @@
     /** Класс DB для работы с MariaDB */
 class DB
 {
+    private static bool $is_transaction_started =  false;
+
     private static $_instance = null;
 
     public static ?mysqli $DBConnect = null;
@@ -11,7 +13,9 @@ class DB
         self::connect();
     }
 
-    public static function transactionRollback(){
+    public static function transactionRollback() {
+        self::$is_transaction_started = false;
+
         if (self::$DBConnect === null) {
             return false;
         } else {
@@ -20,6 +24,8 @@ class DB
     }
 
     public static function transactionCommit() {
+        self::$is_transaction_started = false;
+
         if (self::$DBConnect === null) {
             return false;
         } else {
@@ -28,13 +34,18 @@ class DB
     }
 
     public static function transactionStart(): bool {
+        if (self::$is_transaction_started) {
+            return true;
+        }
+
         if (self::$DBConnect === null) {
             self::connect();
         }
 
         if (!mysqli_begin_transaction(self::$DBConnect)) {
             self::connect();
-            return mysqli_begin_transaction(self::$DBConnect);
+
+            return self::$is_transaction_started = mysqli_begin_transaction(self::$DBConnect);
         }
 
         return true;

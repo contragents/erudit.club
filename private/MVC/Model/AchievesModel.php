@@ -129,6 +129,15 @@ class AchievesModel extends BaseModel
 
     private static ?Game $instance = null;
 
+    public static function getDescription(string $eventType, string $eventPeriod): string
+    {
+        if ($eventType === AchievesModel::TOP_TYPE) {
+            return T::S('rank position') . ' ' . T::S(AchievesModel::TOP_TYPE . '_' . $eventPeriod);
+        } else {
+            return T::S('record of the ' . $eventPeriod) . ' - ' . T::S($eventType);
+        }
+    }
+
     public static function getPastAchievesByCommonId(int $commonId) {
         $query = ORM::select(
                 [
@@ -141,9 +150,9 @@ class AchievesModel extends BaseModel
                 self::TABLE_NAME
             )
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
-            //. ORM::andWhere(self::EVENT_TYPE_FIELD, '=', self::TOP_TYPE)
+            . ORM::andWhere(self::IS_ACTIVE_FIELD, '=', 0, true)
             . ORM::orderBy(self::ID_FIELD, false)
-            . ORM::limit(30, 30);
+            . ORM::limit(30);
 
         $res = DB::queryArray($query) ?: [];
 
@@ -162,9 +171,8 @@ class AchievesModel extends BaseModel
                 self::TABLE_NAME
             )
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
-            //. ORM::andWhere(self::EVENT_TYPE_FIELD, '=', self::TOP_TYPE)
-            . ORM::orderBy(self::ID_FIELD, false)
-            . ORM::limit(30);
+            . ORM::andWhere(self::IS_ACTIVE_FIELD, '=', 1, true)
+            . ORM::orderBy(self::ID_FIELD, false);
 
         $res = DB::queryArray($query) ?: [];
 

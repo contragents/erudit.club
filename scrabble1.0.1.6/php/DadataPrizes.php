@@ -5,7 +5,9 @@ namespace Dadata;
 use BaseModel;
 use \Cache;
 use AchievesModel;
+use MonetizationService;
 use ORM;
+use T;
 
 class Prizes
 {
@@ -160,8 +162,8 @@ class Prizes
                 AchievesModel::WORD_FIELD => $arr['word'] ?: '',
                 AchievesModel::EVENT_VALUE_FIELD => $arr['value'],
                 AchievesModel::IS_ACTIVE_FIELD => 1,
-                AchievesModel::REWARD_FIELD => \MonetizationService::REWARD[$eventPeriod],
-                AchievesModel::INCOME_FIELD => \MonetizationService::INCOME[$eventPeriod],
+                AchievesModel::REWARD_FIELD => MonetizationService::REWARD[$eventPeriod],
+                AchievesModel::INCOME_FIELD => MonetizationService::INCOME[$eventPeriod],
             ]
         )) {
             return true;
@@ -225,6 +227,17 @@ class Prizes
         };
 
         // todo здесь начислить reward на баланс монет
+        if (!\BalanceModel::changeBalance(
+            $commonId,
+            MonetizationService::REWARD[$eventPeriod],
+            AchievesModel::getDescription($eventType, $eventPeriod)
+        )) {
+            \DB::transactionRollback();
+
+            return false;
+        }
+
+        // todo начислить income за первый час
 
         \DB::transactionCommit();
 

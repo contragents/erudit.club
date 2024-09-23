@@ -212,4 +212,9 @@ class ORM
     {
         return ' AND NOT ' . self::getWhereCondition($fieldName, $cond, $value, $isRaw);
     }
+
+    public static function skobki(string $expression): string
+    {
+        return ' ( ' . $expression . ' ) ';
+    }
 }
