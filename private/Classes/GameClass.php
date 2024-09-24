@@ -13,6 +13,15 @@ class Game
     const CURRENT_GAME_KEY = 'erudit.current_game_';
     const NEW_PLAYER = 'new_player';
 
+    public const SUDOKU = 'sudoku';
+    public const ERUDIT = 'erudit';
+    public const GOMOKU = 'gomoku';
+    public const SCRABBLE = 'scrabble';
+
+    public const GAME_LANG = [T::EN_LANG => self::SCRABBLE, T::RU_LANG => self::ERUDIT];
+
+    public static string $gameName = self::SCRABBLE;
+
     protected $Queue = Queue::class;
     const GAMES_KEY = 'erudit.games_';
     public static $configStatic;
@@ -20,7 +29,6 @@ class Game
     public $config;
     public $User; // user cookie
     public $commonId; // user verified commonId
-    public string $gameName;
     public $currentGame;
     public $currentGameUsers = false;
     protected $gamePlayersWaiting = false; // Количество игроков, ожидающих начала игры
@@ -120,8 +128,6 @@ class Game
         $this->turnDeltaTime = $this->config['turnDeltaTime'];
         $this->activityTimeout = $this->config['activityTimeout'];
         $this->chisloFishek = $this->config['chisloFishek'];
-
-        T::$lang = $_GET['lang'] ?? T::RU_LANG;
 
         $this->User = $this->validateCookie($_COOKIE['erudit_user_session_ID']);
 
@@ -508,8 +514,8 @@ class Game
         error_reporting(E_ALL);*/
 
         $message['info'] = [];
-        $message['info']['rating'] = CommonIdRatingModel::getRating($this->commonId);
-        $message['info']['top'] = CommonIdRatingModel::getTopByRating($message['info']['rating']);
+        $message['info']['rating'] = CommonIdRatingModel::getRating($this->commonId, self::$gameName);
+        $message['info']['top'] = CommonIdRatingModel::getTopByRating($message['info']['rating'], self::$gameName);
         $message['info']['SUDOKU_BALANCE'] = 100500;
         $message['info']['SUDOKU_TOP'] = 365;
         $message['info']['rewards'] = 15.356;
@@ -939,7 +945,7 @@ class Game
 
     protected function getRatingWithCommonID($commonId)
     {
-        $rating = CommonIdRatingModel::getRating($commonId);
+        $rating = CommonIdRatingModel::getRating($commonId, self::$gameName);
 
         /*'max(cookie) as cookie',
                     'max(rating) as rating',
@@ -959,7 +965,7 @@ class Game
         $ratingInfo[0] = [
             'rating' => $rating,
             'top' => $rating >= 1700 ? CommonIdRatingModel::getTopByRating($rating) : 'Не в ТОПе',
-            'games_played' => RatingHistoryModel::getNumGamesPlayed($commonId, $this->gameName),
+            'games_played' => RatingHistoryModel::getNumGamesPlayed($commonId, self::$gameName),
             'win_percent' => 50,
             'inactive_percent' => 0,
         ];
@@ -1960,7 +1966,7 @@ class Game
 
 
                 $this->gameStatus['users'][$num]['common_id'] = PlayerModel::getPlayerID($user['ID'], true);
-                if (!($this->gameStatus['users'][$num]['rating'] = CommonIdRatingModel::getRating($this->gameStatus['users'][$num]['common_id']))) {
+                if (!($this->gameStatus['users'][$num]['rating'] = CommonIdRatingModel::getRating($this->gameStatus['users'][$num]['common_id'], self::$gameName))) {
                     $userRating = $this->getRatings($user['ID']);
                     $this->gameStatus['users'][$num]['rating'] = $userRating ? $userRating[0]['rating'] : self::NEW_PLAYER;
                 }

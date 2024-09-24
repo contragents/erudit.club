@@ -4,6 +4,7 @@ namespace Dadata;
 
 use \Cache;
 use AchievesModel;
+use Game;
 
 class Prizes
 {
@@ -157,6 +158,7 @@ class Prizes
                 AchievesModel::EVENT_PERIOD_FIELD => $eventPeriod,
                 AchievesModel::WORD_FIELD => $arr['word'] ?: '',
                 AchievesModel::EVENT_VALUE_FIELD => $arr['value'],
+                AchievesModel::GAME_NAME_ID_FIELD => Game::$gameName,
             ]
         )) {
             return true;

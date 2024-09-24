@@ -124,6 +124,9 @@ class StatsController extends BaseController
 
     public function viewV2Action(): string
     {
+        //ini_set("display_errors", 1);
+        //error_reporting(E_ALL);
+        try {
         $result = ['player_name' => AchievesModel::getPlayerNameByCommonId(self::$Request['common_id']), 'player_avatar_url' => PlayerModel::getAvatarUrl(self::$Request['common_id'])];
 
         $baseUrl = self::getUrl('viewV2', self::$Request, ['page']);
@@ -140,6 +143,9 @@ class StatsController extends BaseController
         $result['past_achieves'] = $pastAchieves;
 
         $result += $this->gamesV2Action(true);
+            } catch(Throwable $e) {
+            return json_encode(['exception' => $e->__toString()] , JSON_UNESCAPED_UNICODE);
+        }
 
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }

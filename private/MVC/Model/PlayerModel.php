@@ -91,7 +91,7 @@ class PlayerModel extends BaseModel
     {
         return DB::queryValue(
             ORM::select(['name'], self::PLAYER_NAMES_TABLE_NAME)
-            . ORM::where('some_id', '=', Game::hash_str_2_int($someId), true)
+            . ORM::where('some_id', '=', \Game::hash_str_2_int($someId), true)
             . ORM::limit(1)
         );
     }
@@ -163,7 +163,7 @@ class PlayerModel extends BaseModel
             return 0;
         }
 
-        return CommonIdRatingModel::getRating($player[self::COMMON_ID_FIELD]) ?: ($player[self::RATING_FIELD] ?? CommonIdRatingModel::INITIAL_RATING);
+        return CommonIdRatingModel::getRating($player[self::COMMON_ID_FIELD], \Game::$gameName) ?: ($player[self::RATING_FIELD] ?? CommonIdRatingModel::INITIAL_RATING);
     }
 
     public static function getRating($commonID = false, $cookie = false, $userID = false)
@@ -394,7 +394,7 @@ class PlayerModel extends BaseModel
         foreach ($idArray as $value) {
             Cache::setex(
                 'erudit.rating_cache_' . $value,
-                round(Game::$configStatic['cacheTimeout'] / 15),
+                round((\Game::$configStatic['cacheTimeout'] ?? 3000) / 15),
                 $ratingInfo
             );
         }

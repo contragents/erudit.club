@@ -22,7 +22,7 @@ class RatingService
         // todo сделать после отключения games_statistics - в статистике отключено
         self::saveGameStats($Game, $players);
 
-        if(!self::saveRatings($players, $Game['gameNumber'], T::$lang === T::RU_LANG ? BaseModel::ERUDIT : BaseModel::SCRABBLE)) {
+        if(!self::saveRatings($players, $Game['gameNumber'])) {
             return self::$playersUnchanged; // todo отдать рейтинги без изменений
         } else {
             foreach ($players as $player) {
@@ -160,8 +160,10 @@ class RatingService
         }
     }
 
-    protected static function saveRatings(&$players, int $gameId, string $gameName = BaseModel::ERUDIT): bool
+    protected static function saveRatings(&$players, int $gameId): bool
     {
+        $gameName = Game::$gameName;
+
         DB::transactionStart();
 
         foreach ($players as $player) {
@@ -227,7 +229,7 @@ class RatingService
 
         $winner['common_id'] = $Game['users'][$Game[$winner['cookie']]]['common_id'] ?? false;
         // рейтинг берем из БД, потом из игры, т.к. он мог поменяться в процессе
-        $winner['rating'] = CommonIdRatingModel::getRating($winner['common_id'])
+        $winner['rating'] = CommonIdRatingModel::getRating($winner['common_id'], Game::$gameName)
             ?: (
                 ((int)$Game['users'][$Game[$winner['cookie']]]['rating'] ?? 0)
                 ?: CommonIdRatingModel::INITIAL_RATING
@@ -246,7 +248,7 @@ class RatingService
                 : false;
 
             $lostPlayers[$num]['common_id'] = $Game['users'][$Game[$cookie]]['common_id'] ?? false;
-            $lostPlayers[$num]['rating'] = CommonIdRatingModel::getRating($lostPlayers[$num]['common_id'])
+            $lostPlayers[$num]['rating'] = CommonIdRatingModel::getRating($lostPlayers[$num]['common_id'], Game::$gameName)
                 ?: (
                     ((int)$Game['users'][$Game[$cookie]]['rating'] ?? 0)
                     ?: CommonIdRatingModel::INITIAL_RATING

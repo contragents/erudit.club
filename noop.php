@@ -1,4 +1,9 @@
 <?php
+$secretKey = 'eruditforever';
+$method = 'AES-128-CBC'; // todo move to .env somedays
+$iv = base64_decode('x/bazHpEqMpxpLfVWD9dhA==');
+$decrypted_message = openssl_decrypt('xwA5Ebr5JzLBDhWNqmD3gQ==', $method, $secretKey, 0, $iv);
+var_export($decrypted_message); exit;
 /*
 ini_set("display_errors", 1);
 error_reporting(E_ALL);

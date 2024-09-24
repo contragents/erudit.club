@@ -5,7 +5,7 @@ class T
     const RU_LANG = 'RU';
     const EN_LANG = 'EN';
 
-    public static $lang = self::EN_LANG;
+    public static string $lang = self::EN_LANG;
 
     public static function getInviteFriendPrompt(): string
     {

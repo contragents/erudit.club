@@ -1,5 +1,6 @@
 <?php
-
+//ini_set("display_errors", 1);
+//error_reporting(E_ALL);
 spl_autoload_register(
     function ($class_name) {
         $Exploded_class = explode('\\', $class_name);
@@ -56,6 +57,11 @@ Config::makeEnvironment();
 
 // Проверяем режим дебага
 Config::checkDebugFlag();
+
+T::$lang = in_array(($_GET['lang'] ?? 'NA'), T::GAME_MODE_LANG) ? $_GET['lang'] : BaseController::getLang();
+Game::$gameName = Game::GAME_LANG[T::$lang];
+
+//T::$lang = T::RU_LANG;
 
 /**
  * Глобальная функция вывода отладочной инфо, либо логирования (пока в keydb)

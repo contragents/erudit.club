@@ -8,8 +8,30 @@ class BalanceHistoryModel extends BaseModel
     const PREV_BALANCE_FIELD = 'prev_count'; // varchar!
     const NEW_BALANCE_FIELD = 'new_count'; // varchar!
     const CURRENCY_ID_FIELD = 'currency_id'; // 1 - sudoku default
+    const TYPE_ID_FIELD = 'transaction_type_id'; // 0 - game (default), 1 - achieve, 2 - deposit, 3 - withdraw, 4 - motivation
+    const REF_FIELD = 'reference';
 
-    public static function addTransaction(int $commonId, $deltaBalance, string $description = ''): bool {
+    const GAME_TYPE =  'game';
+    const ACHIEVE_TYPE = 'achieve';
+    const DEPOSIT_TYPE = 'deposit';
+    const WITHDRAW_TYPE = 'withdraw';
+    const MOTIVATION_TYPE = 'motivation';
+
+    const TYPE_IDS = [
+        self::GAME_TYPE => 0,
+        self::ACHIEVE_TYPE => 1,
+        self::DEPOSIT_TYPE => 2,
+        self::WITHDRAW_TYPE => 3,
+        self::MOTIVATION_TYPE => 4
+    ];
+
+    public static function addTransaction(
+        int $commonId,
+        $deltaBalance,
+        string $description = '',
+        ?int $typeId = null,
+        ?int $ref = null
+    ): bool {
         return (bool)self::add(
             [
                 self::COMMON_ID_FIELD => $commonId,
@@ -28,6 +50,8 @@ class BalanceHistoryModel extends BaseModel
                     )
                 ),
             ]
+            + ($typeId ? [self::TYPE_ID_FIELD => $typeId] : [])
+            + ($ref ? [self::REF_FIELD => $ref] : [])
         );
     }
 }

@@ -1576,7 +1576,7 @@ label.file-label:active:before {
 .modal-stats .player-info .left-col {
 	flex-grow: 1;
 	margin-top: 1px;
-	padding-left: 0;
+	padding-left: 5px;
 	font-size: 14px;
 	word-wrap: anywhere;
 }
@@ -1587,13 +1587,11 @@ label.file-label:active:before {
 	display: block;
 	flex-basis: 55px;
 	word-wrap: normal;
-	line-height: 28px;
 }
 .modal-stats .player-info .left-col span:last-of-type {
 	display: block;
 	margin-left: 5px;
 	flex-grow: 1;
-	flex-shrink: 1;
 	font-size: 17px;
 	font-weight: 700;
 }
@@ -1756,7 +1754,7 @@ label.file-label:active:before {
 	padding-bottom: 8px;
 }
 .total span:last-of-type {
-	--border: 1px solid #909dcd;
+	--border: 1px solid #fff;
 	margin-top: auto;
 	border-top: var(--border);
 	border-bottom: var(--border);
@@ -1801,7 +1799,6 @@ label.file-label:active:before {
 }
 .card_list > li {
 	flex-grow: 1;
-	width: 49%;
 }
 .card_list .full_card {
 	width: auto;
@@ -1811,11 +1808,9 @@ label.file-label:active:before {
 }
 .card-list-wrap .date {
 	font-size: 18px;
-	line-height: 18px;
 	display: block;
 	text-align: center;
 	margin-top: 2px;
-	margin-bottom: 4px;
 }
 .divider {
 	border: none;
@@ -1840,7 +1835,7 @@ label.file-label:active:before {
 }
 
 .card_item {
-	border: 2px solid rgb(200, 200, 200)/*rgb(70, 66, 66)*/;
+	border: 2px solid rgb(70, 66, 66);
 	padding: 16px 20px 16px 20px;
 	height: 100%;
 	width: 100%;
@@ -1907,6 +1902,7 @@ label.file-label:active:before {
 	padding: 19px 0 19px 0;
 	font-size: 23px;
 	font-weight: 900;
+
 	outline: #b28c1d solid 1px;
 	outline-offset: -6px;
 }
@@ -1981,7 +1977,7 @@ label.file-label:active:before {
 } */
 
 /* @media (min-width: 360px) and (max-width: 500px) { */
-@media (min-width: 320px) {
+@media (min-width: 360px) {
 	.lightCard {
 		padding: 15px 10px 15px 10px;
 		max-width: 45%;
@@ -2028,7 +2024,7 @@ label.file-label:active:before {
 	}
 
 	.full_cards {
-		gap: 8px 2%;
+		gap: 8px;
 	}
 
 	.full_card {
@@ -2050,13 +2046,10 @@ label.file-label:active:before {
 	.full_card .card_get {
 		margin-top: 6px;
 		font-size: 10px;
-		border-radius: 20px;
+
+		border-radius: 12px;
 		/*outline: none;*/
 		padding: 7px;
-	}
-
-	.full_card .card_get > p:first-child {
-		margin-top: 3px;
 	}
 
 	.full_card .card_plus {
@@ -2065,8 +2058,8 @@ label.file-label:active:before {
 	}
 
 	.full_card .card_rewardImage {
-		width: 40px;
-		height: 40px;
+		width: 27px;
+		height: 27px;
 	}
 
 	.full_card .card_hourImage {
@@ -2080,9 +2073,7 @@ label.file-label:active:before {
 
 	.full_card .card_record {
 		border-radius: 12px;
-		font-size: 14px;
-		padding: 6px;
-		word-break: break-word;
+		font-size: 10px;
 	}
 
 	.full_card .card_passive,
@@ -2120,149 +2111,6 @@ label.file-label:active:before {
 .modal-stats button.close {
 	display: none;
 	position: absolute;
-	right: 20px;
-	top: 12px;
-}
-
-.modal-settings .nav-tabs {
-	overflow: hidden;
-}
-
-.modal-settings.modal-stats .modal-content {
-	background-position: top center;
-}
-
-.modal-settings .nav-item::after {
-	background: #1d2c59;
-}
-
-.modal-settings .player-info .invisible {
-	display: none !important;
-}
-
-.modal-stats .pagination li:only-child {
-	display: none;
-}
-
-.modal-stats .pagination li:nth-child(16) ~ li {
-	display: none;
-}
-
-.modal-stats .player-info .left-col > div:before {
-	content: '';
-	display: block;
-	flex-basis: 10px;
-	flex-grow: 0;
-	flex-shrink: 9999;
-}
-
-.modal-stats .player-info .left-col > div {
-	margin-left: 0 !important;
-}
-
-@media (max-width: 479.9px) {
-	.modal-stats .player-info .left-col span:first-of-type {
-		padding-left: 0;
-		align-self: start;
-		flex-basis: 37px;
-		align-self: start;
-		line-height: 20px;
-		font-size: 11px;
-	}
-
-	.modal-stats .player-info .left-col span:last-of-type {
-		margin-left: 2px;
-		font-size: 13px;
-	}
-
-	.modal-stats .player-info .left-col {
-		flex-shrink: 1;
-		flex-basis: 276px;
-		padding-right: 5px;
-		padding-left: 0;
-	}
-
-	.modal-stats .img-col {
-		max-width: none;
-		padding: 0;
-		padding-right: 2px;
-		flex-shrink: 1;
-		flex-basis: 78px;
-		flex-grow: 0;
-	}
-
-	.modal-settings .pill {
-		font-size: 10px;
-	}
-
-	.modal-stats .match-history-table li {
-		gap: 10px;
-	}
-
-	.modal-stats .match-history-date {
-		font-size: 11px;
-		text-wrap: nowrap;
-	}
-
-	.modal-stats .match-history-result,
-	.modal-stats .match-history-rating,
-	.modal-stats .match-history-table .th:nth-child(2),
-	.modal-stats .match-history-table .th:nth-child(3) {
-		flex-basis: 80px;
-		flex-shrink: 1;
-		flex-grow: 1;
-	}
-
-	.modal-stats .match-history-date,
-	.modal-stats .match-history-table .th:nth-child(1) {
-		flex-basis: 86px;
-	}
-
-	.modal-stats .match-history-table .pill {
-		max-width: unset;
-	}
-
-	.modal-stats .match-history-date {
-		font-size: 9px;
-		font-weight: 900;
-	}
-
-	.modal-stats .match-history-opponent {
-		flex-shrink: 1;
-		flex-basis: 78px;
-		padding: 5px 0 2px;
-	}
-
-	.modal-stats .pagination a,
-	.modal-stats .pagination span {
-		width: 100%;
-		display: block;
-	}
-
-	.modal-stats .pagination li {
-		width: calc(100% / 16);
-		text-align: center;
-		font-size: 10px;
-	}
-
-	.modal-stats .pagination {
-		padding-left: 2%;
-		flex-wrap: nowrap;
-	}
-
-	.box {
-		font-size: 10px;
-	}
-}
-
-@media (max-width: 575.9px) {
-	.modal-settings {
-		padding-left: 0 !important;
-		padding-right: 0 !important;
-	}
-
-	.modal-settings .modal-dialog {
-		margin-left: auto;
-		margin-right: auto;
-	}
+    right: 20px;
+    top: 12px;
 }

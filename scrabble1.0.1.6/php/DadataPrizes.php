@@ -2,9 +2,14 @@
 
 namespace Dadata;
 
+use BalanceHistoryModel;
+use BalanceModel;
 use BaseModel;
 use \Cache;
 use AchievesModel;
+use Game;
+use IncomeHistoryModel;
+use IncomeModel;
 use MonetizationService;
 use ORM;
 use T;
@@ -147,13 +152,13 @@ class Prizes
         $eventType,
         $eventPeriod,
         array $arr
-    ): bool {
+    ) {
         $commonId = $arr['common_id'] ?? Players::getPlayerID($arr['cookie']);
         if (!$commonId) {
             return false;
         }
 
-        if (AchievesModel::add(
+        if ($newId = AchievesModel::add(
             [
                 AchievesModel::COMMON_ID_FIELD => $commonId,
                 AchievesModel::DATE_ACHIEVED_FIELD => date('Y-m-d H:i:s', $arr['record_date']),
@@ -164,9 +169,10 @@ class Prizes
                 AchievesModel::IS_ACTIVE_FIELD => 1,
                 AchievesModel::REWARD_FIELD => MonetizationService::REWARD[$eventPeriod],
                 AchievesModel::INCOME_FIELD => MonetizationService::INCOME[$eventPeriod],
+                AchievesModel::GAME_NAME_ID_FIELD => Game::$gameName,
             ]
         )) {
-            return true;
+            return $newId;
         }
 
         return false;
@@ -210,7 +216,7 @@ class Prizes
                                         ],
                                     ]);
 
-        if(!self::saveHistory(
+        if(!($newId = self::saveHistory(
             $eventType,
             $eventPeriod,
             [
@@ -220,17 +226,19 @@ class Prizes
                 'word' => $word,
                 'record_date' => date('U'),
             ]
-        )) {
+        ))) {
             \DB::transactionRollback();
 
             return false;
         };
 
         // todo здесь начислить reward на баланс монет
-        if (!\BalanceModel::changeBalance(
+        if (!BalanceModel::changeBalance(
             $commonId,
             MonetizationService::REWARD[$eventPeriod],
-            AchievesModel::getDescription($eventType, $eventPeriod)
+            AchievesModel::getDescription($eventType, $eventPeriod),
+            BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::ACHIEVE_TYPE],
+            $newId
         )) {
             \DB::transactionRollback();
 
@@ -238,6 +246,17 @@ class Prizes
         }
 
         // todo начислить income за первый час
+        if (!IncomeModel::changeIncome(
+            $commonId,
+            MonetizationService::INCOME[$eventPeriod],
+            AchievesModel::getDescription($eventType, $eventPeriod),
+            IncomeHistoryModel::TYPE_IDS[IncomeHistoryModel::ACHIEVE_TYPE],
+            $newId
+        )) {
+            \DB::transactionRollback();
+
+            return false;
+        }
 
         \DB::transactionCommit();
 

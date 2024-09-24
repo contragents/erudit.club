@@ -19,6 +19,8 @@ class BaseController
 
         if (!empty(self::$Request['lang'])) {
             T::$lang = self::$Request['lang'];
+        } else {
+            T::$lang = self::getLang();
         }
     }
 
@@ -45,6 +47,22 @@ class BaseController
                     )
                 )
                 : '');
+    }
+
+    /*
+     * Определяем язык (игру) по рефереру
+     */
+    public static function getLang(): string
+    {
+        if (strpos($_SERVER['HTTP_REFERER'] ?? '', 'dev.html')) {
+            return T::GAME_MODE_LANG['dev'];
+        } elseif (strpos($_SERVER['HTTP_REFERER'] ?? '', 'private.html')) {
+            return T::GAME_MODE_LANG['yandex'];
+        } elseif  (strpos($_SERVER['HTTP_REFERER'] ?? '', 'scramble.html')) {
+            return T::GAME_MODE_LANG['scrabble'];
+        } else {
+            return T::GAME_MODE_LANG['yandex'];
+        }
     }
 
     public function Run()

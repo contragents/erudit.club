@@ -188,7 +188,7 @@ function StatsPage({ json, BASE_URL }) {
                                 <p><img class="card_plus" src="./images/plus.png" alt=""></p>
                                 <p><img class="card_rewardImage" src="./images/bigMoney.png" alt="money">
                                 </p>
-                                <span class="card_moneyCount">x${reward}</span>
+                                <span class="card_moneyCount">${reward}</span>
                             </div>
                         </div>
                         <p class="card_passive">Your passive income</p>

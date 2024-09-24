@@ -15,7 +15,7 @@ class RatingHistoryModel extends BaseModel
         int $newRating,
         bool $isWinner,
         int $gameId,
-        string $gameName = self::ERUDIT
+        string $gameName = Game::SCRABBLE
     ) {
         return self::add(
             [
