@@ -170,10 +170,6 @@ function StatsPage({ json, BASE_URL }) {
 
                     return `
                 <li>
-                
-      <p class="card_effect">Effect lasts until beaten</p>
-    </li>
-    
                     <div class="card_item full_card ${types[event_period]}">
                         <h3 class="card_record">
                             ${record_type_text} <br>
@@ -188,7 +184,7 @@ function StatsPage({ json, BASE_URL }) {
                                 <p><img class="card_plus" src="./images/plus.png" alt=""></p>
                                 <p><img class="card_rewardImage" src="./images/bigMoney.png" alt="money">
                                 </p>
-                                <span class="card_moneyCount">${reward}</span>
+                                <span class="card_moneyCount">x${reward}</span>
                             </div>
                         </div>
                         <p class="card_passive">Your passive income</p>
@@ -197,7 +193,7 @@ function StatsPage({ json, BASE_URL }) {
                             <span>x${income}/hour</span>
                         </div>
 
-                        <p class="card_effect">Effect lasts until beaten</p>
+                        <p class="card_effect">Effect lasts util beaten</p>
                     </div>
                     <span class="date">${strDate}</span>
                 </li>
