@@ -39,7 +39,4 @@ class Eng extends Ru
     private static $badWords = [];
     private static $goodWords = [];
     private static $goodWordsLinks = [];
-
-    private static $dictTable = 'dict';
-
 }

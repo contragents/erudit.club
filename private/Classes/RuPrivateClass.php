@@ -87,8 +87,6 @@ class RuPrivate
     protected static $goodWordsPrice = [];
     protected static $goodWordsLinks = [];
 
-    protected static $dictTable = 'dict';
-
     const BIG_WORD_LEN = 5;
     public static bool $isFirstTurn = false;
     protected static int $slovoX2Price = 0;
@@ -417,14 +415,6 @@ class RuPrivate
     {
         // CLUB-290, CLUB-299 не проверяем слова по словарю
         return 1;
-
-        if (isset($wordsAccepted[$word])) {
-            return 0;
-        }
-
-        return DB::queryValue(
-            "SELECT count(1) as cnt FROM " . self::$dictTable . " WHERE slovo='$word' AND deleted = 0 LIMIT 1;"
-        );
     }
 
     private static function compare_desks(&$desk, &$cells, &$gameStatus)

@@ -405,8 +405,22 @@ function StatsPage({ json, BASE_URL }) {
                     .replaceAll('{{gameList}}', GameList({ games: json.games }))
                     .replaceAll('{{pagination}}', Pagination({ pagination: json.pagination }))
                     .replaceAll('{{activeAwards}}', CardList({ list: json.current_achieves }))
-                    .replaceAll('{{pastAwards}}', CardList({ list: json.past_achieves }));
+                    .replaceAll('{{pastAwards}}', CardList({ list: json.past_achieves }))
 
+
+                    .replaceAll('{{Stats}}', '<?= T::S('Stats') ?>')
+                    .replaceAll('{{Past Awards}}', '<?= T::S('Past Awards') ?>')
+                    .replaceAll('{{Parties_Games}}', '<?= T::S('Parties_Games') ?>')
+                    .replaceAll('{{Player Awards}}', '<?= T::S('Player Awards') ?>')
+                    .replaceAll('{{Player}}', '<?= T::S('Player') ?>')
+                    .replaceAll('{{VS}}', '<?= T::S('VS') ?>')
+                    .replaceAll('{{Date}}', '<?= T::S('Date') ?>')
+                    .replaceAll('{{Result}}', '<?= T::S('Result') ?>')
+                    .replaceAll('{{Rating}}', '<?= T::S('Rating') ?>')
+                    .replaceAll('{{Opponent}}', '<?= T::S('Opponent') ?>')
+                    .replaceAll('{{Active Awards}}', '<?= T::S('Active Awards') ?>')
+                    .replaceAll('{{Статистика}}', '<?= T::S('Stats') ?>')
+                ;
                 return message;
             })
             .catch((error) => console.error('Ошибка загрузки stats-modal-tpl:', error));
@@ -460,12 +474,15 @@ function StatsPage({ json, BASE_URL }) {
     };
 
     const setTabContentOffset = (i = 0) => {
-        if (!document.querySelectorAll(`${selectors.tabLink}.active`)) {
+        if (
+            !document.querySelectorAll(`${selectors.tabLink}.active`)
+            ||
+            !(0 in document.querySelectorAll(`${selectors.tabLink}.active`))
+        ) {
             return;
         }
-        const targetId = document
-            .querySelectorAll(`${selectors.tabLink}.active`)[0]
-            .getAttribute('href');
+
+        const targetId = document.querySelectorAll(`${selectors.tabLink}.active`)[0].getAttribute('href');
         const tabContent = document.querySelector(targetId).closest(selectors.tabContent);
         const tabContentWrap = tabContent.closest(selectors.tabContentWrap);
         const tabPane = document.querySelector(targetId);

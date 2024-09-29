@@ -18,6 +18,8 @@ class Game
     public const GOMOKU = 'gomoku';
     public const SCRABBLE = 'scrabble';
 
+    public const COOKIE_KEY = 'erudit_user_session_ID';
+
     public const GAME_LANG = [T::EN_LANG => self::SCRABBLE, T::RU_LANG => self::ERUDIT];
 
     public static string $gameName = self::SCRABBLE;
@@ -1216,6 +1218,7 @@ class Game
         if ($this->currentGame === false) {
             return 'Игра еще не начата!';
         }
+
         $check_statuses = ['Слово не найдено', 'Корректно', 'Слово из одной буквы', 'Повтор'];
         $result = '';
         $desk = Cache::get(static::CURRENT_GAME_KEY . $this->currentGame);
@@ -1223,8 +1226,12 @@ class Game
         $cells = json_decode($_POST['cells'], true);
         //Присланная доска
 
+        /**
+         * @method Ru|Eng submit()
+         */
         $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus);
         $summa = 0;
+
         if (is_array($new_fishki) && !empty($new_fishki)) {
             foreach ($new_fishki['badWords'] as $badWord) {
                 if (isset($this->gameStatus['wordsAccepted'][$badWord])) {
@@ -1251,7 +1258,7 @@ class Game
             $result = 'Вы не составили ни одного слова';
         }
 
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
+        return json_encode([$result], JSON_UNESCAPED_UNICODE);
     }
 
     public function botUnlock(): void
@@ -1287,7 +1294,7 @@ class Game
             // Текущая доска
 
             $saveDesk = $desk;
-            // Сохранили доску
+            // Сохранили доску во временную копию
 
             $saveWords = $this->gameStatus['wordsAccepted'];
             // сохранили сыгранные слова
@@ -1381,9 +1388,10 @@ class Game
                 //Проверяем забранные с поля звезды
                 foreach ($this->gameStatus['users'][$this->numUser]['fishki'] as $num => $fishka) {
                     foreach ($new_fishki['good'] as $i => $good_fishka) {
-                        if ($fishka === $good_fishka[3]) {
+                        if ($fishka === $good_fishka['replaced_code']) {
                             unset($new_fishki['good'][$i]);
                             unset($this->gameStatus['users'][$this->numUser]['fishki'][$num]);
+
                             break;
                         }
                     }
@@ -1391,9 +1399,10 @@ class Game
                 //Проверяем оставшиеся фишки
                 foreach ($this->gameStatus['users'][$this->numUser]['fishki'] as $num => $fishka) {
                     foreach ($new_fishki['good'] as $i => $good_fishka) {
-                        if (($fishka === $good_fishka[2]) || (($fishka == 999) && ($good_fishka[2] > 999))) {
+                        if (($fishka === $good_fishka['code']) || (($fishka == 999) && ($good_fishka['code'] > 999))) {
                             unset($new_fishki['good'][$i]);
                             unset($this->gameStatus['users'][$this->numUser]['fishki'][$num]);
+
                             break;
                         }
                     }
@@ -1545,7 +1554,8 @@ class Game
         print json_encode(
             array_merge(
                 $ochkiZaHod ? ($cells ?: []) : ($saveDesk ?: []),
-                [$this->gameStatus['users'][$this->numUser]['fishki']]
+                [$this->gameStatus['users'][$this->numUser]['fishki']],
+                //['new_fishki' => var_export($new_fishki, true)]
             )
         );
         //Сделать через отправку статуса

@@ -514,4 +514,4 @@ function placeFishki(fishki) {
 //<?php include('globals/openWindowGlobalFunction.js')?>
 //<?php include('globals/buttonGlobalFunctions.js')?>
 //<?php include('globals/gagetTypeFunctions.js')?>
-//<?php include('globals/verstkaFunctions.js')?>
+//<?php include('globals/verstkaFunctions.js.php')?>

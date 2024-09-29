@@ -12,6 +12,7 @@ use IncomeHistoryModel;
 use IncomeModel;
 use MonetizationService;
 use ORM;
+use RatingHistoryModel;
 use T;
 
 class Prizes
@@ -62,6 +63,12 @@ class Prizes
 
     public static function playerCurrentRecords($cookie = false)
     {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::playerCurrentRecords($cookie);
+        } else {
+            return \PrizesErudit::playerCurrentRecords($cookie);
+        }
+
         $cookie = $cookie ?: $_COOKIE['erudit_user_session_ID'];
         $allRecords = Cache::hgetall(self::ALL_RECORDS);
         $records = [];
@@ -82,6 +89,12 @@ class Prizes
 
     public static function getRandomRecord()
     {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::getRandomRecord();
+        } else {
+            return \PrizesErudit::getRandomRecord();
+        }
+
         $allRecords = Cache::hgetall(self::ALL_RECORDS);
 
         foreach ($allRecords as $type => $record) {
@@ -102,7 +115,7 @@ class Prizes
         return $record;
     }
 
-
+    /*
     private
     static function recordsSort(
         $a,
@@ -146,7 +159,9 @@ class Prizes
 
         return 0;
     }
+    */
 
+    /*
     private
     static function saveHistory(
         $eventType,
@@ -169,7 +184,7 @@ class Prizes
                 AchievesModel::IS_ACTIVE_FIELD => 1,
                 AchievesModel::REWARD_FIELD => MonetizationService::REWARD[$eventPeriod],
                 AchievesModel::INCOME_FIELD => MonetizationService::INCOME[$eventPeriod],
-                AchievesModel::GAME_NAME_ID_FIELD => Game::$gameName,
+                AchievesModel::GAME_NAME_ID_FIELD => RatingHistoryModel::GAME_IDS[Game::$gameName],
             ]
         )) {
             return $newId;
@@ -177,7 +192,8 @@ class Prizes
 
         return false;
     }
-
+    */
+/*
     private
     static function saveAchieve(
         $cookie,
@@ -273,10 +289,16 @@ class Prizes
 
         return true;
     }
+*/
 
-    public static function checkDayGamesPlayedRecord(
-        array $players
-    ) {
+    public static function checkDayGamesPlayedRecord(array $players)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkDayGamesPlayedRecord($players);
+        } else {
+            return \PrizesErudit::checkDayGamesPlayedRecord($players);
+        }
+
         $todayRecord = Cache::get(self::GAMES_PLAYED_DAILY . strtotime('today'));
 
         if (!$todayRecord) {
@@ -303,7 +325,6 @@ class Prizes
                 ? ['number' => $lastMonthRecord['number'] * self::MONTH_DISCOUNT]
                 : ['number' => 70];
         }
-
 
         $yearRecord = Cache::get(self::GAMES_PLAYED_YEARLY . date('Y'));
 
@@ -411,6 +432,12 @@ class Prizes
         $price,
         $cookie
     ) {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkDayGamePriceRecord($price, $cookie);
+        } else {
+            return \PrizesErudit::checkDayGamePriceRecord($price, $cookie);
+        }
+
         $todayRecord = Cache::get(self::GAME_PRICE_DAILY . strtotime('today'));
 
         if (!$todayRecord) {
@@ -433,11 +460,17 @@ class Prizes
 
         return [];
     }
-
+/*
     public
     static function checkWeekGamePriceRecord(
         $price
     ) {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkWeekGamePriceRecord($price);
+        } else {
+            return \PrizesErudit::checkWeekGamePriceRecord($price);
+        }
+
         $weekRecord = Cache::get(self::GAME_PRICE_WEEKLY . date('W'));
 
         if (!$weekRecord) {
@@ -456,10 +489,14 @@ class Prizes
         return [];
     }
 
-    public
-    static function checkMonthGamePriceRecord(
-        $price
-    ) {
+    public static function checkMonthGamePriceRecord($price)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkMonthGamePriceRecord($price);
+        } else {
+            return \PrizesErudit::checkMonthGamePriceRecord($price);
+        }
+
         $monthRecord = Cache::get(self::GAME_PRICE_MONTHLY . date('n'));
 
         if (!$monthRecord) {
@@ -478,10 +515,14 @@ class Prizes
         return [];
     }
 
-    public
-    static function checkYearGamePriceRecord(
-        $price
-    ) {
+    public static function checkYearGamePriceRecord($price)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkYearGamePriceRecord($price);
+        } else {
+            return \PrizesErudit::checkYearGamePriceRecord($price);
+        }
+
         $yearRecord = Cache::get(self::GAME_PRICE_YEARLY . date('Y'));
 
         if (!$yearRecord) {
@@ -499,12 +540,15 @@ class Prizes
 
         return [];
     }
+*/
+    public static function checkDayTurnPriceRecord($price, $cookie)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkDayTurnPriceRecord($price, $cookie);
+        } else {
+            return \PrizesErudit::checkDayTurnPriceRecord($price, $cookie);
+        }
 
-    public
-    static function checkDayTurnPriceRecord(
-        $price,
-        $cookie
-    ) {
         $todayRecord = Cache::get(self::TURN_PRICE_DAILY . strtotime('today'));
 
         if (!$todayRecord) {
@@ -527,11 +571,15 @@ class Prizes
 
         return [];
     }
+/*
+    public static function checkWeekTurnPriceRecord($price)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkWeekTurnPriceRecord($price);
+        } else {
+            return \PrizesErudit::checkWeekTurnPriceRecord($price);
+        }
 
-    public
-    static function checkWeekTurnPriceRecord(
-        $price
-    ) {
         $weekRecord = Cache::get(self::TURN_PRICE_WEEKLY . date('W'));
 
         if (!$weekRecord) {
@@ -550,10 +598,14 @@ class Prizes
         return [];
     }
 
-    public
-    static function checkMonthTurnPriceRecord(
-        $price
-    ) {
+    public static function checkMonthTurnPriceRecord($price)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkMonthTurnPriceRecord($price);
+        } else {
+            return \PrizesErudit::checkMonthTurnPriceRecord($price);
+        }
+
         $monthRecord = Cache::get(self::TURN_PRICE_MONTHLY . date('n'));
 
         if (!$monthRecord) {
@@ -572,10 +624,14 @@ class Prizes
         return [];
     }
 
-    public
-    static function checkYearTurnPriceRecord(
-        $price
-    ) {
+    public static function checkYearTurnPriceRecord($price)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkYearTurnPriceRecord($price);
+        } else {
+            return \PrizesErudit::checkYearTurnPriceRecord($price);
+        }
+
         $yearRecord = Cache::get(self::TURN_PRICE_YEARLY . date('Y'));
 
         if (!$yearRecord) {
@@ -593,13 +649,15 @@ class Prizes
 
         return [];
     }
+*/
+    public static function checkDayWordPriceRecord($word, $price, $cookie)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkDayWordPriceRecord($word, $price, $cookie);
+        } else {
+            return \PrizesErudit::checkDayWordPriceRecord($word, $price, $cookie);
+        }
 
-    public
-    static function checkDayWordPriceRecord(
-        $word,
-        $price,
-        $cookie
-    ) {
         $todayRecord = Cache::get(self::WORD_PRICE_DAILY . strtotime('today'));
 
         if (!$todayRecord) {
@@ -626,12 +684,15 @@ class Prizes
 
         return [];
     }
+/*
+    public static function checkWeekWordPriceRecord($word, $price)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkWeekWordPriceRecord($word, $price);
+        } else {
+            return \PrizesErudit::checkWeekWordPriceRecord($word, $price);
+        }
 
-    public
-    static function checkWeekWordPriceRecord(
-        $word,
-        $price
-    ) {
         $weekRecord = Cache::get(self::WORD_PRICE_WEEKLY . date('W'));
 
         if (!$weekRecord) {
@@ -650,11 +711,14 @@ class Prizes
         return [];
     }
 
-    public
-    static function checkMonthWordPriceRecord(
-        $word,
-        $price
-    ) {
+    public static function checkMonthWordPriceRecord($word, $price)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkMonthWordPriceRecord($word, $price);
+        } else {
+            return \PrizesErudit::checkMonthWordPriceRecord($word, $price);
+        }
+
         $monthRecord = Cache::get(self::WORD_PRICE_MONTHLY . date('n'));
 
         if (!$monthRecord) {
@@ -673,11 +737,14 @@ class Prizes
         return [];
     }
 
-    public
-    static function checkYearWordPriceRecord(
-        $word,
-        $price
-    ) {
+    public static function checkYearWordPriceRecord($word, $price)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkYearWordPriceRecord($word, $price);
+        } else {
+            return \PrizesErudit::checkYearWordPriceRecord($word, $price);
+        }
+
         $yearRecord = Cache::get(self::WORD_PRICE_YEARLY . date('Y'));
 
         if (!$yearRecord) {
@@ -695,13 +762,16 @@ class Prizes
 
         return [];
     }
+*/
 
+    public static function checkDayWordLenRecord($word, $cookie)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkDayWordLenRecord($word, $cookie);
+        } else {
+            return \PrizesErudit::checkDayWordLenRecord($word, $cookie);
+        }
 
-    public
-    static function checkDayWordLenRecord(
-        $word,
-        $cookie
-    ) {
         $wordLen = mb_strlen($word, 'UTF-8');
         $todayRecord = Cache::get(self::WORD_LEN_DAILY . strtotime('today'));
         if (!$todayRecord) {
@@ -728,11 +798,15 @@ class Prizes
 
         return [];
     }
+/*
+    public static function checkWeekWordLenRecord($word)
+    {
+        if (Game::$gameName === Game::SCRABBLE) {
+            return \PrizesScrabble::checkWeekWordLenRecord($word);
+        } else {
+            return \PrizesErudit::checkWeekWordLenRecord($word);
+        }
 
-    public
-    static function checkWeekWordLenRecord(
-        $word
-    ) {
         $wordLen = mb_strlen($word, 'UTF-8');
         $weekRecord = Cache::get(self::WORD_LEN_WEEKLY . date('W'));
         if (!$weekRecord) {
@@ -793,4 +867,5 @@ class Prizes
 
         return [];
     }
+*/
 }

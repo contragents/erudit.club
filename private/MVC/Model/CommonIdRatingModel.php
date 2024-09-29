@@ -54,8 +54,9 @@ class CommonIdRatingModel extends BaseModel
     }
 
     /**
+     * @param string $gameName - erudit, scrabble,...
      * @param int $top Номер в рейтинге - 1,2,3 ...
-     * @param int $topMax Максимальный номер в рейтинге (для поиска ТОП10 задать 4,10)
+     * @param int|null $topMax Максимальный номер в рейтинге (для поиска ТОП10 задать 4,10)
      * @return array
      */
     public static function getTopPlayers(string $gameName, int $top, ?int $topMax = null): array

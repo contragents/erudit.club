@@ -130,13 +130,21 @@ class AchievesModel extends BaseModel
 
     //private static ?Game $instance = null;
 
-    public static function getDescription(string $eventType, string $eventPeriod): string
+    public static function getDescription(string $eventType, string $eventPeriod, string $gameName = ''): string
     {
+        $res = '';
+
         if ($eventType === AchievesModel::TOP_TYPE) {
-            return T::S('rank position') . ' ' . T::S(AchievesModel::TOP_TYPE . '_' . $eventPeriod);
+            $res = T::S('rank position') . ' ' . T::S(AchievesModel::TOP_TYPE . '_' . $eventPeriod);
         } else {
-            return T::S('record of the ' . $eventPeriod) . ' - ' . T::S($eventType);
+            $res = T::S('record of the ' . $eventPeriod) . ' - ' . T::S($eventType);
         }
+
+        if ($gameName) {
+            $res .= ' ('. T::S('game_name') .')';
+        }
+
+        return $res;
     }
 
     public static function getPastAchievesByCommonId(int $commonId) {

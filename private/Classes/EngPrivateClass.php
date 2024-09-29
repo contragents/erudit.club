@@ -1,6 +1,6 @@
 <?php
 
-class EngPrivate extends Ru
+class EngPrivate extends RuPrivate
 {
     public static $bukvy = [
         34 => ['a', 1, 9, 'glas'],

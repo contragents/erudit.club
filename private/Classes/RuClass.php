@@ -87,8 +87,6 @@ class Ru
     protected static $goodWords = [];
     protected static $goodWordsLinks = [];
 
-    protected static $dictTable = 'dict';
-
     public static function generateBankFishki()
     {
         $bankFishki = [];
@@ -98,10 +96,17 @@ class Ru
             }
         }
         shuffle($bankFishki);
+
         return $bankFishki;
     }
 
-    private static function deskZvezda(&$desk, &$cells)
+    /**
+     * Находим все звезды, которые были забраны с поля и использованы в присланном ходе
+     * @param $desk - текущее поле
+     * @param $cells - новое поле
+     * @return array
+     */
+    private static function deskZvezda(&$desk, &$cells): array
     {
         $zvezdy = [];
         for ($i = 0; $i <= 14; $i++) {
@@ -111,9 +116,10 @@ class Ru
                         if ($cells[$i][$j][2] !== false) // Звездочку забрали с поля?
                         {
                             $zvezdy[] = [
-                                0 => $i,
-                                1 => $j,
-                                2 => $cells[$i][$j][2] // код фишки, которая забрала звезду с поля
+                                'i' => $i,
+                                'j' => $j,
+                                'letter_code' => $cells[$i][$j][2],
+                                'is_correct' => ($desk[$i][$j][1] - 999 - 1 - $cells[$i][$j][2]) === 0 // код фишки, которая забрала звезду с поля
                             ];
                         }
                     }
@@ -124,22 +130,24 @@ class Ru
         return $zvezdy;
     }
 
-    private static function validateFishki($fishki, &$cells, $gameFishki, &$desk)
+    private static function validateFishki($fishki, $gameFishki, $zvezdyTemporary): array
     {
-        $zvezdyTemporary = static::deskZvezda($desk, $cells);
         $numZvezd = 0;
-        foreach ($fishki as $fishka) {
-            if ($fishka[2] > 999) {
+        // Сколько звезд поставил на поле игрок в этом ходе
+        foreach ($fishki as $cellFishka) {
+            if ($cellFishka['code'] > 999) {
                 $numZvezd++;
             }
         }
 
-        foreach ($gameFishki as $fishka) {
-            if ($fishka == 999) {
+        // Отнимаем число звезд, бывших на руках у игрока
+        foreach ($gameFishki as $playerFishka) {
+            if ($playerFishka == 999) {
                 $numZvezd--;
             }
         }
 
+        // Проверяем, что игрок поставил не больше звезд, чем было на руках + он забрал с поля
         if ((count($zvezdyTemporary) - $numZvezd) < 0) {
             return [];
         }
@@ -160,15 +168,23 @@ class Ru
 
         $bad_fishki = [];
 
+        // Забранные с поля звезды (временные звезды, только на этот хлд)
+        $zvezdyTemporary = static::deskZvezda($desk, $cells);
+
+        //Проверяем полученный массив звезд на признак !is_correct
+        if (!self::isCorrectZvezdy($zvezdyTemporary)) {
+            return false;
+        }
+
         $fishki = self::compare_desks($desk, $cells, $gameStatus);
+
         if ($fishki === false) {
             return false;
         } else {
             $zvezdy = self::validateFishki(
                 $fishki,
-                $cells,
                 $gameStatus['users'][$gameStatus['activeUser']]['fishki'],
-                $desk
+                $zvezdyTemporary
             );
         }
 
@@ -179,8 +195,8 @@ class Ru
                 if (!self::fishka_correct($fishka, $cells, $desk, $gameStatus)) {
                     $bad_fishki[] = $fishki[$num];
                     unset($fishki[$num]);
-                    $cells[$fishka[0]][$fishka[1]][0] = false;
-                    $cells[$fishka[0]][$fishka[1]][1] = false;
+                    $cells[$fishka['i']][$fishka['j']][0] = false;
+                    $cells[$fishka['i']][$fishka['j']][1] = false;
                 }
             }
         }
@@ -192,39 +208,40 @@ class Ru
             foreach ($fishki as $num => $fishka) {
                 if (self::fishka_connected($fishka, $cells, $desk)) {
                     $fishki[$num]['connected'] = true;
-                    $desk[$fishka[0]][$fishka[1]][0] = true;
+                    $desk[$fishka['i']][$fishka['j']][0] = true; // todo обязательно трогать исходную доску?
                 }
             }
         }
-
+/*
+        // Несвязанные фишки признаем плохими - bad_fishki
         foreach ($fishki as $num => $fishka) {
             if (!isset($fishka['connected'])) {
-                $cells[$fishka[0]][$fishka[1]][0] = false;
-                $cells[$fishka[0]][$fishka[1]][1] = false;
+                $cells[$fishka['i']][$fishka['j']][0] = false;
+                $cells[$fishka['i']][$fishka['j']][1] = false;
                 $bad_fishki[] = $fishki[$num];
                 unset($fishki[$num]);
             }
         }
-
+*/
         foreach ($bad_fishki as $bad_fishka) {
-            if (isset(self::$words[$bad_fishka[0] . '-' . $bad_fishka[1]])) {
-                unset(self::$words[$bad_fishka[0] . '-' . $bad_fishka[1]]);
+            if (isset(self::$words[$bad_fishka['i'] . '-' . $bad_fishka['j']])) {
+                unset(self::$words[$bad_fishka['i'] . '-' . $bad_fishka['j']]);
             }
             //Убрали слова на плохой фишке
 
-            if (isset(self::$goodWordsLinks[$bad_fishka[0] . '-' . $bad_fishka[1]]['hor'])) {
-                if (isset(self::$goodWords[self::$goodWordsLinks[$bad_fishka[0] . '-' . $bad_fishka[1]]['hor']]['hor'])) {
-                    unset(self::$goodWords[self::$goodWordsLinks[$bad_fishka[0] . '-' . $bad_fishka[1]]['hor']]['hor']);
+            if (isset(self::$goodWordsLinks[$bad_fishka['i'] . '-' . $bad_fishka['j']]['hor'])) {
+                if (isset(self::$goodWords[self::$goodWordsLinks[$bad_fishka['i'] . '-' . $bad_fishka['j']]['hor']]['hor'])) {
+                    unset(self::$goodWords[self::$goodWordsLinks[$bad_fishka['i'] . '-' . $bad_fishka['j']]['hor']]['hor']);
                 }
-                unset(self::$goodWordsLinks[$bad_fishka[0] . '-' . $bad_fishka[1]]['hor']);
+                unset(self::$goodWordsLinks[$bad_fishka['i'] . '-' . $bad_fishka['j']]['hor']);
                 //Убрали слова, которые проходят через плохую фищку по горизонтали
             }
 
-            if (isset(self::$goodWordsLinks[$bad_fishka[0] . '-' . $bad_fishka[1]]['vert'])) {
-                if (isset(self::$goodWords[self::$goodWordsLinks[$bad_fishka[0] . '-' . $bad_fishka[1]]['vert']]['vert'])) {
-                    unset(self::$goodWords[self::$goodWordsLinks[$bad_fishka[0] . '-' . $bad_fishka[1]]['vert']]['vert']);
+            if (isset(self::$goodWordsLinks[$bad_fishka['i'] . '-' . $bad_fishka['j']]['vert'])) {
+                if (isset(self::$goodWords[self::$goodWordsLinks[$bad_fishka['i'] . '-' . $bad_fishka['j']]['vert']]['vert'])) {
+                    unset(self::$goodWords[self::$goodWordsLinks[$bad_fishka['i'] . '-' . $bad_fishka['j']]['vert']]['vert']);
                 }
-                unset(self::$goodWordsLinks[$bad_fishka[0] . '-' . $bad_fishka[1]]['vert']);
+                unset(self::$goodWordsLinks[$bad_fishka['i'] . '-' . $bad_fishka['j']]['vert']);
                 //Убрали слова, которые проходят через плохую фищку по вертикали
             }
         }
@@ -257,12 +274,12 @@ class Ru
         }
 
         foreach ($fishki as $nn => $fishka) {
-            if ($fishka[3] !== false) {
+            if ($fishka['replaced_code'] !== false) {
                 foreach ($zvezdy ?: [] as $num => $zvezda) {
-                    if ($zvezda[2] === $fishka[3]) {
-                        $cells[$zvezda[0]][$zvezda[1]][2] = false;
-                        $cells[$zvezda[0]][$zvezda[1]][1] = $fishka[3]; // в ячейку записали код фишки, которая забрала звездочку
-                        unset($zvezda[$num]);
+                    if ($zvezda['letter_code'] === $fishka['replaced_code']) {
+                        $cells[$zvezda['i']][$zvezda['j']][1] = $fishka['replaced_code']; // в ячейку записали код фишки, которая забрала звездочку
+                        $cells[$zvezda['i']][$zvezda['j']][2] = false;
+                        unset($zvezdy[$num]);
                     }
                 }
             }
@@ -270,10 +287,10 @@ class Ru
         //Обнулили и освободили сыгравшую забратую фишку
 
         foreach ($bad_fishki as $nn => $bfishka) {
-            if ($bfishka[3] !== false) {
+            if ($bfishka['replaced_code'] !== false) {
                 foreach ($zvezdy ?: [] as $num => $zvezda) {
-                    if ($zvezda[2] === $bfishka[3]) {
-                        $cells[$zvezda[0]][$zvezda[1]][2] = false;
+                    if ($zvezda['letter_code'] === $bfishka['replaced_code']) {
+                        $cells[$zvezda['i']][$zvezda['j']][2] = false;
                         unset($zvezda[$num]);
                     }
                 }
@@ -360,42 +377,81 @@ class Ru
         return $dsc;
     }
 
-    private static function word_correct($word, array &$wordsAccepted)
+    private static function word_correct($word, array &$wordsAccepted): bool
     {
         if (isset($wordsAccepted[$word])) {
-            return 0;
+            return false;
         }
 
-        return DB::queryValue(
-            "SELECT count(1) as cnt FROM " . self::$dictTable . " WHERE slovo='$word' AND deleted = 0 LIMIT 1;"
-        );
+        return DictModel::checkWord($word);
     }
 
+    /**
+     * Возвращает массив новых фишек на поле или false
+     * @param $desk - старая доска
+     * @param $cells - новая доска
+     * @param $gameStatus
+     * @return array|false
+     */
     private static function compare_desks(&$desk, &$cells, &$gameStatus)
     {
         $fshki = [];
         //$j - строки, $i - столбцы
         for ($j = 0; $j <= 14; $j++) {
             for ($i = 0; $i <= 14; $i++) {
+                // Проверки на консистентность присланной доски - пропала буква с поля?
                 if ($desk[$i][$j][0] && !$cells[$i][$j][0]) {
                     return false;
                 }
 
+                // Проверки на консистентность присланной доски - букву заменили на другую?
                 if ($desk[$i][$j][0] && ($cells[$i][$j][1] != $desk[$i][$j][1])) {
                     return false;
                 }
 
                 if ($cells[$i][$j][0] && !$desk[$i][$j][0]) {
                     $fshki[] = [
-                        0 => $i, // столбец
-                        1 => $j, // строка
-                        2 => $cells[$i][$j][1], // код фишки
-                        3 => $cells[$i][$j][2] // Код фишки, которой заменили звездочку
+                        'i' => $i, // 0 => столбец
+                        'j' => $j, // 1 => строка
+                        'code' => $cells[$i][$j][1], // 2 => код фишки
+                        'replaced_code' => $cells[$i][$j][2] // 3 => Код фишки, которой заменили звездочку
                     ];
                 }
             }
         }
 
+        // todo добавить проверки на соответствие новых фишек на поле и фишек у игрока из $gameStatus
+        $playerFishki = $gameStatus['users'][$gameStatus['activeUser']]['fishki'];
+        $cellsFishki = $fshki;
+        foreach($cellsFishki as $cellNum => $cellFishka) {
+            foreach($playerFishki as $playerNum => $playerFishka) {
+                // ищем новую фишку с поля в массиве фишек игрока
+                if (
+                    $cellFishka['code'] == $playerFishka
+                    || (
+                        $cellFishka['replaced_code']
+                        && $cellFishka['replaced_code'] == $playerFishka
+                    )
+                    || (
+                        !$cellFishka['replaced_code']
+                        && $cellFishka['code'] > 999
+                        && $playerFishka == 999
+                    )
+                ) {
+                    unset($playerFishki[$playerNum]);
+                    unset($cellsFishki[$cellNum]);
+
+                    break;
+                }
+            }
+        }
+
+        // Все фишки с поля должны быть найдены в массиве фишек игрока
+        if (!empty($cellsFishki)) {
+
+            // print_r(['cells' => $cellsFishki, 'player' => $playerFishki]);
+            return false;
+        }
 
         if (count($fshki) > count($gameStatus['users'][$gameStatus['activeUser']]['fishki'])) {
             return false;
@@ -410,16 +466,16 @@ class Ru
             return true;
         }
 
-        if (($fishka[0] == 7) && ($fishka[1] == 7)) {
+        if (($fishka['i'] == 7) && ($fishka['j'] == 7)) {
             return true;
         }
 
         //Идем влево от буквы
         //$i - столбец
-        $i = $fishka[0] - 1;
+        $i = $fishka['i'] - 1;
         if ($i >= 0) {
-            while ($cells[$i][$fishka[1]][0]) {
-                if ($desk[$i][$fishka[1]][0]) {
+            while ($cells[$i][$fishka['j']][0]) {
+                if ($desk[$i][$fishka['j']][0]) {
                     return true;
                 } else {
                     $i--;
@@ -431,10 +487,10 @@ class Ru
         }
 
         //Идем вправо от буквы
-        $i = $fishka[0] + 1;
+        $i = $fishka['i'] + 1;
         if ($i <= 14) {
-            while ($cells[$i][$fishka[1]][0]) {
-                if ($desk[$i][$fishka[1]][0]) {
+            while ($cells[$i][$fishka['j']][0]) {
+                if ($desk[$i][$fishka['j']][0]) {
                     return true;
                 } else {
                     $i++;
@@ -447,10 +503,10 @@ class Ru
 
         //Идем вверх от буквы
         //$j - строка
-        $j = $fishka[1] - 1;
+        $j = $fishka['j'] - 1;
         if ($j >= 0) {
-            while ($cells[$fishka[0]][$j][0]) {
-                if ($desk[$fishka[0]][$j][0]) {
+            while ($cells[$fishka['i']][$j][0]) {
+                if ($desk[$fishka['i']][$j][0]) {
                     return true;
                 } else {
                     $j--;
@@ -463,10 +519,10 @@ class Ru
 
         //Идем вниз от буквы
         //$j - строка
-        $j = $fishka[1] + 1;
+        $j = $fishka['j'] + 1;
         if ($j <= 14) {
-            while ($cells[$fishka[0]][$j][0]) {
-                if ($desk[$fishka[0]][$j][0]) {
+            while ($cells[$fishka['i']][$j][0]) {
+                if ($desk[$fishka['i']][$j][0]) {
                     return true;
                 } else {
                     $j++;
@@ -489,16 +545,16 @@ class Ru
     {
         //Определяем слово по горизонтали
         //$i - столбец
-        $hor_word = static::$bukvy[self::code($fishka[2])][0];
-        $horWordStart = [$fishka[0], $fishka[1]];
+        $hor_word = static::$bukvy[self::code($fishka['code'])][0];
+        $horWordStart = [$fishka['i'], $fishka['j']];
         //Начало слова по горизонтали
 
         //Идем влево от буквы
-        $i = $fishka[0] - 1;
+        $i = $fishka['i'] - 1;
         if ($i >= 0) {
-            while (($cells[$i][$fishka[1]][0]) && ($i >= 0) && ($i <= 14)) {
-                $hor_word = static::$bukvy[self::code($cells[$i][$fishka[1]][1])][0] . $hor_word;
-                $horWordStart = [$i, $fishka[1]];
+            while (($cells[$i][$fishka['j']][0]) && ($i >= 0) && ($i <= 14)) {
+                $hor_word = static::$bukvy[self::code($cells[$i][$fishka['j']][1])][0] . $hor_word;
+                $horWordStart = [$i, $fishka['j']];
                 $i--;
                 if ($i < 0) {
                     break;
@@ -507,10 +563,10 @@ class Ru
         }
 
         //Идем вправо от буквы
-        $i = $fishka[0] + 1;
+        $i = $fishka['i'] + 1;
         if ($i <= 14) {
-            while (($cells[$i][$fishka[1]][0]) && ($i >= 0) && ($i <= 14)) {
-                $hor_word .= static::$bukvy[self::code($cells[$i][$fishka[1]][1])][0];
+            while (($cells[$i][$fishka['j']][0]) && ($i >= 0) && ($i <= 14)) {
+                $hor_word .= static::$bukvy[self::code($cells[$i][$fishka['j']][1])][0];
                 $i++;
                 if ($i > 14) {
                     break;
@@ -521,23 +577,24 @@ class Ru
         if (mb_strlen($hor_word, 'UTF-8') > 1) {
             if (!self::word_correct($hor_word, $gameStatus['wordsAccepted'])) {
                 self::$badWords[$hor_word] = $hor_word;
+
                 return false;
             }
         }
 
         //Определяем слово по вертикали
         //$j - строка
-        $vert_word = static::$bukvy[self::code($fishka[2])][0];
-        $vertWordStart = [$fishka[0], $fishka[1]];
-        //Начало слова по горизонтали
+        $vert_word = static::$bukvy[self::code($fishka['code'])][0];
+        $vertWordStart = [$fishka['i'], $fishka['j']];
+        //Начало слова по вертикали
 
         //Идем вверх от буквы
-        $j = $fishka[1] - 1;
+        $j = $fishka['j'] - 1;
 
         if ($j >= 0) {
-            while (($cells[$fishka[0]][$j][0]) && ($j >= 0) && ($j <= 14)) {
-                $vert_word = static::$bukvy[self::code($cells[$fishka[0]][$j][1])][0] . $vert_word;
-                $vertWordStart = [$fishka[0], $j];
+            while (($cells[$fishka['i']][$j][0]) && ($j >= 0) && ($j <= 14)) {
+                $vert_word = static::$bukvy[self::code($cells[$fishka['i']][$j][1])][0] . $vert_word;
+                $vertWordStart = [$fishka['i'], $j];
                 $j--;
                 if ($j < 0) {
                     break;
@@ -546,10 +603,10 @@ class Ru
         }
 
         //Идем вниз от буквы
-        $j = $fishka[1] + 1;
+        $j = $fishka['j'] + 1;
         if ($j <= 14) {
-            while (($cells[$fishka[0]][$j][0]) && ($j >= 0) && ($j <= 14)) {
-                $vert_word .= static::$bukvy[self::code($cells[$fishka[0]][$j][1])][0];
+            while (($cells[$fishka['i']][$j][0]) && ($j >= 0) && ($j <= 14)) {
+                $vert_word .= static::$bukvy[self::code($cells[$fishka['i']][$j][1])][0];
                 $j++;
                 if ($j > 14) {
                     break;
@@ -564,20 +621,21 @@ class Ru
         if (mb_strlen($vert_word, 'UTF-8') > 1) {
             if (!self::word_correct($vert_word, $gameStatus['wordsAccepted'])) {
                 self::$badWords[$vert_word] = $vert_word;
+
                 return false;
             }
         }
 
         if (mb_strlen($hor_word, 'UTF-8') > 1) {
-            self::$words[$fishka[0] . '-' . $fishka[1]]['hor'] = $hor_word;
+            self::$words[$fishka['i'] . '-' . $fishka['j']]['hor'] = $hor_word;
             self::$goodWords[$horWordStart[0] . '-' . $horWordStart[1]]['hor'] = $hor_word;
-            self::$goodWordsLinks[$fishka[0] . '-' . $fishka[1]]['hor'] = $horWordStart[0] . '-' . $horWordStart[1];
+            self::$goodWordsLinks[$fishka['i'] . '-' . $fishka['j']]['hor'] = $horWordStart[0] . '-' . $horWordStart[1];
         }
 
         if (mb_strlen($vert_word, 'UTF-8') > 1) {
-            self::$words[$fishka[0] . '-' . $fishka[1]]['vert'] = $vert_word;
+            self::$words[$fishka['i'] . '-' . $fishka['j']]['vert'] = $vert_word;
             self::$goodWords[$vertWordStart[0] . '-' . $vertWordStart[1]]['vert'] = $vert_word;
-            self::$goodWordsLinks[$fishka[0] . '-' . $fishka[1]]['vert'] = $vertWordStart[0] . '-' . $vertWordStart[1];
+            self::$goodWordsLinks[$fishka['i'] . '-' . $fishka['j']]['vert'] = $vertWordStart[0] . '-' . $vertWordStart[1];
         }
         //Сохранили собранные слова
 
@@ -616,5 +674,16 @@ class Ru
         }
 
         return false;
+    }
+
+    protected static function isCorrectZvezdy(array $zvezdyTemporary): bool
+    {
+        foreach($zvezdyTemporary as $zvezda) {
+            if(!$zvezda['is_correct']){
+                return false;
+            }
+        }
+
+        return true;
     }
 }

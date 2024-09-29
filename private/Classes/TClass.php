@@ -26,6 +26,10 @@ class T
     }
 
     const PHRASES = [
+        'game_name' => [
+            self::EN_LANG => 'Scrabble',
+            self::RU_LANG => 'Эрудит'
+        ],
         'invite_friend_prompt' => [
             self::EN_LANG => 'Join the online game Scrabble on Telegram! Get the maximum rating, earn coins and withdraw tokens to your wallet',
             self::RU_LANG => 'Присоединяйся к онлайн игре Эрудит в Telegram! Набери максимальный рейтинг, зарабатывай монеты и выводи токены на кошелек'
@@ -293,6 +297,35 @@ class T
         'Play on' => [
             self::RU_LANG => 'Играть в'
         ],
+
+        // Окно статистика
+        'Past Awards' => [
+            self::RU_LANG => 'Прошлые награды'
+        ],
+        'Parties_Games' => [
+            self::EN_LANG => 'Games',
+            self::RU_LANG => 'Партии'
+        ],
+        'Player Awards' => [
+            self::RU_LANG => 'Награды игрока'
+        ],
+        'Player' => [
+            self::RU_LANG => 'Игрок'
+        ],
+        'VS' => [
+            self::RU_LANG => 'Против'
+        ],
+        'Rating' => [
+            self::RU_LANG => 'Рейтинг'
+        ],
+        'Opponent' => [
+            self::RU_LANG => 'Соперник'
+        ],
+        'Active Awards' => [
+            self::RU_LANG => 'Награды'
+        ],
+        // Окно статистика конец
+
         "Opponent's rating" => [
             self::RU_LANG => 'Рейтинг соперника'
         ],

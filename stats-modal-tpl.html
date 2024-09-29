@@ -1,23 +1,22 @@
 <!-- MY MODAL CONTENT -->
 <!-- tabs -->
 <div class="box d-flex align-items-center p-2 mb-2">
-	<div class="box-heading text-center mx-auto fs-4">Статистика</div>
+	<div class="box-heading text-center mx-auto fs-4">{{Stats}}</div>
 </div>
 <div class="box box-top">
 	<div>
 		<ul class="tabs nav nav-tabs" role="tablist" id="stats-tabs">
 			<li class="nav-item">
 				<a class="nav-link" id="active-awards-tab" href="#active-awards-tab-pane" role="tab"
-					aria-selected="false" data-toggle="tab">Активные награды</a>
+					aria-selected="false" data-toggle="tab">{{Active Awards}}</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" id="past-awards-tab" href="#past-awards-tab-pane" role="tab" aria-selected="false"
-					data-toggle="tab">Прошлые
-					награды</a>
+					data-toggle="tab">{{Past Awards}}</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link active" id="match-history-tab" href="#match-history-tab-pane" role="tab"
-					aria-selected="true" data-toggle="tab">Партии</a>
+					aria-selected="true" data-toggle="tab">{{Parties_Games}}</a>
 			</li>
 		</ul>
 	</div>
@@ -30,7 +29,7 @@
 
 			<div class="box box-bottom">
 				<div class="fw-medium">
-					<div class="awards-title d-block h6 ml-1 hid">Награды игрока <span
+					<div class="awards-title d-block h6 ml-1 hid">{{Player Awards}} <span
 							class="text-accent pl-1 h4">{{name}}</span>
 					</div>
 					<div class="card-list-wrap">
@@ -46,7 +45,7 @@
 		<div class="tab-pane" id="past-awards-tab-pane">
 			<div class="box box-bottom">
 				<div class="fw-medium">
-					<div class="awards-title d-block h6 ml-1">Награды игрока <span
+					<div class="awards-title d-block h6 ml-1">{{Player Awards}} <span
 							class="text-accent pl-1 h4">{{name}}</span>
 					</div>
 					<div class="card-list-wrap">
@@ -64,9 +63,9 @@
 				<div class="player-info d-flex fw-medium">
 
 					<div class="left-col pt-3">
-						<div class="d-flex ml-1"><span>Игрок</span><span class="text-accent">{{name}}</span>
+						<div class="d-flex ml-1"><span>{{Player}}</span><span class="text-accent">{{name}}</span>
 						</div>
-						<div class="d-flex ml-1 invisible"><span>Против</span><span
+						<div class="d-flex ml-1 invisible"><span>{{VS}}</span><span
 								class="opponent-name text-accent">NicknameNickname</span>
 						</div>
 					</div>
@@ -90,10 +89,10 @@
 
 			<div class="match-history-table">
 				<div class="match-history-thead d-flex">
-					<div class="th">Дата</div>
-					<div class="th">Результат</div>
-					<div class="th">Рейтинг</div>
-					<div class="th">Соперник</div>
+					<div class="th">{{Date}}</div>
+					<div class="th">{{Result}}</div>
+					<div class="th">{{Rating}}</div>
+					<div class="th">{{Opponent}}</div>
 				</div>
 				{{gameList}}
 
