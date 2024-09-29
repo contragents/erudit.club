@@ -330,6 +330,9 @@ class T
         'Active Awards' => [
             self::RU_LANG => 'Награды'
         ],
+        'Remove filter' => [
+            self::RU_LANG => 'Снять фильтр'
+        ],
         // Окно статистика конец
 
         "Opponent's rating" => [

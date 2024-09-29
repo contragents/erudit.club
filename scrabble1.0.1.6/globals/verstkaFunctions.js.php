@@ -24,6 +24,9 @@ function copyToClipboard(selector) {
     };
 
     const setTabContentOffset = (tabsSelector) => {
+        if (!document.getElementById(selectors.profileTabsId)) {
+            return;
+        }
         const targetId = document
             .querySelectorAll(`${selectors.tabLink}.active`)[0]
             .getAttribute('href');
@@ -66,6 +69,9 @@ function copyToClipboard(selector) {
 
     document.addEventListener('click', (event) => {
         if (event.target && event.target.closest(selectors.tabLink)) {
+            if (!document.getElementById(selectors.profileTabsId)) {
+                return;
+            }
             event.preventDefault();
             document
                 .querySelectorAll(selectors.tabLink)
@@ -85,6 +91,10 @@ function copyToClipboard(selector) {
     });
 
     const onProfileModalLoaded = () => {
+        if (!document.getElementById(selectors.profileTabsId)) {
+            return;
+        }
+
         const setWidthToPanes = () => {
             const tabPaneList = document.querySelectorAll(selectors.tabPane) || [];
             if (tabPaneList.length > 0) {
@@ -107,6 +117,9 @@ function copyToClipboard(selector) {
 
         if (!window.profileTabslistenerAttached) {
             window.addEventListener('resize', () => {
+                if (!document.getElementById(selectors.profileTabsId)) {
+                    return;
+                }
                 setWidthToPanes();
                 setTabContentOffset(`#${selectors.profileTabsId}`);
             });
@@ -407,7 +420,6 @@ function StatsPage({ json, BASE_URL }) {
                     .replaceAll('{{activeAwards}}', CardList({ list: json.current_achieves }))
                     .replaceAll('{{pastAwards}}', CardList({ list: json.past_achieves }))
 
-
                     .replaceAll('{{Stats}}', '<?= T::S('Stats') ?>')
                     .replaceAll('{{Past Awards}}', '<?= T::S('Past Awards') ?>')
                     .replaceAll('{{Parties_Games}}', '<?= T::S('Parties_Games') ?>')
@@ -418,9 +430,8 @@ function StatsPage({ json, BASE_URL }) {
                     .replaceAll('{{Result}}', '<?= T::S('Result') ?>')
                     .replaceAll('{{Rating}}', '<?= T::S('Rating') ?>')
                     .replaceAll('{{Opponent}}', '<?= T::S('Opponent') ?>')
-                    .replaceAll('{{Active Awards}}', '<?= T::S('Active Awards') ?>')
-                    .replaceAll('{{Статистика}}', '<?= T::S('Stats') ?>')
-                ;
+                    .replaceAll('{{Active Awards}}', '<?= T::S('Active Awards') ?>');
+
                 return message;
             })
             .catch((error) => console.error('Ошибка загрузки stats-modal-tpl:', error));
@@ -474,15 +485,12 @@ function StatsPage({ json, BASE_URL }) {
     };
 
     const setTabContentOffset = (i = 0) => {
-        if (
-            !document.querySelectorAll(`${selectors.tabLink}.active`)
-            ||
-            !(0 in document.querySelectorAll(`${selectors.tabLink}.active`))
-        ) {
+        if (!document.querySelectorAll(`${selectors.tabLink}.active`).length) {
             return;
         }
-
-        const targetId = document.querySelectorAll(`${selectors.tabLink}.active`)[0].getAttribute('href');
+        const targetId = document
+            .querySelectorAll(`${selectors.tabLink}.active`)[0]
+            .getAttribute('href');
         const tabContent = document.querySelector(targetId).closest(selectors.tabContent);
         const tabContentWrap = tabContent.closest(selectors.tabContentWrap);
         const tabPane = document.querySelector(targetId);
@@ -623,6 +631,3 @@ function onImagesLoaded(container, event) {
         }
     }
 }
-
-
-

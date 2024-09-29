@@ -665,7 +665,7 @@ var gameStates = {
                                         },
                                         buttons: {
                                             removeFilter: {
-                                                label: 'Снять фильтр',
+                                                label: '<?= T::S('Remove filter') ?>',
                                                 className: 'js-remove-filter btn btn-sm btn-auto mr-0 d-none',
                                                 callback: function (e) {
                                                     e.preventDefault();
@@ -673,7 +673,7 @@ var gameStates = {
                                                 },
                                             },
                                             ok: {
-                                                label: 'Назад',
+                                                label: '<?= T::S('Back') ?>',
                                                 className: 'btn-sm ml-auto mr-0',
                                                 callback: function () {
                                                     gameStates['chooseGame']['action'](data);
