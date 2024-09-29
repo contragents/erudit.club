@@ -162,8 +162,6 @@ class RatingService
 
     protected static function saveRatings(&$players, int $gameId): bool
     {
-        $gameName = Game::$gameName;
-
         DB::transactionStart();
 
         foreach ($players as $player) {
@@ -174,14 +172,14 @@ class RatingService
                 $player['rating'] + $player['deltaRating'],
                 $player['is_winner'],
                 $gameId,
-                $gameName
+                Game::$gameName
             )) {
                 DB::transactionRollback();
 
                 return false;
             }
 
-            if (!CommonIdRatingModel::changeUserRating($player['common_id'], $player['rating'] + $player['deltaRating'], $gameName)) {
+            if (!CommonIdRatingModel::changeUserRating($player['common_id'], $player['rating'] + $player['deltaRating'], Game::$gameName)) {
                 DB::transactionRollback();
 
                 return false;

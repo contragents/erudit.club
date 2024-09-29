@@ -16,11 +16,9 @@ class IncomeModel extends BaseModel
             }
         }
 
-        //return true;
-
         DB::transactionStart();
 
-        // 1. В поле sudoku таблицы balance записать значение из поля sudoku + $deltabalance
+        // 1. В поле sudoku таблицы income записать значение из поля sudoku + $deltabalance
         if(!self::setParam(
             $commonId,
             self::SUDOKU_INCOME_FIELD,

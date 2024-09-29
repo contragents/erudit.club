@@ -38,4 +38,21 @@ class RatingHistoryModel extends BaseModel
             . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', self::GAME_IDS[$gameName], true)
         ) ?: 0;
     }
+
+    public static function getDeltaRating($commonId, string $gameName): int
+    {
+        $lastRatingChangeRecord = DB::queryArray(
+            self::select(['*'])
+            . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
+            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', self::GAME_IDS[$gameName], true)
+            . ORM::orderBy(self::ID_FIELD, false)
+            . ORM::limit(1)
+        )[0] ?? false;
+
+        if (!$lastRatingChangeRecord) {
+            return 0;
+        }
+
+        return $lastRatingChangeRecord[self::RATING_AFTER_FIELD] - $lastRatingChangeRecord[self::RATING_BEFORE_FIELD];
+    }
 }

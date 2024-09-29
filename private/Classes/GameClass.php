@@ -21,6 +21,7 @@ class Game
     public const COOKIE_KEY = 'erudit_user_session_ID';
 
     public const GAME_LANG = [T::EN_LANG => self::SCRABBLE, T::RU_LANG => self::ERUDIT];
+    const MIN_TOP_RATING = 1700;
 
     public static string $gameName = self::SCRABBLE;
 
@@ -518,9 +519,9 @@ class Game
         $message['info'] = [];
         $message['info']['rating'] = CommonIdRatingModel::getRating($this->commonId, self::$gameName);
         $message['info']['top'] = CommonIdRatingModel::getTopByRating($message['info']['rating'], self::$gameName);
-        $message['info']['SUDOKU_BALANCE'] = 100500;
-        $message['info']['SUDOKU_TOP'] = 365;
-        $message['info']['rewards'] = 15.356;
+        $message['info']['SUDOKU_BALANCE'] = BalanceModel::getBalance($this->commonId) ?: 0;//100500;
+        $message['info']['SUDOKU_TOP'] = BalanceModel::getTopByBalance($message['info']['SUDOKU_BALANCE']);
+        $message['info']['rewards'] = IncomeModel::getIncome($this->commonId);
 
         $message['refs'] = [['Peter Pervyy', 10], ['Nickolay Vtoroy', 10], ['Aleksey Tretiy', 10]];
 
@@ -675,7 +676,7 @@ class Game
 
     public function playersInfo()
     {
-        $ratings = $this->getRatings(); // todo рейтинги получать через модель CommonIdRating
+        // $ratings = $this->getRatings(); // todo рейтинги получать через модель CommonIdRating
         $message = include($this->dir . '/tpl/ratingsTableHeader.php'); // todo переделать include на классы - а то не работает так
         if (!isset($this->gameStatus['users'])) {
             return $this->makeResponse(['message' => "Игра не начата"]);
@@ -685,23 +686,18 @@ class Game
         $thisPlayerHasBanned = BanModel::hasBanned($commonId);
 
         foreach ($this->gameStatus['users'] as $num => $user) {
-            $deltaRating = PlayerModel::getDeltaRating($user['common_id']);
+            $deltaRating = RatingHistoryModel::getDeltaRating($user['common_id'], self::$gameName);
 
-            $ratingFound = false;
-            foreach ($ratings as $rating) {
-                if ($user['ID'] == $rating['cookie']) {
-                    $ratingFound = true;
-                    break;
-                }
-            }
+            $rating = [];
 
-            if (!$ratingFound) {
-                $rating['rating'] = '1700 (новый игрок)';
-                $rating['games_played'] = 0;
-                $rating['win_percent'] = 0;
-                $rating['inactive_percent'] = 'N/A';
-                $rating['top'] = '';
-            }
+            $rating['rating'] = ($rawRating = CommonIdRatingModel::getRating($user['common_id'], self::$gameName))
+                ?: (self::MIN_TOP_RATING . ' (новый игрок)');
+            $rating['games_played'] = RatingHistoryModel::getNumGamesPlayed($user['common_id'], self::$gameName);
+            $rating['win_percent'] = 0; // это не используем
+            $rating['inactive_percent'] = 'N/A'; //это не используем
+            $rating['top'] = ($rawRating > self::MIN_TOP_RATING)
+                ? CommonIdRatingModel::getTopByRating($rating['rating'], self::$gameName)
+                : '';
 
             $rating['playerName'] = $this->getPlayerName($user);
             $rating['playerAvatarUrl'] = $this->getAvatarUrl($user['ID']);
@@ -721,18 +717,18 @@ class Game
             $records = Prizes::playerCurrentRecords($user['ID']);
             $recordsShown = 0;
             foreach ($records as $record) {
-                // todo переделать на ViewHelper
-                $recImgs .= "<img 
-								style=\"
-									cursor: pointer; 
-									margin-left: " . ($recordsShown ? -20 : 0) . "px; padding: 0;
-									margin-top: -10px;
-									z-index: 50;
-								\" 
-								title=\"Кликните для увеличения изображения\" 
-								id=\"{$record['type']}\" 
-								onclick=\"showFullImage('{$record['type']}', 500, 100);\" 
-								src=\"/{$record['link']}\" width=\"100px\" />";
+                $recImgs .= VH::img([
+                        'style' => 'cursor: pointer;
+                            margin-left: ' . ($recordsShown ? -20 : 0) . 'px; padding: 0;
+                            margin-top: -10px;
+                            z-index: 50;',
+                        'title' => 'Кликните для увеличения изображения',
+                        'id' => $record['type'],
+                        'onclick' => "showFullImage('{$record['type']}', 500, 100);",
+                        'src' => "{$record['link']}",
+                        'width' => '100px',
+                ]);
+
                 $recordsShown++;
                 if ($recordsShown >= 3) {
                     break;
@@ -949,24 +945,14 @@ class Game
     {
         $rating = CommonIdRatingModel::getRating($commonId, self::$gameName);
 
-        /*'max(cookie) as cookie',
-                    'max(rating) as rating',
-                    'max(games_played) as games_played',
-                    'case when max(win_percent) is null then 0 else max(win_percent) END as win_percent',
-                    'avg(inactive_percent) as inactive_percent',
-                    'case when max(rating) >= 1700 then('
-                    . ORM::select(
-                        ['case when sum(num) IS null THEN 1 else sum(num) + 1 END'],
-                        '(select 1 as num from players where rating > ps . rating group by user_id, rating) dd'
-                    )
-                    . ') else \'Не в ТОПе\' END as top'*/
-        if (!$rating/* = PlayerModel::getRating($commonId))*/) {
+        if (!$rating) {
             return false;
         }
+
         $ratingInfo = [];
         $ratingInfo[0] = [
             'rating' => $rating,
-            'top' => $rating >= 1700 ? CommonIdRatingModel::getTopByRating($rating) : 'Не в ТОПе',
+            'top' => ($rating > self::MIN_TOP_RATING) ? CommonIdRatingModel::getTopByRating($rating, self::$gameName) : 'Не в ТОПе',
             'games_played' => RatingHistoryModel::getNumGamesPlayed($commonId, self::$gameName),
             'win_percent' => 50,
             'inactive_percent' => 0,
@@ -1229,7 +1215,7 @@ class Game
         /**
          * @method Ru|Eng submit()
          */
-        $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus);
+        $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus['users'][$this->numUser]['fishki'], $this->gameStatus['wordsAccepted']);
         $summa = 0;
 
         if (is_array($new_fishki) && !empty($new_fishki)) {
@@ -1325,7 +1311,7 @@ class Game
             /**
              * @method Ru|Eng submit()
              */
-            $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus);
+            $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus['users'][$this->numUser]['fishki'], $this->gameStatus['wordsAccepted']);
         } catch (\Throwable $e) {
             BadRequest::logBadRequest(
                 [

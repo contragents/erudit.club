@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var array $deltaRating
+ * @var int $deltaRating
  * @var array $user
  * @var array $rating
  * @var bool $canDeleteBan
@@ -91,10 +91,10 @@ return ViewHelper::tag(
         ViewHelper::tag('strong', $rating['rating'] ?? '')
         . ViewHelper::tag(
             'span',
-            ViewHelper::nbsp() . (($deltaRating['delta'] ?? 0) > 0 ? '+' : '') . ($deltaRating['delta'] ?? 0),
+            ViewHelper::nbsp() . ($deltaRating > 0 ? '+' : '') . ($deltaRating),
             [
                 'title' => 'Последнее изменение рейтинга',
-                'style' => 'color:' . (($deltaRating['delta'] ?? 0) <= 0 ? 'indianred' : 'lawngreen'),
+                'style' => 'color:' . ($deltaRating <= 0 ? 'indianred' : 'lawngreen'),
             ], !!$deltaRating
         )
         . (is_numeric($top = $rating['top'])

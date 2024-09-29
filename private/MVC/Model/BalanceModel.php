@@ -10,7 +10,7 @@ class BalanceModel extends BaseModel
 
     public static function changeBalance(
         int $commonId,
-        int $deltaBalance,
+        float $deltaBalance,
         string $description = '',
         ?int $typeId = null,
         ?int $ref = null
@@ -22,7 +22,8 @@ class BalanceModel extends BaseModel
             }
         }
 
-        //return true;
+        // todo в таблицу balance заносим только целые монеты, дроби записываем в income (IncomeModel::changeIncome())
+        $deltaBalance = (int)round($deltaBalance);
 
         DB::transactionStart();
 
@@ -64,5 +65,19 @@ class BalanceModel extends BaseModel
     private static function createBalance(int $commonId): bool
     {
         return (bool)self::add([self::COMMON_ID_FIELD => $commonId]);
+    }
+
+    public static function getTopByBalance(int $balance): int
+    {
+        $topQuery = ORM::select(
+            ['count(1) + 1 as top'],
+            "("
+            . ORM::select(['1 as num'], self::TABLE_NAME)
+            . ORM::where(self::SUDOKU_BALANCE_FIELD, '>', $balance, true)
+            . ORM::groupBy([self::SUDOKU_BALANCE_FIELD])
+            . ") dd"
+        );
+
+        return (int)DB::queryValue($topQuery);
     }
 }

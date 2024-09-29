@@ -130,7 +130,13 @@ class Ru
         return $zvezdy;
     }
 
-    private static function validateFishki($fishki, $gameFishki, $zvezdyTemporary): array
+    /**
+     * @param array $fishki - фишки, полученные из сравнения полей cells, desk
+     * @param array $playerFishki - фишки на руках у игрока
+     * @param array $zvezdyTemporary - звезды, забранные с поля
+     * @return array
+     */
+    private static function validateFishki(array $fishki, array $playerFishki, array $zvezdyTemporary): array
     {
         $numZvezd = 0;
         // Сколько звезд поставил на поле игрок в этом ходе
@@ -141,7 +147,7 @@ class Ru
         }
 
         // Отнимаем число звезд, бывших на руках у игрока
-        foreach ($gameFishki as $playerFishka) {
+        foreach ($playerFishki as $playerFishka) {
             if ($playerFishka == 999) {
                 $numZvezd--;
             }
@@ -155,7 +161,7 @@ class Ru
         return $zvezdyTemporary;
     }
 
-    public static function submit(&$cells, &$desk, &$gameStatus)
+    public static function submit(&$cells, &$desk, array $playerFishki, array $wordsAccepted)
     {
         self::$words = [];
         self::$badWords = [];
@@ -176,23 +182,19 @@ class Ru
             return false;
         }
 
-        $fishki = self::compare_desks($desk, $cells, $gameStatus);
+        $fishki = self::compare_desks($desk, $cells, $playerFishki);
 
         if ($fishki === false) {
             return false;
         } else {
-            $zvezdy = self::validateFishki(
-                $fishki,
-                $gameStatus['users'][$gameStatus['activeUser']]['fishki'],
-                $zvezdyTemporary
-            );
+            $zvezdy = self::validateFishki($fishki, $playerFishki, $zvezdyTemporary);
         }
 
         // Проверяем слова на корректность и удаляем лишние фишки
         $num_fishki = count($fishki);
         for ($f = 0; $f < $num_fishki; $f++) {
             foreach ($fishki as $num => $fishka) {
-                if (!self::fishka_correct($fishka, $cells, $desk, $gameStatus)) {
+                if (!self::fishka_correct($fishka, $cells, $desk, $wordsAccepted)) {
                     $bad_fishki[] = $fishki[$num];
                     unset($fishki[$num]);
                     $cells[$fishka['i']][$fishka['j']][0] = false;
@@ -377,7 +379,7 @@ class Ru
         return $dsc;
     }
 
-    private static function word_correct($word, array &$wordsAccepted): bool
+    private static function word_correct($word, array $wordsAccepted): bool
     {
         if (isset($wordsAccepted[$word])) {
             return false;
@@ -388,12 +390,12 @@ class Ru
 
     /**
      * Возвращает массив новых фишек на поле или false
-     * @param $desk - старая доска
-     * @param $cells - новая доска
-     * @param $gameStatus
+     * @param array $desk - старая доска
+     * @param array $cells - новая доска
+     * @param array $playerFishki - фишки у игргока, приславшего хад на проверку
      * @return array|false
      */
-    private static function compare_desks(&$desk, &$cells, &$gameStatus)
+    private static function compare_desks(array &$desk, array &$cells, array $playerFishki)
     {
         $fshki = [];
         //$j - строки, $i - столбцы
@@ -420,11 +422,12 @@ class Ru
             }
         }
 
-        // todo добавить проверки на соответствие новых фишек на поле и фишек у игрока из $gameStatus
-        $playerFishki = $gameStatus['users'][$gameStatus['activeUser']]['fishki'];
-        $cellsFishki = $fshki;
-        foreach($cellsFishki as $cellNum => $cellFishka) {
-            foreach($playerFishki as $playerNum => $playerFishka) {
+        // Проверки на соответствие новых фишек на поле и фишек у игрока из $playerFishki
+
+        $tmpPlayerFishki = $playerFishki;
+        $tmpCellsFishki = $fshki;
+        foreach($tmpCellsFishki as $cellNum => $cellFishka) {
+            foreach($tmpPlayerFishki as $playerNum => $playerFishka) {
                 // ищем новую фишку с поля в массиве фишек игрока
                 if (
                     $cellFishka['code'] == $playerFishka
@@ -438,8 +441,8 @@ class Ru
                         && $playerFishka == 999
                     )
                 ) {
-                    unset($playerFishki[$playerNum]);
-                    unset($cellsFishki[$cellNum]);
+                    unset($tmpPlayerFishki[$playerNum]);
+                    unset($tmpCellsFishki[$cellNum]);
 
                     break;
                 }
@@ -447,13 +450,11 @@ class Ru
         }
 
         // Все фишки с поля должны быть найдены в массиве фишек игрока
-        if (!empty($cellsFishki)) {
-
-            // print_r(['cells' => $cellsFishki, 'player' => $playerFishki]);
+        if (!empty($tmpCellsFishki)) {
             return false;
         }
 
-        if (count($fshki) > count($gameStatus['users'][$gameStatus['activeUser']]['fishki'])) {
+        if (count($fshki) > count($playerFishki)) {
             return false;
         }
 
@@ -541,7 +542,7 @@ class Ru
         return ($code < 999 ? $code : $code - 999 - 1);
     }
 
-    private static function fishka_correct(&$fishka, &$cells, &$desk, &$gameStatus)
+    private static function fishka_correct(&$fishka, &$cells, &$desk, $wordsAccepted)
     {
         //Определяем слово по горизонтали
         //$i - столбец
@@ -575,7 +576,7 @@ class Ru
         }
 
         if (mb_strlen($hor_word, 'UTF-8') > 1) {
-            if (!self::word_correct($hor_word, $gameStatus['wordsAccepted'])) {
+            if (!self::word_correct($hor_word, $wordsAccepted)) {
                 self::$badWords[$hor_word] = $hor_word;
 
                 return false;
@@ -619,7 +620,7 @@ class Ru
         }
 
         if (mb_strlen($vert_word, 'UTF-8') > 1) {
-            if (!self::word_correct($vert_word, $gameStatus['wordsAccepted'])) {
+            if (!self::word_correct($vert_word, $wordsAccepted)) {
                 self::$badWords[$vert_word] = $vert_word;
 
                 return false;

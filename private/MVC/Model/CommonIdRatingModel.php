@@ -9,7 +9,7 @@ class CommonIdRatingModel extends BaseModel
 
     const INITIAL_RATING = 1700;
 
-    public static function changeUserRating(int $commonId, int $newRating, string $gameName = Game::SCRABBLE): bool
+    public static function changeUserRating(int $commonId, int $newRating, string $gameName): bool
     {
         if (self::update($commonId, [self::RATING_FIELD_PREFIX . $gameName => $newRating])){
             return true;
@@ -43,7 +43,7 @@ class CommonIdRatingModel extends BaseModel
         );
     }
 
-    public static function getTopByRating(int $rating, string $gameName = Game::SCRABBLE): int
+    public static function getTopByRating(int $rating, string $gameName): int
     {
         $topQuery = ORM::select(
             ['count(1) + 1 as top'],

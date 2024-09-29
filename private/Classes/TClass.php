@@ -12,13 +12,18 @@ class T
         return self::PHRASES['invite_friend_prompt'][self::$lang];
     }
 
-    // Здесь задается язык и режим игры для папки запуска скрипта
+    // Здесь задается язык и режим игры для папки запуска скрипта (и для игры scrabble, erudit)
     const GAME_MODE_LANG = [
         'scrabble' => self::EN_LANG,
         'yandex' => self::RU_LANG,
         'dev' => self::RU_LANG,
+        'erudit' => self::RU_LANG,
     ];
 
+    public static function setLangGame(string $lang, string $gameName) {
+        self::$lang = $lang;
+        Game::$gameName = $gameName;
+    }
 
     public static function S($keyPhrase): string
     {
@@ -170,7 +175,8 @@ class T
             self::RU_LANG => 'Баланс SUDOKU'
         ],
         'Claim' => [
-            self::RU_LANG => 'Забрать'
+            self::EN_LANG => 'Claim <br>(soon)',
+            self::RU_LANG => 'Забрать<br>(скоро)'
         ],
         'Name' => [
             self::RU_LANG => 'Имя'

@@ -15,7 +15,19 @@ class TopChecker {
      */
     public static function Run() {
         // todo CLUB-398 Сделать обход Топов и ачивок для каждой игры (эрудит, scrabble)
+        try {
+            foreach ([Game::ERUDIT, Game::SCRABBLE] as $gameName) {
+                T::setLangGame(T::GAME_MODE_LANG[$gameName], $gameName);
+
+                self::processIncomes($gameName);
+            }
+        } catch(Throwable $e) {
+            print $e->__toString();
+        }
+
         foreach([Game::ERUDIT, Game::SCRABBLE] as $gameName) {
+            T::setLangGame(T::GAME_MODE_LANG[$gameName], $gameName);
+
             $gameNameId = RatingHistoryModel::GAME_IDS[$gameName];
 
             foreach (self::TOP_PARAMS as $period => $params) {
@@ -224,16 +236,26 @@ class TopChecker {
                 }
             }
         }
+    }
 
+    private static function processIncomes($gameName) {
+        $gameAchieves = AchievesModel::getActive($gameName);
 
-/*
-        PlayerModel::getTopPlayers(1);
-        PlayerModel::getTopPlayers(2);
-        PlayerModel::getTopPlayers(3);
-        PlayerModel::getTopPlayers(4, 10);
-*/
-
-
+        foreach($gameAchieves as $achieve) {
+            if (IncomeModel::changeIncome(
+                $achieve[AchievesModel::COMMON_ID_FIELD],
+                $achieve[AchievesModel::INCOME_FIELD],
+                AchievesModel::getDescription(
+                    $achieve[AchievesModel::EVENT_TYPE_FIELD],
+                    $achieve[AchievesModel::EVENT_PERIOD_FIELD],
+                    $gameName
+                ),
+                IncomeHistoryModel::TYPE_IDS[IncomeHistoryModel::ACHIEVE_TYPE],
+                $achieve[AchievesModel::ID_FIELD]
+            )) {
+                print("Income processed: " . var_export($achieve, true) . "\n");
+            }
+        }
     }
 }
 

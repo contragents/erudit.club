@@ -61,8 +61,6 @@ Config::checkDebugFlag();
 T::$lang = in_array(($_GET['lang'] ?? 'NA'), T::GAME_MODE_LANG) ? $_GET['lang'] : BaseController::getLang();
 Game::$gameName = Game::GAME_LANG[T::$lang];
 
-//T::$lang = T::RU_LANG;
-
 /**
  * Глобальная функция вывода отладочной инфо, либо логирования (пока в keydb)
  * @param $data
