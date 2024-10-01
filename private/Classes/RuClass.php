@@ -278,7 +278,7 @@ class Ru
         foreach ($fishki as $nn => $fishka) {
             if ($fishka['replaced_code'] !== false) {
                 foreach ($zvezdy ?: [] as $num => $zvezda) {
-                    if ($zvezda['letter_code'] === $fishka['replaced_code']) {
+                    if ($zvezda['letter_code'] == $fishka['replaced_code']) {
                         $cells[$zvezda['i']][$zvezda['j']][1] = $fishka['replaced_code']; // в ячейку записали код фишки, которая забрала звездочку
                         $cells[$zvezda['i']][$zvezda['j']][2] = false;
                         unset($zvezdy[$num]);
@@ -291,7 +291,7 @@ class Ru
         foreach ($bad_fishki as $nn => $bfishka) {
             if ($bfishka['replaced_code'] !== false) {
                 foreach ($zvezdy ?: [] as $num => $zvezda) {
-                    if ($zvezda['letter_code'] === $bfishka['replaced_code']) {
+                    if ($zvezda['letter_code'] == $bfishka['replaced_code']) {
                         $cells[$zvezda['i']][$zvezda['j']][2] = false;
                         unset($zvezda[$num]);
                     }
@@ -432,11 +432,11 @@ class Ru
                 if (
                     $cellFishka['code'] == $playerFishka
                     || (
-                        $cellFishka['replaced_code']
+                        $cellFishka['replaced_code'] !== false
                         && $cellFishka['replaced_code'] == $playerFishka
                     )
                     || (
-                        !$cellFishka['replaced_code']
+                        $cellFishka['replaced_code'] === false
                         && $cellFishka['code'] > 999
                         && $playerFishka == 999
                     )
