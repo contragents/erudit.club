@@ -51,7 +51,7 @@ class PrizesErudit
     public static function playerCurrentRecords($cookie = false)
     {
         $cookie = $cookie ?: $_COOKIE[Game::COOKIE_KEY];
-        $allRecords = Cache::hgetall(static::ALL_RECORDS);
+        $allRecords = Cache::hgetall(static::ALL_RECORDS) ?: [];
         $records = [];
 
         foreach ($allRecords as $type => $record) {

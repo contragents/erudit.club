@@ -6,7 +6,6 @@ class BotGenV3ENG
     const MINUTES_TO_GO = 5;
     const LANG = 'EN';
 
-    public $p;
     private $config;
 
     const BOT_GAMES = 'erudit.botEN_games';
@@ -22,10 +21,10 @@ class BotGenV3ENG
         $start_script_time = date('U');
         $script_work_time = self::MINUTES_TO_GO * 60 - 5;
 
-        $this->p = Cache::getInstance();
         $this->config = include __DIR__ . '/../../configs/conf.php';
 
         while ((date('U') - $start_script_time) < $script_work_time) {
+            /*
             if ($this->players4Waiting()) {
                 if ($this->timeToMake4Game()) {
                     if ($this->noBots4Waiting()) {
@@ -40,13 +39,14 @@ class BotGenV3ENG
                     print ' ' . date('U') . '- не подошло время создавать бота' . "\n";
                 }
             }
+            */
 
             if ($this->players2Waiting()) {
                 if ($this->timeToMake2Game()) {
                     if ($this->noBots2Waiting()) {
                         if ($newBot = $this->genNewBot()) {
                             $this->storeTo2Players($newBot);
-                            $this->startGame($newBot);
+                            //$this->startGame($newBot);
                         }
                     }
                 }
@@ -67,7 +67,7 @@ class BotGenV3ENG
         $resp = include __DIR__ . '/status_checker.php';
         ob_end_clean();
         //Пинганули сервер, что есть новый игрок
-        $this->p->redis->rpush(static::BOT_GAMES, $botName);
+        Cache::rpush(static::BOT_GAMES, $botName);
         //Сохранили нового бота в список игроков
     }
 
@@ -75,8 +75,8 @@ class BotGenV3ENG
     {
         $options = false;
 
-        if (!$this->p->redis->hget(static::WAITERS_2_PLAYERS_QUEUE, $User)) {
-            $this->p->redis->hset(
+        if (!Cache::hget(static::WAITERS_2_PLAYERS_QUEUE, $User)) {
+            Cache::hset(
                 static::WAITERS_2_PLAYERS_QUEUE,
                 $User,
                 serialize(
@@ -91,10 +91,10 @@ class BotGenV3ENG
 
     private function storeTo4Players($User)
     {
-        if (!$this->p->redis->hget(static::WAITERS_4_PLAYERS_QUEUE, $User)) {
+        if (!Cache::hget(static::WAITERS_4_PLAYERS_QUEUE, $User)) {
             $options = false;
 
-            $this->p->redis->hset(
+            Cache::hset(
                 static::WAITERS_4_PLAYERS_QUEUE,
                 $User,
                 serialize(
@@ -109,7 +109,7 @@ class BotGenV3ENG
 
     private function noBots2Waiting()
     {
-        $allPlayers2Waiting = $this->p->redis->hgetall(static::WAITERS_2_PLAYERS_QUEUE);
+        $allPlayers2Waiting = Cache::hgetall(static::WAITERS_2_PLAYERS_QUEUE);
         foreach ($allPlayers2Waiting as $player => $serializedData) {
             if (strpos($player, self::BOT_TPL) !== false) {
                 return false;
@@ -120,7 +120,7 @@ class BotGenV3ENG
 
     private function timeToMake2Game()
     {
-        $waitingPlayers = $this->p->redis->hgetall(static::WAITERS_2_PLAYERS_QUEUE);
+        $waitingPlayers = Cache::hgetall(static::WAITERS_2_PLAYERS_QUEUE);
         $maxTimeWaiting = 0;
         foreach ($waitingPlayers as $player => $data) {
             $data = unserialize($data);
@@ -137,17 +137,18 @@ class BotGenV3ENG
 
     private function players2Waiting()
     {
-        $cnt = $this->p->redis->hlen(static::WAITERS_2_PLAYERS_QUEUE);
+        $cnt = Cache::hlen(static::WAITERS_2_PLAYERS_QUEUE);
         if ($cnt >= 1) {
             return true;
         }
+
         return false;
     }
 
     private function genNewBot()
     {
         for ($num = rand(0, self::BOTSNUM - 1); $num < self::BOTSNUM * 2; $num++) {
-            if (($incr = $this->p->redis->hincrBy(
+            if (($incr = Cache::hincrBy(
                     self::BOT_LIST,
                     $botNum = (self::BOT_TPL . ($num % self::BOTSNUM)),
                     1
@@ -155,7 +156,7 @@ class BotGenV3ENG
                 return $botNum;
             } else {
                 if ($incr > 200) {
-                    $this->p->redis->hset(self::BOT_LIST, $botNum = (self::BOT_TPL . ($num % self::BOTSNUM)), 1);
+                    Cache::hset(self::BOT_LIST, $botNum = (self::BOT_TPL . ($num % self::BOTSNUM)), 1);
                     return $botNum;
                 }
             }
@@ -166,7 +167,7 @@ class BotGenV3ENG
 
     private function noBots4Waiting()
     {
-        $allPlayers4Waiting = $this->p->redis->hgetall(static::WAITERS_4_PLAYERS_QUEUE);
+        $allPlayers4Waiting = Cache::hgetall(static::WAITERS_4_PLAYERS_QUEUE);
         foreach ($allPlayers4Waiting as $player => $serializedData) {
             print "!!!!!!!!" . $player;
             if (strpos($player, self::BOT_TPL) !== false) {
@@ -178,7 +179,7 @@ class BotGenV3ENG
 
     private function timeToMake4Game()
     {
-        $waitingPlayers = $this->p->redis->hgetall(static::WAITERS_4_PLAYERS_QUEUE);
+        $waitingPlayers = Cache::hgetall(static::WAITERS_4_PLAYERS_QUEUE);
         $maxTimeWaiting = 0;
         foreach ($waitingPlayers as $player => $data) {
             $data = unserialize($data);
@@ -195,7 +196,7 @@ class BotGenV3ENG
 
     private function players4Waiting()
     {
-        $cnt = $this->p->redis->hlen(static::WAITERS_4_PLAYERS_QUEUE);
+        $cnt = Cache::hlen(static::WAITERS_4_PLAYERS_QUEUE);
         print $cnt;
         if (($cnt >= 1) && ($cnt < 4)) {
             return true;

@@ -214,7 +214,7 @@ class Ru
                 }
             }
         }
-/*
+
         // Несвязанные фишки признаем плохими - bad_fishki
         foreach ($fishki as $num => $fishka) {
             if (!isset($fishka['connected'])) {
@@ -224,7 +224,7 @@ class Ru
                 unset($fishki[$num]);
             }
         }
-*/
+
         foreach ($bad_fishki as $bad_fishka) {
             if (isset(self::$words[$bad_fishka['i'] . '-' . $bad_fishka['j']])) {
                 unset(self::$words[$bad_fishka['i'] . '-' . $bad_fishka['j']]);

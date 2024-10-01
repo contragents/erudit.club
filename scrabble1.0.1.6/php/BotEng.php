@@ -4,13 +4,14 @@ use Erudit\Game;
 
 class BotEng
 {
-    const MINUTES_TO_GO = 5;
+    const MINUTES_TO_GO = 50;
     const ENG_LANG = 'EN';
     const RU_LANG = 'RU';
     public static $langClass = Eng::class;
     public static $lang = self::ENG_LANG;
     public static $thinkEndTime;
     const LNG_ID = 2;
+    const DIR = 'scrabble1.0.1.6/php/';
 
     const BOT_GAMES = 'erudit.botEN_games';
 
@@ -34,14 +35,20 @@ class BotEng
                 $_GET['queryNumber'] = $zaprosNum;
                 $_GET['lang'] = static::$lang;
 
-                $resp = include __DIR__ . '/status_checker.php';
-
+                $resp = self::makeRequest(
+                    'status_checker.php',
+                    $Bot,
+                    ['queryNumber' => $zaprosNum, 'lang' => static::$lang]
+                );//include __DIR__ . '/status_checker.php';
+print $resp;
                 $resp = json_decode($resp, true);
 
+print_r($resp);
+
                 if (($resp['gameState'] == 'gameResults') || ($resp['gameState'] == 'initGame')) {
-                    ob_start();
+                    /*ob_start();
                     (new Game())->exitGame();
-                    ob_end_clean();
+                    ob_end_clean();*/
                     //Не будем анализировать ответы!)) - просто новая игра
                     unset($botsTurns[$Bot]);
                     unset($botTimes[$Bot]);
@@ -121,6 +128,37 @@ class BotEng
         exit();
     }
 
+    protected static function makeRequest(string $scriptName, string $cookie,array $params = [], array $post = []): string {
+        $opts = [
+            "http" => [
+                "method" => (!empty($post)) ? "POST" : "GET",
+                "header" => "Accept-language: en\r\n"
+                    . "Cookie: " . Game::COOKIE_KEY . "=$cookie\r\n"
+                    . ($post ? "Content-Type: application/x-www-form-urlencoded\r\n" : ''),
+            ]
+            + ((!empty($post)) ? ['content' => http_build_query($post)] : [])
+        ];
+
+// DOCS: https://www.php.net/manual/en/function.stream-context-create.php
+        $context = stream_context_create($opts);
+
+        print_r($context);
+
+// Open the file using the HTTP headers set above
+// DOCS: https://www.php.net/manual/en/function.file-get-contents.php
+        return file_get_contents(
+            'https://xn--d1aiwkc2d.club/'
+            . static::DIR
+            . $scriptName
+            . ($params
+                ? ('?' . implode('&', array_map(fn($param, $value) => "$param=$value", array_keys($params), $params)))
+                : ''
+            ),
+            false,
+            $context
+        );
+    }
+
 
     public static function changeFishkiBot(&$data)
     {
@@ -156,7 +194,9 @@ class BotEng
             if (self::makeTurn($cells, $data['fishki'], $slovaPlayed)) {
                 print "++++++++++Submiting turn...........";
                 $_POST['cells'] = json_encode($cells);
-                $resp = include __DIR__ . '/turn_submitter.php';
+
+                $resp = self::makeRequest('turn_submitter.php', $_COOKIE[Cookie::COOKIE_NAME], ['lang' => static::$lang], $_POST);
+                //$resp = include __DIR__ . '/turn_submitter.php';
                 print $resp;
 
                 return $resp;

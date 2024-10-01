@@ -245,7 +245,8 @@ class Game
                             if (strstr($user['ID'], 'botV3#') === false) {
                                 $players[$user['ID']] = [
                                     'cookie' => $user['ID'],
-                                    'userID' => (isset($user['userID']) ? $user['userID'] : false)
+                                    'userID' => (isset($user['userID']) ? $user['userID'] : false),
+                                    'common_id' => $user['common_id'],
                                 ];
                             }
                         }
@@ -269,34 +270,34 @@ class Game
             foreach ($players as $num => $player) {
                 $rangedOnlinePlayers[0]++;
 
-                if (($rating = $this->getRatings($player))) {
-                    $players[$num]['rating'] = $rating;
+                if (($rating = CommonIdRatingModel::getRating($player['common_id'], self::$gameName)/*$this->getRatings($player)*/)) {
+                    //$players[$num]['rating'] = $rating;
 
-                    if ($rating['rating'] > 1900) {
+                    if ($rating > 1900) {
                         $rangedOnlinePlayers[1900]++;
                     }
-                    if ($rating['rating'] > 2000) {
+                    if ($rating > 2000) {
                         $rangedOnlinePlayers[2000]++;
                     }
-                    if ($rating['rating'] > 2100) {
+                    if ($rating > 2100) {
                         $rangedOnlinePlayers[2100]++;
                     }
-                    if ($rating['rating'] > 2200) {
+                    if ($rating > 2200) {
                         $rangedOnlinePlayers[2200]++;
                     }
-                    if ($rating['rating'] > 2300) {
+                    if ($rating > 2300) {
                         $rangedOnlinePlayers[2300]++;
                     }
-                    if ($rating['rating'] > 2400) {
+                    if ($rating > 2400) {
                         $rangedOnlinePlayers[2400]++;
                     }
-                    if ($rating['rating'] > 2500) {
+                    if ($rating > 2500) {
                         $rangedOnlinePlayers[2500]++;
                     }
-                    if ($rating['rating'] > 2600) {
+                    if ($rating > 2600) {
                         $rangedOnlinePlayers[2600]++;
                     }
-                    if ($rating['rating'] > 2700) {
+                    if ($rating > 2700) {
                         $rangedOnlinePlayers[2700]++;
                     }
                 }
@@ -312,10 +313,11 @@ class Game
         if ($rangedOnlinePlayers[1900]) {
             $cnt = Cache::hlen($this->Queue::QUEUES['erudit.rating_waiters']);
             if ($cnt < ($rangedOnlinePlayers[1900] / 2)) {
-                $thisUserRating = $this->getRatings(['cookie' => $this->User, 'userID' => false]);
-                if (($thisUserRating !== false) && ($thisUserRating['rating'] > 1750)) {
+                $thisUserRating = CommonIdRatingModel::getRating($this->commonId, self::$gameName);//$this->getRatings(['cookie' => $this->User, 'userID' => false]);
+                if ($thisUserRating > 1750) {
                     $rangedOnlinePlayers['waiters_count'] = $cnt;
-                    $rangedOnlinePlayers['thisUserRating'] = $thisUserRating['rating'];
+                    $rangedOnlinePlayers['thisUserRating'] = $thisUserRating;
+
                     return $rangedOnlinePlayers;
                 }
             }
@@ -907,94 +909,23 @@ class Game
         return false;
     }
 
-    protected function normalizeRatings(&$ratings)
-    {
-        $result = [];
-
-        foreach ($ratings as $cook => $rate) {
-            if (isset($rate[0])) {
-                if ($rate[0]['cookie'] !== $cook) {
-                    $rate[0]['cookie'] = $cook;
-                }
-                $result[] = $rate[0];
-            }
-        }
-
-        return $result;
-    }
-
-    protected function getRatingWithCommonID($commonId)
-    {
-        $rating = CommonIdRatingModel::getRating($commonId, self::$gameName);
-
-        if (!$rating) {
-            return false;
-        }
-
-        $ratingInfo = [];
-        $ratingInfo[0] = [
-            'rating' => $rating,
-            'top' => ($rating > self::MIN_TOP_RATING) ? CommonIdRatingModel::getTopByRating($rating, self::$gameName) : 'Не в ТОПе',
-            'games_played' => RatingHistoryModel::getNumGamesPlayed($commonId, self::$gameName),
-            'win_percent' => 50,
-            'inactive_percent' => 0,
-        ];
-
-        PlayerModel::saveRatingToCache([$commonId], $ratingInfo);
-
-        return $ratingInfo;
-    }
-
     public static function hash_str_2_int($str, $len = 16)
     {
         $hash_int = base_convert("0x" . substr(md5($str), 0, $len), 16, 10);
         return $hash_int;
     }
 
-    public function getRatings($userCookie = false)
-    {
-        if (!$userCookie) {
-            if (isset($this->gameStatus['users'])) {
-                foreach ($this->gameStatus['users'] as $user) {
-                    $ratings[$user['ID']] = $this->getRatingWithCommonID($user['common_id']);
-                }
 
-                return $this->normalizeRatings($ratings);
-            }
-        }
-
-        if (!$userCookie) {
-            if (!($ratings[$this->User] = PlayerModel::getRatingFromCache($this->User))) {
-                $ratings[$this->User] = $this->getRatingWithCommonID($this->commonId);
-            }
-
-            return $this->normalizeRatings($ratings);
-        }
-
-        if (!is_array($userCookie)) {
-            $ratings = [];
-            $ratings[$userCookie] = false;
-            if (!$ratings[$userCookie]) {
-                $ratings[$userCookie] = $this->getRatingWithCommonID(PlayerModel::getPlayerID($userCookie, true));
-            }
-
-            return $this->normalizeRatings($ratings);
-        } else {
-            $ratings = $this->getRatingWithCommonID(PlayerModel::getPlayerID($userCookie['cookie'], true));
-
-            return count($ratings ?: []) ? $ratings[0] : false;
-        }
-    }
 
     protected function statusComments_startGame()
     {
         Stats::saveStats();
 
-        $ratings = $this->getRatings($this->User);
+        $rating = CommonIdRatingModel::getRating($this->commonId, self::$gameName);
 
-        $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings ? $ratings[0]['rating'] : self::NEW_PLAYER;
+        $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $rating ?: self::NEW_PLAYER;
 
-        return 'Новая игра начата! <br />Набери <strong>' . $this->gameStatus['winScore'] . '</strong> очков' . '<br />' . $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
+        return 'Новая игра начата! <br />Набери <strong>' . $this->gameStatus['winScore'] . '</strong> очков' . '<br />' . $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит' . '<br />Ваш текущий рейтинг - <strong>' . $rating . '</strong>';
     }
 
     protected function statusComments_otherTurn()
@@ -1024,11 +955,11 @@ class Game
         }
 
         if ($this->gameStatus['turnNumber'] == 1 || !isset($this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'])) {
-            $ratings = $this->getRatings($this->User);
+            $rating = CommonIdRatingModel::getRating($this->commonId, self::$gameName);
 
-            $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings[0]['rating'] ?? self::NEW_PLAYER;
+            $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $rating ?: self::NEW_PLAYER;
 
-            return 'Ваш ход! <br />Игра до <strong>' . $this->gameStatus['winScore'] . '</strong> очков' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
+            return 'Ваш ход! <br />Игра до <strong>' . $this->gameStatus['winScore'] . '</strong> очков' . '<br />Ваш текущий рейтинг - <strong>' . $rating . '</strong>';
         } else {
             return $this->gameStatus['users'][$this->numUser]['username'] . ', Ваш ход!'
                 . Hints::getHint(
@@ -1052,8 +983,10 @@ class Game
     protected function statusComments_preMyTurn()
     {
         if ($this->gameStatus['turnNumber'] == 1) {
-            $ratings = $this->getRatings($this->User);
-            return 'Игра до <strong>' . $this->gameStatus['winScore'] . '</strong> очков<br />Ваш ход следующий - приготовьтесь!' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
+            $rating = CommonIdRatingModel::getRating($this->commonId, self::$gameName);
+            $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $rating;
+
+            return 'Игра до <strong>' . $this->gameStatus['winScore'] . '</strong> очков<br />Ваш ход следующий - приготовьтесь!' . '<br />Ваш текущий рейтинг - <strong>' . $rating . '</strong>';
         } else {
             return $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит. <br />Ваш ход следующий - приготовьтесь!'
                 . Hints::getHint(
@@ -1945,8 +1878,8 @@ class Game
 
                 $this->gameStatus['users'][$num]['common_id'] = PlayerModel::getPlayerID($user['ID'], true);
                 if (!($this->gameStatus['users'][$num]['rating'] = CommonIdRatingModel::getRating($this->gameStatus['users'][$num]['common_id'], self::$gameName))) {
-                    $userRating = $this->getRatings($user['ID']);
-                    $this->gameStatus['users'][$num]['rating'] = $userRating ? $userRating[0]['rating'] : self::NEW_PLAYER;
+                    $userRating = CommonIdRatingModel::getRating($this->gameStatus['users'][$num]['common_id'], self::$gameName);
+                    $this->gameStatus['users'][$num]['rating'] = $userRating ?: self::NEW_PLAYER;
                 }
                 //Прописали рейтинг и common_id игрока в статусе игры - только для games_statistic.php
             }

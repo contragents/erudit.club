@@ -4,6 +4,7 @@ namespace Erudit;
 
 use BanModel;
 use \Cache;
+use CommonIdRatingModel;
 use Dadata\Hints;
 use Dadata\Prizes;
 use Dadata\Stats;
@@ -12,6 +13,7 @@ use Lang\Ru;
 use LogModel;
 use PlayerModel;
 use \QueuePrivate as Queue;
+use RatingHistoryModel;
 
 class Game extends \Game
 {
@@ -33,6 +35,79 @@ class Game extends \Game
         $this->dir = __DIR__;
 
         parent::__construct();
+    }
+
+    protected function getRatingWithCommonID($commonId)
+    {
+        $rating = CommonIdRatingModel::getRating($commonId, self::$gameName);
+
+        if (!$rating) {
+            return false;
+        }
+
+        $ratingInfo = [];
+        $ratingInfo[0] = [
+            'rating' => $rating,
+            'top' => ($rating > self::MIN_TOP_RATING) ? CommonIdRatingModel::getTopByRating($rating, self::$gameName) : 'Не в ТОПе',
+            'games_played' => RatingHistoryModel::getNumGamesPlayed($commonId, self::$gameName),
+            'win_percent' => 50,
+            'inactive_percent' => 0,
+        ];
+
+        PlayerModel::saveRatingToCache([$commonId], $ratingInfo);
+
+        return $ratingInfo;
+    }
+
+    protected function normalizeRatings(&$ratings)
+    {
+        $result = [];
+
+        foreach ($ratings as $cook => $rate) {
+            if (isset($rate[0])) {
+                if ($rate[0]['cookie'] !== $cook) {
+                    $rate[0]['cookie'] = $cook;
+                }
+                $result[] = $rate[0];
+            }
+        }
+
+        return $result;
+    }
+
+    public function getRatings($userCookie = false)
+    {
+        if (!$userCookie) {
+            if (isset($this->gameStatus['users'])) {
+                foreach ($this->gameStatus['users'] as $user) {
+                    $ratings[$user['ID']] = $this->getRatingWithCommonID($user['common_id']);
+                }
+
+                return $this->normalizeRatings($ratings);
+            }
+        }
+
+        if (!$userCookie) {
+            if (!($ratings[$this->User] = PlayerModel::getRatingFromCache($this->User))) {
+                $ratings[$this->User] = $this->getRatingWithCommonID($this->commonId);
+            }
+
+            return $this->normalizeRatings($ratings);
+        }
+
+        if (!is_array($userCookie)) {
+            $ratings = [];
+            $ratings[$userCookie] = false;
+            if (!$ratings[$userCookie]) {
+                $ratings[$userCookie] = $this->getRatingWithCommonID(PlayerModel::getPlayerID($userCookie, true));
+            }
+
+            return $this->normalizeRatings($ratings);
+        } else {
+            $ratings = $this->getRatingWithCommonID(PlayerModel::getPlayerID($userCookie['cookie'], true));
+
+            return count($ratings ?: []) ? $ratings[0] : false;
+        }
     }
 
     public function playersInfo() // private version
