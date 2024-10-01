@@ -303,6 +303,16 @@ class PrizesErudit
 
         $playersRecords = [];
 
+        foreach (static::PERIODS as $period) {
+            $activeAchieve = AchievesModel::getActive(
+                    Game::$gameName,
+                    'games_played',
+                    $period
+                )[0] ?? false;
+
+            Cache::rpush('activeAchieve', $activeAchieve);
+        }
+
         foreach ($players as $cookie) {
             $playerDailyPlayedGames = Cache::incr(static::GAMES_PLAYED_DAILY . $cookie . strtotime('today'));
             Cache::setex(
@@ -318,7 +328,15 @@ class PrizesErudit
                     static::DAY_TTL,
                     ['number' => $playerDailyPlayedGames]
                 );
-                self::saveAchieve($cookie, 'games_played', static::PERIODS['день'], $playerDailyPlayedGames, false);
+
+                $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS['день'])[0] ?? false;
+
+                // Проверить, предыдущий рекорд принадлежит этому же игроку - просто обновить число игр
+                if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
+                    AchievesModel::setParam($activeAchieve[AchievesModel::ID_FIELD], AchievesModel::EVENT_VALUE_FIELD, $playerDailyPlayedGames, true);
+                } else {
+                    self::saveAchieve($cookie, 'games_played', static::PERIODS['день'], $playerDailyPlayedGames, false);
+                }
                 $todayRecord['number'] = $playerDailyPlayedGames;
                 $playersRecords['день'] = [$cookie => $playerDailyPlayedGames];
             }
@@ -334,13 +352,22 @@ class PrizesErudit
                         static::WEEK_TTL,
                         ['number' => $playerWeeklyPlayedGames]
                     );
-                    self::saveAchieve(
-                        $cookie,
-                        'games_played',
-                        static::PERIODS['неделю'],
-                        $playerWeeklyPlayedGames,
-                        false
-                    );
+
+                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS['неделю'])[0] ?? false;
+
+                    // Проверить, предыдущий рекорд принадлежит этому же игроку - просто обновить число игр
+                    if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
+                        AchievesModel::setParam($activeAchieve[AchievesModel::ID_FIELD], AchievesModel::EVENT_VALUE_FIELD, $playerWeeklyPlayedGames, true);
+                    } else {
+                        self::saveAchieve(
+                            $cookie,
+                            'games_played',
+                            static::PERIODS['неделю'],
+                            $playerWeeklyPlayedGames,
+                            false
+                        );
+                    }
+
                     $weekRecord['number'] = $playerWeeklyPlayedGames;
                     $playersRecords['неделю'] = [$cookie => $playerWeeklyPlayedGames];
                 }
@@ -361,13 +388,21 @@ class PrizesErudit
                         static::MONTH_TTL,
                         ['number' => $playerMonthlyPlayedGames]
                     );
-                    self::saveAchieve(
+
+                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS['месяц'])[0] ?? false;
+
+                    if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
+                        AchievesModel::setParam($activeAchieve[AchievesModel::ID_FIELD], AchievesModel::EVENT_VALUE_FIELD, $playerMonthlyPlayedGames, true);
+                    } else {
+                        self::saveAchieve(
                         $cookie,
                         'games_played',
                         static::PERIODS['месяц'],
                         $playerMonthlyPlayedGames,
                         false
                     );
+                    }
+
                     $monthRecord['number'] = $playerMonthlyPlayedGames;
                     $playersRecords['месяц'] = [$cookie => $playerMonthlyPlayedGames];
                 }
@@ -384,7 +419,22 @@ class PrizesErudit
                         static::YEAR_TTL,
                         ['number' => $playerYearlyPlayedGames]
                     );
-                    self::saveAchieve($cookie, 'games_played', static::PERIODS['год'], $playerYearlyPlayedGames, false);
+
+                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS['год'])[0] ?? false;
+
+                    // Проверить, предыдущий рекорд принадлежит этому же игроку - просто обновить число игр
+                    if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
+                        AchievesModel::setParam($activeAchieve[AchievesModel::ID_FIELD], AchievesModel::EVENT_VALUE_FIELD, $playerYearlyPlayedGames, true);
+                    } else {
+                        self::saveAchieve(
+                            $cookie,
+                            'games_played',
+                            static::PERIODS['год'],
+                            $playerYearlyPlayedGames,
+                            false
+                        );
+                    }
+
                     $yearRecord['number'] = $playerYearlyPlayedGames;
                     $playersRecords['год'] = [$cookie => $playerYearlyPlayedGames];
                 }

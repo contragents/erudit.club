@@ -560,12 +560,14 @@ class AchievesModel extends BaseModel
         );
     }
 
-    public static function getActive($gameName): array
+    public static function getActive(string $gameName, string $type = '', string $period = ''): array
     {
         return DB::queryArray(
             self::select(['*'])
             . ORM::where(self::IS_ACTIVE_FIELD, '=', 1, true)
             . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', self::GAME_IDS[$gameName])
+            . ($type ? ORM::andWhere(self::EVENT_TYPE_FIELD, '=', $type) : '')
+            . ($period ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '=', $period) : '')
         ) ?: [];
     }
 }

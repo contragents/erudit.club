@@ -21,6 +21,7 @@ class PlayerModel extends BaseModel
     const TOP_10 = 10;
     const MIN_TOP_RATING = 2100; // Рейтинг, ниже которого ТОП не рассчитывается в некоторых запросах
     const TOP_PLAYERS_CACHE_TTL = 3600;
+    private static array $cache = [];
 
 
     /**
@@ -31,17 +32,25 @@ class PlayerModel extends BaseModel
      */
     public static function getPlayerID(string $cookie, bool $createIfNotExist = false)
     {
-        if ($commonID = self::getCommonID($cookie)) {
-            return $commonID;
+        if (self::$cache[$cookie]['common_id'] ?? false) {
+            return self::$cache[$cookie]['common_id'];
+        }
+
+        if ($commonId = self::getCommonID($cookie)) {
+            self::$cache[$cookie]['common_id'] = $commonId;
+
+            return $commonId;
         }
 
         // Пробуем найти связанный common_id у другого плеера по user_id
-        $userIDArr = self::getCrossingCommonIdByCookie($cookie);
+        $commonIdCrossing = self::getCrossingCommonIdByCookie($cookie);
         // Если связь есть
-        if ($userIDArr !== self::COOKIE_NOT_LINKED_STATUS) {
+        if ($commonIdCrossing !== self::COOKIE_NOT_LINKED_STATUS) {
             // .. и если common_id установлен - возвращаем
-            if ($userIDArr) {
-                return $userIDArr;
+            if ($commonIdCrossing) {
+                self::$cache[$cookie]['common_id'] = $commonIdCrossing;
+
+                return $commonIdCrossing;
             }
 
             // ..а если common_id не установлен - создаем
@@ -79,6 +88,8 @@ class PlayerModel extends BaseModel
                 if ($id) {
                     self::update($id, ['field' => self::COMMON_ID_FIELD, 'value' => $id, 'raw' => true]);
                 }
+
+                self::$cache[$cookie]['common_id'] = $id;
 
                 return $id;
             }
