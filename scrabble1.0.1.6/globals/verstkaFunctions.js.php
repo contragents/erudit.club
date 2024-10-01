@@ -192,21 +192,21 @@ function StatsPage({ json, BASE_URL }) {
                             ${points_text}
                         </div>
                         <div class="card_get">
-                            <p>Got reward</p>
+                            <p><?= T::S('Got reward') ?></p>
                             <div class="card_rewardInfo">
                                 <p><img class="card_plus" src="./images/plus.png" alt=""></p>
                                 <p><img class="card_rewardImage" src="./images/bigMoney.png" alt="money">
                                 </p>
-                                <span class="card_moneyCount">x${reward}</span>
+                                <span class="card_moneyCount">${reward}</span>
                             </div>
                         </div>
-                        <p class="card_passive">Your passive income</p>
+                        <p class="card_passive"><?= T::S('Your passive income') ?></p>
                         <div class="card_hour">
                             <img class="card_hourImage" src="./images/smallMoney.png" alt="">
-                            <span>x${income}/hour</span>
+                            <span>x${income}/<?= T::S('per_hour') ?></span>
                         </div>
 
-                        <p class="card_effect">Effect lasts util beaten</p>
+                        <p class="card_effect"><?= T::S('Effect lasts until beaten') ?></p>
                     </div>
                     <span class="date">${strDate}</span>
                 </li>

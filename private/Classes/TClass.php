@@ -78,6 +78,19 @@ class T
             self::RU_LANG => 'Ошибка авторизации'
         ],
         // Рекорды
+        'Got reward'  => [
+            self::RU_LANG => 'Получена награда'
+        ],
+        'Your passive income' => [
+            self::RU_LANG => 'Пассивный заработок'
+        ],
+        'Effect lasts until beaten' => [
+            self::RU_LANG => 'Начисляется, пока не перебито'
+        ],
+        'per_hour' => [
+            self::EN_LANG => 'hour',
+            self::RU_LANG => 'час',
+        ],
         'rank position' => [
             self::RU_LANG => 'место в рейтинге'
         ],

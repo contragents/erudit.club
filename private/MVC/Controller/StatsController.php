@@ -16,7 +16,7 @@ class StatsController extends BaseController
             if ($achieve['event_type'] === AchievesModel::TOP_TYPE) {
                 $achieve['record_type_text'] = T::S('rank position');
                 $achieve['event_type_text'] = T::S(AchievesModel::TOP_TYPE .'_'. $achieve[AchievesModel::EVENT_PERIOD_FIELD]);
-                $achieve['points_text'] = '';
+                $achieve['points_text'] = $achieve[AchievesModel::EVENT_VALUE_FIELD];
             } else {
                 $achieve['record_type_text'] = T::S('record of the ' . $achieve[AchievesModel::EVENT_PERIOD_FIELD]);
                 $achieve['event_type_text'] = T::S($achieve[AchievesModel::EVENT_TYPE_FIELD]);

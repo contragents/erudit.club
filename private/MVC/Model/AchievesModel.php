@@ -160,7 +160,7 @@ class AchievesModel extends BaseModel
             )
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
             . ORM::andWhere(self::IS_ACTIVE_FIELD, '=', 0, true)
-            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[\Game::$gameName], true)
+            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[Game::$gameName], true)
             . ORM::orderBy(self::ID_FIELD, false)
             . ORM::limit(30);
 
@@ -183,7 +183,7 @@ class AchievesModel extends BaseModel
             )
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
             . ORM::andWhere(self::IS_ACTIVE_FIELD, '=', 1, true)
-            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[\Game::$gameName], true)
+            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[Game::$gameName], true)
             . ORM::orderBy(self::ID_FIELD, false);
 
         $res = DB::queryArray($query) ?: [];
@@ -202,7 +202,7 @@ class AchievesModel extends BaseModel
                 self::TABLE_NAME
             )
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
-            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[\Game::$gameName], true)
+            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[Game::$gameName], true)
             . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::DAY_PERIOD) : '')
             . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::WEEK_PERIOD) : '')
             . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::MONTH_PERIOD) : '')
@@ -231,7 +231,7 @@ class AchievesModel extends BaseModel
         return DB::queryValue(
             ORM::select(['count(1)'], self::TABLE_NAME)
             . ORM::where(self::COMMON_ID_FIELD,'=', $commonId, true)
-            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[\Game::$gameName], true)
+            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[Game::$gameName], true)
             . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::DAY_PERIOD) : '')
             . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::WEEK_PERIOD) : '')
             . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::MONTH_PERIOD) : '')
@@ -256,7 +256,7 @@ class AchievesModel extends BaseModel
             )
             // Пока строим статистику только для игр на 2 игрока
             . ORM::where(self::PLAYERS_NUMBER_FIELD, '=', 2, true)
-            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[\Game::$gameName], true)
+            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[Game::$gameName], true)
             . ' AND ( '
             . ORM::getWhereCondition('1_player_id', '=', $commonId, true)
             . ORM::orWhere('2_player_id', '=', $commonId, true)
@@ -341,7 +341,7 @@ class AchievesModel extends BaseModel
             )
             // Пока строим статистику только для игр на 2 игрока
             . ORM::where(self::PLAYERS_NUMBER_FIELD, '=', 2, true)
-            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[\Game::$gameName], true)
+            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[Game::$gameName], true)
             . ' AND ( '
             . ORM::getWhereCondition('1_player_id', '=', $commonId, true)
             . ORM::orWhere('2_player_id', '=', $commonId, true)
@@ -477,7 +477,7 @@ class AchievesModel extends BaseModel
             ORM::select(['count(1)'], self::GAMES_STATS_TABLE)
             // Пока строим статистику только для игр на 2 игрока
             . ORM::where(self::PLAYERS_NUMBER_FIELD, '=', 2, true)
-            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[\Game::$gameName], true)
+            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[Game::$gameName], true)
             . ' AND ( '
             . ORM::getWhereCondition('1_player_id', '=', $commonId, true)
             . ORM::orWhere('2_player_id', '=', $commonId, true)
@@ -505,7 +505,7 @@ class AchievesModel extends BaseModel
             )
             // Пока строим статистику только для игр на 2 игрока
             . ORM::where(self::PLAYERS_NUMBER_FIELD, '=', 2, true)
-            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[\Game::$gameName], true)
+            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[Game::$gameName], true)
             . ' AND ( '
             . ORM::getWhereCondition('1_player_id', '=', $commonId, true)
             . ORM::orWhere('2_player_id', '=', $commonId, true)
