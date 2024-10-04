@@ -314,12 +314,12 @@ class Game
             $cnt = Cache::hlen($this->Queue::QUEUES['erudit.rating_waiters']);
             if ($cnt < ($rangedOnlinePlayers[1900] / 2)) {
                 $thisUserRating = CommonIdRatingModel::getRating($this->commonId, self::$gameName);//$this->getRatings(['cookie' => $this->User, 'userID' => false]);
-                if ($thisUserRating > 1750) {
+                //if ($thisUserRating > 1750) {
                     $rangedOnlinePlayers['waiters_count'] = $cnt;
                     $rangedOnlinePlayers['thisUserRating'] = $thisUserRating;
 
                     return $rangedOnlinePlayers;
-                }
+                //}
             }
         }
 
