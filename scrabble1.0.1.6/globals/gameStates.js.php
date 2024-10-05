@@ -676,10 +676,14 @@ var gameStates = {
                                                 label: '<?= T::S('Back') ?>',
                                                 className: 'btn-sm ml-auto mr-0',
                                                 callback: function () {
-                                                    gameStates['chooseGame']['action'](data);
+                                                    //gameStates['chooseGame']['action'](data);
+                                                    fetchGlobal(STATUS_CHECKER_SCRIPT)
+                                                        .then((data) => {
+                                                            commonCallback(data);
+                                                            gameStates['chooseGame']['action'](data)
+                                                        });
                                                 }
                                             },
-
                                         }
                                     })
                                     .off('shown.bs.modal')
