@@ -653,6 +653,7 @@ var gameStates = {
                         label: '<?= T::S('Stats') ?>',
                         className: 'btn-outline-success',
                         callback: function() {
+                            activateFullScreenForMobiles();
                             getStatPageGlobal().then(data => {
                                 console.log(data);
                                 dialog = bootbox
