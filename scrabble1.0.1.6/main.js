@@ -32,7 +32,7 @@ var UIScene = new Phaser.Class({
 
 //<?php include('config.js')?>
 
-//<?php include('globalFunctions.js')?>
+//<?php include('globalFunctions.js.php')?>
 
 var game = new Phaser.Game(config);
 

@@ -146,7 +146,9 @@ class T
             self::RU_LANG => 'В десятке лучших'
         ],
         // Рекорды конец
-
+        'Return to fullscreen mode?' => [
+            self::RU_LANG => 'Вернуться в полноэкранный режим?'
+        ],
         // Профиль игрока
         'Back' => [
             self::RU_LANG => 'Назад'

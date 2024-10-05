@@ -7,6 +7,22 @@ function activateFullScreenForMobiles() {
     }
 }
 
+document.addEventListener("fullscreenchange", function() {
+    if (!document.fullscreenElement) {
+        bootbox.confirm({
+            size: 'small',
+            message: '<?= T::S('Return to fullscreen mode?') ?>',
+            locale: '<?= strtolower(T::$lang) ?>',
+            callback: function(result) {
+                if(result) {
+                    document.body.requestFullscreen();
+                }
+            }
+        });
+
+    }
+});
+
 async function mobileShare() {
     thisUrl = window.location.href;
     thisTitle = document.title;
