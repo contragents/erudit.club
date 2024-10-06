@@ -621,5 +621,21 @@ class T
         "Error saving new URL" => [
             self::RU_LANG => 'Ошибка сохранения нового URL'
         ],
+        'faq_rules' => [
+            self::EN_LANG => Faq::RULES[self::EN_LANG],
+            self::RU_LANG => Faq::RULES[self::RU_LANG],
+        ],
+        'faq_rating' => [
+            self::EN_LANG => Faq::RATING[self::EN_LANG],
+            self::RU_LANG => Faq::RATING[self::RU_LANG],
+            ],
+        'faq_rewards' => [
+            self::EN_LANG => Faq::REWARDS[self::EN_LANG],
+            self::RU_LANG => Faq::REWARDS[self::RU_LANG],
+            ],
+        'faq_coins' => [
+            self::EN_LANG => Faq::COINS[self::EN_LANG],
+            self::RU_LANG => Faq::COINS[self::RU_LANG],
+            ],
     ];
 }

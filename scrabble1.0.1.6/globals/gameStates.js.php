@@ -1057,11 +1057,9 @@ function commonCallback(data) {
 
     if ('lang' in data && data['lang'] != lang) {
         lang = data['lang'];
-        if (lang == 'EN') {
+        if (lang === 'EN') {
             // ToDo not working under Yandex
             asyncCSS('/css/choose_css.css');
-            //for avoiding errors in IDE
-            //<?php include('instruction_eng.js'); ?>
         }
     }
 

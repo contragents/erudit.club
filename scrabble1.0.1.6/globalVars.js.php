@@ -249,11 +249,10 @@ var fullImgWidth = 0;
 
 var useLocalStorage = localStorage.erudit_user_session_ID ? true : false;
 
-var instruction = '';
-
 var soundPlayed = false;
+var instruction = `<?= T::S('faq_rules') ?>`;
 
-//<?php if (T::$lang === T::EN_LANG) include('globals/instruction_eng.js'); else include('globals/instruction.js'); ?>
+//<?php /*if (T::$lang === T::EN_LANG) include('globals/instruction_eng.js'); else include('globals/instruction.js'); */?>
 
 //<?php include('globals/tgGlobalFunction.js')?>
 //<?php include('globals/buttonSettingsGlobal.js')?>

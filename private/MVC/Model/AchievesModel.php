@@ -271,13 +271,13 @@ class AchievesModel extends BaseModel
             )
             .ORM::orderBy(self::GAME_ID_FIELD, false)
             .ORM::limit($limit, ($page - 1) * $limit);
-
+Cache::hset('games_stats_xxx', $commonId, $query);
         $res = DB::queryArray($query);
 
         $gameStats = [];
 
         // todo сделать подгрузку классов централизованно
-        include_once(__DIR__ . '/../../../autoload_helper.php');
+        //include_once(__DIR__ . '/../../../autoload_helper.php');
 
         foreach($res as $row) {
             $opponentCommonId = $row[self::PLAYER1_ID_FIELD] != $commonId ? $row[self::PLAYER1_ID_FIELD] : $row[self::PLAYER2_ID_FIELD];
