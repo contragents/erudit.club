@@ -277,7 +277,7 @@ var players = {
         svgObject: false,
     },
     timerBlock: {
-        // todo цифры таймера нужно загружать отдельно с учетом вертикального коэффициента
+        // todo сделать мигающие цифры таймера
         filename: 'timer',
         x: botXY.x + knopkiWidth / 2,
         y: botXY.y + botHeight * 0.75 * 0.5 + buttonHeight / 2,

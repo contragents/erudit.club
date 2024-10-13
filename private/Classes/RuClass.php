@@ -102,8 +102,8 @@ class Ru
 
     /**
      * Находим все звезды, которые были забраны с поля и использованы в присланном ходе
-     * @param $desk - текущее поле
-     * @param $cells - новое поле
+     * @param $desk - текущая доска
+     * @param $cells - новая доска
      * @return array
      */
     private static function deskZvezda(&$desk, &$cells): array
@@ -119,7 +119,8 @@ class Ru
                                 'i' => $i,
                                 'j' => $j,
                                 'letter_code' => $cells[$i][$j][2],
-                                'is_correct' => ($desk[$i][$j][1] - 999 - 1 - $cells[$i][$j][2]) === 0 // код фишки, которая забрала звезду с поля
+                                'is_correct' => ($desk[$i][$j][1] - 999 - 1 - $cells[$i][$j][2]) === 0, // код фишки, которая забрала звезду с поля
+                                'desk_letter_code' => $desk[$i][$j][1]
                             ];
                         }
                     }
@@ -174,11 +175,18 @@ class Ru
 
         $bad_fishki = [];
 
-        // Забранные с поля звезды (временные звезды, только на этот хлд)
+        // Забранные с поля звезды (временные звезды, только на этот ход)
         $zvezdyTemporary = static::deskZvezda($desk, $cells);
 
         //Проверяем полученный массив звезд на признак !is_correct
         if (!self::isCorrectZvezdy($zvezdyTemporary)) {
+            LogModel::add(
+                [
+                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR . '|' .LogModel::CATEGORY_SUBMIT_ERROR,
+                    LogModel::MESSAGE_FIELD => var_export($zvezdyTemporary, true)
+                ]
+            );
+
             return false;
         }
 
@@ -403,11 +411,43 @@ class Ru
             for ($i = 0; $i <= 14; $i++) {
                 // Проверки на консистентность присланной доски - пропала буква с поля?
                 if ($desk[$i][$j][0] && !$cells[$i][$j][0]) {
+                    LogModel::add(
+                        [
+                            LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR . '|' . LogModel::CATEGORY_SUBMIT_ERROR,
+                            LogModel::MESSAGE_FIELD => var_export(
+                                [
+                                    'i' => $i,
+                                    'j' => $j,
+                                    '$desk[$i][$j]' => $desk[$i][$j],
+                                    '$cells[$i][$j]' => $cells[$i][$j],
+                                    'error_type' => 'Проверки на консистентность присланной доски - пропала буква с поля'
+                                ],
+                                true
+                            )
+                        ]
+                    );
+
                     return false;
                 }
 
                 // Проверки на консистентность присланной доски - букву заменили на другую?
                 if ($desk[$i][$j][0] && ($cells[$i][$j][1] != $desk[$i][$j][1])) {
+                    LogModel::add(
+                        [
+                            LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR . '|' . LogModel::CATEGORY_SUBMIT_ERROR,
+                            LogModel::MESSAGE_FIELD => var_export(
+                                [
+                                    'i' => $i,
+                                    'j' => $j,
+                                    '$desk[$i][$j]' => $desk[$i][$j],
+                                    '$cells[$i][$j]' => $cells[$i][$j],
+                                    'error_type' => 'Проверки на консистентность присланной доски - букву заменили на другую'
+                                ],
+                                true
+                            )
+                        ]
+                    );
+
                     return false;
                 }
 
@@ -451,9 +491,24 @@ class Ru
 
         // Все фишки с поля должны быть найдены в массиве фишек игрока
         if (!empty($tmpCellsFishki)) {
+            LogModel::add(
+                [
+                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR . '|' .LogModel::CATEGORY_SUBMIT_ERROR,
+                    LogModel::MESSAGE_FIELD => var_export(
+                        [
+                            '$tmpPlayerFishki' => $tmpPlayerFishki,
+                            '$tmpCellsFishki' => $tmpCellsFishki,
+                            'error_type' => 'Все фишки с поля должны быть найдены в массиве фишек игрока'
+                        ],
+                        true
+                    )
+                ]
+            );
+
             return false;
         }
 
+        // Если число поставленных на поле фишек больше количества фишек у игрока фактически
         if (count($fshki) > count($playerFishki)) {
             return false;
         }

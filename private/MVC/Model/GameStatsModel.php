@@ -8,4 +8,5 @@ class GameStatsModel extends BaseModel
     const GAME_ID_FIELD = 'game_id';
     const PLAYERS_NUM_FIELD = 'players_num';
     const WINNER_ID_FIELD = 'winner_player_id';
+    const GAME_NAME_ID = 'game_name_id';
 }

@@ -6,6 +6,7 @@ class LogModel extends BaseModel
 
     const MESSAGE_FIELD = 'message';
     const CATEGORY_FIELD = 'category';
+    const COMMON_ID_FIELD = 'common_id';
 
     const FIELDS =
         parent::FIELDS +
@@ -24,5 +25,17 @@ class LogModel extends BaseModel
         self::CATEGORY_RULANG_ERROR,
         self::CATEGORY_SUBMIT_ERROR,
     ];
+
+    public static function add(array $fieldsVals)
+    {
+        // Добавляем в лог common_id текущего игрока
+        return parent::add(
+            $fieldsVals
+            + ((!isset($fieldsVals[self::COMMON_ID_FIELD]) && Game::$commonID)
+                ? [self::COMMON_ID_FIELD => Game::$commonID]
+                : []
+            )
+        );
+    }
 
 }

@@ -106,6 +106,12 @@ class Queue
         return false;
     }
 
+    public static function botExitGame($botCookie)
+    {
+        Cache::del(static::GET_GAME_KEY . $botCookie);
+        //Удалили указатель на текущую игру для пользователя
+    }
+
     protected static function getRuClass(): string
     {
         return Ru::class;

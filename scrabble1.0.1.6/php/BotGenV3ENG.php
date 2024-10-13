@@ -24,51 +24,45 @@ class BotGenV3ENG
         $this->config = include __DIR__ . '/../../configs/conf.php';
 
         while ((date('U') - $start_script_time) < $script_work_time) {
-            /*
-            if ($this->players4Waiting()) {
-                if ($this->timeToMake4Game()) {
-                    if ($this->noBots4Waiting()) {
-                        if ($newBot = $this->genNewBot()) {
-                            $this->storeTo4Players($newBot);
-                            $this->startGame($newBot);
-                        } else {
-                            print 'не удалось создать бота genNewBot' . "\n";
-                        }
-                    }
-                } else {
-                    print ' ' . date('U') . '- не подошло время создавать бота' . "\n";
-                }
-            }
-            */
-
             if ($this->players2Waiting()) {
                 if ($this->timeToMake2Game()) {
                     if ($this->noBots2Waiting()) {
                         if ($newBot = $this->genNewBot()) {
                             $this->storeTo2Players($newBot);
-                            //$this->startGame($newBot);
+                            $prevLlen = Cache::llen(static::BOT_GAMES);
+                            Cache::rpush(static::BOT_GAMES, $newBot);
                         }
                     }
                 }
             }
 
             sleep(5);
+
+            if (Cache::llen(static::BOT_GAMES) == 0) {
+                self::releaseBots();
+            }
+
             print 'next!';
         }
     }
 
 
-    private function startGame($botName)
-    {
-        //Не будем анализировать ответы!)) - просто новая игра
-        $_COOKIE[Cookie::COOKIE_NAME] = $botName;
-        $_GET['lang'] = static::LANG;
-        ob_start();
-        $resp = include __DIR__ . '/status_checker.php';
-        ob_end_clean();
-        //Пинганули сервер, что есть новый игрок
-        Cache::rpush(static::BOT_GAMES, $botName);
-        //Сохранили нового бота в список игроков
+    protected static function releaseBots() {
+        $botsInUse = Cache::hgetall(self::BOT_LIST) ?: [];
+
+        foreach($botsInUse as $bot => $nothing) {
+            // проверим бота на участие в играх или в очереди подбора
+            if(Game::isInGame($bot, (bool)(date('U') % 10))) {
+                continue;
+            }
+
+            if(Queue::isUserInQueue($bot)) {
+                continue;
+            }
+
+            // удаляем бота из списка занятых ботов
+            Cache::hdel(self::BOT_LIST, $bot);
+        }
     }
 
     private function storeTo2Players($User)
@@ -78,24 +72,6 @@ class BotGenV3ENG
         if (!Cache::hget(static::WAITERS_2_PLAYERS_QUEUE, $User)) {
             Cache::hset(
                 static::WAITERS_2_PLAYERS_QUEUE,
-                $User,
-                serialize(
-                    [
-                        'time' => date('U'),
-                        'options' => $options
-                    ]
-                )
-            );
-        }
-    }
-
-    private function storeTo4Players($User)
-    {
-        if (!Cache::hget(static::WAITERS_4_PLAYERS_QUEUE, $User)) {
-            $options = false;
-
-            Cache::hset(
-                static::WAITERS_4_PLAYERS_QUEUE,
                 $User,
                 serialize(
                     [
@@ -162,45 +138,6 @@ class BotGenV3ENG
             }
         }
 
-        return false;
-    }
-
-    private function noBots4Waiting()
-    {
-        $allPlayers4Waiting = Cache::hgetall(static::WAITERS_4_PLAYERS_QUEUE);
-        foreach ($allPlayers4Waiting as $player => $serializedData) {
-            print "!!!!!!!!" . $player;
-            if (strpos($player, self::BOT_TPL) !== false) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private function timeToMake4Game()
-    {
-        $waitingPlayers = Cache::hgetall(static::WAITERS_4_PLAYERS_QUEUE);
-        $maxTimeWaiting = 0;
-        foreach ($waitingPlayers as $player => $data) {
-            $data = unserialize($data);
-            if ((date('U') - $data['time']) > $maxTimeWaiting) {
-                $maxTimeWaiting = date('U') - $data['time'];
-            }
-        }
-        if ($maxTimeWaiting < $this->config['gameWaitLimit']) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private function players4Waiting()
-    {
-        $cnt = Cache::hlen(static::WAITERS_4_PLAYERS_QUEUE);
-        print $cnt;
-        if (($cnt >= 1) && ($cnt < 4)) {
-            return true;
-        }
         return false;
     }
 }

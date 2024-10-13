@@ -4,19 +4,32 @@ use Erudit\Game;
 
 class BotEng
 {
-    const MINUTES_TO_GO = 50;
+    const MINUTES_TO_GO = 10;
     const ENG_LANG = 'EN';
     const RU_LANG = 'RU';
     public static $langClass = Eng::class;
     public static $lang = self::ENG_LANG;
     public static $thinkEndTime;
+
+    protected static string $botname = '';
+    public const BOT_LOG_KEY = 'erudit.bot_log';
+
     const LNG_ID = 2;
+
+    const HOST_NAME = 'https://xn--d1aiwkc2d.club/';
     const DIR = 'scrabble1.0.1.6/php/';
+    const CHANGE_FISHKI_SCRIPT = 'change_fishki.php';
+    const STATUS_CHECKER_SCRIPT = 'status_checker.php';
+    const SUBMIT_SCRIPT = 'turn_submitter.php';
 
     const BOT_GAMES = 'erudit.botEN_games';
 
+    const BOT_LIST = 'erudit.bot_v3_list';
+
     public static function Run()
     {
+        Cache::del(static::BOT_LOG_KEY);
+
         $_SERVER['DOCUMENT_ROOT'] = '/var/www/erudit.club';
         set_time_limit(self::MINUTES_TO_GO * 60 + 25);
         $start_script_time = date('U');
@@ -27,6 +40,7 @@ class BotEng
         $botTimes = [];
         while ((date('U') - $start_script_time) < $script_work_time) {
             if ($Bot = Cache::lpop(static::BOT_GAMES)) {
+                static::$botname = $Bot;
                 $_COOKIE[Cookie::COOKIE_NAME] = $Bot;
 
                 $resp = ['gameState' => 1];
@@ -36,31 +50,30 @@ class BotEng
                 $_GET['lang'] = static::$lang;
 
                 $resp = self::makeRequest(
-                    'status_checker.php',
+                    static::STATUS_CHECKER_SCRIPT,
                     $Bot,
                     ['queryNumber' => $zaprosNum, 'lang' => static::$lang]
-                );//include __DIR__ . '/status_checker.php';
-print $resp;
+                );
+
                 $resp = json_decode($resp, true);
 
-print_r($resp);
+                print ($resp['gameState'] ?? 'no State');
 
-                if (($resp['gameState'] == 'gameResults') || ($resp['gameState'] == 'initGame')) {
-                    /*ob_start();
-                    (new Game())->exitGame();
-                    ob_end_clean();*/
-                    //Не будем анализировать ответы!)) - просто новая игра
+                if ($resp['gameState'] == Game::GAME_RESULTS_STATE) {
+                    // Игра окончена
+
+                    // Удаляем ссылку на игру бота
+                    Queue::botExitGame($Bot);
                     unset($botsTurns[$Bot]);
                     unset($botTimes[$Bot]);
-                    Cache::hdel('erudit.bot_v3_list', $Bot);
+
+                    // Удаляем бота из списка занятых ботов
+                    Cache::hdel(self::BOT_LIST, $Bot);
 
                     continue;
                 } else {
                     Cache::rpush(static::BOT_GAMES, $Bot);
                     //Вернули бота в список игроков
-
-                    print $resp['gameState'];
-
 
                     if ($resp['gameState'] == Game::MY_TURN_STATUS) {
                         if (
@@ -128,26 +141,26 @@ print_r($resp);
         exit();
     }
 
-    protected static function makeRequest(string $scriptName, string $cookie,array $params = [], array $post = []): string {
+    protected static function makeRequest(
+        string $scriptName,
+        string $cookie,
+        array $params = [],
+        array $post = []
+    ): string {
         $opts = [
             "http" => [
-                "method" => (!empty($post)) ? "POST" : "GET",
-                "header" => "Accept-language: en\r\n"
-                    . "Cookie: " . Game::COOKIE_KEY . "=$cookie\r\n"
-                    . ($post ? "Content-Type: application/x-www-form-urlencoded\r\n" : ''),
-            ]
-            + ((!empty($post)) ? ['content' => http_build_query($post)] : [])
+                    "method" => (!empty($post)) ? "POST" : "GET",
+                    "header" => "Accept-language: en\r\n"
+                        . "Cookie: " . Game::COOKIE_KEY . "=$cookie\r\n"
+                        . ($post ? "Content-Type: application/x-www-form-urlencoded\r\n" : ''),
+                ]
+                + ((!empty($post)) ? ['content' => http_build_query($post)] : [])
         ];
 
-// DOCS: https://www.php.net/manual/en/function.stream-context-create.php
         $context = stream_context_create($opts);
 
-        print_r($context);
-
-// Open the file using the HTTP headers set above
-// DOCS: https://www.php.net/manual/en/function.file-get-contents.php
         return file_get_contents(
-            'https://xn--d1aiwkc2d.club/'
+            static::HOST_NAME
             . static::DIR
             . $scriptName
             . ($params
@@ -159,27 +172,25 @@ print_r($resp);
         );
     }
 
-
-    public static function changeFishkiBot(&$data)
+    public static function changeFishkiBot()
     {
-        $kf = 1;
+        $resp = self::makeRequest(
+            static::CHANGE_FISHKI_SCRIPT,
+            $_COOKIE[Cookie::COOKIE_NAME],
+            ['lang' => static::$lang]
+        );
 
-        foreach ($data['fishki'] as $fishka) {
-            $kf++;
-            if ($fishka != 999) {
-                $_POST['fishka_' . $kf . '_' . $fishka] = 'on';
-            }
-        }
-        ob_start();
-        $resp = include __DIR__ . '/change_fishki.php';
-        ob_end_clean();
         return $resp;
     }
 
-    public static function sendResponse(&$data)
-    {
+    public
+    static function sendResponse(
+        &$data
+    ) {
         if (isset($data['desk'])) {
-            $cells = $data['desk']; // $_POST['cells'] - готовим доску на отправку
+            $cells = $data['desk'];
+
+            // todo сделать через static метод ::staticGameWordsPlayed($cookie)
             $obj = new Game();
             $slovaPlayed = $obj->gameWordsPlayed();
             $obj->botUnlock(); // разблокировали состояние игры
@@ -188,20 +199,21 @@ print_r($resp);
             $slovaPlayed = [];
         }
 
-        //error_reporting(E_ALL & ~E_NOTICE);
-        //ini_set('display_errors', 0);
         try {
             if (self::makeTurn($cells, $data['fishki'], $slovaPlayed)) {
                 print "++++++++++Submiting turn...........";
                 $_POST['cells'] = json_encode($cells);
 
-                $resp = self::makeRequest('turn_submitter.php', $_COOKIE[Cookie::COOKIE_NAME], ['lang' => static::$lang], $_POST);
-                //$resp = include __DIR__ . '/turn_submitter.php';
-                print $resp;
+                $resp = self::makeRequest(
+                    static::SUBMIT_SCRIPT,
+                    $_COOKIE[Cookie::COOKIE_NAME],
+                    ['lang' => static::$lang],
+                    $_POST
+                );
 
                 return $resp;
             } else {
-                return self::changeFishkiBot($data);
+                return self::changeFishkiBot();
             }
         } catch (Throwable $e) {
             print $e->__toString();
@@ -220,8 +232,12 @@ print_r($resp);
      * @param array $slovaPlayed - массив уже сыгранных слов
      * @return bool
      */
-    public static function makeTurn(array &$desk, array &$fishki, array &$slovaPlayed): bool
-    {
+    public
+    static function makeTurn(
+        array &$desk,
+        array &$fishki,
+        array &$slovaPlayed
+    ): bool {
         $fishki1 = $fishki;
         $word = '';
 
@@ -233,6 +249,17 @@ print_r($resp);
                         if (($fishka + 999 + 1) === $desk[$i][$j][1]) {
                             $desk[$i][$j][2] = $fishka;
                             $fishki[$num] = $desk[$i][$j][1];
+
+                            // todo CLUB-402 иногда звездочка берется с поля какимито другими буквами - разобраться. Не всегда, редко
+                            self::mp(
+                                [
+                                    'message' => 'zvezdy s polia',
+                                    'new_fishki' => $fishki,
+                                    'old_fishki' => $fishki1,
+                                    'i' => $i,
+                                    'j' => $j
+                                ]
+                            );
 
                             break;
                         }
@@ -297,7 +324,7 @@ print_r($resp);
             }
 
             if (count($fishki) && (count($fishki1) != count($fishki))) {
-                continue;//На следующий круг
+                continue; // На следующий круг
             } else {
                 print 'go out from k cycle;';
                 break;
@@ -306,6 +333,7 @@ print_r($resp);
 
         if (count($fishki1) == count($fishki)) {
             $fishki = $fishki1;
+
             return false;
         } else {
             return true;
@@ -315,22 +343,35 @@ print_r($resp);
 
     public static function printr(&$cells)
     {
+        $result = '';
+
         for ($j = 0; $j <= 14; $j++) {
             for ($i = 0; $i <= 14; $i++) {
                 if (($i == $j) && !$cells[$i][$j][0]) {
                     print ($i % 10);
+                    $result .= ($i % 10);
                 } elseif ($cells[$i][$j][0]) {
                     print static::$langClass::$bukvy[self::getFishkaCode($cells[$i][$j][1])][0];
+                    $result .= static::$langClass::$bukvy[self::getFishkaCode($cells[$i][$j][1])][0];
                 } else {
                     print '.';
+                    $result .= '.';
                 }
             }
             print "\n";
+            $result .= "\n";
         }
+
+        self::mp(['cells' => $result]);
     }
 
-    public static function findWordSleva($x, $y, &$desk, &$fishki, array &$slovaPlayed)
-    {
+    public static function findWordSleva(
+        $x,
+        $y,
+        &$desk,
+        &$fishki,
+        array &$slovaPlayed
+    ) {
         if (!count($fishki)) {
             return '';
         }
@@ -354,7 +395,7 @@ print_r($resp);
 
         $lastLetter = '';
         $step = 1;
-        while ($desk[$x + $step][$y][0]) {
+        while ($desk[$x + $step][$y][0] ?? false) {
             // Собираем коды последних букв слова
             $lastLetter .= static::$langClass::$bukvy[self::getFishkaCode($desk[$x + $step][$y][1])][0];
             $maxWordLen++;
@@ -387,7 +428,6 @@ print_r($resp);
 
         $andLng = 'AND lng=' . static::LNG_ID;
         $zapros .= "$\") AND NOT deleted = 1 AND slovo != '$lastLetter' AND length<=$maxWordLen $andLng ORDER BY length ASC";
-        print $zapros . 'SLEVA'; //sleep (5);
 
         if ($res = DB::queryArray($zapros)) {
             foreach ($res as $row) {
@@ -404,12 +444,12 @@ print_r($resp);
                             $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
                         );
 
-                        if (isset($lettersZvezd[$letter])) {
+                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
+                            reset($lettersZvezd[$letter]);
                             // Указали на занятую звездочку
-                            $cells[$x - $k][$y][2] = $lettersZvezd[$letter]['code'];
-                            if (--$lettersZvezd[$letter]['count'] == 0) {
-                                unset($lettersZvezd[$letter]);
-                            }
+                            $cells[$x - $k][$y][2] = current($lettersZvezd[$letter]);
+
+                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                         }
                     }
 
@@ -425,13 +465,12 @@ print_r($resp);
                             $letter = mb_substr($row['slovo'], $k, 1, 'UTF-8')
                         );
 
-                        if (isset($lettersZvezd[$letter])) {
+                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
+                            reset($lettersZvezd[$letter]);
                             // Указали на занятую звездочку
-                            // todo 268 Не нужно отмечать [2] что атм звездочка - проверить
-                            $cells[$x + $k - $slovoNach + 1 + $delta][$y][2] = $lettersZvezd[$letter]['code'];
-                            if (--$lettersZvezd[$letter]['count'] == 0) {
-                                unset($lettersZvezd[$letter]);
-                            }
+                            $cells[$x + $k - $slovoNach + 1 + $delta][$y][2] = current($lettersZvezd[$letter]);
+
+                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                         }
                     }
 
@@ -467,8 +506,14 @@ print_r($resp);
         return '';
     }
 
-    public static function findWordSverhu($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
-    {
+    public static function findWordSverhu(
+        $x,
+        $y,
+        &$desk,
+        &$fishki,
+        array &$slovaPlayed,
+        $orientation = 'all'
+    ) {
         if (!count($fishki)) {
             return '';
         }
@@ -478,7 +523,7 @@ print_r($resp);
         $maxWordLen = $maxLen;
 
         // Не анализируем, если есть горизонтальные примыкающие буквы
-        if ($desk[$x + 1][$y][0] || $desk[$x - 1][$y][0]) {
+        if (($desk[$x + 1][$y][0] ?? false) || ($desk[$x - 1][$y][0] ?? false)) {
             return '';
         }
 
@@ -509,7 +554,6 @@ print_r($resp);
 
         $andLng = 'AND lng=' . static::LNG_ID;
         $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY length ASC";;
-        print $zapros . 'SVERHU'; //sleep (5);
 
         // Длина фрагмента из фишек уже на поле
         $lastLetterLen = ($lastLetter === '' ? 0 : mb_strlen($lastLetter, 'UTF-8'));
@@ -534,12 +578,12 @@ print_r($resp);
                             $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
                         );
 
-                        if (isset($lettersZvezd[$letter])) {
+                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
+                            reset($lettersZvezd[$letter]);
                             // Указали на занятую звездочку
-                            $cells[$x][$y - $k][2] = $lettersZvezd[$letter]['code'];
-                            if (--$lettersZvezd[$letter]['count'] == 0) {
-                                unset($lettersZvezd[$letter]);
-                            }
+                            $cells[$x][$y - $k][2] = current($lettersZvezd[$letter]);
+
+                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                         }
                     }
 
@@ -550,12 +594,12 @@ print_r($resp);
                             $letter = mb_substr($row['slovo'], $k, 1, 'UTF-8')
                         );
 
-                        if (isset($lettersZvezd[$letter])) {
+                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
+                            reset($lettersZvezd[$letter]);
                             // Указали на занятую звездочку
-                            $cells[$x][$y + $k - $slovoNach + 1][2] = $lettersZvezd[$letter]['code'];
-                            if (--$lettersZvezd[$letter]['count'] == 0) {
-                                unset($lettersZvezd[$letter]);
-                            }
+                            $cells[$x][$y + $k - $slovoNach + 1][2] = current($lettersZvezd[$letter]);
+
+                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                         }
                     }
 
@@ -591,8 +635,14 @@ print_r($resp);
         return '';
     }
 
-    public static function findWordSprava($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
-    {
+    public static function findWordSprava(
+        $x,
+        $y,
+        &$desk,
+        &$fishki,
+        array &$slovaPlayed,
+        $orientation = 'all'
+    ) {
         if (!count($fishki)) {
             return '';
         }
@@ -634,7 +684,6 @@ print_r($resp);
         $andLng = 'AND lng=' . static::LNG_ID;
         $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY length ASC";
 
-        print $zapros . 'SPRAVA';
         $xLastLetter = $x - mb_strlen($lastLetter, 'UTF-8');
         if ($res = DB::queryArray($zapros)) {
             foreach ($res as $row) {
@@ -658,26 +707,27 @@ print_r($resp);
                             $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
                         );
 
-                        if (isset($lettersZvezd[$letter])) {
+                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
+                            reset($lettersZvezd[$letter]);
                             // Указали на занятую звездочку
-                            $cells[$xLastLetter - $k - 1][$y][2] = $lettersZvezd[$letter]['code'];
-                            if (--$lettersZvezd[$letter]['count'] == 0) {
-                                unset($lettersZvezd[$letter]);
-                            }
+                            $cells[$xLastLetter - $k - 1][$y][2] = current($lettersZvezd[$letter]);
+
+                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                         }
                     }
+
                     for ($k = 0; $k <= mb_strlen($row['slovo'], 'UTF-8') - $slovoNach - $lastLetterLen - 1; $k++) {
                         $cells[$x + $k][$y][0] = true;
                         $cells[$x + $k][$y][1] = static::$langClass::getLetterCode(
                             $letter = mb_substr($row['slovo'], $slovoNach + $lastLetterLen + $k, 1, 'UTF-8')
                         );
 
-                        if (isset($lettersZvezd[$letter])) {
+                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
+                            reset($lettersZvezd[$letter]);
                             // Указали на занятую звездочку
-                            $cells[$x + $k][$y][2] = $lettersZvezd[$letter]['code'];
-                            if (--$lettersZvezd[$letter]['count'] == 0) {
-                                unset($lettersZvezd[$letter]);
-                            }
+                            $cells[$x + $k][$y][2] = current($lettersZvezd[$letter]);
+
+                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                         }
                     }
 
@@ -713,8 +763,14 @@ print_r($resp);
         return '';
     }
 
-    public static function findWordVniz($x, $y, &$desk, &$fishki, array &$slovaPlayed, $orientation = 'all')
-    {
+    public static function findWordVniz(
+        $x,
+        $y,
+        &$desk,
+        &$fishki,
+        array &$slovaPlayed,
+        $orientation = 'all'
+    ) {
         if (!count($fishki)) {
             return '';
         }
@@ -724,7 +780,7 @@ print_r($resp);
         $maxWordLen = $maxLen;
 
         // Не анализируем, если есть горизонтальные примыкающие буквы
-        if ($desk[$x + 1][$y][0] || $desk[$x - 1][$y][0]) {
+        if (($desk[$x + 1][$y][0] ??false) || ($desk[$x - 1][$y][0] ?? false)) {
             return '';
         }
 
@@ -758,8 +814,6 @@ print_r($resp);
         $andLng = 'AND lng=' . static::LNG_ID;
         $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY length ASC";;
 
-        print $zapros . 'VNIZ';
-
         // Длина фрагмента из фишек уже на поле
         $lastLetterLen = mb_strlen($lastLetter, 'UTF-8');
 
@@ -774,6 +828,9 @@ print_r($resp);
                             'UTF-8'
                         )]
                     ) && self::checkWordFishki($fishki, $row['slovo'], $lastLetter, $lettersZvezd)) {
+
+                    // todo добавить проход слова сначала или с конца
+
                     $cells = $desk;
                     $slovoNach = mb_strpos($row['slovo'], $lastLetter, 0, 'UTF-8') ?: 0;
 
@@ -784,12 +841,12 @@ print_r($resp);
                             $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
                         );
 
-                        if (isset($lettersZvezd[$letter])) {
+                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
+                            reset($lettersZvezd[$letter]);
                             // Указали на занятую звездочку
-                            $cells[$x][$yLastLetter - $k - 1][2] = $lettersZvezd[$letter]['code'];
-                            if (--$lettersZvezd[$letter]['count'] == 0) {
-                                unset($lettersZvezd[$letter]);
-                            }
+                            $cells[$x][$yLastLetter - $k - 1][2] = current($lettersZvezd[$letter]);
+
+                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                         }
                     }
 
@@ -800,12 +857,12 @@ print_r($resp);
                             $letter = mb_substr($row['slovo'], $slovoNach + $lastLetterLen + $k, 1, 'UTF-8')
                         );
 
-                        if (isset($lettersZvezd[$letter])) {
+                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
+                            reset($lettersZvezd[$letter]);
                             // Указали на занятую звездочку
-                            $cells[$x][$y + $k][2] = $lettersZvezd[$letter]['code'];
-                            if (--$lettersZvezd[$letter]['count'] == 0) {
-                                unset($lettersZvezd[$letter]);
-                            }
+                            $cells[$x][$y + $k][2] = current($lettersZvezd[$letter]);
+
+                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                         }
                     }
 
@@ -865,73 +922,88 @@ print_r($resp);
         }
     }
 
-    public static function checkWordFishki(&$fishki, &$word, $lastLetter, &$lettersZvezd = [])
-    {
+    /**
+     * @param $fishki
+     * @param $word - возвращает слово с заглавными буквами на месте звезды
+     * @param $lastLetter
+     * @param array $lettersZvezd
+     * @return bool
+     */
+    public static function checkWordFishki(
+        &$fishki,
+        &$word,
+        $lastLetter,
+        &$lettersZvezd = []
+    ) {
         $fishki1 = $fishki;
+        asort($fishki1);
+
         $word = mb_strtolower($word, 'UTF-8');
         $lettersLastLetter = mb_str_split($lastLetter, 1, 'UTF-8');
         $lettersWord = mb_str_split($word, 1, 'UTF-8');
         $lettersZvezd = [];
 
-        // todo remove after CLUB-268
-        print 'Слово:';
-        print_r($lettersWord);
-        print ' Буквы на поле:';
-        print_r($lettersLastLetter);
-        print ' Фишки:';
-        print_r($fishki1);
+        self::mp(
+            [
+                'Слово' => $lettersWord,
+                'Буквы на поле' => $lettersLastLetter,
+                'Фишки' => $fishki1
+            ]
+        );
 
+        // удалим из слова все старые буквы, поставленные до текуего хода
         foreach ($lettersWord as $numLetter => $letter) {
             foreach ($lettersLastLetter as $num => $lastLetter) {
                 if ($letter == $lastLetter) {
-                    $lettersLastLetter[$num] = '';
-                    $letter = '';
+                    // Буква поставлена до нашего хода
+                    unset($lettersLastLetter[$num]);
+                    $lettersWord[$numLetter] .= '_';
+
+                    break;
                 }
-            }
-
-            if ($letter !== '') {
-                foreach ($fishki1 as $num => $fishka) {
-                    print '!!!-' . $fishka . '-!!!';
-                    if ($letter === static::$langClass::$bukvy[self::getFishkaCode($fishka)][0]) {
-                        unset($fishki1[$num]);
-                        $letter = '';
-                    }
-                }
-            }
-
-            if ($letter !== '') {
-                foreach ($fishki1 as $num => $fishka) {
-                    if ($fishka >= 999) {
-                        $lettersWord[$numLetter] = mb_strtoupper($letter, 'UTF-8');
-                        if ($fishka > 999) {
-                            if (isset($lettersZvezd[$lettersWord[$numLetter]])) {
-                                $lettersZvezd[$lettersWord[$numLetter]]['count']++;
-                            } else {
-                                // У нас звезда под кодом буквы
-                                $lettersZvezd[$lettersWord[$numLetter]]['code'] = $fishka - 999 - 1; // У нас звезда под кодом буквы
-                                $lettersZvezd[$lettersWord[$numLetter]]['count'] = 1;
-                            }
-                        }
-
-                        unset($fishki1[$num]);
-                        //Признак что буква со звездочкой
-                        $letter = '';
-                        break;
-                    }
-                }
-            }
-
-            if ($letter !== '') {
-                //print 'Лишняя буква: ' . $letter;
-                //print 'Слово:';
-                //print_r($lettersWord);
-                //print ' Буквы на поле:';
-                //print_r($lettersLastLetter);
-                //print ' Фишки:';
-                //print_r($fishki1);
-                return false;
             }
         }
+
+        foreach ($lettersWord as $numLetter => $letter) {
+            if (strpos($letter, '_')) {
+                // Буква поставлена дог нашего хода
+                continue;
+            }
+
+
+            foreach ($fishki1 as $num => $fishka) {
+                if ($letter === static::$langClass::$bukvy[self::getFishkaCode($fishka)][0]) {
+                    unset($fishki1[$num]);
+
+                    continue 2;
+                } elseif ($fishka >= 999) {
+                    unset($fishki1[$num]);
+
+                    //Признак что буква со звездочкой
+                    $lettersWord[$numLetter] = mb_strtoupper($letter, 'UTF-8');
+
+                    if ($fishka > 999) {
+                        $lettersZvezd[$lettersWord[$numLetter]][] = $fishka - 999 - 1; // У нас звезда под кодом буквы
+                    }
+
+                    continue 2;
+                }
+            }
+
+            // Сюда попадаем, если буква не найдена в фишках
+            self::mp(
+                [
+                    'Лишняя буква' => $letter,
+                    'Слово' => $lettersWord,
+                    'Буквы на поле' => $lettersLastLetter,
+                    'Фишки' => $fishki1,
+                    'error_type' => 'Буква без совпадения'
+                ]
+            );
+
+            return false;
+        }
+
         //print 'Слово:';
         //print_r($lettersWord);
         //print ' Буквы на поле:';
@@ -942,13 +1014,17 @@ print_r($resp);
         $fishki = $fishki1;
 
         // Собираем обратно слово с большими буквами для определения звезд CLUB-268
-        $word = implode('', $lettersWord);
+        $word = implode('', array_map(fn($letter) => trim($letter, '_'), $lettersWord));
 
         return true;
     }
 
-    public static function maxToLeft($x, $y, $countFishki, &$desk)
-    {
+    public static function maxToLeft(
+        $x,
+        $y,
+        $countFishki,
+        &$desk
+    ) {
         $max = 0;
         //if ($x == 0) return 1;
         for (
@@ -968,8 +1044,12 @@ print_r($resp);
         return ($max > $countFishki ? $countFishki : $max);
     }
 
-    public static function maxToUp($x, $y, $countFishki, &$desk)
-    {
+    public static function maxToUp(
+        $x,
+        $y,
+        $countFishki,
+        &$desk
+    ) {
         $max = 0;
 
         for (
@@ -989,8 +1069,12 @@ print_r($resp);
         return ($max > $countFishki ? $countFishki : $max);
     }
 
-    public static function maxToRight($x, $y, $countFishki, &$desk)
-    {
+    public static function maxToRight(
+        $x,
+        $y,
+        $countFishki,
+        &$desk
+    ) {
         //if ($x == 14) return 1;
         $max = 0;
 
@@ -1012,8 +1096,12 @@ print_r($resp);
         return ($max > $countFishki ? $countFishki : $max);
     }
 
-    public static function maxToDown($x, $y, $countFishki, &$desk)
-    {
+    public static function maxToDown(
+        $x,
+        $y,
+        $countFishki,
+        &$desk
+    ) {
         $max = 0;
 
         for (
@@ -1045,4 +1133,8 @@ print_r($resp);
             : ($code - 999 - 1);
     }
 
+    protected static function mp(array $data): void
+    {
+        Cache::rpush(static::BOT_LOG_KEY, $data + ['bot' => static::$botname]);
+    }
 }

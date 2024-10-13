@@ -24,6 +24,9 @@ class Game
     const MIN_TOP_RATING = 1700;
 
     public static string $gameName = self::SCRABBLE;
+    protected static array $playersInGames = [];
+
+    public static ?int $commonID = null;
 
     protected $Queue = Queue::class;
     const GAMES_KEY = 'erudit.games_';
@@ -114,7 +117,7 @@ class Game
     const OTHER_TURN_STATUS = 'otherTurn';
     const PRE_MY_TURN_STATUS = 'preMyTurn';
     const START_GAME_STATUS = 'startGame';
-    const GAME_RESULTS_STATUS = 'gameResults';
+    const GAME_RESULTS_STATE = 'gameResults';
 
     protected $dir = __DIR__;
 
@@ -136,6 +139,7 @@ class Game
 
         $this->commonId = Tg::$commonId // авторизован через Телеграм или...
             ?? PlayerModel::getPlayerID($this->User, true);
+        self::$commonID = $this->commonId;
 
         // Если не удалось дождаться лока по текущему игроку, то посылаем ошибку и выходим
         if(!Cache::waitLock($this->User, true)) {
@@ -313,13 +317,14 @@ class Game
         if ($rangedOnlinePlayers[1900]) {
             $cnt = Cache::hlen($this->Queue::QUEUES['erudit.rating_waiters']);
             if ($cnt < ($rangedOnlinePlayers[1900] / 2)) {
-                $thisUserRating = CommonIdRatingModel::getRating($this->commonId, self::$gameName);//$this->getRatings(['cookie' => $this->User, 'userID' => false]);
-                //if ($thisUserRating > 1750) {
-                    $rangedOnlinePlayers['waiters_count'] = $cnt;
-                    $rangedOnlinePlayers['thisUserRating'] = $thisUserRating;
+                $thisUserRating = CommonIdRatingModel::getRating(
+                    $this->commonId,
+                    self::$gameName
+                );
+                $rangedOnlinePlayers['waiters_count'] = $cnt;
+                $rangedOnlinePlayers['thisUserRating'] = $thisUserRating;
 
-                    return $rangedOnlinePlayers;
-                //}
+                return $rangedOnlinePlayers;
             }
         }
 
@@ -343,6 +348,34 @@ class Game
         }
 
         return $incomingCookie;
+    }
+
+    public static function isInGame(string $cookie, bool $clearCache = false): bool
+    {
+        if ($clearCache) {
+            static::$playersInGames = [];
+        } elseif(isset(static::$playersInGames[$cookie])) {
+            return static::$playersInGames[$cookie];
+        }
+
+        $lastGame = Cache::get(Queue::GAMES_COUNTER);
+
+        for ($i = $lastGame; $i > ($lastGame - 100); $i--) {
+            if ($game = Cache::get(static::GAME_STATUS_KEY . $i)) {
+                foreach ($game['users'] as $num => $user) {
+                    if (!isset($user['ID'])) {
+                        continue;
+                    }
+                    if (!isset($game['results'])) {
+                        static::$playersInGames[$user['ID']] = true; // игрок в игре
+                    } else {
+                        static::$playersInGames[$user['ID']] = false; // игрок в игре, которая завершена
+                    }
+                }
+            }
+        }
+
+        return static::$playersInGames[$cookie] ?? false;
     }
 
     private static function unauthorized()
@@ -493,7 +526,7 @@ class Game
 
         $inviteStatus = ['inviteStatus' => $this->gameStatus['invite']];
 
-        return $this->makeResponse(array_merge(['gameState' => self::GAME_RESULTS_STATUS, 'message' => $message], $inviteStatus));
+        return $this->makeResponse(array_merge(['gameState' => self::GAME_RESULTS_STATE, 'message' => $message], $inviteStatus));
     }
 
     public function playerCabinetInfo()
@@ -1003,6 +1036,10 @@ class Game
             return $this->checkGameStatus();
         }
 
+        if ($this->isBot()) {
+            $fishkiToChange = $this->getBotFishkiToChange();
+        }
+
         if (count($fishkiToChange)) {
             $this->addToLog('меняет фишки и пропускает ход', $this->numUser);
 
@@ -1059,7 +1096,7 @@ class Game
         // Новая версия
 
         foreach ($this->gameStatus['users'] as $num => $user) {
-            $this->updateUserStatus(self::GAME_RESULTS_STATUS, $user['ID']);
+            $this->updateUserStatus(self::GAME_RESULTS_STATE, $user['ID']);
 
             if (
                 !empty($user['ID'])
@@ -1231,7 +1268,7 @@ class Game
             BadRequest::logBadRequest(
                 [
                     'message' => 'Ошибка обработки данных!',
-                    'err_msg' => $e->getMessage(),
+                    'err_msg' => $e->__toString(),//getMessage(),
                     'err_file' => $e->getFile(),
                     'err_line' => $e->getLine(),
                     'err_context' => $e->getTrace(),
@@ -1533,7 +1570,7 @@ class Game
 
         $desk = Cache::get(static::CURRENT_GAME_KEY . $this->currentGame);
 
-        if ($this->getUserStatus() == self::GAME_RESULTS_STATUS) {
+        if ($this->getUserStatus() == self::GAME_RESULTS_STATE) {
 
 
             $result = $this->gameStatus['results'];
@@ -1542,7 +1579,7 @@ class Game
 
                 return $this->makeResponse(
                     [
-                        'gameState' => self::GAME_RESULTS_STATUS,
+                        'gameState' => self::GAME_RESULTS_STATE,
                         'comments' => self::playerGameResultsRendered(
                             $result['winner'] == $this->User,
                             $ratingsChanged
@@ -1583,7 +1620,7 @@ class Game
                     {
                         return $this->makeResponse(
                             [
-                                'gameState' => self::GAME_RESULTS_STATUS,
+                                'gameState' => self::GAME_RESULTS_STATE,
                                 'comments' => self::playerGameResultsRendered(
                                     $result['winner'] == $this->User,
                                     $ratingsChanged
@@ -2049,7 +2086,7 @@ class Game
                 $arr = array_merge($arr, ['turnTime' => $this->gameStatus['turnTime']]);
             }
 
-            if ($arr['gameState'] == self::GAME_RESULTS_STATUS && isset($this->gameStatus['invite'])) {
+            if ($arr['gameState'] == self::GAME_RESULTS_STATE && isset($this->gameStatus['invite'])) {
                 $this->processInvites($arr);
             }
 
@@ -2134,5 +2171,20 @@ class Game
     protected function isBot(): bool
     {
         return !(strstr($this->User, 'botV3#') === false);
+    }
+
+    protected function getBotFishkiToChange(): array
+    {
+        $fishkiToChange = [];
+
+        $fishki = $this->gameStatus['users'][$this->numUser]['fishki'];
+
+        foreach ($fishki as $num => $fishka) {
+            if ($fishka < 999) {
+                $fishkiToChange["fishka_{$num}_$fishka"] = 'on';
+            }
+        }
+
+        return $fishkiToChange;
     }
 }
