@@ -508,8 +508,8 @@ function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits = false) {
             font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
         }).setVisible(false); // todo delete vremia
 }    ,
-    
-    update : 
+
+    update :
     ////
 function (time, delta) {
 
@@ -1951,8 +1951,8 @@ var gameStates = {
 
 
 
-                                                    .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
-                                                    .replaceAll('{{cookie}}', profileData.cookie)
+                                                    .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE[0].value)
+                                                    .replaceAll('{{cookie}}', profileData.cookie[0].value)
                                                     .replaceAll('{{common_id}}', profileData.common_id)
                                                     .replaceAll('{{name}}', profileData.name)
                                                     .replaceAll('{{imageUrl}}', profileData.imageUrl)
@@ -1984,6 +1984,7 @@ var gameStates = {
                                             locale: 'ru',
                                             // size: 'large',
                                             className: 'modal-settings modal-profile',
+                                            closeButton: false,
                                             buttons: {
                                                 ok: {
                                                     label: 'Назад',
@@ -4056,7 +4057,7 @@ function changeFishkiGlobal(fishkiRequest) {
             .then((data) => {
                 commonCallback(data);
             });
-            
+
     return;
 }////
 function bootBoxIsOpenedGlobal() {
@@ -4638,7 +4639,7 @@ function playersButtonFunction() {
 
                 makeCheckButtonInactive(dialog);
                 makeSubmitButtonInactive(dialog);
-                
+
                 buttons['playersButton']['svgObject'].setInteractive();
                 buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
 
@@ -4862,12 +4863,42 @@ function copyToClipboard(selector) {
 })();
 
 const btnFAQClickHandler = () => {
-    dialog = bootbox
-        .alert({
-            message: instruction,
-            locale: 'ru',
-        })
-        .off('shown.bs.modal');
+    bootbox.hideAll();
+
+    getFAQModal().then(html => {
+
+        dialog = bootbox
+            .dialog({
+                message: html,
+                locale: lang === 'RU' ? 'ru' : 'en',
+                className: 'modal-settings  modal-faq',
+                closeButton: false,
+                buttons: {
+                    ok: {
+                        label: lang === 'RU' ? 'Назад' : 'Back',
+                        className: 'btn-sm ml-auto mr-0',
+                        callback: function() {
+
+                            fetchGlobal(STATUS_CHECKER_SCRIPT).then((data) => {
+                                commonCallback(data);
+                                gameStates['chooseGame']['action'](data)
+                            });
+                        }
+                    },
+                }
+            })
+            .off('shown.bs.modal').on('shown.bs.modal', function() {
+                if (tabsModule) {
+                    tabsModule.initTabs();
+                }
+            }).find('.modal-content').css({
+                'background-color': 'rgba(230, 255, 230, 1)',
+            });
+
+
+    }).catch(error => {
+        console.error(error);
+    });
 
     return false;
 };
@@ -5359,6 +5390,46 @@ function onImagesLoaded(container, event) {
             event();
         }
     }
+}
+
+
+function getInstructions(lang) {
+    const url = 'https://эрудит.club/mvc/faq/getAll?lang=' + lang;
+    // const url = 'faq.json?lang=' + lang;
+
+    return fetch(url)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Ошибка при получении инструкций');
+            }
+        }).catch(error => console.error('Ошибка загрузки instructions:', error));
+}
+
+function getFAQModal() {
+    return fetch('/faq-modal-tpl.html')
+        .then(response => response.text())
+        .then(template => {
+
+            return new Promise((resolve, reject) => {
+                let message = document.createElement('div');
+
+                getInstructions(lang).then(instructions => {
+
+                    message.innerHTML = template;
+
+                    ['faq_rules', 'faq_rating', 'faq_rewards', 'faq_coins'].forEach(item => {
+                        if (item in instructions) {
+                            message.querySelector(`#${item}`).innerHTML = instructions[item];
+                        }
+                    });
+
+                    resolve(message);
+                }).catch(error => reject(error));
+            });
+        })
+        .catch(error => console.error('Ошибка загрузки faq-modal:', error));
 }
 
 var game = new Phaser.Game(config);

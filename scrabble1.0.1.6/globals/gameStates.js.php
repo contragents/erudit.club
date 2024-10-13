@@ -432,6 +432,10 @@ var gameStates = {
 
                                                     .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
                                                     .replaceAll('{{cookie}}', profileData.cookie)
+                                                    /* хз зачем
+                                                    .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE[0].value)
+                                                    .replaceAll('{{cookie}}', profileData.cookie[0].value)
+                                                    */
                                                     .replaceAll('{{common_id}}', profileData.common_id)
                                                     .replaceAll('{{name}}', profileData.name)
                                                     .replaceAll('{{imageUrl}}', profileData.imageUrl)

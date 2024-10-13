@@ -25,7 +25,8 @@ var buttons = {
         object: false,
         svgObject: false,
         pointerupFunction: function () {
-            shareButtonFunction();
+            btnFAQClickHandler(false);
+            // shareButtonFunction();
         }
     },
     prizesButton: {

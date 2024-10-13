@@ -56,8 +56,9 @@ function checkButtonFunction() {
                 buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + OTJAT_MODE));
             });
     }, 100);
-};
+}
 
+/*
 function shareButtonFunction() {
     if (bootBoxIsOpenedGlobal())
         return;
@@ -67,6 +68,7 @@ function shareButtonFunction() {
         locale: 'ru'
     }).off("shown.bs.modal");
 };
+*/
 
 function newGameButtonFunction(ignoreDialog = false) {
     if (!ignoreDialog && bootBoxIsOpenedGlobal()) {
