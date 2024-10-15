@@ -351,11 +351,11 @@ class Ru
 
             $letterPrice = static::$bukvy[self::getLetterCode(mb_substr($word, $k, 1, 'UTF-8'))][1];
 
-            if (isset(self::$multi[$I][$J])) {
-                if (isset (self::$multi[$I][$J]['bukva'])) {
-                    $letterPrice = $letterPrice * self::$multi[$I][$J]['bukva'];
+            if (isset(static::$multi[$I][$J])) {
+                if (isset (static::$multi[$I][$J]['bukva'])) {
+                    $letterPrice = $letterPrice * static::$multi[$I][$J]['bukva'];
                 } else {
-                    $word_multi[] = self::$multi[$I][$J]['slovo'];
+                    $word_multi[] = static::$multi[$I][$J]['slovo'];
                 }
             }
 

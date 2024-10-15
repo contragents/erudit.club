@@ -25,6 +25,10 @@ var buttons = {
         object: false,
         svgObject: false,
         pointerupFunction: function () {
+            if (bootBoxIsOpenedGlobal()) {
+                return;
+            }
+
             btnFAQClickHandler(false);
             // shareButtonFunction();
         }
@@ -40,6 +44,10 @@ var buttons = {
         object: false,
         svgObject: false,
         pointerupFunction: function () {
+            if (bootBoxIsOpenedGlobal()) {
+                return;
+            }
+
             return;
         }
     },
@@ -54,6 +62,10 @@ var buttons = {
         svgObject: false,
         pointerupFunction: function () {
             {
+                if (bootBoxIsOpenedGlobal()) {
+                    return;
+                }
+
                 shareTgGlobal();
 
                 return false;

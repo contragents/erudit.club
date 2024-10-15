@@ -238,14 +238,16 @@ class Game
 
     public function onlinePlayers()
     {
-        if (!($rangedOnlinePlayers = Cache::get(static::NUM_RATING_PLAYERS_KEY))) {
+        if (!($rangedOnlinePlayers = Cache::get(static::NUM_RATING_PLAYERS_KEY)) || self::$gameName === self::SCRABBLE) {
             $lastGame = Cache::get($this->Queue::GAMES_COUNTER);
             $players = [];
             for ($i = $lastGame; $i > ($lastGame - 50); $i--) {
                 if ($game = Cache::get(static::GAME_STATUS_KEY . $i)) {
                     if (!isset($game['results'])) {
                         foreach ($game['users'] as $num => $user) {
-                            if (!isset($user['ID'])) {continue;}
+                            if (!isset($user['ID'])) {
+                                continue;
+                            }
                             if (strstr($user['ID'], 'botV3#') === false) {
                                 $players[$user['ID']] = [
                                     'cookie' => $user['ID'],
@@ -274,7 +276,15 @@ class Game
             foreach ($players as $num => $player) {
                 $rangedOnlinePlayers[0]++;
 
-                if (($rating = CommonIdRatingModel::getRating($player['common_id'], self::$gameName)/*$this->getRatings($player)*/)) {
+                // Не выводим число рейтинговых игроков для скрабла, пока
+                if (self::$gameName === self::SCRABBLE) {
+                    continue;
+                }
+
+                if (($rating = CommonIdRatingModel::getRating(
+                    $player['common_id'],
+                    self::$gameName
+                )/*$this->getRatings($player)*/)) {
                     //$players[$num]['rating'] = $rating;
 
                     if ($rating > 1900) {
@@ -307,11 +317,15 @@ class Game
                 }
             }
 
-            Cache::setex(
-                static::NUM_RATING_PLAYERS_KEY,
-                $this->ratingsCacheTimeout,
-                $rangedOnlinePlayers
-            );
+            if (self::$gameName === self::SCRABBLE) {
+                $rangedOnlinePlayers[0] += mt_rand(5, 10);
+            } else {
+                Cache::setex(
+                    static::NUM_RATING_PLAYERS_KEY,
+                    $this->ratingsCacheTimeout,
+                    $rangedOnlinePlayers
+                );
+            }
         }
 
         if ($rangedOnlinePlayers[1900]) {
@@ -328,7 +342,7 @@ class Game
             }
         }
 
-        return [];
+        return $rangedOnlinePlayers;
     }
 
     protected function validateCookie($incomingCookie)

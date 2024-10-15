@@ -496,8 +496,9 @@ function submitButtonActive() {
 }
 
 function playersButtonFunction() {
-    if (bootBoxIsOpenedGlobal())
+    if (bootBoxIsOpenedGlobal()) {
         return;
+    }
 
     if (window.innerWidth < window.innerHeight) {
         var orient = 'vertical';

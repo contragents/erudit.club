@@ -36,4 +36,7 @@ var UIScene = new Phaser.Class({
 
 var game = new Phaser.Game(config);
 
-document.body.style.backgroundColor = "#dddddd";
+document.body.style.backgroundColor = "#2C3C6C";
+document.body.style.backgroundImage = "url('/img/back2.svg')";
+document.body.style.backgroundSize = 'cover';
+document.body.style.backgroundSize = '100% 500%';

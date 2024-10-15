@@ -188,27 +188,26 @@ class BotEng
         &$data
     ) {
         if (isset($data['desk'])) {
-            $cells = $data['desk'];
+            $desk = $data['desk'];
 
             // todo сделать через static метод ::staticGameWordsPlayed($cookie)
             $obj = new Game();
             $slovaPlayed = $obj->gameWordsPlayed();
             $obj->botUnlock(); // разблокировали состояние игры
         } else {
-            $cells = static::$langClass::init_desk();
+            $desk = static::$langClass::init_desk();
             $slovaPlayed = [];
         }
 
         try {
-            if (self::makeTurn($cells, $data['fishki'], $slovaPlayed)) {
+            if (self::makeTurn($desk, $data['fishki'], $slovaPlayed)) {
                 print "++++++++++Submiting turn...........";
-                $_POST['cells'] = json_encode($cells);
 
                 $resp = self::makeRequest(
                     static::SUBMIT_SCRIPT,
                     $_COOKIE[Cookie::COOKIE_NAME],
                     ['lang' => static::$lang],
-                    $_POST
+                    ['cells' => json_encode($desk)]
                 );
 
                 return $resp;
@@ -232,14 +231,9 @@ class BotEng
      * @param array $slovaPlayed - массив уже сыгранных слов
      * @return bool
      */
-    public
-    static function makeTurn(
-        array &$desk,
-        array &$fishki,
-        array &$slovaPlayed
-    ): bool {
+    public static function makeTurn(array &$desk, array &$fishki, array &$slovaPlayed): bool
+    {
         $fishki1 = $fishki;
-        $word = '';
 
         // CLUB-270 забираем звезды с поля
         for ($j = 0; $j <= 14; $j++) {
@@ -248,7 +242,7 @@ class BotEng
                     foreach ($fishki as $num => $fishka) {
                         if (($fishka + 999 + 1) === $desk[$i][$j][1]) {
                             $desk[$i][$j][2] = $fishka;
-                            $fishki[$num] = $desk[$i][$j][1];
+                            // $fishki[$num] = $desk[$i][$j][1]; // временно фишку не меняем - смотрим где ошибка
 
                             // todo CLUB-402 иногда звездочка берется с поля какимито другими буквами - разобраться. Не всегда, редко
                             self::mp(
@@ -268,7 +262,6 @@ class BotEng
             }
         }
         // Собрали звезды с поля
-
 
         print '$k - cycle;';
         for ($k = 0; $k < 2; $k++) {// 2 прохода
@@ -431,25 +424,34 @@ class BotEng
 
         if ($res = DB::queryArray($zapros)) {
             foreach ($res as $row) {
-                if (!isset($slovaPlayed[$row['slovo'] = mb_strtolower($row['slovo'], 'UTF-8')])
+                $row['slovo'] = mb_strtolower($row['slovo'], 'UTF-8');
+                if (
+                    !isset($slovaPlayed[$row['slovo']])
                     &&
-                    self::checkWordFishki($fishki, $row['slovo'], $lastLetter, $lettersZvezd)) {
+                    self::checkWordFishki($fishki, $row['slovo'], $lastLetter, $lettersZvezd)
+                ) {
                     $cells = $desk; // создали временную копию доски для попытки составить слово
 
                     $slovoNach = ($lastLetter === '' ? 0 : mb_strpos($row['slovo'], $lastLetter, 0, 'UTF-8'));
                     $lastLetterLen = ($lastLetter === '' ? 0 : mb_strlen($lastLetter, 'UTF-8'));
                     for ($k = 0; $k < $slovoNach; $k++) {
-                        $cells[$x - $k][$y][0] = true;
-                        $cells[$x - $k][$y][1] = static::$langClass::getLetterCode(
-                            $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
-                        );
+                        $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8');
 
-                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
-                            reset($lettersZvezd[$letter]);
-                            // Указали на занятую звездочку
-                            $cells[$x - $k][$y][2] = current($lettersZvezd[$letter]);
+                        if($cells[$x - $k][$y][0] === false ) {
+                            $cells[$x - $k][$y][0] = true;
+                            $cells[$x - $k][$y][1] = static::$langClass::getLetterCode($letter);
 
-                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            if (
+                                isset($lettersZvezd[$letter])
+                                && count($lettersZvezd[$letter])
+                                && $cells[$x - $k][$y][2] !== false
+                            ) {
+                                reset($lettersZvezd[$letter]);
+                                // Указали на занятую звездочку
+                                $cells[$x - $k][$y][2] = current($lettersZvezd[$letter]);
+
+                                unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            }
                         }
                     }
 
@@ -460,17 +462,23 @@ class BotEng
                     }
 
                     for ($k = $slovoNach + $lastLetterLen; $k < mb_strlen($row['slovo'], 'UTF-8'); $k++) {
-                        $cells[$x + $k - $slovoNach + 1 + $delta][$y][0] = true;
-                        $cells[$x + $k - $slovoNach + 1 + $delta][$y][1] = static::$langClass::getLetterCode(
-                            $letter = mb_substr($row['slovo'], $k, 1, 'UTF-8')
-                        );
+                        $letter = mb_substr($row['slovo'], $k, 1, 'UTF-8');
 
-                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
-                            reset($lettersZvezd[$letter]);
-                            // Указали на занятую звездочку
-                            $cells[$x + $k - $slovoNach + 1 + $delta][$y][2] = current($lettersZvezd[$letter]);
+                        if($cells[$x + $k - $slovoNach + 1 + $delta][$y][0] === false ) {
+                            $cells[$x + $k - $slovoNach + 1 + $delta][$y][0] = true;
+                            $cells[$x + $k - $slovoNach + 1 + $delta][$y][1] = static::$langClass::getLetterCode($letter);
 
-                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            if (
+                                isset($lettersZvezd[$letter])
+                                && count($lettersZvezd[$letter])
+                                && $cells[$x + $k - $slovoNach + 1 + $delta][$y][2] !== false
+                            ) {
+                                reset($lettersZvezd[$letter]);
+                                // Указали на занятую звездочку
+                                $cells[$x + $k - $slovoNach + 1 + $delta][$y][2] = current($lettersZvezd[$letter]);
+
+                                unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            }
                         }
                     }
 
@@ -557,49 +565,64 @@ class BotEng
 
         // Длина фрагмента из фишек уже на поле
         $lastLetterLen = ($lastLetter === '' ? 0 : mb_strlen($lastLetter, 'UTF-8'));
-        // Строка, с которой начинается примыкающая сверху часть слова
-        $yLastLetter = $y - $lastLetterLen;
 
         if ($res = DB::queryArray($zapros)) {
             foreach ($res as $row) {
-                if (!isset(
-                        $slovaPlayed[$row['slovo'] = mb_strtolower(
-                            $row['slovo'],
-                            'UTF-8'
-                        )]
-                    ) && self::checkWordFishki($fishki, $row['slovo'], $lastLetter, $lettersZvezd)) {
+                $row['slovo'] = mb_strtolower(
+                    $row['slovo'],
+                    'UTF-8'
+                );
+                if (!isset($slovaPlayed[$row['slovo']])
+                    && self::checkWordFishki(
+                        $fishki,
+                        $row['slovo'],
+                        $lastLetter,
+                        $lettersZvezd
+                    )) {
                     $cells = $desk;
                     $slovoNach = ($lastLetter === '' ? 0 : mb_strpos($row['slovo'], $lastLetter, 0, 'UTF-8'));
 
                     // Ставим фишки вверх от текущей позиции
                     for ($k = 0; $k < $slovoNach; $k++) {
-                        $cells[$x][$y - $k][0] = true;
-                        $cells[$x][$y - $k][1] = static::$langClass::getLetterCode(
-                            $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
-                        );
+                        if ($cells[$x][$y - $k][0] === false) {
+                            $cells[$x][$y - $k][0] = true;
+                            $cells[$x][$y - $k][1] = static::$langClass::getLetterCode(
+                                $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
+                            );
 
-                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
-                            reset($lettersZvezd[$letter]);
-                            // Указали на занятую звездочку
-                            $cells[$x][$y - $k][2] = current($lettersZvezd[$letter]);
+                            if (
+                                isset($lettersZvezd[$letter])
+                                && count($lettersZvezd[$letter])
+                                && $cells[$x][$y - $k][2] !== false
+                            ) {
+                                reset($lettersZvezd[$letter]);
+                                // Указали на занятую звездочку
+                                $cells[$x][$y - $k][2] = current($lettersZvezd[$letter]);
 
-                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                                unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            }
                         }
                     }
 
                     // Ставим фишки вниз от позиции ниже уже существующих фишек на поле
                     for ($k = $slovoNach + $lastLetterLen; $k < mb_strlen($row['slovo'], 'UTF-8'); $k++) {
-                        $cells[$x][$y + $k - $slovoNach + 1][0] = true;
-                        $cells[$x][$y + $k - $slovoNach + 1][1] = static::$langClass::getLetterCode(
-                            $letter = mb_substr($row['slovo'], $k, 1, 'UTF-8')
-                        );
+                        $letter = mb_substr($row['slovo'], $k, 1, 'UTF-8');
 
-                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
-                            reset($lettersZvezd[$letter]);
-                            // Указали на занятую звездочку
-                            $cells[$x][$y + $k - $slovoNach + 1][2] = current($lettersZvezd[$letter]);
+                        if($cells[$x][$y + $k - $slovoNach + 1][0] === false) {
+                            $cells[$x][$y + $k - $slovoNach + 1][0] = true;
+                            $cells[$x][$y + $k - $slovoNach + 1][1] = static::$langClass::getLetterCode($letter);
 
-                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            if (
+                                isset($lettersZvezd[$letter])
+                                && count($lettersZvezd[$letter])
+                                && $cells[$x][$y + $k - $slovoNach + 1][2] !== false
+                            ) {
+                                reset($lettersZvezd[$letter]);
+                                // Указали на занятую звездочку
+                                $cells[$x][$y + $k - $slovoNach + 1][2] = current($lettersZvezd[$letter]);
+
+                                unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            }
                         }
                     }
 
@@ -702,32 +725,44 @@ class BotEng
                     $slovoNach = mb_strpos($row['slovo'], $lastLetter, 0, 'UTF-8');
                     $lastLetterLen = mb_strlen($lastLetter, 'UTF-8');
                     for ($k = 0; $k < $slovoNach; $k++) {
-                        $cells[$xLastLetter - $k - 1][$y][0] = true;
-                        $cells[$xLastLetter - $k - 1][$y][1] = static::$langClass::getLetterCode(
-                            $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
-                        );
+                        $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8');
 
-                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
-                            reset($lettersZvezd[$letter]);
-                            // Указали на занятую звездочку
-                            $cells[$xLastLetter - $k - 1][$y][2] = current($lettersZvezd[$letter]);
+                        if($cells[$xLastLetter - $k - 1][$y][0] === false) {
+                            $cells[$xLastLetter - $k - 1][$y][0] = true;
+                            $cells[$xLastLetter - $k - 1][$y][1] = static::$langClass::getLetterCode($letter);
 
-                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            if (
+                                isset($lettersZvezd[$letter])
+                                && count($lettersZvezd[$letter])
+                                && $cells[$xLastLetter - $k - 1][$y][2] !== false
+                            ) {
+                                reset($lettersZvezd[$letter]);
+                                // Указали на занятую звездочку
+                                $cells[$xLastLetter - $k - 1][$y][2] = current($lettersZvezd[$letter]);
+
+                                unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            }
                         }
                     }
 
                     for ($k = 0; $k <= mb_strlen($row['slovo'], 'UTF-8') - $slovoNach - $lastLetterLen - 1; $k++) {
-                        $cells[$x + $k][$y][0] = true;
-                        $cells[$x + $k][$y][1] = static::$langClass::getLetterCode(
-                            $letter = mb_substr($row['slovo'], $slovoNach + $lastLetterLen + $k, 1, 'UTF-8')
-                        );
+                        $letter = mb_substr($row['slovo'], $slovoNach + $lastLetterLen + $k, 1, 'UTF-8');
 
-                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
-                            reset($lettersZvezd[$letter]);
-                            // Указали на занятую звездочку
-                            $cells[$x + $k][$y][2] = current($lettersZvezd[$letter]);
+                        if($cells[$x + $k][$y][0] === false) {
+                            $cells[$x + $k][$y][0] = true;
+                            $cells[$x + $k][$y][1] = static::$langClass::getLetterCode($letter);
 
-                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            if (
+                                isset($lettersZvezd[$letter])
+                                && count($lettersZvezd[$letter])
+                                && $cells[$x + $k][$y][2] !== false
+                            ) {
+                                reset($lettersZvezd[$letter]);
+                                // Указали на занятую звездочку
+                                $cells[$x + $k][$y][2] = current($lettersZvezd[$letter]);
+
+                                unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            }
                         }
                     }
 
@@ -836,33 +871,45 @@ class BotEng
 
                     // Ставим фишки вверх от позиции выше уже существующих фишек на поле
                     for ($k = 0; $k < $slovoNach; $k++) {
-                        $cells[$x][$yLastLetter - $k - 1][0] = true;
-                        $cells[$x][$yLastLetter - $k - 1][1] = static::$langClass::getLetterCode(
-                            $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8')
-                        );
+                        $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8');
 
-                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
-                            reset($lettersZvezd[$letter]);
-                            // Указали на занятую звездочку
-                            $cells[$x][$yLastLetter - $k - 1][2] = current($lettersZvezd[$letter]);
+                        if($cells[$x][$yLastLetter - $k - 1][0] === false) {
+                            $cells[$x][$yLastLetter - $k - 1][0] = true;
+                            $cells[$x][$yLastLetter - $k - 1][1] = static::$langClass::getLetterCode($letter);
 
-                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            if (
+                                isset($lettersZvezd[$letter])
+                                && count($lettersZvezd[$letter])
+                                && $cells[$x][$yLastLetter - $k - 1][2] !== false
+                            ) {
+                                reset($lettersZvezd[$letter]);
+                                // Указали на занятую звездочку
+                                $cells[$x][$yLastLetter - $k - 1][2] = current($lettersZvezd[$letter]);
+
+                                unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            }
                         }
                     }
 
                     // Ставим фишки винз от текущей позиции
                     for ($k = 0; $k <= mb_strlen($row['slovo'], 'UTF-8') - $slovoNach - $lastLetterLen - 1; $k++) {
-                        $cells[$x][$y + $k][0] = true;
-                        $cells[$x][$y + $k][1] = static::$langClass::getLetterCode(
-                            $letter = mb_substr($row['slovo'], $slovoNach + $lastLetterLen + $k, 1, 'UTF-8')
-                        );
+                        $letter = mb_substr($row['slovo'], $slovoNach + $lastLetterLen + $k, 1, 'UTF-8');
 
-                        if (isset($lettersZvezd[$letter]) && count($lettersZvezd[$letter])) {
-                            reset($lettersZvezd[$letter]);
-                            // Указали на занятую звездочку
-                            $cells[$x][$y + $k][2] = current($lettersZvezd[$letter]);
+                        if($cells[$x][$y + $k][0] === false) {
+                            $cells[$x][$y + $k][0] = true;
+                            $cells[$x][$y + $k][1] = static::$langClass::getLetterCode($letter);
 
-                            unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            if (
+                                isset($lettersZvezd[$letter])
+                                && count($lettersZvezd[$letter])
+                                && $cells[$x][$y + $k][2] !== false
+                            ) {
+                                reset($lettersZvezd[$letter]);
+                                // Указали на занятую звездочку
+                                $cells[$x][$y + $k][2] = current($lettersZvezd[$letter]);
+
+                                unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
+                            }
                         }
                     }
 

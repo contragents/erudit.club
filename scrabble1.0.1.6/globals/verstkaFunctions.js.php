@@ -683,7 +683,7 @@ function getInstructions(lang) {
 }
 
 function getFAQModal() {
-    return fetch('/faq-modal-tpl.html')
+    return fetch('/faq-modal-tpl_' + lang + '.html')
         .then(response => response.text())
         .then(template => {
 
