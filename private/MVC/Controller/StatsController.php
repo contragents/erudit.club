@@ -123,6 +123,11 @@ class StatsController extends BaseController
     {
         //ini_set("display_errors", 1);
         //error_reporting(E_ALL);
+
+        if (/*self::$Request['common_id'] == 183834*/ $_SERVER['REMOTE_ADDR'] == '85.139.20.118') {
+            Cache::rpush('stats_test', self::$Request);
+        }
+
         try {
         $result = ['player_name' => AchievesModel::getPlayerNameByCommonId(self::$Request['common_id']), 'player_avatar_url' => PlayerModel::getAvatarUrl(self::$Request['common_id'])];
 

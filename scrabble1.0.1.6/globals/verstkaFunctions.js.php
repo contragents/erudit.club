@@ -491,18 +491,6 @@ function StatsPage({ json, BASE_URL }) {
         tabsModule.initTabs();
     }
 
-    // document.addEventListener('DOMContentLoaded', (e) => {
-    // 	getStatsModal(json).then((html) => {
-    // 		// document.getElementById('test-tpl').innerHTML = html;
-
-    // 		// profileModal.onProfileModalLoaded();
-    // 		statsModal.onStatsModalLoaded();
-    // 		tabsModule.initTabs();
-
-    // 		// document.addEventListener("DOMContentLoaded", profileModal.onProfileModalLoaded);
-    // 	});
-    // });
-
     return {
         buildHtml: () => getStatsModal(json),
         onLoad,
@@ -510,9 +498,6 @@ function StatsPage({ json, BASE_URL }) {
 }
 /* ------------------------------- END OF FILE ------------------------------ */
 (function tabsModule() {
-    // on modal loaded
-    // document.addEventListener("DOMContentLoaded", initTabs);
-
     const selectors = {
         tabLink: 'a[data-toggle="tab"]',
         tabContent: '.tab-content',
@@ -588,7 +573,6 @@ function StatsPage({ json, BASE_URL }) {
 
         if (diff > 1 && i < 100) {
             i++;
-            // console.log(i, diff);
 
             setTimeout(setTabContentOffset, 100, i);
         }
