@@ -3,6 +3,9 @@
 
 var lang = '<?= T::$lang ?>';
 
+const chooseFile = "'<?= T::S('Choose file') ?>'";
+document.documentElement.style.setProperty('--choose-file', chooseFile);
+
 const INVITE_FRIEND_PROMPT = '<?= T::getInviteFriendPrompt() ?>';
 const GAME_BOT_URL = '<?= T::PHRASES['game_bot_url'][T::$lang] ?>';
 const LOADING_TEXT = '<?= T::PHRASES['loading_text'][T::$lang] ?>';

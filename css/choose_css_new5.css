@@ -1107,11 +1107,12 @@ label.file-label {
 	display: flex;
 	flex-wrap: nowrap;
 }
+
 label.file-label:before {
-	content: 'выбрать файл';
+	content: var(--choose-file, 'Choose file');
 	display: block;
 	font-size: 9px;
-	padding: 1px 3px 0;
+	padding: 3px 6px 0;
 	border-radius: 10px;
 	margin-top: -1px;
 	margin-bottom: -2px;
