@@ -447,8 +447,1130 @@ RU
         T::RU_LANG => 'Правила расчета рейтинга',
     ];
     const REWARDS = [
-        T::EN_LANG => 'Rewards gain rules',
-        T::RU_LANG => 'Правила получения наград',
+        T::EN_LANG => <<<EN
+За определенные достижения (рекорды) игроки получают награды.
+<br><br>
+Награды игрока отражаются в разделе "СТАТИСТИКА" в следующих
+номинациях: золото/серебро/бронза/камень.
+<br><br>
+При полученнии карточки-награды игроку также начисляется бонус монетами SUDOKU {{sudoku_icon}}<br> 
+Использовать монеты можно в специальном режиме игры "НА МОНЕТЫ", можно пополнять внутриигровой кошелек, 
+а также выводить монеты из игры - подробнее читайте во вкладке "ИГРА НА МОНЕТЫ"
+<br><br>
+<h2>Список достижений и их стоимость в монетах</h2>
+
+<table class="table table-dark table-transp">
+<thead>
+МЕСТО В РЕЙТИНГЕ
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+ТОП 1
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+ТОП 2
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+ТОП 3
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+10 лучших
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+ОЧКИ ЗА ИГРУ
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+ОЧКИ ЗА ХОД
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+ОЧКИ ЗА СЛОВО
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+САМОЕ ДЛИННОЕ СЛОВО
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+СЫГРАНО ПАРТИЙ
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+ПРИГЛАШЕННЫЕ ДРУЗЬЯ (РЕФЕРАЛЫ)
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+Пока рекорд одного игрока не был перебит другим игроком, карточка-награда отражается у такого игрока во вкладке "АКТИВНЫЕ НАГРАДЫ"
+раздела "СТАТИСТИКА".<br><br>
+Каждая "АКТИВНАЯ НАГРАДА" каждый час генерирует доплонительную
+"прибыль" в монетах.<br><br>
+Если рекорд был перебит другим игроком, то карточка-награда у
+предыдущего владельца рекорда перемещается во вкладку "ПРОШЛЫЕ
+НАГРАДЫ" и перестает приносить пассивный доход.<br><br>
+Общее количество полученных монет (единовременные бонусы и
+дополнительная прибыль) можно посмотреть в разделе "ПРОФИЛЬ" во
+вкладке "КОШЕЛЕК" в поле "Баланс SUDOKU" и "Начислено бонусов" соответственно.<br><br>
+При превышении собственного рекорда для достижений "СЫГРАНО
+ПАРТИЙ" и "ПРИГЛАШЕННЫЕ ДРУЗЬЯ" игроку повторно не выдается новая
+карточка-награда и не начисляются монеты повторно. Само значение рекорда
+(число игр / количество друзей) обновляется на карточке-награде.<br><br>
+Например, если игрок ранее получил достижение - "СЫГРАНО ПАРТИЙ"
+(золото) за 10 000 игр, то при изменении количества игр у этого игрока на
+значение 10 001 еще одна карточка-награда обладателю рекорда не выдается.<br>
+EN,
+        T::RU_LANG => <<<RU
+За определенные достижения (рекорды) игроки получают награды.
+<br><br>
+Награды игрока отражаются в разделе "СТАТИСТИКА" в следующих
+номинациях: золото/серебро/бронза/камень.
+<br><br>
+При полученнии карточки-награды игроку также начисляется бонус монетами SUDOKU {{sudoku_icon}}<br> 
+Использовать монеты можно в специальном режиме игры "НА МОНЕТЫ", можно пополнять внутриигровой кошелек, 
+а также выводить монеты из игры - подробнее читайте во вкладке "ИГРА НА МОНЕТЫ"
+<br><br>
+<h2>Список достижений и их стоимость в монетах</h2>
+
+<table class="table table-dark table-transp">
+<thead>
+МЕСТО В РЕЙТИНГЕ
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+ТОП 1
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+ТОП 2
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+ТОП 3
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+10 лучших
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+ОЧКИ ЗА ИГРУ
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+ОЧКИ ЗА ХОД
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+ОЧКИ ЗА СЛОВО
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+САМОЕ ДЛИННОЕ СЛОВО
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+СЫГРАНО ПАРТИЙ
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+<table class="table table-dark table-transp">
+<thead>
+ПРИГЛАШЕННЫЕ ДРУЗЬЯ (РЕФЕРАЛЫ)
+</thead>
+<tr>
+<td>
+Тип
+</td>
+<td>
+Название
+</td>
+<td>
+Награда
+</td>
+<td>
+Прибыль<br> в час
+</td>
+</tr>
+<tr>
+<td>
+золото
+</td>
+<td>
+РЕКОРД ГОДА
+</td>
+<td>
+{{sudoku_icon}} {{gold_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{gold_income}}
+</td>
+</tr>
+<tr>
+<td>
+серебро
+</td>
+<td>
+РЕКОРД МЕСЯЦА
+</td>
+<td>
+{{sudoku_icon}} {{silver_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{silver_income}}
+</td>
+</tr>
+<tr>
+<td>
+бронза
+</td>
+<td>
+РЕКОРД НЕДЕЛИ
+</td>
+<td>
+{{sudoku_icon}} {{bronze_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{bronze_income}}
+</td>
+</tr>
+<tr>
+<td>
+камень
+</td>
+<td>
+РЕКОРД ДНЯ
+</td>
+<td>
+{{sudoku_icon}} {{stone_reward}}
+</td>
+<td>
+{{sudoku_icon}} {{stone_income}}
+</td>
+</tr>
+</table>
+
+Пока рекорд одного игрока не был перебит другим игроком, карточка-награда отражается у такого игрока во вкладке "АКТИВНЫЕ НАГРАДЫ"
+раздела "СТАТИСТИКА".<br><br>
+Каждая "АКТИВНАЯ НАГРАДА" каждый час генерирует доплонительную
+"прибыль" в монетах.<br><br>
+Если рекорд был перебит другим игроком, то карточка-награда у
+предыдущего владельца рекорда перемещается во вкладку "ПРОШЛЫЕ
+НАГРАДЫ" и перестает приносить пассивный доход.<br><br>
+Общее количество полученных монет (единовременные бонусы и
+дополнительная прибыль) можно посмотреть в разделе "ПРОФИЛЬ" во
+вкладке "КОШЕЛЕК" в поле "Баланс SUDOKU" и "Начислено бонусов" соответственно.<br><br>
+При превышении собственного рекорда для достижений "СЫГРАНО
+ПАРТИЙ" и "ПРИГЛАШЕННЫЕ ДРУЗЬЯ" игроку повторно не выдается новая
+карточка-награда и не начисляются монеты повторно. Само значение рекорда
+(число игр / количество друзей) обновляется на карточке-награде.<br><br>
+Например, если игрок ранее получил достижение - "СЫГРАНО ПАРТИЙ"
+(золото) за 10 000 игр, то при изменении количества игр у этого игрока на
+значение 10 001 еще одна карточка-награда обладателю рекорда не выдается.<br>
+RU
     ];
     const COINS = [
         T::EN_LANG => 'Coins use rules',

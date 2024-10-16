@@ -27,6 +27,12 @@ class T
 
     public static function S($keyPhrase): string
     {
+        $res = self::PHRASES[$keyPhrase][self::$lang] ?? $keyPhrase;
+
+        if (strpos($res, Macros::PATTERN)) {
+            return Macros::applyMacros($res);
+        }
+
         return self::PHRASES[$keyPhrase][self::$lang] ?? $keyPhrase;
     }
 

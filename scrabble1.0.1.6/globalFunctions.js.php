@@ -330,8 +330,12 @@ function refreshId(element_id, url) {
     });
 }
 
+function version() {
+    return '&ver=' + Math.floor(Date.now());
+}
+
 async function getStatPageGlobal() {
-    let urlPart = STATS_URL + commonId + '&lang=' + lang + '&ver=' + Math.floor(Date.now());
+    let urlPart = STATS_URL + commonId + '&lang=' + lang + version();
     let respMessage = 'Ошибка загрузки статистики';
 
     if (commonId) {

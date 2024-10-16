@@ -626,10 +626,6 @@ function StatsPage({ json, BASE_URL }) {
     };
 
     window.tabsModule = { initTabs, update };
-
-    // return {
-    //     onProfileModalLoaded
-    // }
 })();
 
 function onImagesLoaded(container, event) {
@@ -653,8 +649,7 @@ function onImagesLoaded(container, event) {
 }
 
 function getInstructions(lang) {
-    const url = 'https://эрудит.club/mvc/faq/getAll?lang=' + lang;
-    // const url = 'faq.json?lang=' + lang;
+    const url = 'https://эрудит.club/mvc/faq/getAll?lang=' + lang + version();
 
     return fetch(url)
         .then(response => {
