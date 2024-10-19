@@ -1,4 +1,7 @@
 <?php
+/**
+ * @property int $_id
+ **/
 
 class BaseModel
 {
@@ -11,6 +14,8 @@ class BaseModel
     const UPDATED_AT_FIELD = 'updated_at';
     const IS_DELETED_FIELD = 'is_deleted';
     const COMMON_ID_FIELD = 'common_id';
+
+    const SKIP_ATTR_TYPES = ["object", "resource", "resource (closed)", "NULL", "unknown type"];
 
     const CURRENT_TIMESTAMP = 'CURRENT_TIMESTAMP';
 
@@ -27,6 +32,97 @@ class BaseModel
         Game::SUDOKU => 3,
         Game::GOMOKU => 4,
     ];
+
+    public ?int $_id = null;
+
+    private static function fieldName(string $property): string
+    {
+        return ltrim($property, '_');
+    }
+
+    private static function isFieldName(string $property): bool
+    {
+        return substr($property, 0, 1) === '_';
+    }
+
+    private function from_boolean(bool $value): int
+    {
+        return (int)$value;
+    }
+
+    private function from_array(bool $value): string
+    {
+        return json_encode($value, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function to_boolean(int $value): bool
+    {
+        return (bool)$value;
+    }
+
+    public function to_array(string $value): array
+    {
+        return json_decode($value, true);
+    }
+
+    public function save(): bool
+    {
+        $properties = get_object_vars($this);
+        $fieldsVals = [];
+
+        foreach($properties as $property => $value) {
+            $valueType = gettype($value);
+            if(self::isFieldName($property) && !in_array($valueType, self::SKIP_ATTR_TYPES)) {
+                if (is_callable([$this, "from_$valueType"])) {
+                    try {
+                        $value = call_user_func([$this, "from_$valueType"], $value);
+                    } catch(Throwable $e) {
+                        continue;
+                    }
+                }
+
+                $fieldsVals[self::fieldName($property)] = $value;
+            }
+        }
+
+        if(($this->_id ?? false) && self::exists($this->_id)) {
+            unset($fieldsVals['id']);
+            return self::update($this->_id, $fieldsVals);
+        } else {
+            $id = self::add($fieldsVals);
+            if (is_int($id)) {
+                $this->_id = $id;
+            }
+
+            return (bool)$id;
+        }
+    }
+
+    public static function getOneO(int $id, bool $createIfNotExists = false) {
+        $row = self::getOne($id);
+        $res = new static();
+
+        if (!empty($row)) {
+            foreach($row as $field => $value) {
+                try {
+                    $property = '_' . $field;
+
+                    $propertyType = gettype($res->$property);
+                    if (is_callable([$res, "to_$propertyType"])) {
+                        $value = call_user_func([$res, "to_$propertyType"], $value);
+                    }
+
+                    $res->$property = $value;
+                } catch(Throwable $e) {
+                    continue;
+                }
+            }
+        } elseif($createIfNotExists) {
+            $res->_id = $id;
+        }
+
+        return $res;
+    }
 
     public static function select(array $fields = [], bool $skobki = false, string $where = '', string $as = ''): string
     {

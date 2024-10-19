@@ -170,7 +170,6 @@ class AchievesModel extends BaseModel
     }
 
     public static function getCurrentAchievesByCommonId(int $commonId) {
-        //print_r(['lang' => T::$lang, 'gameName' => Game::$gameName]);exit;
         $query = ORM::select(
                 [
                     "substring(" . self::DATE_ACHIEVED_FIELD . ",1,10) as " . self::DATE_ACHIEVED_FIELD,
@@ -546,13 +545,6 @@ Cache::hset('games_stats_xxx', $commonId, $query);
         $cookie = PlayerModel::getOne($commonId)['cookie'] ?? '';
 
         return PlayerModel::getPlayerName(
-            [
-                'ID' => $cookie,
-                'common_id' => $commonId
-            ]
-        );
-
-        return $instance->getPlayerName(
             [
                 'ID' => $cookie,
                 'common_id' => $commonId

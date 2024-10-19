@@ -58,7 +58,9 @@ Config::makeEnvironment();
 // Проверяем режим дебага
 Config::checkDebugFlag();
 
-T::$lang = in_array(($_GET['lang'] ?? 'NA'), T::GAME_MODE_LANG) ? $_GET['lang'] : BaseController::getLang();
+T::$lang = in_array(($_GET['lang'] ?? 'NA'), T::GAME_MODE_LANG)
+    ? $_GET['lang']
+    : BaseController::getLang();
 Game::$gameName = Game::GAME_LANG[T::$lang];
 
 /**

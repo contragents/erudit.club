@@ -1,12 +1,31 @@
 <?php
 
+/**
+ * @property int $_id
+ * @propertystring $_avatar_url
+ * @property string $_name
+ * @property string $_created_at
+ * @property string $_updated_at
+ * @property int $_tg_id
+ * @property int $_is_balance_hidden
+ **/
+
 class UserModel extends BaseModel
 {
     const TABLE_NAME = 'users';
     const AVATAR_URL_FIELD = 'avatar_url';
     const COMMON_ID_FIELD = self::ID_FIELD;
+    const BALANCE_HIDDEN_FIELD = 'is_balance_hidden';
     const NAME_FIELD = 'name';
     const UPDATABLE_FIELDS = [self::NAME_FIELD, self::AVATAR_URL_FIELD];
+
+    // public ?int $_id = null; // =common_id наследует
+    public ?string $_avatar_url = null;
+    public ?string $_name = null;
+    public ?string $_created_at = null;
+    public ?string $_updated_at = null;
+    public ?int $_tg_id = null;
+    public bool $_is_balance_hidden = false;
 
     public static function updateUrl(int $commonId, string $url): bool {
         // Добавим версию для перекеширования

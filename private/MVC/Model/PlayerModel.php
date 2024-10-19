@@ -245,11 +245,11 @@ class PlayerModel extends BaseModel
         return $topRatings;
     }
 
-    public
-    static function getAvatarUrl(
-        int $commonID
-    ): string {
-        $avatarUrl = UserModel::getOne($commonID)['avatar_url'] ?? false;
+    public static function getAvatarUrl(int $commonID, bool $defaultOnly = false): string
+    {
+        $avatarUrl = $defaultOnly
+            ? false
+            : (UserModel::getOne($commonID)['avatar_url'] ?? false);
 
         if (!empty($avatarUrl)) {
             return $avatarUrl;
@@ -263,7 +263,12 @@ class PlayerModel extends BaseModel
         array $user = ['ID' => 'cookie', 'common_id' => 15, 'userID' => 'user_ID']
     ) {
         if (strpos($user['ID'], 'bot') !== false) {
-            return 'John Doe';
+            $config = include(__DIR__ . '/../../../configs/conf.php');
+
+            return T::translit(
+                $config['botNames'][str_replace('botV3#', '', $user['ID'])] ?? 'John Doe',
+                T::$lang === T::EN_LANG
+            );
         }
 
         $commonId = $user['common_id'];

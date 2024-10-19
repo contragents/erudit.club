@@ -88,7 +88,12 @@ class DB
         $res = mysqli_query(self::$DBConnect, $mysqlQuery);
         $affectedRows = mysqli_affected_rows(self::$DBConnect);
 
-        return $affectedRows > 0 ? $affectedRows : false;
+        preg_match_all ('/(\S[^:]+): (\d+)/', mysqli_info(self::$DBConnect), $matches);
+        $info = array_combine ($matches[1], $matches[2]);
+
+        return $affectedRows > 0
+            ? $affectedRows
+            : (($info['Rows matched'] ?? false) ?: false);
     }
 
     public static function insertID()

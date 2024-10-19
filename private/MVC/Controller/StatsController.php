@@ -84,20 +84,12 @@ class StatsController extends BaseController
             unset(self::$Request['page']);
         }
 
-        $baseUrlPage = self::getUrl('gamesV2', self::$Request);
-
         $games = AchievesModel::getGamesByCommonIdV2(
             self::$Request['common_id'],
             AchievesModel::LIMIT,
             self::$Request['page'] ?? 1,
             self::getGamesFilters()
         );
-
-        $gamesCount = AchievesModel::getGamesByCommonIdCount(self::$Request['common_id'], self::getGamesFilters());
-
-        if ($gamesCount < ((self::$Request['page'] ?? 1) - 1) * AchievesModel::LIMIT) {
-            unset(self::$Request['page']);
-        }
 
         $pagination = ViewHelper::paginationArr(
             StatsController::$Request['page'] ?? 1,

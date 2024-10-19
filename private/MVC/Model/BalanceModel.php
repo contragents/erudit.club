@@ -6,6 +6,8 @@ class BalanceModel extends BaseModel
     const COMMON_ID_FIELD = self::ID_FIELD;
     const SUDOKU_BALANCE_FIELD = 'sudoku';
 
+    const HIDDEN_BALANCE_REPLACEMENT = '*****';
+
     const SYSTEM_COMMON_ID = 0;
 
     public static function changeBalance(
