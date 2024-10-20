@@ -29,8 +29,10 @@ class PlayerModel extends BaseModel
     public ?string $_cookie = null;
     public ?int $_common_id = null;
 
-    public static function validateCommonIdByCookie(int $commonId, string $cookie) {
-        $player = self::getCustomO(self::COOKIE_FIELD, '=', $cookie);
+    public static function validateCommonIdByCookie(int $commonId, string $cookie): bool {
+        $player = self::getOneCustomO(self::COOKIE_FIELD, $cookie);
+
+        return $player && ($player->_common_id === $commonId);
     }
 
     /**

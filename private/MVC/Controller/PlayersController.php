@@ -16,22 +16,22 @@ class PlayersController extends BaseController
 
     public function Run()
     {
-        // ini_set("display_errors", 1); error_reporting(E_ALL);
+        ini_set("display_errors", 1); error_reporting(E_ALL);
 
         return parent::Run();
     }
 
     public function hideBalanceAction(): string
     {
-        // todo проверять куки на соответствие common_id
-
         $res = [];
         $res['message'] = T::S('Error changing settings. Try again later');
 
         $hide = self::$Request[self::HIDE_PARAM] ?? false;
 
-        if (in_array($hide, self::PARAM_VALUES[self::HIDE_PARAM])) {
-            if ($commonId = self::$Request[self::COMMON_ID_PARAM] ?? false) {
+        $commonId = self::$Request[self::COMMON_ID_PARAM] ?? false;
+
+        if($commonId && PlayerModel::validateCommonIdByCookie($commonId, $_COOKIE[Cookie::COOKIE_NAME])) {
+            if (in_array($hide, self::PARAM_VALUES[self::HIDE_PARAM])) {
                 $user = UserModel::getOneO($commonId, true);
 
                 $user->_is_balance_hidden = $hide === self::HIDE;

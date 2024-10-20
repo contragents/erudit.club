@@ -98,35 +98,72 @@ class BaseModel
         }
     }
 
-    private static function arrayToObject(array $record): object
+    private static function arrayToObject(array $row): object
     {
+        $res = new static();
+        $properties = get_object_vars($res);
+
+        foreach ($row as $field => $value) {
+            $property = '_' . $field;
+
+            if (!array_key_exists($property, $properties)) {
+                continue;
+            }
+
+            try {
+                $propertyType = gettype($res->$property);
+                if (is_callable([$res, "to_$propertyType"])) {
+                    $value = call_user_func([$res, "to_$propertyType"], $value);
+                }
+
+                $res->$property = $value;
+            } catch (Throwable $e) {
+                continue;
+            }
+        }
+
+        return $res;
     }
 
+    /**
+     * @param $field
+     * @param $value
+     * @param bool $isRaw
+     * @return BaseModel|null
+     */
+    public static function getOneCustomO($field, $value, bool $isRaw = false): ?object
+    {
+        $row = self::getOneCustom($field, $value, $isRaw);
+
+        return empty($row) ? null : self::arrayToObject($row);
+    }
+
+    /**
+     * @param string $field
+     * @param string $condition
+     * @param $value
+     * @param bool $isRaw
+     * @return BaseModel[]
+     */
     public static function getCustomO(string $field, string $condition, $value, bool $isRaw = false): array
     {
+        $rows = self::getCustom($field, $condition, $value, $isRaw);
+        $res = [];
 
+        foreach($rows as $row) {
+            $res[] = self::arrayToObject($row);
+        }
+
+        return $res;
     }
 
     public static function getOneO(int $id, bool $createIfNotExists = false) {
         $row = self::getOne($id);
-        $res = new static();
 
         if (!empty($row)) {
-            foreach($row as $field => $value) {
-                try {
-                    $property = '_' . $field;
-
-                    $propertyType = gettype($res->$property);
-                    if (is_callable([$res, "to_$propertyType"])) {
-                        $value = call_user_func([$res, "to_$propertyType"], $value);
-                    }
-
-                    $res->$property = $value;
-                } catch(Throwable $e) {
-                    continue;
-                }
-            }
+            $res = self::arrayToObject($row);
         } elseif($createIfNotExists) {
+            $res = new static();
             $res->_id = $id;
         }
 
