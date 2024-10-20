@@ -28,7 +28,7 @@ print "<pre>" . print_r(delIds($gameData), true) . "</pre>";
 
 function delIds($game): array {
     foreach($game['users'] ?? [] as $num => $nothing) {
-        //unset($game['users'][$num]['ID']);
+        unset($game['users'][$num]['ID']);
     }
 
     foreach(is_array($game) ? $game : [] as $key => $nothing) {

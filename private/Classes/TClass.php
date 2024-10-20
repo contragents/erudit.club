@@ -37,6 +37,9 @@ class T
     }
 
     const PHRASES = [
+        'Server connecting error. Please try again' => [
+            self::RU_LANG => 'Ошибка связи с сервером. Пожалуйста, повторите'
+        ],
         'Error changing settings. Try again later' => [
             self::RU_LANG => 'Ошибка. Пожалуйста попробуйте позднее'
         ],

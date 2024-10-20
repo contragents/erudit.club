@@ -5,7 +5,7 @@ async function fetchGlobal(script, param_name = '', param_data = '') {
     }
 
     if (!requestToServerEnabled && script === STATUS_CHECKER_SCRIPT) {
-        return {message: "Ошибка связи с сервером. Пожалуйста, повторите", http_status: BAD_REQUEST, status: "error"};
+        return {message: errorServerMessage, http_status: BAD_REQUEST, status: "error"};
     }
 
     if (script === SUBMIT_SCRIPT) {
@@ -64,7 +64,7 @@ async function fetchGlobalMVC(urlPart, param_name, param_data) {
 
     if (!response.ok) {
         console.log(`An error has occured: ${response.status}`);
-        return {message: "Ошибка связи с сервером. Попробуйте еще раз...", status: "error"};
+        return {message: errorServerMessage, status: "error"};
     }
 
     return await response.json(); // parses JSON response into native JavaScript objects
@@ -112,7 +112,7 @@ async function fetchGlobalNominal(script, param_name, param_data) {
 
     if (!response.ok) {
         console.log(`An error has occured: ${response.status}`);
-        return {message: "Ошибка связи с сервером. Попробуйте еще раз...", status: "error"};
+        return {message: errorServerMessage, status: "error"};
     }
 
     return await response.json(); // parses JSON response into native JavaScript objects
@@ -148,7 +148,7 @@ async function fetchGlobalYowser(script, param_name, param_data) {
 
     if (!response.ok) {
         console.log(`An error has occured: ${response.status}`);
-        return {message: "Ошибка связи с сервером. Попробуйте еще раз...", status: "error"};
+        return {message: errorServerMessage, status: "error"};
     }
 
     return await response.json();

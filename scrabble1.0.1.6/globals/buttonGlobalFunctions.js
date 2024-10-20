@@ -500,6 +500,10 @@ function playersButtonFunction() {
         return;
     }
 
+    if (!gameNumber) {
+        return;
+    }
+
     if (window.innerWidth < window.innerHeight) {
         var orient = 'vertical';
     } else {
@@ -510,7 +514,7 @@ function playersButtonFunction() {
     buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + 'Inactive'));
 
     setTimeout(function () {
-        fetchGlobal(PLAYER_RATING_SCRIPT, '', orient)
+        fetchGlobalMVC(PLAYER_RATING_SCRIPT + '?game_id=' + gameNumber + '&common_id=' + commonId + '&lang=' + lang, '', orient)
             .then((data) => {
 
                 canOpenDialog = false;
@@ -519,7 +523,7 @@ function playersButtonFunction() {
                 if (data == '')
                     var responseText = 'Ошибка';
                 else
-                    var responseText = data['message'];
+                    var responseText = JSON.stringify(data);//data['message'];
                 dialog = bootbox.alert({
                     title: 'Рейтинг соперников',
                     message: responseText,

@@ -2,12 +2,12 @@
 
 /**
  * @property int $_id
- * @propertystring $_avatar_url
+ * @property string $_avatar_url
  * @property string $_name
  * @property string $_created_at
  * @property string $_updated_at
  * @property int $_tg_id
- * @property int $_is_balance_hidden
+ * @property bool $_is_balance_hidden
  **/
 
 class UserModel extends BaseModel

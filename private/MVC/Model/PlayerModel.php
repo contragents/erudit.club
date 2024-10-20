@@ -1,7 +1,10 @@
 <?php
 
-use Dadata\Players;
-use Erudit\Game;
+/**
+ * @property int $_id
+ * @property string $_cookie
+ * @property int $_common_id
+ **/
 
 class PlayerModel extends BaseModel
 {
@@ -23,6 +26,12 @@ class PlayerModel extends BaseModel
     const TOP_PLAYERS_CACHE_TTL = 3600;
     private static array $cache = [];
 
+    public ?string $_cookie = null;
+    public ?int $_common_id = null;
+
+    public static function validateCommonIdByCookie(int $commonId, string $cookie) {
+        $player = self::getCustomO(self::COOKIE_FIELD, '=', $cookie);
+    }
 
     /**
      * Определяет common_id по сложной схеме через связанные куки и ID от яндекса
@@ -345,7 +354,7 @@ class PlayerModel extends BaseModel
         foreach ($topRatings as $num => &$playerArr) {
             foreach ($playerArr as $numPlayer => &$player) {
                 $player['avatar_url'] = self::getAvatarUrl($player[self::COMMON_ID_FIELD]);
-                $player['name'] = Players::getPlayerName(['common_id' => $player[self::COMMON_ID_FIELD]]);
+                $player['name'] = self::getPlayerName(['common_id' => $player[self::COMMON_ID_FIELD]]);
             }
         }
 

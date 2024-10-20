@@ -98,6 +98,15 @@ class BaseModel
         }
     }
 
+    private static function arrayToObject(array $record): object
+    {
+    }
+
+    public static function getCustomO(string $field, string $condition, $value, bool $isRaw = false): array
+    {
+
+    }
+
     public static function getOneO(int $id, bool $createIfNotExists = false) {
         $row = self::getOne($id);
         $res = new static();

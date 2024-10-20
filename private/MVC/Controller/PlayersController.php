@@ -23,6 +23,8 @@ class PlayersController extends BaseController
 
     public function hideBalanceAction(): string
     {
+        // todo проверять куки на соответствие common_id
+
         $res = [];
         $res['message'] = T::S('Error changing settings. Try again later');
 
@@ -53,6 +55,8 @@ class PlayersController extends BaseController
 
     public function infoAction(): string
     {
+        // todo проверять куки на соответствие common_id
+
         $gameId = self::$Request[self::GAME_ID_PARAM] ?? false;
         $commonId = self::$Request[self::COMMON_ID_PARAM] ?? false;
         $res = [];
@@ -71,15 +75,9 @@ class PlayersController extends BaseController
 
                     $thisUser = UserModel::getOneO($res[$numUser]['common_id'], true);
 
-                    //var_export($thisUser);
-
-                    /*if (!($thisUser->_id ?? false)) {
-                        $thisUser->_id = $res[$numUser]['common_id'];
-                    }*/
-
                     $res[$numUser]['nickname'] = $thisUser->_name
                         ?: PlayerModel::getPlayerName($user);
-                    $res[$numUser]['ID'] = $user['ID'];
+
                     $res[$numUser]['avatar_url'] = $thisUser->_avatar_url
                         ?? PlayerModel::getAvatarUrl($thisUser->_id, true);
 
