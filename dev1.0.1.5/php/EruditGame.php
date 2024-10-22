@@ -65,9 +65,7 @@ class Game extends \Game
 
         foreach ($ratings as $cook => $rate) {
             if (isset($rate[0])) {
-                if ($rate[0]['cookie'] !== $cook) {
-                    $rate[0]['cookie'] = $cook;
-                }
+                $rate[0]['cookie'] = $cook;
                 $result[] = $rate[0];
             }
         }
@@ -211,7 +209,7 @@ class Game extends \Game
 
         $ratings = $this->getRatings($this->User);
 
-        $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings ? $ratings[0]['rating'] : 'new_player';
+        $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings[0]['rating'] ?? 'new_player';
 
         return 'Новая игра начата! <br />Набери как можно больше очков' . '<br />' . $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
     }
@@ -272,7 +270,7 @@ class Game extends \Game
     {
         if ($this->gameStatus['turnNumber'] == 1) {
             $ratings = $this->getRatings($this->User);
-            return 'Игра до последней фишки<br />Ваш ход следующий - приготовьтесь!' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
+            return 'Игра до последней фишки<br />Ваш ход следующий - приготовьтесь!' . '<br />Ваш текущий рейтинг - <strong>' . ($ratings[0]['rating'] ?? 'new_player') . '</strong>';
         } else {
             return $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит. <br />Ваш ход следующий - приготовьтесь!'
                 . Hints::getHint(
@@ -377,7 +375,7 @@ class Game extends \Game
         return json_encode($result);
     }
 
-    public function submitTurnPrivate() // есть ли отличия от основного метода - протестить
+    public function submitTurn() // есть ли отличия от основного метода - протестить
     {
         if ($this->getUserStatus() != self::MY_TURN_STATUS) {
             $this->addToLog(
@@ -696,7 +694,7 @@ class Game extends \Game
                 //Сделали невозможным значение терна инактив
 
                 $userRating = $this->getRatings($user['ID']);
-                $this->gameStatus['users'][$num]['rating'] = $userRating ? $userRating[0]['rating'] : 'new_player';
+                $this->gameStatus['users'][$num]['rating'] = $ratings[0]['rating'] ?? 'new_player';
                 $this->gameStatus['users'][$num]['common_id'] = PlayerModel::getPlayerID($user['ID'], true);
                 //Прописали рейтинг и common_id игрока в статусе игры - только для games_statistic.php
             }

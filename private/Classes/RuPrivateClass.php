@@ -446,7 +446,6 @@ class RuPrivate
             }
         }
 
-
         if (count($fshki) > count($gameStatus['users'][$gameStatus['activeUser']]['fishki'])) {
             return false;
         }
