@@ -523,9 +523,9 @@ function playersButtonFunction() {
                 if (data == '')
                     var responseText = 'Ошибка';
                 else
-                    var responseText = JSON.stringify(data);//data['message'];
+                    var responseText = JSON.stringify(data);
                 dialog = bootbox.alert({
-                    title: 'Рейтинг соперников',
+                    title: '<?= T::S('Rating of opponents') ?>',
                     message: responseText,
                     size: 'large',
                     callback: function () {

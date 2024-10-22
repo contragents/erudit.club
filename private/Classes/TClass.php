@@ -20,7 +20,8 @@ class T
         'erudit' => self::RU_LANG,
     ];
 
-    public static function setLangGame(string $lang, string $gameName) {
+    public static function setLangGame(string $lang, string $gameName)
+    {
         self::$lang = $lang;
         Game::$gameName = $gameName;
     }
@@ -37,6 +38,9 @@ class T
     }
 
     const PHRASES = [
+        'Server sync lost' => [
+            self::RU_LANG => 'Потеря синхронизации с сервером'
+        ],
         'Server connecting error. Please try again' => [
             self::RU_LANG => 'Ошибка связи с сервером. Пожалуйста, повторите'
         ],
@@ -90,7 +94,7 @@ class T
             self::RU_LANG => 'Ошибка авторизации'
         ],
         // Рекорды
-        'Got reward'  => [
+        'Got reward' => [
             self::RU_LANG => 'Получена награда'
         ],
         'Your passive income' => [
@@ -180,6 +184,9 @@ class T
         'Save' => [
             self::RU_LANG => 'Сохранить'
         ],
+        'new nickname' => [
+            self::RU_LANG => 'новый Ник'
+        ],
         'Input new nickname' => [
             self::RU_LANG => 'Задайте новый ник'
         ],
@@ -222,26 +229,26 @@ class T
         'Lost server synchronization' => [
             'Потеря синхронизации с сервером',
         ],
-        "Closed game window" => [
-            self::RU_LANG => "Закрыл вкладку с игрой"
+        'Closed game window' => [
+            self::RU_LANG => 'Закрыл вкладку с игрой'
         ],
         "You closed the game window and became inactive!" => [
             self::RU_LANG => 'Вы закрыли вкладку с игрой и стали Неактивным!'
         ],
-        "Request denied. Game is still ongoing." => [
-            self::RU_LANG => 'Запрос отклонен. Игра еще продолжается.'
+        "Request denied. Game is still ongoing" => [
+            self::RU_LANG => 'Запрос отклонен. Игра еще продолжается'
         ],
         "New game request sent" => [
             self::RU_LANG => 'Запрос на новую игру отправлен'
         ],
-        "Your new game request awaits players' response" => [
+        'Your new game request awaits players response' => [
             self::RU_LANG => 'Ваш запрос на новую игру ожидает ответа игроков'
         ],
         "Request was aproved! Starting new game" => [
             self::RU_LANG => 'Запрос принят! Начинаем новую игру'
         ],
-        "Default avatar is used" => [
-            self::RU_LANG => "Используется аватар по умолчанию"
+        'Default avatar is used' => [
+            self::RU_LANG => 'Используется аватар по умолчанию'
         ],
         "Avatar by provided link" => [
             self::RU_LANG => "Аватар по предоставленной ссылке"
@@ -249,14 +256,17 @@ class T
         "Set" => [
             self::RU_LANG => 'Задать'
         ],
-        "Loading Avatar" => [
+        "Avatar loading" => [
             self::RU_LANG => 'Загрузка Аватара'
         ],
         "Send" => [
             self::RU_LANG => 'Отправить'
         ],
-        "Avatar's URL" => [
+        'Avatar URL' => [
             self::RU_LANG => 'URL аватара'
+        ],
+        'Apply' => [
+            self::RU_LANG => 'Применить'
         ],
         "Account key" => [
             self::RU_LANG => 'Ключ учетной записи'
@@ -267,50 +277,98 @@ class T
         "old account saved key" => [
             self::RU_LANG => 'сохраненный ключ от старого аккаунта'
         ],
-        "Key transcription error" => [
+        'Key transcription error' => [
             self::RU_LANG => 'Ошибка расшифровки ключа'
         ],
         "Player's ID NOT found by key" => [
             self::RU_LANG => 'ID игрока по ключу НЕ найден'
         ],
-        "Accounts linked" => [
+        'Accounts linked' => [
             self::RU_LANG => 'Учетные записи связаны'
         ],
-        "Link error - accounts are already linked" => [
-            self::RU_LANG => 'Ошибка привязки - аккаунты уже связаны'
+        'Accounts are already linked' => [
+            self::RU_LANG => 'Аккаунты уже связаны'
         ],
-        "Game is not started" => [
-            self::RU_LANG => "Игра не начата"
+        'Game is not started' => [
+            self::RU_LANG => 'Игра не начата'
         ],
-        "Click to expand the image" => [
-            self::RU_LANG => "Кликните для увеличения изображения"
+        'Click to expand the image' => [
+            self::RU_LANG => 'Кликните для увеличения изображения'
         ],
-        "Report sent" => [
+        'Report sent' => [
             self::RU_LANG => 'Отправлена жалоба'
         ],
-        "Report declined! Please choose a player from the list" => [
+        'Report declined! Please choose a player from the list' => [
             self::RU_LANG => 'Жалоба не принята! Пожалуйста, выберите игрока из списка'
         ],
-        "From player" => [
-            self::RU_LANG => "От Игрока"
+        'Your report accepted and will be processed by moderator' => [
+            self::RU_LANG => 'Ваше обращение принято и будет рассмотрено модератором'
         ],
-        "(to everyone):" => [
-            self::RU_LANG => " (всем):"
+        'If confirmed, the player will be banned' => [
+            self::RU_LANG => 'В случае подтверждения к игроку будут применены санкции'
         ],
-        "Message NOT sent - BAN until " => [
+        'Report declined!' => [
+            self::RU_LANG => 'Ваше обращение НЕ принято!'
+        ],
+        'Only one complaint per each player per day can be sent. Total 24 hours complaints limit is' => [
+            self::RU_LANG => 'В течение суток можно отправлять только одну жалобу на одного и того же игрока. Всего за сутки не более'
+        ],
+        'From player' => [
+            self::RU_LANG => 'От Игрока'
+        ],
+        'To player' => [
+            self::RU_LANG => 'Игроку'
+        ],
+        'Message NOT sent - BAN until ' => [
             self::RU_LANG => 'Сообщение НЕ отправлено - БАН до '
         ],
-        "Message NOT sent - BAN from Player" => [
+        'Message NOT sent - BAN from Player' => [
             self::RU_LANG => 'Сообщение НЕ отправлено - БАН от Игрока'
         ],
-        "Message sent" => [
+        'Message sent' => [
             self::RU_LANG => 'Сообщение отправлено'
         ],
-        "Your turn!" => [
+        'Your turn!' => [
             self::RU_LANG => 'Ваш ход!'
         ],
-        'Game goal' => [
+        'Looking for a new game...' => [
+            self::RU_LANG => 'Подбор игры!'
+        ],
+        'Players ready:' => [
+            self::RU_LANG => 'Готово играть:'
+        ],
+        'Time elapsed:' => [
+            self::RU_LANG => 'Время подбора:'
+        ],
+        'Time limit:' => [
+            self::RU_LANG => 'Лимит по времени:'
+        ],
+        'You can start a new game if you wait for a long time' => [
+            self::RU_LANG => 'Вы можете начать новую игру, если долго ждать..'
+        ],
+        'Close after 5 seconds' => [
+            self::RU_LANG => 'Закрывать через 5 секунд'
+        ],
+        'Close immediately' => [
+            self::RU_LANG => 'Закрывать сразу'
+        ],
+        'Will close automatically' => [
+            self::RU_LANG => 'Закроется автоматически'
+        ],
+        's' => [
+            self::RU_LANG => 'с'
+        ],
+        'Average waiting time:' => [
+            self::RU_LANG => 'Среднее время ожидания:'
+        ],
+        'Waiting for other players' => [
+            self::RU_LANG => 'Поиск других игроков'
+        ],
+        'Game goal:' => [
             self::RU_LANG => 'Игра до'
+        ],
+        'Rating of opponents' => [
+            self::RU_LANG => 'Рейтинг соперников'
         ],
         'CHOOSE GAME OPTIONS' => [
             self::RU_LANG => 'ПОДБОР ИГРЫ ПО ПАРАМЕТРАМ'
@@ -333,7 +391,20 @@ class T
         'Play on' => [
             self::RU_LANG => 'Играть в'
         ],
-
+        // Чат
+        'You' => [
+            self::RU_LANG => 'Вы'
+        ],
+        'to all: ' => [
+            self::RU_LANG => 'всем: '
+        ],
+        ' (to all):' => [
+            self::RU_LANG => ' (всем):'
+        ],
+        // Чат
+        'News' => [
+            self::RU_LANG => 'Новости:'
+        ],
         // Окно статистика
         'Past Awards' => [
             self::RU_LANG => 'Прошлые награды'
@@ -398,16 +469,19 @@ class T
         "score" => [
             self::RU_LANG => 'очков'
         ],
-        "Your current rank - " => [
-            self::RU_LANG => 'Ваш текущий рейтинг - '
+        'Your current rank' => [
+            self::RU_LANG => 'Ваш текущий рейтинг'
         ],
-        " making a turn." => [
+        'Server syncing..' => [
+            self::RU_LANG => 'Синхронизируемся с сервером..'
+        ],
+        ' is making a turn.' => [
             self::RU_LANG => ' ходит.'
         ],
-        "Your turn is next - get ready!" => [
+        'Your turn is next - get ready!' => [
             self::RU_LANG => 'Ваш ход следующий - приготовьтесь!'
         ],
-        "switches pieces and skips turn" => [
+        'switches pieces and skips turn' => [
             self::RU_LANG => 'меняет фишки и пропускает ход'
         ],
         "Game still hasn't started!" => [
@@ -416,65 +490,74 @@ class T
         "Word wasn't found" => [
             self::RU_LANG => 'Слово не найдено'
         ],
-        "Correct" => [
+        'Correct' => [
             self::RU_LANG => 'Корректно'
         ],
-        "One-letter word" => [
+        'One-letter word' => [
             self::RU_LANG => 'Слово из одной буквы'
         ],
-        "Repeat" => [
+        'Repeat' => [
             self::RU_LANG => 'Повтор'
         ],
-        "+15 for all pieces used " => [
-            self::RU_LANG => '+15 за все фишки '
+        'costs' => [
+            self::RU_LANG => 'стоимость'
         ],
-        "You did not make any word" => [
+        '+15 for all pieces used' => [
+            self::RU_LANG => '+15 за все фишки'
+        ],
+        'TOTAL' => [
+            self::RU_LANG => 'ИТОГО'
+        ],
+        'You did not make any word' => [
             self::RU_LANG => 'Вы не составили ни одного слова'
         ],
-        "is attempting to make a turn out of his turn (turn #" => [
+        'is attempting to make a turn out of his turn (turn #' => [
             self::RU_LANG => 'пытается сделать ход не в свою очередь (ход #'
         ],
-        "Data processing error!" => [
+        'Data processing error!' => [
             self::RU_LANG => 'Ошибка обработки данных!'
         ],
-        "Turn processing error (turn #" => [
+        ' - turn processing error (turn #' => [
             self::RU_LANG => ' - ошибка обработки хода (ход #'
         ],
         "didn't make any word (turn #" => [
             self::RU_LANG => 'не составил ни одного слова (ход #'
         ],
-        "set word lenght record for " => [
-            self::RU_LANG => "устанавливает рекорд по длине слова за "
+        'set word lenght record for' => [
+            self::RU_LANG => 'устанавливает рекорд по длине слова за'
         ],
-        "set word cost record for " => [
-            self::RU_LANG => "устанавливает рекорд по стоимости слова за "
+        'set word cost record for' => [
+            self::RU_LANG => 'устанавливает рекорд по стоимости слова за'
         ],
-        "set record for turn cost for " => [
-            self::RU_LANG => "устанавливает рекорд по стоимости хода за "
+        'set record for turn cost for' => [
+            self::RU_LANG => 'устанавливает рекорд по стоимости хода за'
         ],
-        "gets " => [
-            self::RU_LANG => 'зарабатывает '
+        'gets' => [
+            self::RU_LANG => 'зарабатывает'
         ],
-        " for turn #" => [
-            self::RU_LANG => ' за ход #'
+        'for turn #' => [
+            self::RU_LANG => 'за ход #'
         ],
-        "For all pieces" => [
-            self::RU_LANG => "За все фишки"
+        'For all pieces' => [
+            self::RU_LANG => 'За все фишки'
         ],
-        "Wins with score " => [
+        'Wins with score ' => [
             self::RU_LANG => 'Побеждает со счетом '
         ],
-        "set record for gotten points in the game for " => [
-            self::RU_LANG => "устанавливает рекорд набранных очков в игре за "
+        'set record for gotten points in the game for' => [
+            self::RU_LANG => "устанавливает рекорд набранных очков в игре за"
         ],
-        "pieces are finished - game ended!" => [
+        'out of chips - end of game!' => [
             self::RU_LANG => 'закончились фишки - конец игры!'
         ],
-        "set record for number of games played for " => [
-            self::RU_LANG => "устанавливает рекорд по числу сыгранных партий за "
+        'set record for number of games played for' => [
+            self::RU_LANG => 'устанавливает рекорд по числу сыгранных партий за'
         ],
         "is the only one left in the game - Victory!" => [
             self::RU_LANG => 'остался в игре один - Победа!'
+        ],
+        'left game' => [
+            self::RU_LANG => 'покинул игру'
         ],
         "is the only one left in the game! Start a new game" => [
             self::RU_LANG => 'остался в игре один! Начните новую игру'
@@ -491,30 +574,33 @@ class T
         "is left without any pieces! You won with score " => [
             self::RU_LANG => 'остался без фишек! Вы победили со счетом '
         ],
-        "gave up" => [
+        "gave up! Winner - " => [
             self::RU_LANG => 'сдался'
         ],
         "skipped 3 turns! Winner - " => [
             self::RU_LANG => 'пропустил 3 хода! Победитель - '
         ],
-        "New game has started!" => [
+        'New game has started!' => [
             self::RU_LANG => 'Новая игра начата!'
         ],
-        "Get" => [
+        'Get' => [
             self::RU_LANG => 'Набери'
         ],
-        "score points" => [
+        'score points' => [
             self::RU_LANG => 'очков'
         ],
 
-        "Запрашиваем подтверждение соперников." => [
-            self::RU_LANG => "Asking for adversaries' approval."
+        "Asking for adversaries' approval." => [
+            self::RU_LANG => "Запрашиваем подтверждение соперников."
         ],
-        "Left in game:" => [
+        'Remaining in the game:' => [
             self::RU_LANG => 'В игре осталось:'
         ],
         "You got invited for a rematch! - Accept?" => [
             self::RU_LANG => 'Вас пригласили на Реванш - Согласны?'
+        ],
+        'All players have left the game' => [
+            self::RU_LANG => 'Все игроки покинули игру'
         ],
         "Your score" => [
             self::RU_LANG => 'Ваши очки:'
@@ -643,15 +729,15 @@ class T
         'faq_rating' => [
             self::EN_LANG => Faq::RATING[self::EN_LANG],
             self::RU_LANG => Faq::RATING[self::RU_LANG],
-            ],
+        ],
         'faq_rewards' => [
             self::EN_LANG => Faq::REWARDS[self::EN_LANG],
             self::RU_LANG => Faq::REWARDS[self::RU_LANG],
-            ],
+        ],
         'faq_coins' => [
             self::EN_LANG => Faq::COINS[self::EN_LANG],
             self::RU_LANG => Faq::COINS[self::RU_LANG],
-            ],
+        ],
     ];
 
     public static function translit(string $text, bool $fromRU = true)

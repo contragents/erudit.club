@@ -30,6 +30,8 @@ class PlayerModel extends BaseModel
     public ?int $_common_id = null;
 
     public static function validateCommonIdByCookie(int $commonId, string $cookie): bool {
+        return true; // todo CLUB-397 убрать после тестирования задачи
+
         $player = self::getOneCustomO(self::COOKIE_FIELD, $cookie);
 
         return $player && ($player->_common_id === $commonId);

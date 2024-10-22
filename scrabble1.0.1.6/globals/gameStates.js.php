@@ -5,7 +5,7 @@ var gameStates = {
         refresh: 1,
         action: function (data) {
             useLocalStorage = true;
-            if (!('erudit_user_session_ID' in localStorage)) {
+            if (!('<?= Cookie::COOKIE_NAME ?>' in localStorage)) {
                 localStorage.erudit_user_session_ID = data['cookie'];
             }
             queryNumber = 1;
@@ -1121,7 +1121,7 @@ function commonCallback(data) {
                         intervalId = setInterval(function () {
                             var igrokiWaiting = '';
                             if ('gameSubState' in data)
-                                igrokiWaiting = "<br />Найдено игроков: " + data['gameSubState'];
+                                igrokiWaiting = "<br /><?= T::S('Players ready:') ?> " + data['gameSubState'];
 
 
                             if ('timeWaiting' in data) {
@@ -1140,7 +1140,7 @@ function commonCallback(data) {
                                 }
                             }
 
-                            let content = data['comments'] + igrokiWaiting + '<br />Время подбора: ' + (tWaiting++) + '<br />Среднее время ожидания: ' + (gWLimit) + 'с';
+                            let content = data['comments'] + igrokiWaiting + '<br /><?= T::S('Time elapsed:') ?> ' + (tWaiting++) + '<br /><?= T::S('Average waiting time:') ?> ' + (gWLimit) + '<?= T::S('s') ?>';
                             dialog.find('.bootbox-body').html(content);
                         }, 1000);
                     });
@@ -1156,13 +1156,13 @@ function commonCallback(data) {
                                         tWaiting = data['timeWaiting'];
                                 }
                             dialog.find('.bootbox-body').html(data['comments'] +
-                                '<br />Время подбора: ' +
+                                '<br /><?= T::S('Time elapsed:') ?> ' +
                                 (tWaiting++) +
                                 'с' +
-                                '<br />Лимит по времени: ' +
+                                '<br /><?= T::S('Time limit:') ?> ' +
                                 data['ratingGameWaitLimit'] +
                                 'c' +
-                                '<hr>Вы можете начать новую игру, если долго ждать..');
+                                '<hr><?= T::S('You can start a new game if you wait for a long time') ?>');
                         }, 1000);
                     });
 
@@ -1181,7 +1181,7 @@ function commonCallback(data) {
             } else if (!('noDialog' in gameStates[gameState])) {
                 setTimeout(function () {
                         var message = '';
-                        var cancelLabel = 'Закрывать через 5 секунд';
+                        var cancelLabel = '<?= T::S('Close after 5 seconds') ?>';
 
                         if ('comments' in data && (data['comments'] !== null)) {
 
@@ -1196,9 +1196,9 @@ function commonCallback(data) {
 
                         if (turnAutocloseDialog) {
                             if (timeToCloseDilog == 5) {
-                                cancelLabel = 'Закрывать сразу';
+                                cancelLabel = '<?= T::S('Close immediately') ?>';
                             } else {
-                                cancelLabel = 'Закроется автоматически';
+                                cancelLabel = '<?= T::S('Will close automatically') ?>';
                             }
                         }
 
@@ -1274,9 +1274,9 @@ function commonCallback(data) {
         for (k in data['chat']) {
 
             if (!
-                (((data['chat'][k].indexOf('Вы') + 1) === 1)
+                (((data['chat'][k].indexOf('<?= T::S('You') ?>') + 1) === 1)
                     ||
-                    ((data['chat'][k].indexOf('Новости') + 1) === 1))
+                    ((data['chat'][k].indexOf('<?= T::S('News') ?>') + 1) === 1))
             ) {
                 hasIncomingMessages = true;
                 buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE));
@@ -1348,8 +1348,6 @@ function userScores(data) {
                     players[playerBlockName].svgObject.setAlpha(INACTIVE_USER_ALPHA);
                 }
             }
-
-
         }
 
         if (ochki_arr === false) {

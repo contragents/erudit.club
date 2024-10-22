@@ -14,7 +14,7 @@ class BanController extends BaseController
 
     public function removeAction()
     {
-        $cookie = $_COOKIE['erudit_user_session_ID'] ?? false;
+        $cookie = $_COOKIE[Cookie::COOKIE_NAME] ?? false;
         if (!$cookie) {
             return self::USER_NOT_FOUND_ERROR;
         }

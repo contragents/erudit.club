@@ -112,7 +112,7 @@ function setPlayerName()
 
 function avatarUpload()
 {
-    print Dadata\Players::avatarUpload($_FILES, Tg::$tgUser['user']['id'] ?? $_COOKIE['erudit_user_session_ID']);
+    print Dadata\Players::avatarUpload($_FILES, Tg::$tgUser['user']['id'] ?? $_COOKIE[Cookie::COOKIE_NAME]);
 }
 
 function setAvatarUrl()

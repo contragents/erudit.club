@@ -151,7 +151,7 @@ class BotEng
             "http" => [
                     "method" => (!empty($post)) ? "POST" : "GET",
                     "header" => "Accept-language: en\r\n"
-                        . "Cookie: " . Game::COOKIE_KEY . "=$cookie\r\n"
+                        . "Cookie: " . Cookie::COOKIE_NAME . "=$cookie\r\n"
                         . ($post ? "Content-Type: application/x-www-form-urlencoded\r\n" : ''),
                 ]
                 + ((!empty($post)) ? ['content' => http_build_query($post)] : [])
