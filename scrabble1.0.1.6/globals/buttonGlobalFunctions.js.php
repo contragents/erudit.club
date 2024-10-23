@@ -135,18 +135,11 @@ function newGameButtonFunction(ignoreDialog = false) {
             }
         });
     } else {
-        let lastState = gameState;
-        gameState = 'chooseGame';
-
         buttons['newGameButton']['svgObject'].bringToTop(buttons['newGameButton']['svgObject'].getByName('newGameButton' + 'Inactive'));
 
         fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState)
             .then((data) => {
                 document.location.reload(true);
-                setTimeout(function () {
-                    gameState = lastState;
-                }, 100);
-
             });
     }
 };
