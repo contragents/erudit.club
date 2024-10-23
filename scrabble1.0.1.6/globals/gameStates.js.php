@@ -225,9 +225,9 @@ var gameStates = {
             } // end if 'players'
 
             let radioButtons =
-                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly">Только два игрока</label></div>';
+                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly"><?= T::S('Just two players') ?></label></div>';
             radioButtons +=
-                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore">До четырех игроков</label></div>';
+                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore"><?= T::S('Up to four players') ?></label></div>';
 
             let wish = '';
 
@@ -409,7 +409,6 @@ var gameStates = {
                                         return fetch('/profile-modal-tpl.html'+ '?ver=' + Math.floor(Date.now()))
                                             .then((response) => response.text())
                                             .then((template) => {
-                                                // Заменяем маркеры в шаблоне реальными данными
                                                 let message = template
                                                     .replaceAll('{{Profile}}', '<?= T::S('Profile') ?>')
                                                     .replaceAll('{{Wallet}}', '<?= T::S('Wallet') ?>')
@@ -426,10 +425,6 @@ var gameStates = {
                                                     .replaceAll('{{SUDOKU Balance}}', '<?= T::S('SUDOKU Balance') ?>') // Баланс SUDOKU
                                                     .replaceAll('{{Claim}}', '<?= T::S('Claim') ?>') // Забрать
                                                     .replaceAll('{{Name}}', '<?= T::S('Name') ?>')
-                                                    //.replaceAll('{{Profile}}', '<?= T::S('Profile') ?>')
-
-
-
                                                     .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
                                                     .replaceAll('{{cookie}}', profileData.cookie)
                                                     /* хз зачем
@@ -488,136 +483,6 @@ var gameStates = {
                             }, 100);
                         },
                     },
-                    /*cabinet: {
-                        label: '<?= T::S('Profile') ?>',
-                        className: 'btn-outline-success',
-                        callback: function () {
-                            setTimeout(function () {
-                                fetchGlobal(CABINET_SCRIPT, '', 12).then(
-                                    (dataCabinet) => {
-                                        if (dataCabinet == '')
-                                            var responseText = '<?= T::S('Error') ?>';
-                                        else
-                                            var responseArr = JSON.parse(
-                                                dataCabinet['message']
-                                            );
-                                        var message = '<form id="superForm" >';
-                                        for (k in responseArr['form']) {
-                                            message +=
-                                                '<div class="form-group"' +
-                                                ('type' in responseArr['form'][k] &&
-                                                responseArr['form'][k]['type'] ===
-                                                'hidden'
-                                                    ? ' style="display:none" '
-                                                    : '') +
-                                                '><div class="col-sm-6">' +
-                                                '<label for="' +
-                                                responseArr['form'][k]['inputId'] +
-                                                '">' +
-                                                responseArr['form'][k]['prompt'] +
-                                                '</label>' +
-                                                '</div>';
-                                            message +=
-                                                '<div class="form-row align-items-center">' +
-                                                '<div class="col-sm-8">' +
-                                                '<input ';
-
-                                            if ('value' in responseArr['form'][k]) {
-                                                message +=
-                                                    'value="' +
-                                                    responseArr['form'][k][
-                                                        'value'
-                                                        ] +
-                                                    '"';
-                                                if (
-                                                    'readonly' in
-                                                    responseArr['form'][k]
-                                                ) {
-                                                    message += ' readonly ';
-                                                }
-                                            } else {
-                                                message +=
-                                                    'placeholder="' +
-                                                    responseArr['form'][k][
-                                                        'placeholder'
-                                                        ] +
-                                                    '"';
-                                            }
-
-                                            message +=
-                                                ('type' in responseArr['form'][k]
-                                                    ? 'type="' +
-                                                    responseArr['form'][k][
-                                                        'type'
-                                                        ] +
-                                                    '"'
-                                                    : 'type="text"') +
-                                                ' class="form-control" name="' +
-                                                responseArr['form'][k][
-                                                    'inputName'
-                                                    ] +
-                                                '" id="' +
-                                                responseArr['form'][k]['inputId'] +
-                                                '" ' +
-                                                ('required' in
-                                                responseArr['form'][k]
-                                                    ? ' required '
-                                                    : '') +
-                                                '></div>';
-                                            message += !(
-                                                'type' in responseArr['form'][k] &&
-                                                responseArr['form'][k]['type'] ===
-                                                'hidden'
-                                            )
-                                                ? '<div class="col-sm-4 col-form-label">' +
-                                                '<button type="submit" class="form-control btn btn-outline-secondary" onclick="' +
-                                                responseArr['form'][k][
-                                                    'onclick'
-                                                    ] +
-                                                "($('#" +
-                                                responseArr['form'][k][
-                                                    'inputId'
-                                                    ] +
-                                                "').val()," +
-                                                responseArr['common_id'] +
-                                                ');return false;">' +
-                                                responseArr['form'][k][
-                                                    'buttonCaption'
-                                                    ] +
-                                                '</button></div>'
-                                                : '' + '</div>';
-                                            message += '</div>';
-                                        }
-                                        message += '</form>';
-                                        dialog = bootbox.alert({
-                                            title:
-                                                '<?= T::S('Your profile') ?>, <span id="playersNikname">' +
-                                                responseArr['name'] +
-                                                '</span>' +
-                                                '<span id="playersAvatar">&nbsp;' +
-                                                '<img style="cursor: pointer;" title="' +
-                                                responseArr['img_title'] +
-                                                '" src="' +
-                                                responseArr['url'] +
-                                                '" width="100px" max-height = "100px" />' +
-                                                '</span>',
-                                            message: responseArr['text'] + message,
-                                            locale: 'ru',
-                                            size: 'large',
-                                            callback: function () {
-                                                gameStates['chooseGame']['action'](
-                                                    data
-                                                );
-                                            },
-                                        });
-                                        return false;
-                                    }
-                                );
-                            }, 100);
-                        },
-                    },*/
-
-                    // пока скроем через d-none
                     instruction: {
                         label: 'FAQ',
                         className: 'btn-outline-success d-none',
@@ -632,7 +497,6 @@ var gameStates = {
                             return false;
                         },
                     },
-
                     beginGame: {
                         label: '<?= T::S('Start') ?>',
                         className: 'btn-primary',
@@ -693,7 +557,6 @@ var gameStates = {
                                     })
                                     .off('shown.bs.modal')
                                     .on('shown.bs.modal', function() {
-                                        // Вызовите onLoad после того, как модальное окно будет показано
                                         if (data.onLoad && typeof data.onLoad === 'function') {
                                             data.onLoad();
                                         }
@@ -743,7 +606,7 @@ var gameStates = {
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
         },
-        message: 'Подбор игры - ожидайте',
+        message: '<?= T::S('Game selection - please wait') ?>',
         refresh: 10
     },
     initRatingGame: {
@@ -752,13 +615,13 @@ var gameStates = {
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
         },
-        message: 'Подбор игры - ожидайте',
+        message: '<?= T::S('Game selection - please wait') ?>',
         refresh: 10
     },
 
     myTurn: {
         1: 'thinking', 2: 'checking', 3: 'submiting', 4: 'done',
-        message: 'Ваш ход!',
+        message: '<?= T::S('Your turn!') ?>',
         refresh: 15,
         action: function (data) {
             gameStates['gameResults']['action'](data);
@@ -795,7 +658,7 @@ var gameStates = {
     },
     preMyTurn: {
         1: 'waiting', 2: 'done',
-        message: 'Приготовьтесь - Ваш ход следующий!',
+        message: '<?= T::S('Get ready - your turn is next!') ?>',
         refresh: 5,
         action: function (data) {
             gameStates['gameResults']['action'](data);
@@ -829,7 +692,7 @@ var gameStates = {
         },
     },
     otherTurn: {
-        1: 'waiting', 2: 'done', message: 'Отдохните - Ваш ход через один',
+        1: 'waiting', 2: 'done', message: '<?= T::S('Take a break - your move in one') ?>',
         refresh: 5,
         action: function (data) {
             gameStates['gameResults']['action'](data);
@@ -873,27 +736,25 @@ var gameStates = {
         results: function (data) {
             if (dialog && canCloseDialog)
                 dialog.modal('hide');
-            var okButtonCaption = 'Отказаться';
+            var okButtonCaption = '<?= T::S('Refuse') ?>';
             if ('inviteStatus' in data && data['inviteStatus'] == 'waiting') {
                 var okButtonCaption = 'OK';
             }
 
             dialog = bootbox.dialog({
-                //title: 'Игра завершена',
                 message: data['comments'],
-                //size: 'small',
                 onEscape: false,
                 closeButton: false,
                 buttons: {
                     invite: {
-                        label: 'Предложить игру',
+                        label: '<?= T::S('Offer a game') ?>',
                         className: 'btn-primary',
                         callback: function () {
                             setTimeout(function () {
                                 fetchGlobal(INVITE_SCRIPT, '', 12)
                                     .then((dataInvite) => {
                                         if (dataInvite == '')
-                                            var responseText = 'Запрос отклонен';
+                                            var responseText = '<?= T::S('Request rejected') ?>';
                                         else
                                             var responseText = dataInvite['message'];
                                         if ('inviteStatus' in dataInvite) {
@@ -931,7 +792,7 @@ var gameStates = {
                         }
                     },
                     new: {
-                        label: 'Новая игра',
+                        label: '<?= T::S('New game') ?>',
                         className: 'btn-danger',
                         callback: function () {
                             newGameButtonFunction(true);
@@ -949,21 +810,19 @@ var gameStates = {
             }
 
             dialog = bootbox.dialog({
-                //title: 'Игра завершена',
                 message: data['comments'],
-                //size: 'small',
                 onEscape: false,
                 closeButton: false,
                 buttons: {
                     invite: {
-                        label: 'Принять приглашение',
+                        label: '<?= T::S('Accept invitation') ?>',
                         className: 'btn-primary',
                         callback: function () {
                             setTimeout(function () {
                                 fetchGlobal(INVITE_SCRIPT, '', 12)
                                     .then((dataInvite) => {
                                         if (dataInvite == '') {
-                                            var responseText = 'Запрос отклонен';
+                                            var responseText = '<?= T::S('Request rejected') ?>';
                                         } else {
                                             var responseText = dataInvite['message'];
                                         }
@@ -994,14 +853,14 @@ var gameStates = {
                         }
                     },
                     ok: {
-                        label: 'Отказаться',
+                        label: '<?= T::S('Refuse') ?>',
                         className: 'btn-info',
                         callback: function () {
                             return true;
                         }
                     },
                     new: {
-                        label: 'Новая игра',
+                        label: '<?= T::S('New game') ?>',
                         className: 'btn-danger',
                         callback: function () {
                             newGameButtonFunction(true);
@@ -1106,7 +965,7 @@ function commonCallback(data) {
                             label: 'Ok',
                         },
                         cancel: {
-                            label: 'Новая игра',
+                            label: '<?= T::S('New game') ?>',
                             className: 'btn-danger'
                         }
                     },

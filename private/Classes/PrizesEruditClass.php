@@ -12,11 +12,16 @@ class PrizesErudit
     protected const MONTH_TTL = 60 * 60 * 24 * 30 * 2;
     protected const YEAR_TTL = 60 * 60 * 24 * 365 * 2;
 
+    protected const DAY = 'день';
+    protected const WEEK = 'неделю';
+    protected const MONTH = 'месяц';
+    protected const YEAR = 'год';
+
     protected const PERIODS = [
-        'день' => 'day',
-        'неделю' => 'week',
-        'месяц' => 'month',
-        'год' => 'year'
+        self::DAY => 'day',
+        self::WEEK => 'week',
+        self::MONTH => 'month',
+        self::YEAR => 'year'
     ];
 
     const GAME_NAME = Game::ERUDIT;
@@ -329,16 +334,16 @@ class PrizesErudit
                     ['number' => $playerDailyPlayedGames]
                 );
 
-                $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS['день'])[0] ?? false;
+                $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS[static::DAY])[0] ?? false;
 
                 // Проверить, предыдущий рекорд принадлежит этому же игроку - просто обновить число игр
                 if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
                     AchievesModel::setParam($activeAchieve[AchievesModel::ID_FIELD], AchievesModel::EVENT_VALUE_FIELD, $playerDailyPlayedGames, true);
                 } else {
-                    self::saveAchieve($cookie, 'games_played', static::PERIODS['день'], $playerDailyPlayedGames, false);
+                    self::saveAchieve($cookie, 'games_played', static::PERIODS[static::DAY], $playerDailyPlayedGames, false);
                 }
                 $todayRecord['number'] = $playerDailyPlayedGames;
-                $playersRecords['день'] = [$cookie => $playerDailyPlayedGames];
+                $playersRecords[static::DAY] = [$cookie => $playerDailyPlayedGames];
             }
 
             if ($playerDailyPlayedGames > 1 || Cache::get(static::GAMES_PLAYED_WEEKLY . $cookie . date('W'))) {
@@ -353,7 +358,7 @@ class PrizesErudit
                         ['number' => $playerWeeklyPlayedGames]
                     );
 
-                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS['неделю'])[0] ?? false;
+                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS[static::WEEK])[0] ?? false;
 
                     // Проверить, предыдущий рекорд принадлежит этому же игроку - просто обновить число игр
                     if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
@@ -362,14 +367,14 @@ class PrizesErudit
                         self::saveAchieve(
                             $cookie,
                             'games_played',
-                            static::PERIODS['неделю'],
+                            static::PERIODS[static::WEEK],
                             $playerWeeklyPlayedGames,
                             false
                         );
                     }
 
                     $weekRecord['number'] = $playerWeeklyPlayedGames;
-                    $playersRecords['неделю'] = [$cookie => $playerWeeklyPlayedGames];
+                    $playersRecords[static::WEEK] = [$cookie => $playerWeeklyPlayedGames];
                 }
             }
 
@@ -389,7 +394,7 @@ class PrizesErudit
                         ['number' => $playerMonthlyPlayedGames]
                     );
 
-                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS['месяц'])[0] ?? false;
+                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS[static::MONTH])[0] ?? false;
 
                     if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
                         AchievesModel::setParam($activeAchieve[AchievesModel::ID_FIELD], AchievesModel::EVENT_VALUE_FIELD, $playerMonthlyPlayedGames, true);
@@ -397,14 +402,14 @@ class PrizesErudit
                         self::saveAchieve(
                         $cookie,
                         'games_played',
-                        static::PERIODS['месяц'],
+                        static::PERIODS[static::MONTH],
                         $playerMonthlyPlayedGames,
                         false
                     );
                     }
 
                     $monthRecord['number'] = $playerMonthlyPlayedGames;
-                    $playersRecords['месяц'] = [$cookie => $playerMonthlyPlayedGames];
+                    $playersRecords[static::MONTH] = [$cookie => $playerMonthlyPlayedGames];
                 }
             }
 
@@ -420,7 +425,7 @@ class PrizesErudit
                         ['number' => $playerYearlyPlayedGames]
                     );
 
-                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS['год'])[0] ?? false;
+                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS[static::YEAR])[0] ?? false;
 
                     // Проверить, предыдущий рекорд принадлежит этому же игроку - просто обновить число игр
                     if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
@@ -429,14 +434,14 @@ class PrizesErudit
                         self::saveAchieve(
                             $cookie,
                             'games_played',
-                            static::PERIODS['год'],
+                            static::PERIODS[static::YEAR],
                             $playerYearlyPlayedGames,
                             false
                         );
                     }
 
                     $yearRecord['number'] = $playerYearlyPlayedGames;
-                    $playersRecords['год'] = [$cookie => $playerYearlyPlayedGames];
+                    $playersRecords[static::YEAR] = [$cookie => $playerYearlyPlayedGames];
                 }
             }
         }
@@ -460,7 +465,7 @@ class PrizesErudit
         if ($price > $todayRecord['price']) {
             Cache::setex(static::GAME_PRICE_DAILY . strtotime('today'), static::DAY_TTL, ['price' => $price]);
 
-            $res = array_merge(['день' => true], self::checkWeekGamePriceRecord($price));
+            $res = array_merge([static::DAY => true], self::checkWeekGamePriceRecord($price));
             foreach ($res as $period => $value) {
                 self::saveAchieve($cookie, 'game_price', static::PERIODS[$period], $price, false);
             }
@@ -487,7 +492,7 @@ class PrizesErudit
         if ($price > $weekRecord['price']) {
             Cache::setex(static::GAME_PRICE_WEEKLY . date('W'), static::WEEK_TTL, ['price' => $price]);
 
-            return array_merge(['неделю' => true], self::checkMonthGamePriceRecord($price));
+            return array_merge([static::WEEK => true], self::checkMonthGamePriceRecord($price));
         }
 
         return [];
@@ -509,7 +514,7 @@ class PrizesErudit
         if ($price > $monthRecord['price']) {
             Cache::setex(static::GAME_PRICE_MONTHLY . date('n'), static::MONTH_TTL, ['price' => $price]);
 
-            return array_merge(['месяц' => true], self::checkYearGamePriceRecord($price));
+            return array_merge([static::MONTH => true], self::checkYearGamePriceRecord($price));
         }
 
         return [];
@@ -531,7 +536,7 @@ class PrizesErudit
         if ($price > $yearRecord['price']) {
             Cache::setex(static::GAME_PRICE_YEARLY . date('Y'), static::YEAR_TTL, ['price' => $price]);
 
-            return ['год' => true];
+            return [static::YEAR => true];
         }
 
         return [];
@@ -554,7 +559,7 @@ class PrizesErudit
         if ($price > $todayRecord['price']) {
             Cache::setex(static::TURN_PRICE_DAILY . strtotime('today'), static::DAY_TTL, ['price' => $price]);
 
-            $res = array_merge(['день' => true], self::checkWeekTurnPriceRecord($price));
+            $res = array_merge([static::DAY => true], self::checkWeekTurnPriceRecord($price));
             foreach ($res as $period => $value) {
                 self::saveAchieve($cookie, 'turn_price', static::PERIODS[$period], $price, false);
             }
@@ -581,7 +586,7 @@ class PrizesErudit
         if ($price > $weekRecord['price']) {
             Cache::setex(static::TURN_PRICE_WEEKLY . date('W'), static::WEEK_TTL, ['price' => $price]);
 
-            return array_merge(['неделю' => true], self::checkMonthTurnPriceRecord($price));
+            return array_merge([static::WEEK => true], self::checkMonthTurnPriceRecord($price));
         }
 
         return [];
@@ -603,7 +608,7 @@ class PrizesErudit
         if ($price > $monthRecord['price']) {
             Cache::setex(static::TURN_PRICE_MONTHLY . date('n'), static::MONTH_TTL, ['price' => $price]);
 
-            return array_merge(['месяц' => true], self::checkYearTurnPriceRecord($price));
+            return array_merge([static::MONTH => true], self::checkYearTurnPriceRecord($price));
         }
 
         return [];
@@ -625,7 +630,7 @@ class PrizesErudit
         if ($price > $yearRecord['price']) {
             Cache::setex(static::TURN_PRICE_YEARLY . date('Y'), static::YEAR_TTL, ['price' => $price]);
 
-            return ['год' => true];
+            return [static::YEAR => true];
         }
 
         return [];
@@ -653,7 +658,7 @@ class PrizesErudit
                 ['word' => $word, 'price' => $price]
             );
 
-            $res = array_merge(['день' => true], self::checkWeekWordPriceRecord($word, $price));
+            $res = array_merge([static::DAY => true], self::checkWeekWordPriceRecord($word, $price));
             foreach ($res as $period => $value) {
                 self::saveAchieve($cookie, 'word_price', static::PERIODS[$period], $price, $word);
             }
@@ -681,7 +686,7 @@ class PrizesErudit
         if ($price > $weekRecord['price']) {
             Cache::setex(static::WORD_PRICE_WEEKLY . date('W'), static::WEEK_TTL, ['word' => $word, 'price' => $price]);
 
-            return array_merge(['неделю' => true], self::checkMonthWordPriceRecord($word, $price));
+            return array_merge([static::WEEK => true], self::checkMonthWordPriceRecord($word, $price));
         }
 
         return [];
@@ -704,7 +709,7 @@ class PrizesErudit
         if ($price > $monthRecord['price']) {
             Cache::setex(static::WORD_PRICE_MONTHLY . date('n'), static::MONTH_TTL, ['word' => $word, 'price' => $price]);
 
-            return array_merge(['месяц' => true], self::checkYearWordPriceRecord($word, $price));
+            return array_merge([static::MONTH => true], self::checkYearWordPriceRecord($word, $price));
         }
 
         return [];
@@ -727,7 +732,7 @@ class PrizesErudit
         if ($price > $yearRecord['price']) {
             Cache::setex(static::WORD_PRICE_YEARLY . date('Y'), static::YEAR_TTL, ['word' => $word, 'price' => $price]);
 
-            return ['год' => true];
+            return [static::YEAR => true];
         }
 
         return [];
@@ -755,7 +760,7 @@ class PrizesErudit
                 ['word' => $word, 'length' => $wordLen]
             );
 
-            $res = array_merge(['день' => true], self::checkWeekWordLenRecord($word));
+            $res = array_merge([static::DAY => true], self::checkWeekWordLenRecord($word));
             foreach ($res as $period => $value) {
                 self::saveAchieve($cookie, 'word_len', static::PERIODS[$period], $wordLen, $word);
             }
@@ -782,7 +787,7 @@ class PrizesErudit
         if ($wordLen > $weekRecord['length']) {
             Cache::setex(static::WORD_LEN_WEEKLY . date('W'), static::WEEK_TTL, ['word' => $word, 'length' => $wordLen]);
 
-            return array_merge(['неделю' => true], self::checkMonthWordLenRecord($word));
+            return array_merge([static::WEEK => true], self::checkMonthWordLenRecord($word));
         }
 
         return [];
@@ -804,7 +809,7 @@ class PrizesErudit
         if ($wordLen > $monthRecord['length']) {
             Cache::setex(static::WORD_LEN_MONTHLY . date('n'), static::MONTH_TTL, ['word' => $word, 'length' => $wordLen]);
 
-            return array_merge(['месяц' => true], self::checkYearWordLenRecord($word));
+            return array_merge([static::MONTH => true], self::checkYearWordLenRecord($word));
         }
 
         return [];
@@ -825,7 +830,7 @@ class PrizesErudit
         if ($wordLen > $yearRecord['length']) {
             Cache::setex(static::WORD_LEN_YEARLY . date('Y'), static::YEAR_TTL, ['word' => $word, 'length' => $wordLen]);
 
-            return ['год' => true];
+            return [static::YEAR => true];
         }
 
         return [];

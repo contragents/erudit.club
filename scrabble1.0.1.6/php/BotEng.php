@@ -42,7 +42,7 @@ class BotEng
             if ($Bot = Cache::lpop(static::BOT_GAMES)) {
                 static::$botname = $Bot;
                 $_COOKIE[Cookie::COOKIE_NAME] = $Bot;
-
+print_r($_COOKIE);
                 $resp = ['gameState' => 1];
                 $zaprosNum = 3;
 

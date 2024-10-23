@@ -4,7 +4,7 @@ class StatsAchievesGamesView extends StatsAchievesView
 {
     public static function render($baseUrl, $baseUrlPage, $games, $count, $opponentStats = false): string
     {
-        $attributeLabels = AchievesModel::ATTRIBUTE_LABELS;
+        $attributeLabels = T::SA(AchievesModel::ATTRIBUTE_LABELS);
         $attributeLabels[AchievesModel::EVENT_TYPE_FIELD] .= ViewHelper::tagOpen('br');
 
         return json_encode(
@@ -15,7 +15,7 @@ class StatsAchievesGamesView extends StatsAchievesView
                         $games,
                         ViewHelper::tag(
                             'a',
-                            self::PLAYER_ACHIEVES_MSG . ' ' . ViewHelper::tag('strong', AchievesModel::getPlayerNameByCommonId(StatsController::$Request['common_id'] ?? 0)),
+                            T::S(self::PLAYER_ACHIEVES_MSG) . ' ' . ViewHelper::tag('strong', AchievesModel::getPlayerNameByCommonId(StatsController::$Request['common_id'] ?? 0)),
                             [
                                 'onClick' => ViewHelper::onClick(
                                     'refreshId',
@@ -37,13 +37,18 @@ class StatsAchievesGamesView extends StatsAchievesView
                                 'class' => "link-underline-primary",
                             ]
                         )
-                        . ' | Партии'
+                        . ' | '
+                        . T::S('Parties_Games')
                         . (
-                            (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? false)
-                                ? ' против игрока '
-                                    . AchievesModel::getPlayerNameByCommonId(StatsController::$Request[StatsController::FILTER_PLAYER_PARAM])
-                                : ''
-                            ),
+                        (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? false)
+                            ? (' '
+                            . T::S('against')
+                            . ' '
+                            . AchievesModel::getPlayerNameByCommonId(
+                                StatsController::$Request[StatsController::FILTER_PLAYER_PARAM]
+                            ))
+                            : ''
+                        ),
                         $attributeLabels
                     ),
                     ['id' => AchievesModel::ACHIEVES_ELEMENT_ID]

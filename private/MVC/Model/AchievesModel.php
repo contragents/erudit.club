@@ -31,20 +31,20 @@ class AchievesModel extends BaseModel
     ];
 
     const ATTRIBUTE_LABELS = [
-        self::COMMON_ID_FIELD => 'ID игрока',
-        self::DATE_ACHIEVED_FIELD => 'Дата',
-        self::EVENT_TYPE_FIELD => 'Тип',
-        self::EVENT_PERIOD_FIELD => 'Период',
-        self::WORD_FIELD => 'Слово',
-        self::EVENT_VALUE_FIELD => 'Очков/букв',
-        self::GAME_DATE_FIELD => 'Дата',
-        self::YOUR_RESULT => 'Результат',
-        self::OPPONENT_COMMON_ID => 'Оппоненты',
-        self::YOUR_RATING_PROGRESS => 'Рейтинг',
-        'games_count' => 'Всего партий',
-        'wins' => 'Всего побед',
-        'delta_rating' => 'Прибавка/потеря в рейтинге',
-        'win_percent' => '% побед',
+        self::COMMON_ID_FIELD => "Player's ID",
+        self::DATE_ACHIEVED_FIELD => 'Date',
+        self::EVENT_TYPE_FIELD => 'Type',
+        self::EVENT_PERIOD_FIELD => 'Period',
+        self::WORD_FIELD => 'Word',
+        self::EVENT_VALUE_FIELD => 'Points/letters',
+        self::GAME_DATE_FIELD => 'Date',
+        self::YOUR_RESULT => 'Result',
+        self::OPPONENT_COMMON_ID => 'Opponents',
+        self::YOUR_RATING_PROGRESS => 'Rating',
+        'games_count' => 'Games in total',
+        'wins' => 'Winning count',
+        'delta_rating' => 'Increase/loss in rating',
+        'win_percent' => '% of wins',
     ];
 
     public const DAY_PERIOD = 'day';
@@ -311,7 +311,7 @@ Cache::hset('games_stats_xxx', $commonId, $query);
                     ]
                 ),
                 'opponent_filter_title' => (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
-                    ? T::S('Remove the filter')
+                    ? T::S('Remove filter')
                     : T::S('Filter by player'),
             ];
         }
@@ -399,7 +399,7 @@ Cache::hset('games_stats_xxx', $commonId, $query);
                                         'games',
                                         ['common_id' => $opponentCommonId,]
                                     ),
-                                'title' => 'Перейти к статистике игрока'
+                                'title' => T::S("Go to player's stats")
                             ]
                         ))
                     . ViewHelper::tag(
@@ -425,8 +425,8 @@ Cache::hset('games_stats_xxx', $commonId, $query);
                                     ? 'btn-outline-secondary'
                                     : 'btn-outline-primary',
                             'title' => (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
-                                    ? 'Снять фильтр'
-                                    : 'Фильтровать по игроку',
+                                    ? T::S('Remove filter')
+                                    : T::S('Filter by player'),
                             'onClick' => ViewHelper::onClick(
                                 'refreshId',
                                 AchievesModel::ACHIEVES_ELEMENT_ID,
@@ -523,22 +523,6 @@ Cache::hset('games_stats_xxx', $commonId, $query);
         return $res;
     }
 
-    /*private static function getGameInstance()
-    {
-        return;
-
-        if (!self::$instance) {
-            include_once(__DIR__ . '/../../../autoload_helper.php');
-            self::$instance = new Game();
-            self::$instance->gameStatus['lngClass'] = (T::$lang === T::RU_LANG
-                ? Ru::class
-                : Eng::class);
-        }
-
-        return self::$instance;
-    }*/
-
-    // todo поменять на метод Players
     public static function getPlayerNameByCommonId(int $commonId): string
     {
         //$instance = self::getGameInstance();

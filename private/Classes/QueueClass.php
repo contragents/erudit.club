@@ -424,7 +424,7 @@ class Queue
                 'gameSubState' => 0,
                 'timeWaiting' => date('U') - $this->userTime,
                 'ratingGameWaitLimit' => $this->caller->ratingGameWaitLimit,
-                'comments' => '<h6>Поиск игрока с указанным рейтингом</h6>'
+                'comments' => '<h6>' . T::S('Searching for players with selected rank') . '</h6>'
             ]
         );
     }
@@ -542,7 +542,7 @@ class Queue
                 'status' => Game::START_GAME_STATUS,
                 'isActive' => true,
                 'score' => 0,
-                'username' => 'Игрок' . ($num + 1),
+                'username' => T::S('Player') . ($num + 1),
                 'avatarUrl' => false,
             ];
             //Прописали игроков в состояние игры

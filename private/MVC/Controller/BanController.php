@@ -2,10 +2,10 @@
 
 class BanController extends BaseController
 {
-    const USER_NOT_FOUND_ERROR = ['result' => 'error', 'message' => 'Пользователь не найден'];
-    const BANNED_USER_NOT_FOUND_ERROR = ['result' => 'error', 'message' => 'Бан пользователя не найден'];
+    const USER_NOT_FOUND_ERROR = ['result' => 'error', 'message' => 'Player not found'];
+    const BANNED_USER_NOT_FOUND_ERROR = ['result' => 'error', 'message' => 'Player`s ban not found'];
 
-    const SUCCESS = ['result' => 'success', 'message' => 'Игрок разблокирован'];
+    const SUCCESS = ['result' => 'success', 'message' => 'Player is unbanned'];
 
     public function Run()
     {
@@ -16,19 +16,18 @@ class BanController extends BaseController
     {
         $cookie = $_COOKIE[Cookie::COOKIE_NAME] ?? false;
         if (!$cookie) {
-            return self::USER_NOT_FOUND_ERROR;
+            return T::SA(self::USER_NOT_FOUND_ERROR);
         }
 
         $commonId = PlayerModel::getCommonID($cookie);
 
         if (!$commonId) {
-            return self::USER_NOT_FOUND_ERROR;
+            return T::SA(self::USER_NOT_FOUND_ERROR);
         }
 
-        return BanModel::delete(self::$Request[BanModel::COMMON_ID_FIELD], $commonId)
+        return T::SA(BanModel::delete(self::$Request[BanModel::COMMON_ID_FIELD], $commonId)
             ? self::SUCCESS
-            : self::BANNED_USER_NOT_FOUND_ERROR;
-
-        return ['I banned' => BanModel::hasBanned($commonId), 'I was banned' => BanModel::bannedBy($commonId)];
+            : self::BANNED_USER_NOT_FOUND_ERROR
+        );
     }
 }

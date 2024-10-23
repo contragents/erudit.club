@@ -11,11 +11,11 @@ class StatsAchievesView extends BaseView
         StatsController::NO_SILVER_PARAM => AchievesModel::PRIZE_LINKS['game_price-month'],
         StatsController::NO_GOLD_PARAM => AchievesModel::PRIZE_LINKS['game_price-year'],
     ];
-    const PLAYER_ACHIEVES_MSG = 'Достижения игрока';
+    const PLAYER_ACHIEVES_MSG = 'Player`s achievements';
 
     public static function render($baseUrl, $baseUrlPage, $achieves, $count, $some = false): string
     {
-        $attributeLabels = AchievesModel::ATTRIBUTE_LABELS;
+        $attributeLabels = T::SA(AchievesModel::ATTRIBUTE_LABELS);
         $attributeLabels[AchievesModel::EVENT_TYPE_FIELD] .= ViewHelper::tagOpen('br');
 
         foreach (self::ZHETONS_FILTERS as $filter => $link) {
@@ -34,7 +34,7 @@ class StatsAchievesView extends BaseView
                         'href' => '/' . str_replace($filter, 'none', $baseUrlPage)
                             . (StatsController::$Request[$filter] ?? false ? '' : "&$filter=1"),
                         'style' => 'opacity: ' . (StatsController::$Request[$filter] ?? false ? self::OFF_OPACITY : 1),
-                        'title' => StatsController::$Request[$filter] ?? false ? 'Снять фильтр' : 'Фильтровать'
+                        'title' => StatsController::$Request[$filter] ?? false ? T::S('Remove filter') : T::S('Apply filter')
                     ]
                 );
         }
@@ -45,11 +45,11 @@ class StatsAchievesView extends BaseView
                     (StatsController::$Request['refresh'] ?? false) ? '' : 'div',
                     ViewHelper::renderGridFromQueryResult(
                         $achieves,
-                        self::PLAYER_ACHIEVES_MSG . ' ' . ViewHelper::tag('strong',AchievesModel::getPlayerNameByCommonId(StatsController::$Request['common_id'] ?? 0))
+                        T::S(self::PLAYER_ACHIEVES_MSG) . ' ' . ViewHelper::tag('strong',AchievesModel::getPlayerNameByCommonId(StatsController::$Request['common_id'] ?? 0))
                         . ' | '
                         . ViewHelper::tag(
                             'a',
-                            'Партии',
+                            T::S('Parties_Games'),
                             [
                                 'onClick' => ViewHelper::onClick(
                                     'refreshId',

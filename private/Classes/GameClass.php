@@ -717,7 +717,7 @@ class Game
             $rating = [];
 
             $rating['rating'] = ($rawRating = CommonIdRatingModel::getRating($user['common_id'], self::$gameName))
-                ?: (self::MIN_TOP_RATING . ' (новый игрок)');
+                ?: (self::MIN_TOP_RATING . ' (' . T::S('new player') . ')');
             $rating['games_played'] = RatingHistoryModel::getNumGamesPlayed($user['common_id'], self::$gameName);
             $rating['win_percent'] = 0; // это не используем
             $rating['inactive_percent'] = 'N/A'; //это не используем
@@ -828,7 +828,7 @@ class Game
                         $this->gameStatus['users'][$num]['chatStack'][] = [T::S('You'), T::S('to all: ') . $message];
                     } else {
                         $this->gameStatus['users'][$num]['chatStack'][] = [
-                            "От Игрока" . ($this->numUser + 1) . T::S(' (to all):'),
+                            T::S('From player') . ($this->numUser + 1) . T::S(' (to all):'),
                             $message
                         ];
                     }
@@ -840,7 +840,7 @@ class Game
                 ];
                 $this->gameStatus['users'][$this->numUser]['chatStack'][] = [
                     T::S('You'),
-                    T::S('To player') . ($toNumUser + 1) . ': ' . $message
+                    T::S('To Player') . ($toNumUser + 1) . ': ' . $message
                 ];
             }
         }
@@ -893,7 +893,7 @@ class Game
                         $this->gameStatus['users'][$num]['chatStack'][] = ['Вы', 'всем: ' . $message];
                     } elseif (!isset($bannedBy[PlayerModel::getCommonID($User['ID']) ?: 0])) {
                         $this->gameStatus['users'][$num]['chatStack'][] = [
-                            "От Игрока" . ($this->numUser + 1) . T::S(' (to all):'),
+                            'From player' . ($this->numUser + 1) . T::S(' (to all):'),
                             $message
                         ];
                     }
@@ -911,7 +911,7 @@ class Game
                 ];
                 $this->gameStatus['users'][$this->numUser]['chatStack'][] = [
                     T::S('You'),
-                    T::S('To player') . ((int)$toNumUser + 1) . ': ' . $message
+                    T::S('To Player') . ((int)$toNumUser + 1) . ': ' . $message
                 ];
             } elseif ($needConfirm) {
                 return $this->makeResponse(

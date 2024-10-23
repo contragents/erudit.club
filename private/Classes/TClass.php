@@ -37,6 +37,22 @@ class T
         return self::PHRASES[$keyPhrase][self::$lang] ?? $keyPhrase;
     }
 
+    public static function SA(array $keyPhraseArr): array
+    {
+        foreach ($keyPhraseArr as $key => $keyPhrase) {
+            // исключаем зарезервированные ключи
+            if (in_array($key, ['result'])) {
+                continue;
+            }
+
+            $keyPhraseArr[$key] = is_array($keyPhrase)
+                ? self::SA($keyPhrase)
+                : self::S($keyPhrase);
+        }
+
+        return $keyPhraseArr;
+    }
+
     const PHRASES = [
         'Server sync lost' => [
             self::RU_LANG => 'Потеря синхронизации с сервером'
@@ -181,6 +197,17 @@ class T
         'Player ID' => [
             self::RU_LANG => 'ID Игрока'
         ],
+        // complaints
+        'Player is unbanned' => [
+            self::RU_LANG => 'Игрок разблокирован'
+        ],
+        'Player`s ban not found' => [
+            self::RU_LANG => 'Бан пользователя не найден'
+        ],
+        'Player not found' => [
+            self::RU_LANG => 'Пользователь не найден'
+        ],
+        // end complaints
         'Save' => [
             self::RU_LANG => 'Сохранить'
         ],
@@ -238,6 +265,12 @@ class T
         "Request denied. Game is still ongoing" => [
             self::RU_LANG => 'Запрос отклонен. Игра еще продолжается'
         ],
+        'Request rejected' => [
+            self::RU_LANG => 'Запрос отклонен'
+        ],
+        'No messages yet' => [
+            self::RU_LANG => 'Сообщений пока нет'
+        ],
         "New game request sent" => [
             self::RU_LANG => 'Запрос на новую игру отправлен'
         ],
@@ -259,7 +292,7 @@ class T
         "Avatar loading" => [
             self::RU_LANG => 'Загрузка Аватара'
         ],
-        "Send" => [
+        'Send' => [
             self::RU_LANG => 'Отправить'
         ],
         'Avatar URL' => [
@@ -316,8 +349,11 @@ class T
         'From player' => [
             self::RU_LANG => 'От Игрока'
         ],
-        'To player' => [
+        'To Player' => [
             self::RU_LANG => 'Игроку'
+        ],
+        'Searching for players with selected rank' => [
+            self::RU_LANG => 'Поиск игрока с указанным рейтингом'
         ],
         'Message NOT sent - BAN until ' => [
             self::RU_LANG => 'Сообщение НЕ отправлено - БАН до '
@@ -328,14 +364,68 @@ class T
         'Message sent' => [
             self::RU_LANG => 'Сообщение отправлено'
         ],
+        'Exit' => [
+            self::RU_LANG => 'Выход'
+        ],
+        'Appeal' => [
+            self::RU_LANG => 'Пожаловаться'
+        ],
+        'There are no events yet' => [
+            self::RU_LANG => 'Событий пока нет'
+        ],
+        'Playing to' => [
+            self::RU_LANG => 'Играем до'
+        ],
+        'Just two players' => [
+            self::RU_LANG => 'Только два игрока'
+        ],
+        'Up to four players' => [
+            self::RU_LANG => 'До четырех игроков'
+        ],
+        'Game selection - please wait' => [
+            self::RU_LANG => 'Подбор игры - ожидайте'
+        ],
         'Your turn!' => [
             self::RU_LANG => 'Ваш ход!'
         ],
         'Looking for a new game...' => [
             self::RU_LANG => 'Подбор игры!'
         ],
+        'Get ready - your turn is next!' => [
+            self::RU_LANG => 'Приготовьтесь - Ваш ход следующий!'
+        ],
+        'Take a break - your move in one' => [
+            self::RU_LANG => 'Отдохните - Ваш ход через один'
+        ],
+        'Refuse' => [
+            self::RU_LANG => 'Отказаться'
+        ],
+        'Offer a game' => [
+            self::RU_LANG => 'Предложить игру'
+        ],
         'Players ready:' => [
             self::RU_LANG => 'Готово играть:'
+        ],
+        'Try sending again' => [
+            self::RU_LANG => 'Попробуйте отправить заново'
+        ],
+        'Error connecting to server!' => [
+            self::RU_LANG => 'Ошибка связи с сервером!'
+        ],
+        'You haven`t composed a single word!' => [
+            self::RU_LANG => 'Вы не составили ни одного слова!'
+        ],
+        'You will lose if you quit the game! CONTINUE?' => [
+            self::RU_LANG => 'Вы проиграете, если выйдете из игры! ПРОДОЛЖИТЬ?'
+        ],
+        'Cancel' => [
+            self::RU_LANG => 'Отмена'
+        ],
+        'Confirm' => [
+            self::RU_LANG => 'Подтвердить'
+        ],
+        'Revenge!' => [
+            self::RU_LANG => 'Реванш!'
         ],
         'Time elapsed:' => [
             self::RU_LANG => 'Время подбора:'
@@ -370,6 +460,9 @@ class T
         'Rating of opponents' => [
             self::RU_LANG => 'Рейтинг соперников'
         ],
+        'new player' => [
+            self::RU_LANG => 'новый игрок'
+        ],
         'CHOOSE GAME OPTIONS' => [
             self::RU_LANG => 'ПОДБОР ИГРЫ ПО ПАРАМЕТРАМ'
         ],
@@ -401,6 +494,21 @@ class T
         ' (to all):' => [
             self::RU_LANG => ' (всем):'
         ],
+        'For everyone' => [
+            self::RU_LANG => 'Для всех'
+        ],
+        'Word matching' => [
+            self::RU_LANG => 'Подбор слов'
+        ],
+        'Player support and chat at' => [
+            self::RU_LANG => 'Поддержка и чат игроков в'
+        ],
+        'Join group' => [
+            self::RU_LANG => 'Вступить в группу'
+        ],
+        'Send an in-game message' => [
+            self::RU_LANG => 'Отправьте сообщение в игре'
+        ],
         // Чат
         'News' => [
             self::RU_LANG => 'Новости:'
@@ -412,6 +520,9 @@ class T
         'Parties_Games' => [
             self::EN_LANG => 'Games',
             self::RU_LANG => 'Партии'
+        ],
+        'Player`s achievements' => [
+            self::RU_LANG => 'Достижения игрока'
         ],
         'Player Awards' => [
             self::RU_LANG => 'Награды игрока'
@@ -583,6 +694,12 @@ class T
         'New game has started!' => [
             self::RU_LANG => 'Новая игра начата!'
         ],
+        'New game' => [
+            self::RU_LANG => 'Новая игра'
+        ],
+        'Accept invitation' => [
+            self::RU_LANG => 'Принять приглашение'
+        ],
         'Get' => [
             self::RU_LANG => 'Набери'
         ],
@@ -611,17 +728,38 @@ class T
         "Player's ID" => [
             self::RU_LANG => 'ID игрока'
         ],
-        "Date" => [
+        'Date' => [
             self::RU_LANG => 'Дата'
         ],
-        "Result" => [
+        'Type' => [
+            self::RU_LANG => 'Тип'
+        ],
+        'Period' => [
+            self::RU_LANG => 'Период'
+        ],
+        'Word' => [
+            self::RU_LANG => 'Слово'
+        ],
+        'Points/letters' => [
+            self::RU_LANG => 'Очков/букв'
+        ],
+        'Result' => [
             self::RU_LANG => 'Результат'
         ],
-        "Games in total" => [
+        'Opponents' => [
+            self::RU_LANG => 'Оппоненты'
+        ],
+        'Games in total' => [
             self::RU_LANG => 'Всего партий'
         ],
-        "Increase/decrease in rank" => [
+        'Winnings count' => [
+            self::RU_LANG => 'Всего побед'
+        ],
+        'Increase/loss in rating' => [
             self::RU_LANG => 'Прибавка/потеря в рейтинге'
+        ],
+        '% of wins' => [
+            self::RU_LANG => '% побед'
         ],
         "GAME points - Year Record!" => [
             self::RU_LANG => 'Очки за ИГРУ - Рекорд Года!'
@@ -692,11 +830,14 @@ class T
         "Go to player's stats" => [
             self::RU_LANG => 'Перейти к статистике игрока'
         ],
-        "Filter by player" => [
+        'Filter by player' => [
             self::RU_LANG => 'Фильтровать по игроку'
         ],
-        "Remove the filter" => [
-            self::RU_LANG => 'Снять фильтр'
+        'Apply filter' => [
+            self::RU_LANG => 'Фильтровать'
+        ],
+        'against' => [
+            self::RU_LANG => 'против игрока'
         ],
         "File loading error!" => [
             self::RU_LANG => 'Ошибка загрузки файла!'

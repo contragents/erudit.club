@@ -28,7 +28,7 @@ try {
                     ($player['name'] ?? '') . " ({$player['rating']})",
                     [
                         'href' => '/' . StatsController::getUrl('games', ['common_id' => $player['common_id']]),
-                        'title' => 'Перейти в статистику игрока'
+                        'title' => T::S("Go to player's stats")
                     ]
                 )
             );

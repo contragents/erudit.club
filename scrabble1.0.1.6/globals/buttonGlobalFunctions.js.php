@@ -19,13 +19,13 @@ function submitButtonFunction() {
                     buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
                     dialog = bootbox.alert({
                         message: ('message' in data && data['message'] !== '')
-                            ? (data['message'] + '<br /> Попробуйте отправить заново')
-                            : '<strong>Ошибка связи с сервером!<br /> Попробуйте отправить заново</strong>',
+                            ? (data['message'] + '<br /> <?= T::S('Try sending again') ?>')
+                            : '<strong><?= T::S('Error connecting to server!') ?><br /> <?= T::S('Try sending again') ?></strong>',
                         size: 'small'
                     });
                 } else {
                     gameState = 'afterSubmit';
-                    parseDeskGlobal(data); // JSON data parsed by `response.json()` call
+                    parseDeskGlobal(data);
                 }
             });
     }, 100);
@@ -44,7 +44,7 @@ function checkButtonFunction() {
         fetchGlobal(WORD_CHECKER_SCRIPT, 'cells', cells)
             .then((data) => {
                 if (data == '')
-                    var responseText = 'Вы не составили ни одного слова!';
+                    var responseText = '<?= T::S('You haven`t composed a single word!') ?>';
                 else
                     var responseText = data;
                 dialog = bootbox.alert({
@@ -58,18 +58,6 @@ function checkButtonFunction() {
     }, 100);
 }
 
-/*
-function shareButtonFunction() {
-    if (bootBoxIsOpenedGlobal())
-        return;
-
-    dialog = bootbox.alert({
-        message: instruction,
-        locale: 'ru'
-    }).off("shown.bs.modal");
-};
-*/
-
 function newGameButtonFunction(ignoreDialog = false) {
     if (!ignoreDialog && bootBoxIsOpenedGlobal()) {
         return;
@@ -80,20 +68,20 @@ function newGameButtonFunction(ignoreDialog = false) {
     if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'startGame') {
         dialog = bootbox.dialog({
             // title: 'Требуется подтверждение',
-            message: 'Вы проиграете, если выйдете из игры! ПРОДОЛЖИТЬ?',
+            message: '<?= T::S('You will lose if you quit the game! CONTINUE?') ?>',
             size: 'medium',
             // onEscape: false,
             closeButton: true,
             buttons: {
                 cancel: {
-                    label: 'Отмена',
-                    className: 'btn-outline-success',//''btn btn-success',
+                    label: '<?= T::S('Cancel') ?>',
+                    className: 'btn-outline-success',
                     callback: function () {
                         return true;
                     }
                 },
                 confirm: {
-                    label: 'Подтвердить',
+                    label: '<?= T::S('Confirm') ?>',
                     className: 'btn-primary',
                     callback: function () {
                         requestToServerEnabled = true;
@@ -108,13 +96,13 @@ function newGameButtonFunction(ignoreDialog = false) {
                     }
                 },
                 invite: {
-                    label: 'Реванш!',
+                    label: '<?= T::S('Revenge!') ?>',
                     className: 'btn-info',
                     callback: function () {
                         setTimeout(function () {
                             fetchGlobal(INVITE_SCRIPT, '', 'gameState=' + gameState)
                                 .then((dataInvite) => {
-                                    let responseText = 'Запрос отклонен';
+                                    let responseText = '<?= T::S('Request rejected') ?>';
                                     if (dataInvite != '') {
                                         responseText = dataInvite['message'];
                                     }
@@ -146,22 +134,6 @@ function newGameButtonFunction(ignoreDialog = false) {
                 },
             }
         });
-        /*
-        dialog = bootbox.confirm({
-            message: 'Вы проиграете, если выйдете из игры! ПРОДОЛЖИТЬ?',
-            locale: 'ru',
-            callback: function (result) {
-                if (result) {
-                    requestToServerEnabled = true;
-                    fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState)
-                        .then((data) => {
-                            document.location.reload(true);
-                        });
-                } else {
-                    buttons['newGameButton']['svgObject'].setInteractive();
-                }
-            }
-        });*/
     } else {
         let lastState = gameState;
         gameState = 'chooseGame';
@@ -280,7 +252,7 @@ function chatButtonFunction() {
 
     let noMsgSpan = '<span id="no_msg_span">';
     if (i == 0) {
-        message += noMsgSpan + 'Сообщений пока нет' + '</span>';
+        message += noMsgSpan + '<?= T::S('No messages yet') ?>' + '</span>';
     } else {
         message += noMsgSpan + '</span>';
     }
@@ -289,41 +261,40 @@ function chatButtonFunction() {
 
     let isSelectedPlaced = false;
     if (ochki_arr.length > 1) {
-        radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="chatall" name="chatTo" value="all" checked> <label class="form-check-label" for="chatall">Для всех</label></div>';
+        radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="chatall" name="chatTo" value="all" checked> <label class="form-check-label" for="chatall"><?= T::S('For everyone') ?></label></div>';
         isSelectedPlaced = true;
     }
 
     for (k in ochki_arr) {
         if (k != myUserNum) {
-            radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_' + (k == 0 ? '0' : k) + '" name="chatTo" value="' + (k == 0 ? '0' : k) + '" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_' + (k == 0 ? '0' : k) + '">Игроку ' + (parseInt(k, 10) + 1) + '</label></div>';
+            radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_' + (k == 0 ? '0' : k) + '" name="chatTo" value="' + (k == 0 ? '0' : k) + '" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_' + (k == 0 ? '0' : k) + '"><?= T::S('To Player') ?>' + (parseInt(k, 10) + 1) + '</label></div>';
             isSelectedPlaced = true;
         }
     }
 
-    radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_words" name="chatTo" value="words" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_words">Подбор слов</label></div>';
+    radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_words" name="chatTo" value="words" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_words"><?= T::S('Word matching') ?></label></div>';
 
     let textInput = '<div class="input-group input-group-lg">  <div class="input-group-prepend"></div>  <input type="text" id="chattext" class="form-control" name="messageText"></div>';
-
 
     dialog = bootbox.dialog({
         title: '</h5>'
             + (
                 !isYandexAppGlobal()
                     ? (
-                        '<h6>Поддержка и чат игроков в <a target="_blank" title="Вступить в группу" href="'
+                        '<h6><?= T::S('Player support and chat at') ?> <a target="_blank" title="<?= T::S('Join group') ?>" href="'
                         + (gameWidth < gameHeight ? 'https://t.me/eruditclub' : 'https://web.telegram.org/#/im?p=@eruditclub')
                         + '">Telegram</a> </h6>'
                     )
                     : ''
             )
-            + '<h5>Отправьте сообщение в игре',
+            + '<h5><?= T::S('Send an in-game message') ?>',
         message: '<form onsubmit="return false" id="myChatForm">' + radioButtons + textInput + '</form>',
         locale: 'ru',
         size: 'large',
         closeButton: false,
         buttons: {
             confirm: {
-                label: 'Отправить',
+                label: '<?= T::S('Send') ?>',
                 className: 'btn-primary',
                 callback: function () {
                     canOpenDialog = true;
@@ -340,11 +311,11 @@ function chatButtonFunction() {
                         fetchGlobal(CHAT_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
                             .then((data) => {
                                     if (data == '')
-                                        var responseText = 'Ошибка';
+                                        var responseText = '<?= T::S('Error') ?>';
                                     else {
                                         var responseText = data['message'];
 
-                                        if (data['message'] === 'Сообщение отправлено') {
+                                        if (data['message'] === '<?= T::S('Message sent') ?>') {
                                             $('#no_msg_span').html('');
                                             $('#msg_span').html('<li>' + $('#chattext').val() + '</li>' + $('#msg_span').html());
                                         }
@@ -352,7 +323,7 @@ function chatButtonFunction() {
                                         $('#chattext').val('');
                                     }
 
-                                    if (data['message'] !== 'Сообщение отправлено') {
+                                    if (data['message'] !== '<?= T::S('Message sent') ?>') {
                                         if (data['gameState'] == 'wordQuery') {
                                             $('#no_msg_span').html('');
                                             $('#msg_span').html('<li>' + data['message'] + '</li>');
@@ -381,7 +352,7 @@ function chatButtonFunction() {
                 }
             },
             cancel: {
-                label: 'Выход',
+                label: '<?= T::S('Exit') ?>',
                 className: 'ml-5 btn-secondary btn-default bootbox-cancel',
                 callback: function () {
                     canOpenDialog = true;
@@ -391,14 +362,14 @@ function chatButtonFunction() {
                 }
             },
             complain: {
-                label: 'Пожаловаться',
+                label: '<?= T::S('Appeal') ?>',
                 className: 'ml-5 ' + (hasIncomingMessages ? 'btn-danger' : 'btn-light'),
                 callback: function () {
                     if (hasIncomingMessages) {
                         fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
                             .then((data) => {
                                 if (data == '')
-                                    var responseText = 'Ошибка';
+                                    var responseText = '<?= T::S('Error') ?>';
                                 else
                                     var responseText = data['message'];
                                 dialog2 = bootbox.alert({
@@ -438,7 +409,7 @@ function logButtonFunction() {
     }
     message = message + '</ul>';
     if (i == 0)
-        message = message + 'Событий пока нет';
+        message = message + '<?= T::S('There are no events yet') ?>';
 
     notDialog = bootbox.dialog({
         message: message,
@@ -450,7 +421,7 @@ function logButtonFunction() {
         },
         buttons: {
             cancel: {
-                label: "Играем до <strong>" + winScore + "</strong>",
+                label: "<?= T::S('Playing to') ?> <strong>" + winScore + "</strong>",
                 className: 'btn btn-outline-secondary',
                 callback: function () {
                     return false;
@@ -514,16 +485,18 @@ function playersButtonFunction() {
     buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + 'Inactive'));
 
     setTimeout(function () {
-        fetchGlobalMVC(PLAYER_RATING_SCRIPT + '?game_id=' + gameNumber + '&common_id=' + commonId + '&lang=' + lang, '', orient)
+        (lang == 'EN'
+            ? fetchGlobalMVC(PLAYER_RATING_SCRIPT + '?game_id=' + gameNumber + '&common_id=' + commonId + '&lang=' + lang, '', orient)
+            : fetchGlobal(PLAYER_RATING_SCRIPT, '', orient))
             .then((data) => {
 
                 canOpenDialog = false;
                 canCloseDialog = false;
 
                 if (data == '')
-                    var responseText = 'Ошибка';
+                    var responseText = '<?= T::S('Error') ?>';
                 else
-                    var responseText = JSON.stringify(data);
+                    var responseText = lang == 'EN' ? JSON.stringify(data) : data['message'];
                 dialog = bootbox.alert({
                     title: '<?= T::S('Rating of opponents') ?>',
                     message: responseText,

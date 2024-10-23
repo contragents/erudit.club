@@ -38,7 +38,7 @@ const SET_PLAYER_NAME_SCRIPT = 'set_player_name.php';
 const DELETE_BAN_URL = 'mvc/ban/remove?common_id=';
 const STATS_URL = 'mvc/stats/viewV2/?common_id='
 const NEW_GAME_SCRIPT = 'new_game.php';
-const PLAYER_RATING_SCRIPT = 'mvc/players/info/';//'players_ratings.php';
+const PLAYER_RATING_SCRIPT = lang == 'EN' ? 'mvc/players/info/' : 'players_ratings.php';
 const CHANGE_FISHKI_SCRIPT = 'change_fishki.php';
 const COOKIE_CHECKER_SCRIPT = 'cookie_checker.php';
 const CABINET_SCRIPT = 'player_cabinet.php';

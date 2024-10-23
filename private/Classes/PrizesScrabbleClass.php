@@ -6,6 +6,18 @@ class PrizesScrabble extends PrizesErudit
 
     protected const ALL_RECORDS = 'scrabble_all_records';
 
+    protected const DAY = 'day';
+    protected const WEEK = 'week';
+    protected const MONTH = 'month';
+    protected const YEAR = 'year';
+
+    protected const PERIODS = [
+        self::DAY => 'day',
+        self::WEEK => 'week',
+        self::MONTH => 'month',
+        self::YEAR => 'year'
+    ];
+
     protected const WORD_LEN_DAILY = 'scrabble_word_len_daily_';
     protected const WORD_LEN_WEEKLY = 'scrabble_word_len_weekly_';
     protected const WORD_LEN_MONTHLY = 'scrabble_word_len_monthly_';
