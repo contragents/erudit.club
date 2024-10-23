@@ -117,16 +117,8 @@ class PlayersController extends BaseController
 
                     $achieves = AchievesModel::getCurrentAchievesByCommonId($thisUser->_id);
                     if (!empty($achieves)) {
-                        $res[$numUser]['achieves'] = [];
-                        foreach ($achieves as $achieve) {
-                            $res[$numUser]['achieves'][] = [
-                                AchievesModel::DATE_ACHIEVED_FIELD => $achieve[AchievesModel::DATE_ACHIEVED_FIELD],
-                                AchievesModel::EVENT_TYPE_FIELD => $achieve[AchievesModel::EVENT_TYPE_FIELD],
-                                AchievesModel::EVENT_PERIOD_FIELD => $achieve[AchievesModel::EVENT_PERIOD_FIELD],
-                                AchievesModel::WORD_FIELD => $achieve[AchievesModel::WORD_FIELD],
-                                AchievesModel::EVENT_VALUE_FIELD => $achieve[AchievesModel::EVENT_VALUE_FIELD]
-                            ];
-                        }
+                        StatsController::addTranslationsToAchieves($achieves);
+                        $res[$numUser]['achieves'] = $achieves;
                     }
                 }
             }

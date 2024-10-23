@@ -10,7 +10,7 @@ class StatsController extends BaseController
 
     const COMMON_URL = 'mvc/stats/';
 
-    private static function addTranslationsToAchieves(array &$achieves): void
+    public static function addTranslationsToAchieves(array &$achieves): void
     {
         foreach($achieves as &$achieve) {
             if ($achieve['event_type'] === AchievesModel::TOP_TYPE) {
