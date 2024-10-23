@@ -1457,7 +1457,7 @@ class Game
                 $arr = Prizes::checkDayGamePriceRecord($this->gameStatus['users'][$this->numUser]['score'], $this->User);
                 foreach ($arr as $period => $value) {
                     $this->addToLog(
-                        T::S('set record for gotten points in the game for ') . " $period - <strong>{$this->gameStatus['users'][$this->numUser]['score']}</strong>",
+                        T::S('set record for gotten points in the game for') . " $period - <strong>{$this->gameStatus['users'][$this->numUser]['score']}</strong>",
                         $this->numUser
                     );
                 }
