@@ -6,16 +6,14 @@ function sessionStorageSet(key, value) {
     try {
         window.sessionStorage.setItem('__telegram__' + key, JSON.stringify(value));
         return true;
-    } catch (e) {
-    }
+    } catch (e) {}
     return false;
 }
 
 function sessionStorageGet(key) {
     try {
         return JSON.parse(window.sessionStorage.getItem('__telegram__' + key));
-    } catch (e) {
-    }
+    } catch (e) {}
     return null;
 }
 
@@ -38,7 +36,7 @@ if (window.Telegram == undefined) {
     var webAppInitDataUnsafe = {};
     var TG = {};
     var WebView = {
-        postEvent: function (p1, p2, p3) {
+        postEvent: function(p1, p2, p3) {
             return;
         }
     };
@@ -65,14 +63,13 @@ if (window.Telegram == undefined) {
                 if (val.substr(0, 1) == '{' && val.substr(-1) == '}' || val.substr(0, 1) == '[' && val.substr(-1) == ']') {
                     webAppInitDataUnsafe[key] = JSON.parse(val);
                 }
-            } catch (e) {
-            }
+            } catch (e) {}
         }
     }
 }
 
 function isTgBot() {
-    return ('user' in webAppInitDataUnsafe) && ('id' in webAppInitDataUnsafe.user);
+    return ('user'in webAppInitDataUnsafe) && ('id'in webAppInitDataUnsafe.user);
 }
 
 // Adjusting max-height of bootbox for Telegram. Used in CSS
@@ -80,10 +77,10 @@ let vh = window.innerHeight * 0.01;
 document.documentElement.style.setProperty('--vh', `${vh}px`);
 
 window.addEventListener('resize', () => {
-        // We execute the same script as before
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
+    // We execute the same script as before
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
 );
 
 var UIScene = new Phaser.Class({
@@ -91,493 +88,492 @@ var UIScene = new Phaser.Class({
     Extends: Phaser.Scene,
 
     initialize: //
-        function UIScene() {
-            Phaser.Scene.call(this, {
-                key: 'UIScene',
-                active: true
-            });
-        },
+    function UIScene() {
+        Phaser.Scene.call(this, {
+            key: 'UIScene',
+            active: true
+        });
+    },
 
     preload: ////
-        function () {
+    function() {
 
-            var progressBar = this.add.graphics();
-            var progressBox = this.add.graphics();
-            progressBox.fillStyle(0x222222, 0.3);
-            progressBox.fillRect(gameWidth / 2 - 320 / 2, gameHeight / 2 - 50 / 5, 320, 50);
+        var progressBar = this.add.graphics();
+        var progressBox = this.add.graphics();
+        progressBox.fillStyle(0x222222, 0.3);
+        progressBox.fillRect(gameWidth / 2 - 320 / 2, gameHeight / 2 - 50 / 5, 320, 50);
 
-            var showCaution = false;
+        var showCaution = false;
 
-            var textWidth = this.cameras.main.width;
-            var textHeight = this.cameras.main.height;
-            var loadingText = this.make.text({
-                x: textWidth / 2,
-                y: textHeight / 2 - 50,
-                text: LOADING_TEXT,
-                style: {
-                    font: '20px monospace',
-                    fill: '#000000'
-                }
-            });
-            loadingText.setOrigin(0.5, 0.5);
-
-            this.load.on('progress', function (value) {
-                progressBar.clear();
-                progressBar.fillStyle(0xffffff, 1);
-                progressBar.fillRect(gameWidth / 2 + 10 - 320 / 2, gameHeight / 2 - 30 / 2 + 15, 300 * value, 30);
-            });
-
-            this.load.on('complete', function () {
-                progressBar.destroy();
-                progressBox.destroy();
-                loadingText.destroy();
-                if (showCaution) {
-                    androidText1.destroy();
-                    androidText2.destroy();
-                }
-            });
-
-            preloaderObject = this;
-
-            this.load.image('no_network', '/img/no_network_transparent.png');
-            this.load.svg('ground', '/img/' + GROUND_FILE, {
-                'width': 513 * 2,
-                'height': 500 * 2
-            });
-            this.load.svg('donate', '/img/donate.svg');
-            this.load.image('zvezda', '/img/star_transparent.png');
-            this.load.svg('zvezdaVerh', '/img/star_transparent_2.svg', {
-                scale: 0.025 * 2
-            });
-            this.load.svg('zvezdaCenter', '/img/star_transparent_2.svg', {
-                scale: 0.06 * 2
-            });
-            this.load.atlas('fishka_empty', '/img/fishka_empty.png', '/img/fishka_empty.json');
-            this.load.atlas('megaset', '/img/letters.png', '/img/letters.json');
-            this.load.atlas('digits', '/img/letters.png', '/img/nums.json');
-            this.load.atlas('megaset_english', '/img/letters_english.png', '/img/letters_english.json');
-            this.load.svg('back', '/img/back2.svg', {
-                'height': 1980,
-                'width': 1080
-            });
-
-            for (let k in buttons) {
-                if ('modes' in buttons[k])
-                    buttons[k]['modes'].forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg', 'width' in buttons[k] ? {
-                        'width': buttons[k]['width'],
-                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
-                    } : {
-                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
-                    }));
-                else
-                    modes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg?ver=2', 'width' in buttons[k] ? {
-                        'width': buttons[k]['width'],
-                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
-                    } : {
-                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
-                    }));
+        var textWidth = this.cameras.main.width;
+        var textHeight = this.cameras.main.height;
+        var loadingText = this.make.text({
+            x: textWidth / 2,
+            y: textHeight / 2 - 50,
+            text: LOADING_TEXT,
+            style: {
+                font: '20px monospace',
+                fill: '#000000'
             }
+        });
+        loadingText.setOrigin(0.5, 0.5);
 
-            for (let k in players) {
-                playerBlockModes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + players[k]['filename'] + '.svg', 'width' in players[k] ? {
-                    'width': players[k]['width'],
-                    'height': 'height' in players[k] ? players[k].height : buttonHeight,
+        this.load.on('progress', function(value) {
+            progressBar.clear();
+            progressBar.fillStyle(0xffffff, 1);
+            progressBar.fillRect(gameWidth / 2 + 10 - 320 / 2, gameHeight / 2 - 30 / 2 + 15, 300 * value, 30);
+        });
+
+        this.load.on('complete', function() {
+            progressBar.destroy();
+            progressBox.destroy();
+            loadingText.destroy();
+            if (showCaution) {
+                androidText1.destroy();
+                androidText2.destroy();
+            }
+        });
+
+        preloaderObject = this;
+
+        this.load.image('no_network', '/img/no_network_transparent.png');
+        this.load.svg('ground', '/img/' + GROUND_FILE, {
+            'width': 513 * 2,
+            'height': 500 * 2
+        });
+        this.load.svg('donate', '/img/donate.svg');
+        this.load.image('zvezda', '/img/star_transparent.png');
+        this.load.svg('zvezdaVerh', '/img/star_transparent_2.svg', {
+            scale: 0.025 * 2
+        });
+        this.load.svg('zvezdaCenter', '/img/star_transparent_2.svg', {
+            scale: 0.06 * 2
+        });
+        this.load.atlas('fishka_empty', '/img/fishka_empty.png', '/img/fishka_empty.json');
+        this.load.atlas('megaset', '/img/letters.png', '/img/letters.json');
+        this.load.atlas('digits', '/img/letters.png', '/img/nums.json');
+        this.load.atlas('megaset_english', '/img/letters_english.png', '/img/letters_english.json');
+        this.load.svg('back', '/img/back2.svg', {
+            'height': 1980,
+            'width': 1080
+        });
+
+        for (let k in buttons) {
+            if ('modes'in buttons[k])
+                buttons[k]['modes'].forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg', 'width'in buttons[k] ? {
+                    'width': buttons[k]['width'],
+                    'height': 'height'in buttons[k] ? buttons[k].height : buttonHeight,
                 } : {
-                    'height': 'height' in players[k] ? players[k].height : buttonHeight,
+                    'height': 'height'in buttons[k] ? buttons[k].height : buttonHeight,
                 }));
+            else
+                modes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg?ver=2', 'width'in buttons[k] ? {
+                    'width': buttons[k]['width'],
+                    'height': 'height'in buttons[k] ? buttons[k].height : buttonHeight,
+                } : {
+                    'height': 'height'in buttons[k] ? buttons[k].height : buttonHeight,
+                }));
+        }
+
+        for (let k in players) {
+            playerBlockModes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + players[k]['filename'] + '.svg', 'width'in players[k] ? {
+                'width': players[k]['width'],
+                'height': 'height'in players[k] ? players[k].height : buttonHeight,
+            } : {
+                'height': 'height'in players[k] ? players[k].height : buttonHeight,
+            }));
+        }
+
+        playerBlockModes.forEach(mode => {
+            for (let k in digits.playerDigits[mode]) {
+                this.load.svg(mode + '_' + 'player_' + k, '/img/' + mode.toLowerCase() + '/' + digits.playerDigits[mode][k]['filename'] + '.svg', {
+                    'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1),
+                    'width': buttonHeight * 0.23 * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1)
+                });
+
+                this.load.svg(mode + '_' + 'timer_' + k, '/img/' + mode.toLowerCase() + '/' + digits.timerDigits[mode][k]['filename'] + '_' + modesColors[mode] + '.svg', {
+                    'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1),
+                    'width': buttonHeight * 0.4 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)
+                });
             }
 
-            playerBlockModes.forEach(mode => {
-                    for (let k in digits.playerDigits[mode]) {
-                        this.load.svg(mode + '_' + 'player_' + k, '/img/' + mode.toLowerCase() + '/' + digits.playerDigits[mode][k]['filename'] + '.svg', {
-                            'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1),
-                            'width': buttonHeight * 0.23 * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1)
-                        });
+            this.load.svg(mode + '_' + 'dvoetoch', '/img/' + mode.toLowerCase() + '/numbers/' + 'dvoetoch' + '_' + modesColors[mode] + '.svg', {
+                'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1),
+                'width': buttonHeight * 0.15 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)
+            });
+        }
+        );
 
-                        this.load.svg(mode + '_' + 'timer_' + k, '/img/' + mode.toLowerCase() + '/' + digits.timerDigits[mode][k]['filename'] + '_' + modesColors[mode] + '.svg', {
-                            'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1),
-                            'width': buttonHeight * 0.4 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)
-                        });
-                    }
-
-                    this.load.svg(mode + '_' + 'dvoetoch', '/img/' + mode.toLowerCase() + '/numbers/' + 'dvoetoch' + '_' + modesColors[mode] + '.svg', {
-                        'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1),
-                        'width': buttonHeight * 0.15 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)
-                    });
-                }
-            );
-
-            loadFishkiSet(userFishkaSet);
-        },
+        loadFishkiSet(userFishkaSet);
+    },
 
     create: ////
-        function () {
-            var letters = [];
-            var atlasTexture = this.textures.get('megaset');
+    function() {
+        var letters = [];
+        var atlasTexture = this.textures.get('megaset');
 
-            var frames = atlasTexture.getFrameNames();
+        var frames = atlasTexture.getFrameNames();
 
-            noNetworkImg = this.add.image(200, 200, 'no_network');
+        noNetworkImg = this.add.image(200, 200, 'no_network');
 
-            var back = this.add.sprite(gameWidth / 2, gameHeight / 2, 'back');
-            back.displayWidth = this.sys.canvas.width;
-            back.displayHeight = this.sys.canvas.height;
+        var back = this.add.sprite(gameWidth / 2, gameHeight / 2, 'back');
+        back.displayWidth = this.sys.canvas.width;
+        back.displayHeight = this.sys.canvas.height;
 
-            WebView.postEvent('web_app_set_header_color', false, {
-                color: '#2C3C6C',
+        WebView.postEvent('web_app_set_header_color', false, {
+            color: '#2C3C6C',
+        });
+
+        var ground = this.add.image(385, 375, 'ground');
+        ground.setOrigin(0, 0);
+        ground.x = game.config.width - ground.width;
+        ground.y = screenOrient === HOR ? 0 : topHeight;
+        ground.setCrop(16 * 2, 3 * 2, 550 * 2, 550 * 2);
+
+        stepX = game.config.width - ground.width;
+        stepY = (screenOrient === HOR) ? 0 : topHeight;
+        initLotok();
+
+        initCellsGlobal();
+
+        for (let k in buttons) {
+
+            if ('preCalc'in buttons[k])
+                buttons[k]['preCalc']();
+
+            buttons[k]['svgObject'] = getSVGButton(buttons[k]['x'], buttons[k]['y'], k, this);
+
+            buttons[k]['svgObject'].on('pointerup', function() {
+                buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
+                if ('pointerupFunction'in buttons[k])
+                    buttons[k]['pointerupFunction']();
             });
 
-            var ground = this.add.image(385, 375, 'ground');
-            ground.setOrigin(0, 0);
-            ground.x = game.config.width - ground.width;
-            ground.y = screenOrient === HOR ? 0 : topHeight;
-            ground.setCrop(16 * 2, 3 * 2, 550 * 2, 550 * 2);
+            buttons[k]['svgObject'].on('pointerdown', function() {
+                buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Najatie'));
+            });
 
-            stepX = game.config.width - ground.width;
-            stepY = (screenOrient === HOR) ? 0 : topHeight;
-            initLotok();
-
-            initCellsGlobal();
-
-            for (let k in buttons) {
-
-                if ('preCalc' in buttons[k])
-                    buttons[k]['preCalc']();
-
-                buttons[k]['svgObject'] = getSVGButton(buttons[k]['x'], buttons[k]['y'], k, this);
-
-                buttons[k]['svgObject'].on('pointerup', function () {
-                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
-                    if ('pointerupFunction' in buttons[k])
-                        buttons[k]['pointerupFunction']();
-                });
-
-                buttons[k]['svgObject'].on('pointerdown', function () {
-                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Najatie'));
-                });
-
-                buttons[k]['svgObject'].on('pointerover', function () {
-                    if (k == 'chatButton') {
-                        if (buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).getData('alarm') !== true)
-                            buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Navedenie'));
-                    } else
+            buttons[k]['svgObject'].on('pointerover', function() {
+                if (k == 'chatButton') {
+                    if (buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).getData('alarm') !== true)
                         buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Navedenie'));
-                });
+                } else
+                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Navedenie'));
+            });
 
-                buttons[k]['svgObject'].on('pointerout', function () {
-                    if (k == 'chatButton') {
-                        if (buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).getData('alarm') !== true)
-                            buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
-                    } else if ('enabled' in buttons[k]) {
-                        if (gameState in buttons[k]['enabled'])
-                            buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
-                    } else
+            buttons[k]['svgObject'].on('pointerout', function() {
+                if (k == 'chatButton') {
+                    if (buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).getData('alarm') !== true)
                         buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
-                });
-            }
-
-            let numTopButtons = 0;
-            let sumWidth = 0;
-            for (let tbK in topButtons) {
-                numTopButtons++;
-                topButtons[tbK].displayWidth = buttons[tbK]['svgObject'].displayWidth;
-                sumWidth += topButtons[tbK].displayWidth;
-            }
-            let stepXTopButtons = (knopkiWidth - sumWidth) / (numTopButtons + 1);
-
-            let currentWidth = 0;
-            for (let tbK in topButtons) {
-                buttons[tbK]['svgObject'].x = stepXTopButtons + currentWidth + buttons[tbK]['svgObject'].displayWidth / 2;
-                currentWidth += stepXTopButtons + buttons[tbK]['svgObject'].displayWidth;
-            }
-
-            buttons['razdvButton']['svgObject'].disableInteractive();
-            buttons['razdvButton']['svgObject'].visible = false;
-
-            if (buttons['submitButton']['svgObject'] !== false) {
-                buttons['submitButton']['svgObject'].disableInteractive();
-                buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
-            }
-
-            for (let k in players) {
-                players[k]['svgObject'] = getSVGBlock(players[k]['x'], players[k]['y'], k, this, players[k].scalable, 'numbers' in players[k]);
-                players[k]['svgObject'].bringToTop(players[k]['svgObject'].getByName(k + OTJAT_MODE));
-                players[k]['svgObject'].getByName(k + ALARM_MODE).setVisible(false);
-            }
-
-            //
-            this.input.on('dragstart', function (pointer, gameObject) {
-                gameObject.depth = 100;
-                let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
-                let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
-                if ((cellX <= 14) && (cellX >= 0) && (cellY <= 14) && (cellY >= 0)) {
-                    cells[cellX][cellY][0] = false;
-                    cells[cellX][cellY][1] = false;
-                    cells[cellX][cellY][2] = false;
-                    cells[cellX][cellY][3] = DEFAULT_FISHKA_SET;
-
-                    gameObject.setData('cellX', false);
-                    gameObject.setData('cellY', false);
-
-                    gameObject.setData('oldCellX', cellX);
-                    gameObject.setData('oldCellY', cellY);
-                } else {
-                    gameObject.setData('oldCellX', false);
-                    gameObject.setData('oldCellY', false);
-                }
-
-                if ((gameObject.getData('lotokX') !== false) && (gameObject.getData('lotokY') !== false)) {
-                    gameObject.setData('oldLotokX', gameObject.getData('lotokX'));
-                    gameObject.setData('oldLotokY', gameObject.getData('lotokY'));
-
-                    lotokFreeXY(gameObject.getData('lotokX'), gameObject.getData('lotokY'));
-
-                    gameObject.setData('lotokX', false);
-                    gameObject.setData('lotokY', false);
-                } else {
-                    gameObject.setData('oldLotokX', false);
-                    gameObject.setData('oldLotokY', false);
-                }
+                } else if ('enabled'in buttons[k]) {
+                    if (gameState in buttons[k]['enabled'])
+                        buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
+                } else
+                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
             });
+        }
 
-            this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-                gameObject.x = dragX;
-                gameObject.y = dragY;
-            });
+        let numTopButtons = 0;
+        let sumWidth = 0;
+        for (let tbK in topButtons) {
+            numTopButtons++;
+            topButtons[tbK].displayWidth = buttons[tbK]['svgObject'].displayWidth;
+            sumWidth += topButtons[tbK].displayWidth;
+        }
+        let stepXTopButtons = (knopkiWidth - sumWidth) / (numTopButtons + 1);
 
-            this.input.on('dragend', function (pointer, gameObject) {
-                if (gameObject.x > stepX && gameObject.y < (ground.height + stepY)) {
-                    let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
-                    if (cellX < 0) {
-                        cellX = 0;
-                    }
-                    if (cellX > 14) {
-                        cellX = 14
-                    }
+        let currentWidth = 0;
+        for (let tbK in topButtons) {
+            buttons[tbK]['svgObject'].x = stepXTopButtons + currentWidth + buttons[tbK]['svgObject'].displayWidth / 2;
+            currentWidth += stepXTopButtons + buttons[tbK]['svgObject'].displayWidth;
+        }
 
-                    let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
-                    if (cellY < 0) {
-                        cellY = 0;
-                    }
-                    if (cellY > 14) {
-                        cellY = 14
-                    }
+        buttons['razdvButton']['svgObject'].disableInteractive();
+        buttons['razdvButton']['svgObject'].visible = false;
 
-                    console.log('x', gameObject.x, 'y', gameObject.y, 'cellX', cellX, 'cellY', cellY);
-                    findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
-                } else {
-                    console.log('x', gameObject.x, 'y', gameObject.y, 'stepX', stepX, 'stepY', stepY);
-                    checkZvezdaGlobal(gameObject);
-                }
+        if (buttons['submitButton']['svgObject'] !== false) {
+            buttons['submitButton']['svgObject'].disableInteractive();
+            buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
+        }
 
-                /*if (gameObject.x > stepX && gameObject.y < ground.height + topHeight && gameObject.y > topHeight) {
+        for (let k in players) {
+            players[k]['svgObject'] = getSVGBlock(players[k]['x'], players[k]['y'], k, this, players[k].scalable, 'numbers'in players[k]);
+            players[k]['svgObject'].bringToTop(players[k]['svgObject'].getByName(k + OTJAT_MODE));
+            players[k]['svgObject'].getByName(k + ALARM_MODE).setVisible(false);
+        }
+
+        //    
+        this.input.on('dragstart', function(pointer, gameObject) {
+            gameObject.depth = 100;
             let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
             let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
-            findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
-        } else {
-            checkZvezdaGlobal(gameObject);
-        }*/
+            if ((cellX <= 14) && (cellX >= 0) && (cellY <= 14) && (cellY >= 0)) {
+                cells[cellX][cellY][0] = false;
+                cells[cellX][cellY][1] = false;
+                cells[cellX][cellY][2] = false;
+                cells[cellX][cellY][3] = DEFAULT_FISHKA_SET;
 
-                gameObject.depth = 1;
-            });
+                gameObject.setData('cellX', false);
+                gameObject.setData('cellY', false);
 
-            //
-            function getSVGButton(X, Y, buttonName, _this) {
-                var elements = [];
-                var elementNumber = 0;
-                if ('modes' in buttons[buttonName]) {
-                    for (let mode in buttons[buttonName]['modes']) {
-                        elements[elementNumber] = _this.add.image(0, 0, buttonName + buttons[buttonName]['modes'][mode]).setName(buttonName + buttons[buttonName]['modes'][mode]).setScale(1, buttonHeightKoef);
-                        elementNumber++;
-                    }
-                } else {
-                    for (let mode in modes) {
-                        elements[elementNumber] = _this.add.image(0, 0, buttonName + modes[mode]).setName(buttonName + modes[mode]).setScale(1, buttonHeightKoef);
-                        elementNumber++;
-                    }
-                }
-
-                var container = _this.add.container(X, Y, elements);
-                container.setSize(elements[0].displayWidth, elements[0].displayHeight);
-                container.setInteractive();
-
-                return container;
+                gameObject.setData('oldCellX', cellX);
+                gameObject.setData('oldCellY', cellY);
+            } else {
+                gameObject.setData('oldCellX', false);
+                gameObject.setData('oldCellY', false);
             }
 
-            function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits = false) {
-                let elements = [];
-                let elementNumber = 0;
+            if ((gameObject.getData('lotokX') !== false) && (gameObject.getData('lotokY') !== false)) {
+                gameObject.setData('oldLotokX', gameObject.getData('lotokX'));
+                gameObject.setData('oldLotokY', gameObject.getData('lotokY'));
 
-                for (let mode in playerBlockModes) {
-                    elements[elementNumber] = _this.add.image(0, 0, buttonName + playerBlockModes[mode]).setName(buttonName + playerBlockModes[mode]);
-                    if (scalable) {
-                        elements[elementNumber].setScale(1, buttonHeightKoef);
-                    }
+                lotokFreeXY(gameObject.getData('lotokX'), gameObject.getData('lotokY'));
+
+                gameObject.setData('lotokX', false);
+                gameObject.setData('lotokY', false);
+            } else {
+                gameObject.setData('oldLotokX', false);
+                gameObject.setData('oldLotokY', false);
+            }
+        });
+
+        this.input.on('drag', function(pointer, gameObject, dragX, dragY) {
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+        });
+
+        this.input.on('dragend', function(pointer, gameObject) {
+            if (gameObject.x > stepX && gameObject.y < (ground.height + stepY)) {
+                let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
+                if (cellX < 0) {
+                    cellX = 0;
+                }
+                if (cellX > 14) {
+                    cellX = 14
+                }
+
+                let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
+                if (cellY < 0) {
+                    cellY = 0;
+                }
+                if (cellY > 14) {
+                    cellY = 14
+                }
+
+                console.log('x', gameObject.x, 'y', gameObject.y, 'cellX', cellX, 'cellY', cellY);
+                findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
+            } else {
+                console.log('x', gameObject.x, 'y', gameObject.y, 'stepX', stepX, 'stepY', stepY);
+                checkZvezdaGlobal(gameObject);
+            }
+
+            /*if (gameObject.x > stepX && gameObject.y < ground.height + topHeight && gameObject.y > topHeight) {
+        let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
+        let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
+        findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
+    } else {
+        checkZvezdaGlobal(gameObject);
+    }*/
+
+            gameObject.depth = 1;
+        });
+        //    
+        function getSVGButton(X, Y, buttonName, _this) {
+            var elements = [];
+            var elementNumber = 0;
+            if ('modes'in buttons[buttonName]) {
+                for (let mode in buttons[buttonName]['modes']) {
+                    elements[elementNumber] = _this.add.image(0, 0, buttonName + buttons[buttonName]['modes'][mode]).setName(buttonName + buttons[buttonName]['modes'][mode]).setScale(1, buttonHeightKoef);
                     elementNumber++;
                 }
-
-                if (hasDigits) {
-                    let imgName = 'numbersX3' in players[buttonName] ? 'timer_' : 'player_';
-                    let y = 'numbersY' in players[buttonName] ? players[buttonName].numbersY : 0;
-                    let x3 = 'numbersX3' in players[buttonName] ? players[buttonName].numbersX3 : elements[0].displayWidth * 0.75 * 0.5;
-                    let x2 = 'numbersX2' in players[buttonName] ? players[buttonName].numbersX2 : elements[0].displayWidth * 0.6 * 0.5;
-                    let x1 = 'numbersX1' in players[buttonName] ? players[buttonName].numbersX1 : elements[0].displayWidth * 0.45 * 0.5;
-
-                    playerBlockModes.forEach(mode => {
-                            if ('dvoetochX' in players[buttonName]) {
-                                elements[elementNumber] = _this.add.image(players[buttonName].dvoetochX, y, mode + '_' + 'dvoetoch').setName(mode + '_' + 'dvoetoch').setVisible(false);
-
-                                elementNumber++;
-                            }
-
-                            for (let k in digits.playerDigits[mode]) {
-                                elements[elementNumber] = _this.add.image(x3, y, mode + '_' + imgName + k).setName(mode + '_' + k.replace('digit_', '') + '_3').setVisible(false);
-
-                                elementNumber++;
-                            }
-                        }
-                    );
-
-                    playerBlockModes.forEach(mode => {
-                            for (let k in digits.playerDigits[mode]) {
-                                elements[elementNumber] = _this.add.image(x2, y, mode + '_' + imgName + k).setName(mode + '_' + k.replace('digit_', '') + '_2').setVisible(false);
-
-                                if (scalable) {
-                                    elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
-                                }
-
-                                elementNumber++;
-                            }
-                        }
-                    );
-
-                    playerBlockModes.forEach(mode => {
-                            for (let k in digits.playerDigits[mode]) {
-                                elements[elementNumber] = _this.add.image(x1, y, mode + '_' + imgName + k).setName(mode + '_' + k.replace('digit_', '') + '_1').setVisible(false);
-
-                                if (scalable) {
-                                    elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
-                                }
-
-                                elementNumber++;
-                            }
-                        }
-                    );
+            } else {
+                for (let mode in modes) {
+                    elements[elementNumber] = _this.add.image(0, 0, buttonName + modes[mode]).setName(buttonName + modes[mode]).setScale(1, buttonHeightKoef);
+                    elementNumber++;
                 }
-
-                let container = _this.add.container(X, Y, elements);
-                container.setSize(elements[0].displayWidth, elements[0].displayHeight);
-
-                if (hasDigits) {
-                    container.setAlpha(INACTIVE_USER_ALPHA);
-                }
-
-                return container;
             }
 
-            ochki = this.add.text(lotokX - lotokCellStep / 2 + 5, buttons['newGameButton']['svgObject'].y + buttons['newGameButton']['svgObject'].height - 15, 'Ваши очки:0', {
-                color: 'black',
-                font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
-            }).setVisible(false);
-            // todo delete ochki
+            var container = _this.add.container(X, Y, elements);
+            container.setSize(elements[0].displayWidth, elements[0].displayHeight);
+            container.setInteractive();
 
-            vremia = this.add.text(ochki.x, ochki.y + ochki.height + 15, 'Время на ход 2:00', {
-                color: 'black',
-                font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
-            }).setVisible(false);
-            // todo delete vremia
-        },
+            return container;
+        }
+
+        function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits=false) {
+            let elements = [];
+            let elementNumber = 0;
+
+            for (let mode in playerBlockModes) {
+                elements[elementNumber] = _this.add.image(0, 0, buttonName + playerBlockModes[mode]).setName(buttonName + playerBlockModes[mode]);
+                if (scalable) {
+                    elements[elementNumber].setScale(1, buttonHeightKoef);
+                }
+                elementNumber++;
+            }
+
+            if (hasDigits) {
+                let imgName = 'numbersX3'in players[buttonName] ? 'timer_' : 'player_';
+                let y = 'numbersY'in players[buttonName] ? players[buttonName].numbersY : 0;
+                let x3 = 'numbersX3'in players[buttonName] ? players[buttonName].numbersX3 : elements[0].displayWidth * 0.75 * 0.5;
+                let x2 = 'numbersX2'in players[buttonName] ? players[buttonName].numbersX2 : elements[0].displayWidth * 0.6 * 0.5;
+                let x1 = 'numbersX1'in players[buttonName] ? players[buttonName].numbersX1 : elements[0].displayWidth * 0.45 * 0.5;
+
+                playerBlockModes.forEach(mode => {
+                    if ('dvoetochX'in players[buttonName]) {
+                        elements[elementNumber] = _this.add.image(players[buttonName].dvoetochX, y, mode + '_' + 'dvoetoch').setName(mode + '_' + 'dvoetoch').setVisible(false);
+
+                        elementNumber++;
+                    }
+
+                    for (let k in digits.playerDigits[mode]) {
+                        elements[elementNumber] = _this.add.image(x3, y, mode + '_' + imgName + k).setName(mode + '_' + k.replace('digit_', '') + '_3').setVisible(false);
+
+                        elementNumber++;
+                    }
+                }
+                );
+
+                playerBlockModes.forEach(mode => {
+                    for (let k in digits.playerDigits[mode]) {
+                        elements[elementNumber] = _this.add.image(x2, y, mode + '_' + imgName + k).setName(mode + '_' + k.replace('digit_', '') + '_2').setVisible(false);
+
+                        if (scalable) {
+                            elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
+                        }
+
+                        elementNumber++;
+                    }
+                }
+                );
+
+                playerBlockModes.forEach(mode => {
+                    for (let k in digits.playerDigits[mode]) {
+                        elements[elementNumber] = _this.add.image(x1, y, mode + '_' + imgName + k).setName(mode + '_' + k.replace('digit_', '') + '_1').setVisible(false);
+
+                        if (scalable) {
+                            elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
+                        }
+
+                        elementNumber++;
+                    }
+                }
+                );
+            }
+
+            let container = _this.add.container(X, Y, elements);
+            container.setSize(elements[0].displayWidth, elements[0].displayHeight);
+
+            if (hasDigits) {
+                container.setAlpha(INACTIVE_USER_ALPHA);
+            }
+
+            return container;
+        }
+
+        ochki = this.add.text(lotokX - lotokCellStep / 2 + 5, buttons['newGameButton']['svgObject'].y + buttons['newGameButton']['svgObject'].height - 15, 'Ваши очки:0', {
+            color: 'black',
+            font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
+        }).setVisible(false);
+        // todo delete ochki
+
+        vremia = this.add.text(ochki.x, ochki.y + ochki.height + 15, 'Время на ход 2:00', {
+            color: 'black',
+            font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
+        }).setVisible(false);
+        // todo delete vremia
+    },
 
     update: ////
-        function (time, delta) {
+    function(time, delta) {
 
-            if (requestSended && ((new Date()).getTime() - requestTimestamp > normalRequestTimeout)) {
-                if (noNetworkImg !== false) {
-                    noNetworkImg.visible = true;
-                    noNetworkImg.alpha = ((new Date()).getTime() - requestTimestamp) < (normalRequestTimeout * 2) ? ((new Date()).getTime() - requestTimestamp - normalRequestTimeout) / 1000 : 1;
-                }
-            } else {
-                if (noNetworkImg !== false) {
-                    noNetworkImg.visible = false;
-                }
+        if (requestSended && ((new Date()).getTime() - requestTimestamp > normalRequestTimeout)) {
+            if (noNetworkImg !== false) {
+                noNetworkImg.visible = true;
+                noNetworkImg.alpha = ((new Date()).getTime() - requestTimestamp) < (normalRequestTimeout * 2) ? ((new Date()).getTime() - requestTimestamp - normalRequestTimeout) / 1000 : 1;
             }
+        } else {
+            if (noNetworkImg !== false) {
+                noNetworkImg.visible = false;
+            }
+        }
 
-            if (gameState == 'chooseGame' && (queryNumber > 1))
-                return;
-            if (newCells.constructor === Array && Array.isArray(newCells[15])) {
+        if (gameState == 'chooseGame' && (queryNumber > 1))
+            return;
+        if (newCells.constructor === Array && Array.isArray(newCells[15])) {
 
-                for (k = 100; k >= 0; k--)
-                    if (k in container) {
-                        if (container[k].getData('lotokX') !== false)
-                            lotokFreeXY(container[k].getData('lotokX'), container[k].getData('lotokY'));
-                        container[k].destroy();
-                        container.splice(k, 1);
+            for (k = 100; k >= 0; k--)
+                if (k in container) {
+                    if (container[k].getData('lotokX') !== false)
+                        lotokFreeXY(container[k].getData('lotokX'), container[k].getData('lotokY'));
+                    container[k].destroy();
+                    container.splice(k, 1);
+                }
+
+            if (newCells[15].length > 0) {
+                for (var $fishkaNum = 0; $fishkaNum < newCells[15].length; $fishkaNum++)
+                    if (newCells[15][$fishkaNum] !== undefined) {
+                        let lotokXY = lotokFindSlotXY();
+                        container.push(getFishkaGlobal(newCells[15][$fishkaNum], lotokGetX(lotokXY[0], lotokXY[1]), lotokGetY(lotokXY[0], lotokXY[1]), this, true, userFishkaSet).setData('lotokX', lotokXY[0]).setData('lotokY', lotokXY[1]));
                     }
 
-                if (newCells[15].length > 0) {
-                    for (var $fishkaNum = 0; $fishkaNum < newCells[15].length; $fishkaNum++)
-                        if (newCells[15][$fishkaNum] !== undefined) {
-                            let lotokXY = lotokFindSlotXY();
-                            container.push(getFishkaGlobal(newCells[15][$fishkaNum], lotokGetX(lotokXY[0], lotokXY[1]), lotokGetY(lotokXY[0], lotokXY[1]), this, true, userFishkaSet).setData('lotokX', lotokXY[0]).setData('lotokY', lotokXY[1]));
-                        }
-
-                }
-                newCells.splice(15, 1);
             }
-            var flor = Math.floor(time / 1000);
-            //if ( (Math.random() > (1-(1/gameStates[gameState]['refresh']/60))) || (queryNumber == 1) ) {
-            if (((flor > lastQueryTime) && ((flor % gameStates[gameState]['refresh']) === 0)) || (queryNumber === 1)) {
-                if (requestToServerEnabled) {
-                    lastQueryTime = flor;
-                    fetchGlobal(STATUS_CHECKER_SCRIPT).then((data) => {
-                            commonCallback(data);
-                        }
-                    );
+            newCells.splice(15, 1);
+        }
+        var flor = Math.floor(time / 1000);
+        //if ( (Math.random() > (1-(1/gameStates[gameState]['refresh']/60))) || (queryNumber == 1) ) {
+        if (((flor > lastQueryTime) && ((flor % gameStates[gameState]['refresh']) === 0)) || (queryNumber === 1)) {
+            if (requestToServerEnabled) {
+                lastQueryTime = flor;
+                fetchGlobal(STATUS_CHECKER_SCRIPT).then( (data) => {
+                    commonCallback(data);
                 }
+                );
             }
+        }
 
-            if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'startGame') {
-                if (flor > lastTimeCorrection) {
-                    lastTimeCorrection = flor;
-                    if ((vremiaMinutes > 0) || (vremiaSeconds > 0)) {
-                        vremiaSeconds--;
-                        if (vremiaSeconds < 0) {
-                            vremiaMinutes--;
-                            vremiaSeconds = 59;
-                        }
-
-                        displayTimeGlobal(+vremiaMinutes * 100 + +vremiaSeconds);
+        if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'startGame') {
+            if (flor > lastTimeCorrection) {
+                lastTimeCorrection = flor;
+                if ((vremiaMinutes > 0) || (vremiaSeconds > 0)) {
+                    vremiaSeconds--;
+                    if (vremiaSeconds < 0) {
+                        vremiaMinutes--;
+                        vremiaSeconds = 59;
                     }
-                }
-            }
 
-            if (gameState == MY_TURN_STATE) {
-                if ((vremiaMinutes === 0) && (vremiaSeconds <= 10) && buttons['submitButton']['svgObject'].input.enabled) {
-                    if ((flor % 2) === 0) {
-                        buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + ALARM_MODE));
-                    } else {
-                        buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
-                    }
-                }
-            }
-
-            if (gameState == MY_TURN_STATE || gameState == PRE_MY_TURN_STATE || gameState == OTHER_TURN_STATE) {
-                let activeUserBlockName = (gameState == MY_TURN_STATE) ? 'youBlock' : ('player' + (+activeUser + 1) + 'Block');
-                if ((flor % 2) === 0) {
-                    buttonSetModeGlobal(players, activeUserBlockName, ALARM_MODE);
-                } else {
-                    buttonSetModeGlobal(players, activeUserBlockName, OTJAT_MODE);
-                }
-            }
-
-            if (gameState == 'gameResults') {
-                if ((flor % 2) === 0) {
-                    buttons['newGameButton']['svgObject'].bringToTop(buttons['newGameButton']['svgObject'].getByName('newGameButton' + ALARM_MODE));
-                } else {
-                    buttons['newGameButton']['svgObject'].bringToTop(buttons['newGameButton']['svgObject'].getByName('newGameButton' + OTJAT_MODE));
+                    displayTimeGlobal(+vremiaMinutes * 100 + +vremiaSeconds);
                 }
             }
         }
+
+        if (gameState == MY_TURN_STATE) {
+            if ((vremiaMinutes === 0) && (vremiaSeconds <= 10) && buttons['submitButton']['svgObject'].input.enabled) {
+                if ((flor % 2) === 0) {
+                    buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + ALARM_MODE));
+                } else {
+                    buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
+                }
+            }
+        }
+
+        if (gameState == MY_TURN_STATE || gameState == PRE_MY_TURN_STATE || gameState == OTHER_TURN_STATE) {
+            let activeUserBlockName = (gameState == MY_TURN_STATE) ? 'youBlock' : ('player' + (+activeUser + 1) + 'Block');
+            if ((flor % 2) === 0) {
+                buttonSetModeGlobal(players, activeUserBlockName, ALARM_MODE);
+            } else {
+                buttonSetModeGlobal(players, activeUserBlockName, OTJAT_MODE);
+            }
+        }
+
+        if (gameState == 'gameResults') {
+            if ((flor % 2) === 0) {
+                buttons['newGameButton']['svgObject'].bringToTop(buttons['newGameButton']['svgObject'].getByName('newGameButton' + ALARM_MODE));
+            } else {
+                buttons['newGameButton']['svgObject'].bringToTop(buttons['newGameButton']['svgObject'].getByName('newGameButton' + OTJAT_MODE));
+            }
+        }
+    }
 });
 
 //
@@ -1105,7 +1101,6 @@ function shareTgGlobal() {
         path_full: shareUrl,
     });
 }
-
 ////
 var topButtons = {
     newGameButton: {
@@ -1133,7 +1128,7 @@ var buttons = {
         width: buttonWidth,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             newGameButtonFunction();
         }
     },
@@ -1146,7 +1141,7 @@ var buttons = {
         width: buttonWidth / 2,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             if (bootBoxIsOpenedGlobal()) {
                 return;
             }
@@ -1165,7 +1160,7 @@ var buttons = {
         //height: topHeight,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             if (bootBoxIsOpenedGlobal()) {
                 return;
             }
@@ -1182,7 +1177,7 @@ var buttons = {
         width: buttonWidth / 2,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             {
                 if (bootBoxIsOpenedGlobal()) {
                     return;
@@ -1205,7 +1200,7 @@ var buttons = {
         enabled: {
             myTurn: 1
         },
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             submitButtonFunction();
         }
     },
@@ -1222,7 +1217,7 @@ var buttons = {
             preMyTurn: 1,
             otherTurn: 1
         },
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             resetButtonFunction();
         }
     },
@@ -1237,7 +1232,7 @@ var buttons = {
         enabled: {
             myTurn: 1
         },
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             changeButtonFunction();
         }
     },
@@ -1249,7 +1244,7 @@ var buttons = {
         width: buttonWidth / 2,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             playersButtonFunction();
         }
     },
@@ -1266,7 +1261,7 @@ var buttons = {
             preMyTurn: 1,
             otherTurn: 1
         },
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             checkButtonFunction();
         }
     },
@@ -1278,7 +1273,7 @@ var buttons = {
         width: buttonWidth / 2,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             chatButtonFunction();
         },
     },
@@ -1290,7 +1285,7 @@ var buttons = {
         width: buttonWidth / 2,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             logButtonFunction();
         },
     },
@@ -1303,7 +1298,7 @@ var buttons = {
         //width: fullscreenButtonSize,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             document.body.requestFullscreen();
         }
     }
@@ -1524,7 +1519,7 @@ var players = {
     },
 };
 
-function displayScoreGlobal(score, blockName, isActive = false) {
+function displayScoreGlobal(score, blockName, isActive=false) {
     let mode = isActive ? ALARM_MODE : OTJAT_MODE;
 
     let container = players[blockName].svgObject;
@@ -1562,7 +1557,7 @@ function displayScoreGlobal(score, blockName, isActive = false) {
     }
 }
 
-function displayTimeGlobal(time, forceShowAll = false) {
+function displayTimeGlobal(time, forceShowAll=false) {
     let mode = (time < 20) ? ALARM_MODE : OTJAT_MODE;
     let disabledMode = (!(time < 20)) ? ALARM_MODE : OTJAT_MODE;
 
@@ -1620,9 +1615,9 @@ var gameStates = {
     register: {
         1: 'waiting',
         refresh: 1,
-        action: function (data) {
+        action: function(data) {
             useLocalStorage = true;
-            if (!('erudit_user_session_ID' in localStorage)) {
+            if (!('erudit_user_session_ID'in localStorage)) {
                 localStorage.erudit_user_session_ID = data['cookie'];
             }
             queryNumber = 1;
@@ -1631,21 +1626,21 @@ var gameStates = {
     cookieTest: {
         1: 'waiting',
         refresh: 10000000,
-        action: function (data) {
-            fetchGlobal(COOKIE_CHECKER_SCRIPT, '', '12=12').then((data) => {
-                    if ('gameState' in data) {
-                        if (data.gameState == 'register') {
-                            gameStates.register.action(data);
-                        } else {
-                            //queryNumber = 1;
-                            commonCallback(data);
-                        }
+        action: function(data) {
+            fetchGlobal(COOKIE_CHECKER_SCRIPT, '', '12=12').then( (data) => {
+                if ('gameState'in data) {
+                    if (data.gameState == 'register') {
+                        gameStates.register.action(data);
                     } else {
-                        var responseText = 'Ошибка';
-                        alert(responseText);
-                        queryNumber = 1;
+                        //queryNumber = 1;
+                        commonCallback(data);
                     }
+                } else {
+                    var responseText = 'Ошибка';
+                    alert(responseText);
+                    queryNumber = 1;
                 }
+            }
             );
         },
     },
@@ -1654,11 +1649,11 @@ var gameStates = {
         2: 'done',
         refresh: 5,
         noDialog: true,
-        action: function (data) {
+        action: function(data) {
             gameState = gameOldState;
             gameSubState = gameOldSubState;
             enableButtons();
-            if ('queryNumber' in data) {
+            if ('queryNumber'in data) {
                 queryNumber = data['queryNumber'];
             }
         },
@@ -1675,21 +1670,21 @@ var gameStates = {
         2: 'done',
         message: 'Игра начата!',
         refresh: 10,
-        action: function (data) {
+        action: function(data) {
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
             gameStates['myTurn']['from_noGame'](data);
             gameStates['gameResults']['action'](data);
         },
-        from_initGame: function () {
+        from_initGame: function() {
             while (fixedContainer.length)
                 fixedContainer.pop().destroy();
             cells = [];
             newCells = [];
             initCellsGlobal();
         },
-        from_initRatingGame: function () {
+        from_initRatingGame: function() {
             gameStates['startGame']['from_initGame']();
         }
     },
@@ -1699,7 +1694,7 @@ var gameStates = {
         refresh: 1000000,
         message: '',
         noDialog: true,
-        action: function (data) {
+        action: function(data) {
             /*data = {
                 players: {0: 30, 1900: 25, 2000:20, 2100:15, thisUserRating: 2400},
                 prefs:{from_rating: 2100}
@@ -1711,8 +1706,8 @@ var gameStates = {
             let title = '';
             let onlinePlayers = '';
             let chooseDisabled = '';
-            if ('players' in data) {
-                if ('thisUserRating' in data['players'] && data['players']['thisUserRating'] < 1800) {
+            if ('players'in data) {
+                if ('thisUserRating'in data['players'] && data['players']['thisUserRating'] < 1800) {
                     chooseDisabled = 'disabled';
                     title = under1800;
                 } else {
@@ -1725,15 +1720,15 @@ var gameStates = {
 
                 let checked_0 = 'checked';
 
-                if ('prefs' in data && data['prefs'] !== false && 'from_rating' in data['prefs'] && data['prefs']['from_rating'] > 0) {
+                if ('prefs'in data && data['prefs'] !== false && 'from_rating'in data['prefs'] && data['prefs']['from_rating'] > 0) {
                     checked_0 = '';
                 }
 
                 /* ----------------------------------- NEW ---------------------------------- */
                 const ratingRadio = (props) => {
-                        const {title = '', text = '', inputValue = 0, inputId = '0', isChecked = false, isDisabled = false, extraClass = '', extraInputAttrString = '',} = props;
+                    const {title='', text='', inputValue=0, inputId='0', isChecked=false, isDisabled=false, extraClass='', extraInputAttrString='', } = props;
 
-                        const html = `
+                    const html = `
 									<div title="${title}"
 										class="form-check form-check-inline ${extraClass}">
 										<input class="form-check-input" type="radio" id="${inputId}" name="from_rating"
@@ -1745,33 +1740,33 @@ var gameStates = {
 										<label class="form-check-label" for="${inputId}">${text}</label>
 									</div>`;
 
-                        return html;
-                    }
+                    return html;
+                }
                 ;
 
                 // ratingValues: number[] ([2000, 2100, 2200, ...])
-                const getRatingList = (ratingValues = [], data = {}) => {
-                        let resultHtml = '';
-                        ratingValues.forEach((ratingValue) => {
-                                if ('players' in data && ratingValue in data['players'] && data['players'][ratingValue] > 0) {
-                                    let isChecked = false;
-                                    if ('prefs' in data && data['prefs'] !== false && 'from_rating' in data['prefs'] && data['prefs']['from_rating'] == ratingValue) {
-                                        isChecked = true;
-                                    }
-                                    resultHtml += ratingRadio({
-                                        title: data['players'][ratingValue] + ' in game',
-                                        text: `Above ${ratingValue} (${data['players'][ratingValue]})`,
-                                        inputValue: ratingValue,
-                                        inputId: `from_${ratingValue}`,
-                                        isChecked,
-                                        isDisabled: chooseDisabled.toString(),
-                                    });
-                                }
+                const getRatingList = (ratingValues=[], data={}) => {
+                    let resultHtml = '';
+                    ratingValues.forEach( (ratingValue) => {
+                        if ('players'in data && ratingValue in data['players'] && data['players'][ratingValue] > 0) {
+                            let isChecked = false;
+                            if ('prefs'in data && data['prefs'] !== false && 'from_rating'in data['prefs'] && data['prefs']['from_rating'] == ratingValue) {
+                                isChecked = true;
                             }
-                        );
-
-                        return resultHtml;
+                            resultHtml += ratingRadio({
+                                title: data['players'][ratingValue] + ' in game',
+                                text: `Above ${ratingValue} (${data['players'][ratingValue]})`,
+                                inputValue: ratingValue,
+                                inputId: `from_${ratingValue}`,
+                                isChecked,
+                                isDisabled: chooseDisabled.toString(),
+                            });
+                        }
                     }
+                    );
+
+                    return resultHtml;
+                }
                 ;
 
                 onlinePlayers = `<div class="box-title-wrap">
@@ -1789,7 +1784,7 @@ var gameStates = {
                     isDisabled: chooseDisabled.toString(),
                 });
 
-                const ratings = Object.keys(data.players).filter((item) => !isNaN(Number(item)) && data.players[item] > 0);
+                const ratings = Object.keys(data.players).filter( (item) => !isNaN(Number(item)) && data.players[item] > 0);
                 // console.log(Object.keys(data.players), ratings);
 
                 ratings.shift();
@@ -1823,7 +1818,7 @@ var gameStates = {
             let checked_200 = 'checked';
             let checked_300 = '';
 
-            if ('prefs' in data && data['prefs'] !== false && 'ochki_num' in data['prefs']) {
+            if ('prefs'in data && data['prefs'] !== false && 'ochki_num'in data['prefs']) {
                 checked_200 = data['prefs']['ochki_num'] == 200 ? 'checked' : '';
                 checked_300 = data['prefs']['ochki_num'] == 300 ? 'checked' : '';
             }
@@ -1864,7 +1859,7 @@ var gameStates = {
             let wish_120 = 'checked';
             let wish_60 = '';
 
-            if ('prefs' in data && data['prefs'] !== false && 'turn_time' in data['prefs']) {
+            if ('prefs'in data && data['prefs'] !== false && 'turn_time'in data['prefs']) {
                 wish_120 = data['prefs']['turn_time'] == 120 ? 'checked' : '';
                 wish_60 = data['prefs']['turn_time'] == 60 ? 'checked' : '';
             }
@@ -1930,107 +1925,106 @@ var gameStates = {
                     cabinet: {
                         label: 'Profile',
                         className: 'btn-outline-success',
-                        callback: function () {
-                            setTimeout(function () {
-                                fetchGlobal(CABINET_SCRIPT, '', 12).then((dataCabinet) => {
-                                        if (dataCabinet == '')
-                                            var responseText = 'Error';
-                                        else
-                                            var responseArr = JSON.parse(dataCabinet['message']);
+                        callback: function() {
+                            setTimeout(function() {
+                                fetchGlobal(CABINET_SCRIPT, '', 12).then( (dataCabinet) => {
+                                    if (dataCabinet == '')
+                                        var responseText = 'Error';
+                                    else
+                                        var responseArr = JSON.parse(dataCabinet['message']);
 
-                                        /* ------------------------------ PROFILE DATA ------------------------------ */
-                                        const profileData = {
-                                            name: responseArr.name ? responseArr.name : 'Nickname',
-                                            common_id: responseArr.common_id,
-                                            // id игрока
-                                            imageUrl: responseArr.url,
-                                            // url картинки
-                                            imageTitle: responseArr.img_title,
-                                            // альт картинки
-                                            rating: responseArr.info.rating ? responseArr.info.rating : 0,
-                                            // рейтинг
-                                            placement: responseArr.info.top,
-                                            // место в рейтинге
-                                            balance: responseArr.info.SUDOKU_BALANCE,
-                                            // баланс
-                                            ratingByCoins: responseArr.info.SUDOKU_TOP,
-                                            // рейтинг по монетам
-                                            tgWallet: '',
-                                            // telegram wallet
-                                            bonusAccrual: responseArr.info.rewards,
-                                            // начисление бонусов
-                                            balanceSudoku: responseArr.info.SUDOKU_BALANCE,
-                                            // баланс SUDOKU
-                                            referrals: responseArr.refs ? responseArr.refs : [],
-                                        };
+                                    /* ------------------------------ PROFILE DATA ------------------------------ */
+                                    const profileData = {
+                                        name: responseArr.name ? responseArr.name : 'Nickname',
+                                        common_id: responseArr.common_id,
+                                        // id игрока
+                                        imageUrl: responseArr.url,
+                                        // url картинки
+                                        imageTitle: responseArr.img_title,
+                                        // альт картинки
+                                        rating: responseArr.info.rating ? responseArr.info.rating : 0,
+                                        // рейтинг
+                                        placement: responseArr.info.top,
+                                        // место в рейтинге
+                                        balance: responseArr.info.SUDOKU_BALANCE,
+                                        // баланс
+                                        ratingByCoins: responseArr.info.SUDOKU_TOP,
+                                        // рейтинг по монетам
+                                        tgWallet: '',
+                                        // telegram wallet
+                                        bonusAccrual: responseArr.info.rewards,
+                                        // начисление бонусов
+                                        balanceSudoku: responseArr.info.SUDOKU_BALANCE,
+                                        // баланс SUDOKU
+                                        referrals: responseArr.refs ? responseArr.refs : [],
+                                    };
 
-                                        profileData.cookie = responseArr.form.filter((item) => item.inputName === 'cookie',);
-                                        profileData.MAX_FILE_SIZE = responseArr.form.filter((item) => item.inputName === 'MAX_FILE_SIZE',);
+                                    profileData.cookie = responseArr.form.filter( (item) => item.inputName === 'cookie', );
+                                    profileData.MAX_FILE_SIZE = responseArr.form.filter( (item) => item.inputName === 'MAX_FILE_SIZE', );
 
-                                        // делаем верстку из массива referrals
-                                        let referralList = '';
-                                        if ('referrals' in profileData && profileData.referrals.length > 0) {
-                                            referralList = profileData.referrals.map((ref) => `
+                                    // делаем верстку из массива referrals
+                                    let referralList = '';
+                                    if ('referrals'in profileData && profileData.referrals.length > 0) {
+                                        referralList = profileData.referrals.map( (ref) => `
 								<li class="box">
 									<span class="name d-block">${ref[0]}</span>
 									<div class="pill-wrap"><span class="pill">${ref[1]}</span></div>
 								</li>
-						`,).join('');
+						`, ).join('');
 
-                                            referralList = `
+                                        referralList = `
 								<ul class="referral-list">
 									${referralList}
 								</ul>
 						`;
-                                        }
+                                    }
 
-                                        function getProfileModal(profileData) {
-                                            return fetch('/profile-modal-tpl.html' + '?ver=' + Math.floor(Date.now())).then((response) => response.text()).then((template) => {
-                                                    let message = template.replaceAll('{{Profile}}', 'Profile').replaceAll('{{Wallet}}', 'Wallet').replaceAll('{{Referrals}}', 'Referrals').replaceAll('{{Player ID}}', 'Player ID').replaceAll('{{Save}}', 'Save').replaceAll('{{Input new nickname}}', 'Input new nickname').replaceAll('{{Your rank}}', 'Your rank').replaceAll('{{Ranking number}}', 'Ranking number').replaceAll('{{Balance}}', 'Balance').replaceAll('{{Rating by coins}}', 'Rating by coins').replaceAll('{{Link}}', 'Link')// Привязать
-                                                        .replaceAll('{{Bonuses accrued}}', 'Bonuses accrued')// Начислено бонусов
-                                                        .replaceAll('{{SUDOKU Balance}}', 'SUDOKU Balance')// Баланс SUDOKU
-                                                        .replaceAll('{{Claim}}', 'Claim <br>(soon)')// Забрать
-                                                        .replaceAll('{{Name}}', 'Name').replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE).replaceAll('{{cookie}}', profileData.cookie)/* хз зачем
+                                    function getProfileModal(profileData) {
+                                        return fetch('/profile-modal-tpl.html' + '?ver=' + Math.floor(Date.now())).then( (response) => response.text()).then( (template) => {
+                                            let message = template.replaceAll('{{Profile}}', 'Profile').replaceAll('{{Wallet}}', 'Wallet').replaceAll('{{Referrals}}', 'Referrals').replaceAll('{{Player ID}}', 'Player ID').replaceAll('{{Save}}', 'Save').replaceAll('{{Input new nickname}}', 'Input new nickname').replaceAll('{{Your rank}}', 'Your rank').replaceAll('{{Ranking number}}', 'Ranking number').replaceAll('{{Balance}}', 'Balance').replaceAll('{{Rating by coins}}', 'Rating by coins').replaceAll('{{Link}}', 'Link')// Привязать
+                                            .replaceAll('{{Bonuses accrued}}', 'Bonuses accrued')// Начислено бонусов
+                                            .replaceAll('{{SUDOKU Balance}}', 'SUDOKU Balance')// Баланс SUDOKU
+                                            .replaceAll('{{Claim}}', 'Claim <br>(soon)')// Забрать
+                                            .replaceAll('{{Name}}', 'Name').replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE).replaceAll('{{cookie}}', profileData.cookie)/* хз зачем
                                                     .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE[0].value)
                                                     .replaceAll('{{cookie}}', profileData.cookie[0].value)
                                                     */
-                                                        .replaceAll('{{common_id}}', profileData.common_id).replaceAll('{{name}}', profileData.name).replaceAll('{{imageUrl}}', profileData.imageUrl).replaceAll('{{imageTitle}}', profileData.imageTitle).replaceAll('{{rating}}', profileData.rating).replaceAll('{{placement}}', profileData.placement).replaceAll('{{balance}}', profileData.balance).replaceAll('{{ratingByCoins}}', profileData.ratingByCoins).replaceAll('{{tgWallet}}', profileData.tgWallet).replaceAll('{{bonusAccrual}}', profileData.bonusAccrual).replaceAll('{{bonusAccrual}}', profileData.bonusAccrual).replaceAll('{{balanceSudoku}}', profileData.balanceSudoku).replaceAll('{{referralList}}', referralList);
+                                            .replaceAll('{{common_id}}', profileData.common_id).replaceAll('{{name}}', profileData.name).replaceAll('{{imageUrl}}', profileData.imageUrl).replaceAll('{{imageTitle}}', profileData.imageTitle).replaceAll('{{rating}}', profileData.rating).replaceAll('{{placement}}', profileData.placement).replaceAll('{{balance}}', profileData.balance).replaceAll('{{ratingByCoins}}', profileData.ratingByCoins).replaceAll('{{tgWallet}}', profileData.tgWallet).replaceAll('{{bonusAccrual}}', profileData.bonusAccrual).replaceAll('{{bonusAccrual}}', profileData.bonusAccrual).replaceAll('{{balanceSudoku}}', profileData.balanceSudoku).replaceAll('{{referralList}}', referralList);
 
-                                                    return message;
-                                                }
-                                            ).catch((error) => console.error('Ошибка загрузки profile-modal:', error),);
+                                            return message;
                                         }
-
-                                        /* ---------------------------- END PROFILE DATA ---------------------------- */
-
-                                        getProfileModal(profileData).then((html) => {
-                                                // document.getElementById('test-tpl').innerHTML = html;
-
-                                                dialog = bootbox.alert({
-                                                    title: '',
-                                                    message: html,
-                                                    locale: 'ru',
-                                                    // size: 'large',
-                                                    className: 'modal-settings modal-profile',
-                                                    buttons: {
-                                                        ok: {
-                                                            label: 'Back',
-                                                            className: 'btn-sm ml-auto mr-0',
-                                                        },
-                                                    },
-                                                    onShown: function (e) {
-                                                        profileModal.onProfileModalLoaded();
-                                                        // document.addEventListener("DOMContentLoaded", profileModal.onProfileModalLoaded);
-                                                    },
-                                                    callback: function () {
-                                                        gameStates['chooseGame']['action'](data);
-                                                    },
-                                                });
-                                            }
-                                        );
-
-                                        return false;
+                                        ).catch( (error) => console.error('Ошибка загрузки profile-modal:', error), );
                                     }
+                                    /* ---------------------------- END PROFILE DATA ---------------------------- */
+
+                                    getProfileModal(profileData).then( (html) => {
+                                        // document.getElementById('test-tpl').innerHTML = html;
+
+                                        dialog = bootbox.alert({
+                                            title: '',
+                                            message: html,
+                                            locale: 'ru',
+                                            // size: 'large',
+                                            className: 'modal-settings modal-profile',
+                                            buttons: {
+                                                ok: {
+                                                    label: 'Back',
+                                                    className: 'btn-sm ml-auto mr-0',
+                                                },
+                                            },
+                                            onShown: function(e) {
+                                                profileModal.onProfileModalLoaded();
+                                                // document.addEventListener("DOMContentLoaded", profileModal.onProfileModalLoaded);
+                                            },
+                                            callback: function() {
+                                                gameStates['chooseGame']['action'](data);
+                                            },
+                                        });
+                                    }
+                                    );
+
+                                    return false;
+                                }
                                 );
                             }, 100);
                         },
@@ -2038,7 +2032,7 @@ var gameStates = {
                     instruction: {
                         label: 'FAQ',
                         className: 'btn-outline-success d-none',
-                        callback: function () {
+                        callback: function() {
                             dialog = bootbox.alert({
                                 message: instruction,
                                 locale: 'ru',
@@ -2050,16 +2044,16 @@ var gameStates = {
                     beginGame: {
                         label: 'Start',
                         className: 'btn-primary',
-                        callback: function () {
+                        callback: function() {
                             activateFullScreenForMobiles();
                             gameState = 'noGame';
-                            fetchGlobal(INIT_GAME_SCRIPT, '', $('.bootbox-body #myGameForm').serialize()).then((data) => {
-                                    if (data == '')
-                                        var responseText = 'Error';
-                                    else {
-                                        commonCallback(data);
-                                    }
+                            fetchGlobal(INIT_GAME_SCRIPT, '', $('.bootbox-body #myGameForm').serialize()).then( (data) => {
+                                if (data == '')
+                                    var responseText = 'Error';
+                                else {
+                                    commonCallback(data);
                                 }
+                            }
                             );
 
                             return true;
@@ -2068,52 +2062,52 @@ var gameStates = {
                     stats: {
                         label: 'Stats',
                         className: 'btn-outline-success',
-                        callback: function () {
+                        callback: function() {
                             activateFullScreenForMobiles();
                             getStatPageGlobal().then(data => {
-                                    console.log(data);
-                                    dialog = bootbox.dialog({
-                                        message: data.message,
-                                        locale: lang === 'RU' ? 'ru' : 'en',
-                                        className: 'modal-settings  modal-stats',
-                                        callback: function () {
-                                            console.log('stats loaded');
+                                console.log(data);
+                                dialog = bootbox.dialog({
+                                    message: data.message,
+                                    locale: lang === 'RU' ? 'ru' : 'en',
+                                    className: 'modal-settings  modal-stats',
+                                    callback: function() {
+                                        console.log('stats loaded');
+                                    },
+                                    buttons: {
+                                        removeFilter: {
+                                            label: 'Remove filter',
+                                            className: 'js-remove-filter btn btn-sm btn-auto mr-0 d-none',
+                                            callback: function(e) {
+                                                e.preventDefault();
+                                                return false;
+                                            },
                                         },
-                                        buttons: {
-                                            removeFilter: {
-                                                label: 'Remove filter',
-                                                className: 'js-remove-filter btn btn-sm btn-auto mr-0 d-none',
-                                                callback: function (e) {
-                                                    e.preventDefault();
-                                                    return false;
-                                                },
-                                            },
-                                            ok: {
-                                                label: 'Back',
-                                                className: 'btn-sm ml-auto mr-0',
-                                                callback: function () {
-                                                    //gameStates['chooseGame']['action'](data);
-                                                    fetchGlobal(STATUS_CHECKER_SCRIPT).then((data) => {
-                                                            commonCallback(data);
-                                                            gameStates['chooseGame']['action'](data)
-                                                        }
-                                                    );
+                                        ok: {
+                                            label: 'Back',
+                                            className: 'btn-sm ml-auto mr-0',
+                                            callback: function() {
+                                                //gameStates['chooseGame']['action'](data);
+                                                fetchGlobal(STATUS_CHECKER_SCRIPT).then( (data) => {
+                                                    commonCallback(data);
+                                                    gameStates['chooseGame']['action'](data)
                                                 }
-                                            },
-                                        }
-                                    }).off('shown.bs.modal').on('shown.bs.modal', function () {
-                                        if (data.onLoad && typeof data.onLoad === 'function') {
-                                            data.onLoad();
-                                        }
-                                    }).find('.modal-content').css({
-                                        'background-color': 'rgba(230, 255, 230, 1)',
-                                    });
+                                                );
+                                            }
+                                        },
+                                    }
+                                }).off('shown.bs.modal').on('shown.bs.modal', function() {
+                                    if (data.onLoad && typeof data.onLoad === 'function') {
+                                        data.onLoad();
+                                    }
+                                }).find('.modal-content').css({
+                                    'background-color': 'rgba(230, 255, 230, 1)',
+                                });
 
-                                    return false;
-                                }
+                                return false;
+                            }
                             ).catch(error => {
-                                    console.error(error);
-                                }
+                                console.error(error);
+                            }
                             );
 
                         },
@@ -2122,7 +2116,7 @@ var gameStates = {
                         telegram: {
                             label: 'Play on',
                             className: 'btn-tg',
-                            callback: function () {
+                            callback: function() {
                                 document.location = GAME_BOT_URL + '/?start=' + ((commonId && commonIdHash) ? (commonId + '_' + commonIdHash) : '');
 
                                 return false;
@@ -2133,7 +2127,7 @@ var gameStates = {
                         invite: {
                             label: 'Invite a friend',
                             className: 'btn-danger',
-                            callback: function () {
+                            callback: function() {
                                 shareTgGlobal();
 
                                 return false;
@@ -2147,7 +2141,7 @@ var gameStates = {
     initGame: {
         1: 'waiting',
         2: 'done',
-        action: function (data) {
+        action: function(data) {
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
         },
@@ -2157,7 +2151,7 @@ var gameStates = {
     initRatingGame: {
         1: 'waiting',
         2: 'done',
-        action: function (data) {
+        action: function(data) {
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
         },
@@ -2172,35 +2166,35 @@ var gameStates = {
         4: 'done',
         message: 'Your turn!',
         refresh: 15,
-        action: function (data) {
+        action: function(data) {
             gameStates['gameResults']['action'](data);
             buttons['submitButton']['svgObject'].setInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
         },
-        from_initRatingGame: function (data) {
+        from_initRatingGame: function(data) {
             gameStates['startGame']['from_initGame']();
             gameStates['myTurn']['from_noGame'](data);
         },
-        from_initGame: function (data) {
+        from_initGame: function(data) {
             gameStates['startGame']['from_initGame']();
             gameStates['myTurn']['from_noGame'](data);
         },
-        from_noGame: function (data) {
-            if ('fishki' in data)
+        from_noGame: function(data) {
+            if ('fishki'in data)
                 placeFishki(data['fishki']);
         },
-        from_desync: function (data) {
-            if ('fishki' in data)
+        from_desync: function(data) {
+            if ('fishki'in data)
                 placeFishki(data['fishki']);
         },
-        from_gameResults: function () {
+        from_gameResults: function() {
             gameStates['startGame']['from_initGame']();
         },
-        from_preMyTurn: function () {
+        from_preMyTurn: function() {
             resetButtonFunction(true);
             gameStates['startGame']['from_initGame']();
         },
-        from_startGame: function () {
+        from_startGame: function() {
             resetButtonFunction(true);
             gameStates['startGame']['from_initGame']();
         }
@@ -2210,34 +2204,34 @@ var gameStates = {
         2: 'done',
         message: 'Get ready - your turn is next!',
         refresh: 5,
-        action: function (data) {
+        action: function(data) {
             gameStates['gameResults']['action'](data);
 
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
         },
-        from_desync: function (data) {
-            if ('fishki' in data)
+        from_desync: function(data) {
+            if ('fishki'in data)
                 placeFishki(data['fishki']);
         },
-        from_initRatingGame: function (data) {
+        from_initRatingGame: function(data) {
             gameStates['startGame']['from_initGame']();
             gameStates['myTurn']['from_noGame'](data);
         },
-        from_initGame: function (data) {
+        from_initGame: function(data) {
             gameStates['startGame']['from_initGame']();
             gameStates['myTurn']['from_noGame'](data);
         },
-        from_noGame: function (data) {
+        from_noGame: function(data) {
             gameStates['myTurn']['from_noGame'](data)
         },
-        from_myTurn: function (data) {
+        from_myTurn: function(data) {
             gameStates['myTurn']['from_noGame'](data)
         },
-        from_otherTurn: function (data) {
+        from_otherTurn: function(data) {
             gameStates['myTurn']['from_noGame'](data)
         },
-        from_gameResults: function () {
+        from_gameResults: function() {
             gameStates['startGame']['from_initGame']()
         },
     },
@@ -2246,7 +2240,7 @@ var gameStates = {
         2: 'done',
         message: 'Take a break - your move in one',
         refresh: 5,
-        action: function (data) {
+        action: function(data) {
             gameStates['gameResults']['action'](data);
 
             gameStates['myTurn']['from_noGame'](data);
@@ -2254,43 +2248,43 @@ var gameStates = {
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
         },
-        from_desync: function (data) {
-            if ('fishki' in data)
+        from_desync: function(data) {
+            if ('fishki'in data)
                 placeFishki(data['fishki']);
         },
-        from_initRatingGame: function (data) {
+        from_initRatingGame: function(data) {
             gameStates['startGame']['from_initGame']();
         },
-        from_initGame: function (data) {
+        from_initGame: function(data) {
             gameStates['startGame']['from_initGame']();
         },
-        from_gameResults: function () {
+        from_gameResults: function() {
             gameStates['startGame']['from_initGame']();
         }
     },
     gameResults: {
         1: 'waiting',
         2: 'done',
-        messageFunction: function (mes) {
+        messageFunction: function(mes) {
             return mes;
         },
         refresh: 10,
-        action: function (data) {
-            if ("desk" in data && data.desk.length > 0) {
+        action: function(data) {
+            if ("desk"in data && data.desk.length > 0) {
                 parseDeskGlobal(data['desk']);
             }
-            if ("score" in data) {
+            if ("score"in data) {
                 userScores(data);
             }
-            if ('activeUser' in data) {
+            if ('activeUser'in data) {
                 activeUser = data.activeUser;
             }
         },
-        results: function (data) {
+        results: function(data) {
             if (dialog && canCloseDialog)
                 dialog.modal('hide');
             var okButtonCaption = 'Refuse';
-            if ('inviteStatus' in data && data['inviteStatus'] == 'waiting') {
+            if ('inviteStatus'in data && data['inviteStatus'] == 'waiting') {
                 var okButtonCaption = 'OK';
             }
 
@@ -2302,34 +2296,34 @@ var gameStates = {
                     invite: {
                         label: 'Offer a game',
                         className: 'btn-primary',
-                        callback: function () {
-                            setTimeout(function () {
-                                fetchGlobal(INVITE_SCRIPT, '', 12).then((dataInvite) => {
-                                        if (dataInvite == '')
-                                            var responseText = 'Request rejected';
-                                        else
-                                            var responseText = dataInvite['message'];
-                                        if ('inviteStatus' in dataInvite) {
-                                            if (dataInvite['inviteStatus'] == 'newGameStarting')
-                                                document.location.reload(true);
-                                        }
-                                        dialogResponse = bootbox.alert({
-                                            message: responseText,
-                                            locale: 'ru',
-                                            size: 'small',
-                                            callback: function () {
-                                                dialogResponse.modal('hide');
-                                                dataInvite['comments'] = data['comments'];
-                                                gameStates['gameResults']['results'](dataInvite);
-                                            }
-                                        });
-
-                                        setTimeout(function () {
-                                            dialogResponse.find(".bootbox-close-button").trigger("click");
-                                        }, 2000);
-
-                                        return false;
+                        callback: function() {
+                            setTimeout(function() {
+                                fetchGlobal(INVITE_SCRIPT, '', 12).then( (dataInvite) => {
+                                    if (dataInvite == '')
+                                        var responseText = 'Request rejected';
+                                    else
+                                        var responseText = dataInvite['message'];
+                                    if ('inviteStatus'in dataInvite) {
+                                        if (dataInvite['inviteStatus'] == 'newGameStarting')
+                                            document.location.reload(true);
                                     }
+                                    dialogResponse = bootbox.alert({
+                                        message: responseText,
+                                        locale: 'ru',
+                                        size: 'small',
+                                        callback: function() {
+                                            dialogResponse.modal('hide');
+                                            dataInvite['comments'] = data['comments'];
+                                            gameStates['gameResults']['results'](dataInvite);
+                                        }
+                                    });
+
+                                    setTimeout(function() {
+                                        dialogResponse.find(".bootbox-close-button").trigger("click");
+                                    }, 2000);
+
+                                    return false;
+                                }
                                 );
                             }, 100);
                         }
@@ -2337,21 +2331,21 @@ var gameStates = {
                     ok: {
                         label: okButtonCaption,
                         className: 'btn-info',
-                        callback: function () {
+                        callback: function() {
                             return true;
                         }
                     },
                     new: {
                         label: 'New game',
                         className: 'btn-danger',
-                        callback: function () {
+                        callback: function() {
                             newGameButtonFunction(true);
                         }
                     }
                 }
             });
         },
-        decision: function (data) {
+        decision: function(data) {
             if (dialog && canCloseDialog) {
                 dialog.modal('hide');
             }
@@ -2367,34 +2361,34 @@ var gameStates = {
                     invite: {
                         label: 'Accept invitation',
                         className: 'btn-primary',
-                        callback: function () {
-                            setTimeout(function () {
-                                fetchGlobal(INVITE_SCRIPT, '', 12).then((dataInvite) => {
-                                        if (dataInvite == '') {
-                                            var responseText = 'Request rejected';
-                                        } else {
-                                            var responseText = dataInvite['message'];
-                                        }
-                                        if ('inviteStatus' in dataInvite) {
-                                            if (dataInvite['inviteStatus'] == 'newGameStarting')
-                                                document.location.reload(true);
-                                        }
-                                        dialogResponse = bootbox.alert({
-                                            message: responseText,
-                                            locale: 'ru',
-                                            size: 'small',
-                                            callback: function () {
-                                                dialogResponse.modal('hide');
-                                                dataInvite['comments'] = data['comments'];
-                                            }
-                                        });
-
-                                        setTimeout(function () {
-                                            dialogResponse.find(".bootbox-close-button").trigger("click");
-                                        }, 2000);
-
-                                        return false;
+                        callback: function() {
+                            setTimeout(function() {
+                                fetchGlobal(INVITE_SCRIPT, '', 12).then( (dataInvite) => {
+                                    if (dataInvite == '') {
+                                        var responseText = 'Request rejected';
+                                    } else {
+                                        var responseText = dataInvite['message'];
                                     }
+                                    if ('inviteStatus'in dataInvite) {
+                                        if (dataInvite['inviteStatus'] == 'newGameStarting')
+                                            document.location.reload(true);
+                                    }
+                                    dialogResponse = bootbox.alert({
+                                        message: responseText,
+                                        locale: 'ru',
+                                        size: 'small',
+                                        callback: function() {
+                                            dialogResponse.modal('hide');
+                                            dataInvite['comments'] = data['comments'];
+                                        }
+                                    });
+
+                                    setTimeout(function() {
+                                        dialogResponse.find(".bootbox-close-button").trigger("click");
+                                    }, 2000);
+
+                                    return false;
+                                }
                                 );
                             }, 100);
                         }
@@ -2402,14 +2396,14 @@ var gameStates = {
                     ok: {
                         label: 'Refuse',
                         className: 'btn-info',
-                        callback: function () {
+                        callback: function() {
                             return true;
                         }
                     },
                     new: {
                         label: 'New game',
                         className: 'btn-danger',
-                        callback: function () {
+                        callback: function() {
                             newGameButtonFunction(true);
                         }
                     }
@@ -2429,26 +2423,26 @@ var lastQueryTime = 0;
 var gameOldState = '';
 
 function commonCallback(data) {
-    if (('gameState' in data) && !(data['gameState'] in gameStates)) {
+    if (('gameState'in data) && !(data['gameState']in gameStates)) {
         return;
     }
 
-    if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
+    if ('http_status'in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
         console.log(data['message']);
         return;
     }
 
-    if ('query_number' in data && data['query_number'] != (queryNumber - 1)) {
+    if ('query_number'in data && data['query_number'] != (queryNumber - 1)) {
         return;
     }
 
     gameOldState = gameState;
     gameOldSubState = gameSubState;
 
-    if ('gameState' in data && gameState != data['gameState']) {
+    if ('gameState'in data && gameState != data['gameState']) {
         gameState = data['gameState'];
 
-        if ('gameNumber' in data) {
+        if ('gameNumber'in data) {
             gameNumber = data['gameNumber'];
         }
     }
@@ -2467,7 +2461,7 @@ function commonCallback(data) {
         }
     }
 
-    if ('lang' in data && data['lang'] != lang) {
+    if ('lang'in data && data['lang'] != lang) {
         lang = data['lang'];
         if (lang === 'EN') {
             // ToDo not working under Yandex
@@ -2475,25 +2469,25 @@ function commonCallback(data) {
         }
     }
 
-    if ('common_id' in data && !commonId) {
+    if ('common_id'in data && !commonId) {
         commonId = data.common_id;
     }
 
-    if ('common_id_hash' in data && !commonIdHash) {
+    if ('common_id_hash'in data && !commonIdHash) {
         commonIdHash = data.common_id_hash;
     }
 
     if (myUserNum === false)
-        if ('yourUserNum' in data)
+        if ('yourUserNum'in data)
             myUserNum = data['yourUserNum']
 
-    if ('gameSubState' in data)
+    if ('gameSubState'in data)
         gameSubState = data['gameSubState'];
 
     console.log(gameOldState + '->' + gameState);
 
     if ((gameOldState != gameState) || (gameOldSubState != gameSubState)) {
-        if ('active_users' in data && data['active_users'] == 0) {
+        if ('active_users'in data && data['active_users'] == 0) {
             clearTimeout(requestToServerEnabledTimeout);
             requestToServerEnabled = false;
         }
@@ -2507,7 +2501,7 @@ function commonCallback(data) {
         if (canOpenDialog) {
             if (gameState == 'initGame' || gameState == 'initRatingGame') {
                 dialog = bootbox.confirm({
-                    message: ('comments' in data) ? data['comments'] : gameStates[gameState]['message'],
+                    message: ('comments'in data) ? data['comments'] : gameStates[gameState]['message'],
                     size: 'small',
                     buttons: {
                         confirm: {
@@ -2518,20 +2512,20 @@ function commonCallback(data) {
                             className: 'btn-danger'
                         }
                     },
-                    callback: function (result) {
+                    callback: function(result) {
                         if (!result) {
                             newGameButtonFunction(true);
                         }
                     }
                 });
-                if ('gameWaitLimit' in data) {
-                    dialog.init(function () {
-                        intervalId = setInterval(function () {
+                if ('gameWaitLimit'in data) {
+                    dialog.init(function() {
+                        intervalId = setInterval(function() {
                             var igrokiWaiting = '';
-                            if ('gameSubState' in data)
+                            if ('gameSubState'in data)
                                 igrokiWaiting = "<br />Players ready: " + data['gameSubState'];
 
-                            if ('timeWaiting' in data) {
+                            if ('timeWaiting'in data) {
                                 if (!tWaiting) {
                                     tWaiting = data['timeWaiting'];
                                 }
@@ -2551,10 +2545,10 @@ function commonCallback(data) {
                             dialog.find('.bootbox-body').html(content);
                         }, 1000);
                     });
-                } else if ('ratingGameWaitLimit' in data)
-                    dialog.init(function () {
-                        intervalId = setInterval(function () {
-                            if ('timeWaiting' in data)
+                } else if ('ratingGameWaitLimit'in data)
+                    dialog.init(function() {
+                        intervalId = setInterval(function() {
+                            if ('timeWaiting'in data)
                                 if (!tWaiting)
                                     tWaiting = data['timeWaiting'];
                                 else {
@@ -2567,7 +2561,7 @@ function commonCallback(data) {
                     });
 
             } else if (gameState == 'gameResults') {
-                if ('inviteStatus' in data) {
+                if ('inviteStatus'in data) {
                     if (data['inviteStatus'] == 'newGameStarting') {
                         document.location.reload(true);
                     } else if (data['inviteStatus'] == 'waiting') {
@@ -2578,19 +2572,19 @@ function commonCallback(data) {
                 } else {
                     gameStates['gameResults']['results'](data);
                 }
-            } else if (!('noDialog' in gameStates[gameState])) {
-                setTimeout(function () {
+            } else if (!('noDialog'in gameStates[gameState])) {
+                setTimeout(function() {
                     var message = '';
                     var cancelLabel = 'Close after 5 seconds';
 
-                    if ('comments' in data && (data['comments'] !== null)) {
+                    if ('comments'in data && (data['comments'] !== null)) {
 
-                        if ('messageFunction' in gameStates[gameState]) {
+                        if ('messageFunction'in gameStates[gameState]) {
                             message = gameStates[gameState]['messageFunction'](data['comments']);
                         } else {
                             message = data['comments'];
                         }
-                    } else if ('message' in gameStates[gameState]) {
+                    } else if ('message'in gameStates[gameState]) {
                         message = gameStates[gameState]['message'];
                     }
 
@@ -2615,7 +2609,7 @@ function commonCallback(data) {
                                 className: 'btn btn-outline-secondary'
                             }
                         },
-                        callback: function (result) {
+                        callback: function(result) {
                             if (!result) {
                                 turnAutocloseDialog = true;
 
@@ -2635,7 +2629,7 @@ function commonCallback(data) {
                     }).find('img').css('background-color', 'rgba(0, 0, 0, 0)');
 
                     if (turnAutocloseDialog) {
-                        setTimeout(function () {
+                        setTimeout(function() {
                             automaticDialogClosed = true;
                             dialogTurn.find(".bootbox-close-button").trigger("click");
                         }, timeToCloseDilog * 1000);
@@ -2649,11 +2643,11 @@ function commonCallback(data) {
         if ('from_' + gameOldState in gameStates[gameState])
             gameStates[gameState]['from_' + gameOldState](data);
 
-        if ('action' in gameStates[gameState])
+        if ('action'in gameStates[gameState])
             gameStates[gameState]['action'](data);
     }
 
-    if ('timeLeft' in data) {
+    if ('timeLeft'in data) {
         vremia.text = data['timeLeft'];
         vremiaMinutes = data['minutesLeft'];
         vremiaSeconds = data['secondsLeft'];
@@ -2661,11 +2655,11 @@ function commonCallback(data) {
         displayTimeGlobal(+vremiaMinutes * 100 + +vremiaSeconds, true);
     }
 
-    if ('log' in data)
+    if ('log'in data)
         for (k in data['log'])
             gameLog.unshift(data['log'][k]);
 
-    if ('chat' in data) {
+    if ('chat'in data) {
         for (k in data['chat']) {
 
             if (!(((data['chat'][k].indexOf('You') + 1) === 1) || ((data['chat'][k].indexOf('News') + 1) === 1))) {
@@ -2678,7 +2672,7 @@ function commonCallback(data) {
         }
     }
 
-    if ('winScore' in data) {
+    if ('winScore'in data) {
         if (!winScore) {
             buttonSetModeGlobal(players, 'goalBlock', data.winScore == 200 ? OTJAT_MODE : ALARM_MODE);
         }
@@ -2689,15 +2683,15 @@ function commonCallback(data) {
     responseData = data;
 
     if (pageActive == 'hidden' && gameState != 'chooseGame') {
-        fetchGlobal(STATUS_CHECKER_SCRIPT).then((data) => {
-                commonCallback(data);
-            }
+        fetchGlobal(STATUS_CHECKER_SCRIPT).then( (data) => {
+            commonCallback(data);
+        }
         );
     }
 }
 
 function userScores(data) {
-    if ("score_arr" in data) {
+    if ("score_arr"in data) {
         for (let k in data['score_arr']) {
             if (k == data['yourUserNum']) {
                 let youBlock = players.youBlock.svgObject;
@@ -2735,7 +2729,7 @@ function userScores(data) {
                     players[playerBlockName].svgObject.setAlpha(1);
                 }
 
-                if (('userNames' in data) && (k in data['userNames']) && (data['userNames'][k] === '')) {
+                if (('userNames'in data) && (k in data['userNames']) && (data['userNames'][k] === '')) {
                     players[playerBlockName].svgObject.setAlpha(INACTIVE_USER_ALPHA);
                 }
             }
@@ -2749,7 +2743,6 @@ function userScores(data) {
         }
     }
 }
-
 ////
 var letterPrices = new Map([[0, 1], [1, 3], [2, 1], [3, 3], [4, 2], [5, 1], [6, 5], [7, 5], [8, 1], [9, 4], [10, 2], [11, 2], [12, 2], [13, 1], [14, 1], [15, 2], [16, 1], [17, 1], [18, 1], [19, 2], [20, 8], [21, 5], [22, 5], [23, 5], [24, 8], [25, 10], [26, 15], [27, 4], [28, 3], [29, 8], [30, 8], [31, 3], [34, 1], [35, 3], [36, 3], [37, 2], [38, 1], [39, 4], [40, 2], [41, 4], [42, 1], [43, 8], [44, 5], [45, 1], [46, 3], [47, 1], [48, 1], [49, 3], [50, 10], [51, 1], [52, 1], [53, 1], [54, 1], [55, 4], [56, 4], [57, 8], [58, 4], [59, 10]]);
 ////
@@ -2775,7 +2768,6 @@ var config = {
         height: gameHeight
     }
 };
-
 ////
 function activateFullScreenForMobiles() {
     if (gameWidth < gameHeight) {
@@ -2785,13 +2777,13 @@ function activateFullScreenForMobiles() {
     }
 }
 
-document.addEventListener("fullscreenchange", function () {
+document.addEventListener("fullscreenchange", function() {
     if (!document.fullscreenElement) {
         bootbox.confirm({
             size: 'small',
             message: 'Return to fullscreen mode?',
             locale: 'en',
-            callback: function (result) {
+            callback: function(result) {
                 if (result) {
                     document.body.requestFullscreen();
                 }
@@ -2816,7 +2808,7 @@ async function mobileShare() {
     }
 }
 
-function genDivGlobal(i, isChange = false) {
+function genDivGlobal(i, isChange=false) {
     if (i <= 31) {
         return '<div class="letter_' + i + '"></div>';
     }
@@ -2965,7 +2957,7 @@ function asyncCSS(href) {
     document.head.appendChild(css);
 }
 
-window.onbeforeunload = function () {
+window.onbeforeunload = function() {
     if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'initGame' || gameState == 'initRatingGame') {
         fetchGlobal(SET_INACTIVE_SCRIPT, '', '');
         return "Вы в игре - уверены, что хотите выйти?";
@@ -2973,20 +2965,20 @@ window.onbeforeunload = function () {
 }
 ;
 
-document.addEventListener("visibilitychange", function () {
+document.addEventListener("visibilitychange", function() {
     pageActive = document.visibilityState;
 
     if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'initGame' || gameState == 'initRatingGame') {
         if (pageActive == 'hidden') {
-            fetchGlobal(STATUS_CHECKER_SCRIPT).then((data) => {
-                    commonCallback(data);
-                }
+            fetchGlobal(STATUS_CHECKER_SCRIPT).then( (data) => {
+                commonCallback(data);
+            }
             );
         }
     }
 });
 
-function showFullImage(idImg, width, oldWidth = 198) {
+function showFullImage(idImg, width, oldWidth=198) {
     if ($('#' + idImg).width() < width) {
         if (fullImgID !== false) {
             $('#' + fullImgID).css('z-index', '50');
@@ -3024,14 +3016,14 @@ function mergeTheIDs(oldKey, commonID) {
         return;
     }
 
-    fetchGlobal(MERGE_IDS_SCRIPT, '', 'oldKey=' + btoa(oldKey) + '&commonID=' + commonID).then((resp) => {
-            showCabinetActionResult(resp);
-        }
+    fetchGlobal(MERGE_IDS_SCRIPT, '', 'oldKey=' + btoa(oldKey) + '&commonID=' + commonID).then( (resp) => {
+        showCabinetActionResult(resp);
+    }
     );
 }
 
 function showCabinetActionResult(response) {
-    if ('message' in response) {
+    if ('message'in response) {
         let background = (response['result'].indexOf('error') + 1) ? '#f99' : '#9f9';
         cabinetAlert = bootbox.alert({
             message: response['message'],
@@ -3045,7 +3037,7 @@ function showCabinetActionResult(response) {
     }
 }
 
-function copyKeyForID(key, commonID = '') {
+function copyKeyForID(key, commonID='') {
     $('#key_for_id').select();
     document.execCommand("copy");
 }
@@ -3056,13 +3048,13 @@ function copyDonateKey() {
 }
 
 function deleteBan(commonID) {
-    fetchGlobalMVC(DELETE_BAN_URL + commonID, '', 'commonID=' + commonID).then((resp) => {
-            showCabinetActionResult(resp);
-        }
+    fetchGlobalMVC(DELETE_BAN_URL + commonID, '', 'commonID=' + commonID).then( (resp) => {
+        showCabinetActionResult(resp);
+    }
     );
 }
 
-function savePlayerName(name, commonIdParam = '') {
+function savePlayerName(name, commonIdParam='') {
     if (name.trim() == '') {
         let resp = {
             result: 'error',
@@ -3073,12 +3065,12 @@ function savePlayerName(name, commonIdParam = '') {
         return;
     }
 
-    fetchGlobal(SET_PLAYER_NAME_SCRIPT, '', 'name=' + encodeURIComponent(name) + '&commonID=' + (commonIdParam != '' ? commonIdParam : commonId)).then((resp) => {
-            if (resp['result'] == 'saved') {
-                $('#playersNikname').text(name);
-            }
-            showCabinetActionResult(resp);
+    fetchGlobal(SET_PLAYER_NAME_SCRIPT, '', 'name=' + encodeURIComponent(name) + '&commonID=' + (commonIdParam != '' ? commonIdParam : commonId)).then( (resp) => {
+        if (resp['result'] == 'saved') {
+            $('#playersNikname').text(name);
         }
+        showCabinetActionResult(resp);
+    }
     );
 }
 
@@ -3111,7 +3103,7 @@ function savePlayerAvatar(url, commonIdParam) {
         cache: false,
         contentType: false,
         processData: false,
-        success: function (returndata) {
+        success: function(returndata) {
             resp = JSON.parse(returndata);
 
             if (resp['result'] === 'saved') {
@@ -3138,7 +3130,7 @@ function refreshId(element_id, url) {
         cache: false,
         contentType: false,
         processData: false,
-        success: function (returndata) {
+        success: function(returndata) {
             resp = JSON.parse(returndata);
             $('#' + element_id).html(resp.message + resp.pagination);
         }
@@ -3149,11 +3141,11 @@ function version() {
     return '&ver=' + Math.floor(Date.now());
 }
 
-async function getStatPageGlobal() {
-    let urlPart = STATS_URL + commonId + '&lang=' + lang + version();
+async function getStatPageGlobal(userId = commonId) {
+    let urlPart = STATS_URL + userId + '&lang=' + lang + version();
     let respMessage = 'Ошибка загрузки статистики';
 
-    if (commonId) {
+    if (userId) {
         try {
             const response = await fetch('/' + urlPart, {
                 method: 'GET',
@@ -3205,11 +3197,11 @@ function savePlayerAvatarUrl(url, commonID) {
         return;
     }
 
-    fetchGlobal(SET_AVATAR_SCRIPT, '', 'avatar=' + encodeURIComponent(url) + '&commonID=' + commonID).then((resp) => {
-            if (resp['result'] == 'saved')
-                $('#playersAvatar').html('<img src="' + url + '" width="100px" max-height = "100px"/>');
-            showCabinetActionResult(resp);
-        }
+    fetchGlobal(SET_AVATAR_SCRIPT, '', 'avatar=' + encodeURIComponent(url) + '&commonID=' + commonID).then( (resp) => {
+        if (resp['result'] == 'saved')
+            $('#playersAvatar').html('<img src="' + url + '" width="100px" max-height = "100px"/>');
+        showCabinetActionResult(resp);
+    }
     );
 }
 
@@ -3287,7 +3279,7 @@ function disableButtons() {
 function enableButtons() {
     //if (bootBoxIsOpenedGlobal()) return;
     for (let k in buttons)
-        if ('enabled' in buttons[k]) {
+        if ('enabled'in buttons[k]) {
             if (gameState in buttons[k]['enabled']) {
                 if (buttons[k]['svgObject'] !== false) {
                     buttons[k]['svgObject'].setInteractive();
@@ -3340,7 +3332,7 @@ function placeFishki(fishki) {
 }
 
 ////
-function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = DEFAULT_FISHKA_SET) {
+function getFishkaGlobal(numLetter, X, Y, _this, draggable=true, fishkaSet=DEFAULT_FISHKA_SET) {
     if (fishkaSet != DEFAULT_FISHKA_SET) {
         console.log('Not default');
         console.log(numLetter);
@@ -3467,7 +3459,7 @@ async function loadFishkiSet(fishkaSet) {
 
     console.log(lang);
 
-    CODES[lang].forEach(function (numLetter) {
+    CODES[lang].forEach(function(numLetter) {
         imgName = fishkaSet + numLetter;
         preloaderObject.load.svg(imgName, '/img/fishki_sets/' + fishkaSet + '/' + numLetter + '.svg');
         if (numLetter != 999) {
@@ -3478,8 +3470,8 @@ async function loadFishkiSet(fishkaSet) {
     });
 
     preloaderObject.load.start();
-    preloaderObject.load.on('complete', function () {
-        CODES[lang].forEach(function (numLetter) {
+    preloaderObject.load.on('complete', function() {
+        CODES[lang].forEach(function(numLetter) {
             imgName = fishkaSet + numLetter;
             fishkiLoaded[fishkaSet][numLetter] = imgName;
             if (numLetter != 999) {
@@ -3490,9 +3482,8 @@ async function loadFishkiSet(fishkaSet) {
         });
     });
 }
-
 ////
-async function fetchGlobal(script, param_name = '', param_data = '') {
+async function fetchGlobal(script, param_name='', param_data='') {
     if (pageActive == 'hidden' && gameState == 'chooseGame' && script === STATUS_CHECKER_SCRIPT) {
         return {
             message: "Выберите параметры игры",
@@ -3519,7 +3510,7 @@ async function fetchGlobal(script, param_name = '', param_data = '') {
     }
 
     requestToServerEnabled = false;
-    requestToServerEnabledTimeout = setTimeout(function () {
+    requestToServerEnabledTimeout = setTimeout(function() {
         requestToServerEnabled = true;
         isSubmitResponseAwaining = false;
     }, isSubmitResponseAwaining ? 1000 : 500)
@@ -3576,7 +3567,7 @@ async function fetchGlobalMVC(urlPart, param_name, param_data) {
 }
 
 function commonParams() {
-    return 'queryNumber=' + (queryNumber++) + '&lang=' + lang + '&gameNumber=' + (gameNumber ? gameNumber : 0) + '&gameState=' + gameState + (pageActive == 'hidden' ? '&page_hidden=true' : '') + ('hash' in webAppInitDataUnsafe ? ('&tg_hash=' + webAppInitDataUnsafe.hash) : '') + ('user' in webAppInitDataUnsafe && 'id' in webAppInitDataUnsafe.user ? ('&tg_id=' + webAppInitDataUnsafe.user.id) : '');
+    return 'queryNumber=' + (queryNumber++) + '&lang=' + lang + '&gameNumber=' + (gameNumber ? gameNumber : 0) + '&gameState=' + gameState + (pageActive == 'hidden' ? '&page_hidden=true' : '') + ('hash'in webAppInitDataUnsafe ? ('&tg_hash=' + webAppInitDataUnsafe.hash) : '') + ('user'in webAppInitDataUnsafe && 'id'in webAppInitDataUnsafe.user ? ('&tg_id=' + webAppInitDataUnsafe.user.id) : '');
 }
 
 async function fetchGlobalNominal(script, param_name, param_data) {
@@ -3652,7 +3643,6 @@ async function fetchGlobalYowser(script, param_name, param_data) {
 
     return await response.json();
 }
-
 ////
 function parseDeskGlobal(newDesc) {
 
@@ -3683,7 +3673,6 @@ function parseDeskGlobal(newDesc) {
                 fixedContainer.push(fixFishka);
             }
 }
-
 ////
 function initCellsGlobal() {
     var n = 15;
@@ -3694,7 +3683,6 @@ function initCellsGlobal() {
         }
     }
 }
-
 ////
 function checkZvezdaGlobal(gameObject) {
     if (gameObject.getData('letter') > '999') {
@@ -3834,7 +3822,7 @@ function chooseLetterGlobal(gameObject) {
         buttons1[i] = {
             label: bukvy,
             className: lang == 'EN' ? 'button1' : 'button1',
-            callback: function () {
+            callback: function() {
                 switchFishkaGlobal(i + 1 + 999, gameObject);
                 chooseFishka = false;
 
@@ -3882,17 +3870,15 @@ function switchFishkaGlobal(letterNum, gameObject) {
 
     container.push(newLetter);
 }
-
 ////
 function changeFishkiGlobal(fishkiRequest) {
-    fetchGlobal(CHANGE_FISHKI_SCRIPT, '', fishkiRequest).then((data) => {
-            commonCallback(data);
-        }
+    fetchGlobal(CHANGE_FISHKI_SCRIPT, '', fishkiRequest).then( (data) => {
+        commonCallback(data);
+    }
     );
 
     return;
 }
-
 ////
 function bootBoxIsOpenedGlobal() {
     if (!canOpenDialog) {
@@ -3902,7 +3888,7 @@ function bootBoxIsOpenedGlobal() {
     if (dialog) {
         if (dialog[0].clientHeight > 0) {
             return true;
-        } else if ('ariaHidden' in dialog[0]) {
+        } else if ('ariaHidden'in dialog[0]) {
             if (dialog[0].ariaHidden !== "true") {
                 return true;
             }
@@ -3912,7 +3898,7 @@ function bootBoxIsOpenedGlobal() {
     if (dialogTurn) {
         if (dialogTurn[0].clientHeight > 0) {
             return true;
-        } else if ('ariaHidden' in dialogTurn[0]) {
+        } else if ('ariaHidden'in dialogTurn[0]) {
             if (dialogTurn[0].ariaHidden !== "true") {
                 return true;
             }
@@ -3921,7 +3907,6 @@ function bootBoxIsOpenedGlobal() {
 
     return false;
 }
-
 ////
 async function openWindowGlobal(word) {
     const response = await fetch('/scrabble1.0.1.6/php/word.php?ingame=yes&word=' + word, {
@@ -3959,20 +3944,20 @@ function submitButtonFunction() {
     buttons['submitButton']['svgObject'].disableInteractive();
     buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
-    setTimeout(function () {
-        fetchGlobal(SUBMIT_SCRIPT, 'cells', cells).then((data) => {
-                if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
-                    buttons['submitButton']['svgObject'].setInteractive();
-                    buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
-                    dialog = bootbox.alert({
-                        message: ('message' in data && data['message'] !== '') ? (data['message'] + '<br /> Try sending again') : '<strong>Error connecting to server!<br /> Try sending again</strong>',
-                        size: 'small'
-                    });
-                } else {
-                    gameState = 'afterSubmit';
-                    parseDeskGlobal(data);
-                }
+    setTimeout(function() {
+        fetchGlobal(SUBMIT_SCRIPT, 'cells', cells).then( (data) => {
+            if ('http_status'in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
+                buttons['submitButton']['svgObject'].setInteractive();
+                buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
+                dialog = bootbox.alert({
+                    message: ('message'in data && data['message'] !== '') ? (data['message'] + '<br /> Try sending again') : '<strong>Error connecting to server!<br /> Try sending again</strong>',
+                    size: 'small'
+                });
+            } else {
+                gameState = 'afterSubmit';
+                parseDeskGlobal(data);
             }
+        }
         );
     }, 100);
 }
@@ -3985,25 +3970,25 @@ function checkButtonFunction() {
     buttons['checkButton']['svgObject'].disableInteractive();
     buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + 'Inactive'));
 
-    setTimeout(function () {
-        fetchGlobal(WORD_CHECKER_SCRIPT, 'cells', cells).then((data) => {
-                if (data == '')
-                    var responseText = 'You haven`t composed a single word!';
-                else
-                    var responseText = data;
-                dialog = bootbox.alert({
-                    message: responseText,
-                    size: 'small'
-                });
+    setTimeout(function() {
+        fetchGlobal(WORD_CHECKER_SCRIPT, 'cells', cells).then( (data) => {
+            if (data == '')
+                var responseText = 'You haven`t composed a single word!';
+            else
+                var responseText = data;
+            dialog = bootbox.alert({
+                message: responseText,
+                size: 'small'
+            });
 
-                buttons['checkButton']['svgObject'].setInteractive();
-                buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + OTJAT_MODE));
-            }
+            buttons['checkButton']['svgObject'].setInteractive();
+            buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + OTJAT_MODE));
+        }
         );
     }, 100);
 }
 
-function newGameButtonFunction(ignoreDialog = false) {
+function newGameButtonFunction(ignoreDialog=false) {
     if (!ignoreDialog && bootBoxIsOpenedGlobal()) {
         return;
     }
@@ -4021,18 +4006,18 @@ function newGameButtonFunction(ignoreDialog = false) {
                 cancel: {
                     label: 'Cancel',
                     className: 'btn-outline-success',
-                    callback: function () {
+                    callback: function() {
                         return true;
                     }
                 },
                 confirm: {
                     label: 'Confirm',
                     className: 'btn-primary',
-                    callback: function () {
+                    callback: function() {
                         requestToServerEnabled = true;
-                        fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState).then((data) => {
-                                document.location.reload(true);
-                            }
+                        fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState).then( (data) => {
+                            document.location.reload(true);
+                        }
                         );
 
                         buttons['newGameButton']['svgObject'].setInteractive();
@@ -4043,31 +4028,31 @@ function newGameButtonFunction(ignoreDialog = false) {
                 invite: {
                     label: 'Revenge!',
                     className: 'btn-info',
-                    callback: function () {
-                        setTimeout(function () {
-                            fetchGlobal(INVITE_SCRIPT, '', 'gameState=' + gameState).then((dataInvite) => {
-                                    let responseText = 'Request rejected';
-                                    if (dataInvite != '') {
-                                        responseText = dataInvite['message'];
-                                    }
-
-                                    dialogResponse = bootbox.alert({
-                                        message: responseText,
-                                        locale: 'ru',
-                                        size: 'small',
-                                        callback: function () {
-                                            dialogResponse.modal('hide');
-                                            gameStates['gameResults']['results'](dataInvite);
-                                        }
-                                    });
-
-                                    setTimeout(function () {
-                                        dialogResponse.find(".bootbox-close-button").trigger("click");
-                                    }, 2000);
-
-                                    buttons['newGameButton']['svgObject'].setInteractive();
-
+                    callback: function() {
+                        setTimeout(function() {
+                            fetchGlobal(INVITE_SCRIPT, '', 'gameState=' + gameState).then( (dataInvite) => {
+                                let responseText = 'Request rejected';
+                                if (dataInvite != '') {
+                                    responseText = dataInvite['message'];
                                 }
+
+                                dialogResponse = bootbox.alert({
+                                    message: responseText,
+                                    locale: 'ru',
+                                    size: 'small',
+                                    callback: function() {
+                                        dialogResponse.modal('hide');
+                                        gameStates['gameResults']['results'](dataInvite);
+                                    }
+                                });
+
+                                setTimeout(function() {
+                                    dialogResponse.find(".bootbox-close-button").trigger("click");
+                                }, 2000);
+
+                                buttons['newGameButton']['svgObject'].setInteractive();
+
+                            }
                             );
                         }, 100);
 
@@ -4082,19 +4067,17 @@ function newGameButtonFunction(ignoreDialog = false) {
 
         buttons['newGameButton']['svgObject'].bringToTop(buttons['newGameButton']['svgObject'].getByName('newGameButton' + 'Inactive'));
 
-        fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState).then((data) => {
-                document.location.reload(true);
-                setTimeout(function () {
-                    gameState = lastState;
-                }, 100);
+        fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState).then( (data) => {
+            document.location.reload(true);
+            setTimeout(function() {
+                gameState = lastState;
+            }, 100);
 
-            }
+        }
         );
     }
 }
-;
-
-function resetButtonFunction(ignoreBootBox = false) {
+;function resetButtonFunction(ignoreBootBox=false) {
     if (ignoreBootBox === false)
         if (bootBoxIsOpenedGlobal())
             return;
@@ -4125,9 +4108,7 @@ function resetButtonFunction(ignoreBootBox = false) {
         }
 
 }
-;
-
-function changeButtonFunction() {
+;function changeButtonFunction() {
     if (bootBoxIsOpenedGlobal())
         return;
 
@@ -4144,7 +4125,7 @@ function changeButtonFunction() {
     dialog = bootbox.confirm({
         message: 'Выберите фишки для замены<br /><br />' + formHeader + formInner + formFooter,
         locale: 'ru',
-        callback: function (result) {
+        callback: function(result) {
             canOpenDialog = true;
             canCloseDialog = true;
 
@@ -4154,9 +4135,7 @@ function changeButtonFunction() {
     });
 
 }
-;
-
-function chatButtonFunction() {
+;function chatButtonFunction() {
     if (bootBoxIsOpenedGlobal())
         return;
 
@@ -4208,7 +4187,7 @@ function chatButtonFunction() {
             confirm: {
                 label: 'Send',
                 className: 'btn-primary',
-                callback: function () {
+                callback: function() {
                     canOpenDialog = true;
                     canCloseDialog = true;
 
@@ -4220,39 +4199,39 @@ function chatButtonFunction() {
                         buttons['chatButton']['svgObject'].disableInteractive();
                         buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Inactive'));
 
-                        fetchGlobal(CHAT_SCRIPT, '', $(".bootbox-body #myChatForm").serialize()).then((data) => {
-                                if (data == '')
-                                    var responseText = 'Error';
-                                else {
-                                    var responseText = data['message'];
+                        fetchGlobal(CHAT_SCRIPT, '', $(".bootbox-body #myChatForm").serialize()).then( (data) => {
+                            if (data == '')
+                                var responseText = 'Error';
+                            else {
+                                var responseText = data['message'];
 
-                                    if (data['message'] === 'Message sent') {
-                                        $('#no_msg_span').html('');
-                                        $('#msg_span').html('<li>' + $('#chattext').val() + '</li>' + $('#msg_span').html());
-                                    }
-
-                                    $('#chattext').val('');
+                                if (data['message'] === 'Message sent') {
+                                    $('#no_msg_span').html('');
+                                    $('#msg_span').html('<li>' + $('#chattext').val() + '</li>' + $('#msg_span').html());
                                 }
 
-                                if (data['message'] !== 'Message sent') {
-                                    if (data['gameState'] == 'wordQuery') {
-                                        $('#no_msg_span').html('');
-                                        $('#msg_span').html('<li>' + data['message'] + '</li>');
-                                    } else {
-                                        dialog2 = bootbox.alert({
-                                            message: responseText,
-                                            size: 'small'
-                                        });
-                                        setTimeout(function () {
-                                            dialog2.find(".bootbox-close-button").trigger("click");
-                                        }, 2000);
-                                    }
-                                }
-
-                                buttons['chatButton']['svgObject'].setInteractive();
-                                buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + OTJAT_MODE));
-                                buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).setData('alarm', false);
+                                $('#chattext').val('');
                             }
+
+                            if (data['message'] !== 'Message sent') {
+                                if (data['gameState'] == 'wordQuery') {
+                                    $('#no_msg_span').html('');
+                                    $('#msg_span').html('<li>' + data['message'] + '</li>');
+                                } else {
+                                    dialog2 = bootbox.alert({
+                                        message: responseText,
+                                        size: 'small'
+                                    });
+                                    setTimeout(function() {
+                                        dialog2.find(".bootbox-close-button").trigger("click");
+                                    }, 2000);
+                                }
+                            }
+
+                            buttons['chatButton']['svgObject'].setInteractive();
+                            buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + OTJAT_MODE));
+                            buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).setData('alarm', false);
+                        }
                         );
                     }
 
@@ -4262,7 +4241,7 @@ function chatButtonFunction() {
             cancel: {
                 label: 'Exit',
                 className: 'ml-5 btn-secondary btn-default bootbox-cancel',
-                callback: function () {
+                callback: function() {
                     canOpenDialog = true;
                     canCloseDialog = true;
 
@@ -4272,21 +4251,21 @@ function chatButtonFunction() {
             complain: {
                 label: 'Appeal',
                 className: 'ml-5 ' + (hasIncomingMessages ? 'btn-danger' : 'btn-light'),
-                callback: function () {
+                callback: function() {
                     if (hasIncomingMessages) {
-                        fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize()).then((data) => {
-                                if (data == '')
-                                    var responseText = 'Error';
-                                else
-                                    var responseText = data['message'];
-                                dialog2 = bootbox.alert({
-                                    message: responseText,
-                                    size: 'small'
-                                });
-                                setTimeout(function () {
-                                    dialog2.find(".bootbox-close-button").trigger("click");
-                                }, 5000);
-                            }
+                        fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize()).then( (data) => {
+                            if (data == '')
+                                var responseText = 'Error';
+                            else
+                                var responseText = data['message'];
+                            dialog2 = bootbox.alert({
+                                message: responseText,
+                                size: 'small'
+                            });
+                            setTimeout(function() {
+                                dialog2.find(".bootbox-close-button").trigger("click");
+                            }, 5000);
+                        }
                         );
                     }
 
@@ -4296,9 +4275,7 @@ function chatButtonFunction() {
         }
     });
 }
-;
-
-function logButtonFunction() {
+;function logButtonFunction() {
     if (bootBoxIsOpenedGlobal())
         return;
 
@@ -4320,7 +4297,7 @@ function logButtonFunction() {
     notDialog = bootbox.dialog({
         message: message,
         size: 'small',
-        onEscape: function () {
+        onEscape: function() {
             activateFullScreenForMobiles();
             canOpenDialog = true;
             canCloseDialog = true;
@@ -4329,14 +4306,14 @@ function logButtonFunction() {
             cancel: {
                 label: "Playing to <strong>" + winScore + "</strong>",
                 className: 'btn btn-outline-secondary',
-                callback: function () {
+                callback: function() {
                     return false;
                 }
             },
             confirm: {
                 label: "OK",
                 className: 'btn-primary',
-                callback: function () {
+                callback: function() {
                     activateFullScreenForMobiles();
                     canOpenDialog = true;
                     canCloseDialog = true;
@@ -4344,7 +4321,7 @@ function logButtonFunction() {
                 }
             }
         },
-        callback: function (result) {
+        callback: function(result) {
             canOpenDialog = true;
             canCloseDialog = true;
         }
@@ -4352,9 +4329,7 @@ function logButtonFunction() {
 
     return;
 }
-;
-
-function makeCheckButtonInactive(dialog) {
+;function makeCheckButtonInactive(dialog) {
     dialog.addClass(CHECK_BUTTON_INACTIVE_CLASS);
 }
 
@@ -4371,6 +4346,7 @@ function submitButtonActive() {
 }
 
 function playersButtonFunction() {
+
     if (bootBoxIsOpenedGlobal()) {
         return;
     }
@@ -4378,6 +4354,7 @@ function playersButtonFunction() {
     if (!gameNumber) {
         return;
     }
+
 
     if (window.innerWidth < window.innerHeight) {
         var orient = 'vertical';
@@ -4388,45 +4365,68 @@ function playersButtonFunction() {
     buttons['playersButton']['svgObject'].disableInteractive();
     buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + 'Inactive'));
 
-    setTimeout(function () {
-        (lang == 'EN' ? fetchGlobalMVC(PLAYER_RATING_SCRIPT + '?game_id=' + gameNumber + '&common_id=' + commonId + '&lang=' + lang, '', orient) : fetchGlobal(PLAYER_RATING_SCRIPT, '', orient)).then((data) => {
-
-                canOpenDialog = false;
-                canCloseDialog = false;
-
-                if (data == '')
-                    var responseText = 'Error';
-                else
-                    var responseText = JSON.stringify(data);
-                dialog = bootbox.alert({
-                    title: 'Rating of opponents',
-                    message: responseText,
-                    size: 'large',
-                    callback: function () {
-                        canOpenDialog = true;
-                        canCloseDialog = true;
-                    }
-                });
-                dialog.find('.modal-content').css({
-                    'background-color': 'rgba(255, 255, 255, 0.7)'
-                }).find('img').css('background-color', 'rgba(0, 0, 0, 0)');
-
-                makeCheckButtonInactive(dialog);
-                makeSubmitButtonInactive(dialog);
-
-                buttons['playersButton']['svgObject'].setInteractive();
-                buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
-
+    setTimeout(function() {
+        // ! MOCK
+        /*
+        fetch('data.json').then( (response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Ошибка');
             }
+        }
+        ).then(data => {
+        */
+        // ! END MOCK
+
+            (lang == 'EN' ? fetchGlobalMVC(PLAYER_RATING_SCRIPT + '?game_id=' + gameNumber + '&common_id=' + commonId + '&lang=' + lang, '', orient) : fetchGlobal(PLAYER_RATING_SCRIPT, '', orient)).then( (data) => {
+
+            canOpenDialog = false;
+            canCloseDialog = false;
+
+            if (data == '')
+                var responseText = 'Error';
+            else
+                var responseText = JSON.stringify(data);
+
+
+            const p = PlayersPage(data);
+            const html = p.buildHtml();
+            const onLoad = p.onLoad;
+
+
+            dialog = bootbox.alert({
+                title: '',
+                message: html,
+                className: 'modal-settings modal-players',
+                buttons: {
+                    ok: {
+                        label: lang === 'ru' ? 'Назад' : 'Back',
+                        className: 'btn btn-sm ml-auto mr-0',
+                    },
+                },
+                onShown: function(e) {
+                    onLoad();
+                },
+                closeButton: false, // 
+                callback: () => $('.modal-players').modal('hide')
+            });
+
+            makeCheckButtonInactive(dialog);
+            makeSubmitButtonInactive(dialog);
+
+            buttons['playersButton']['svgObject'].setInteractive();
+            buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
+
+        }
         );
     }, 100);
 
-    setTimeout(function () {
+    setTimeout(function() {
         buttons['playersButton']['svgObject'].setInteractive();
         buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
     }, 3000);
 }
-
 ////
 function isAndroidAppGlobal() {
     if (getCookieGlobal('DEVICE') === 'Android') {
@@ -4507,7 +4507,6 @@ function isIOSDevice() {
 
     return false;
 }
-
 ////
 
 // для копирования из input в буфер
@@ -4519,208 +4518,208 @@ function copyToClipboard(selector) {
 }
 
 (function profileModal() {
-        const selectors = {
-            profileTabsId: 'profile-tabs',
-            tabLink: '#profile-tabs a',
-            tabContent: '.tab-content',
-            tabContentWrap: '.tab-content-wrap',
-            tabPane: '.tab-pane',
-            copyBtn: '.js-btn-copy',
-            setNicknameBtn: '.js-btn-set-nickname',
-            setProfileImageBtn: '.js-btn-set-profile-image',
-            nicknameInput: '#player_name',
-            profileImageInput: '#player_avatar_file',
-            userIdInput: '#user_id',
-        };
+    const selectors = {
+        profileTabsId: 'profile-tabs',
+        tabLink: '#profile-tabs a',
+        tabContent: '.tab-content',
+        tabContentWrap: '.tab-content-wrap',
+        tabPane: '.tab-pane',
+        copyBtn: '.js-btn-copy',
+        setNicknameBtn: '.js-btn-set-nickname',
+        setProfileImageBtn: '.js-btn-set-profile-image',
+        nicknameInput: '#player_name',
+        profileImageInput: '#player_avatar_file',
+        userIdInput: '#user_id',
+    };
 
-        const setTabContentOffset = (tabsSelector) => {
-                if (!document.getElementById(selectors.profileTabsId)) {
-                    return;
-                }
-                const targetId = document.querySelectorAll(`${selectors.tabLink}.active`)[0].getAttribute('href');
-                const tabContent = document.querySelector(targetId).closest(selectors.tabContent);
-                const tabContentWrap = tabContent.closest(selectors.tabContentWrap);
-                const tabPane = document.querySelector(targetId);
-                tabContentWrap.style.height = tabContent.getBoundingClientRect().height + 'px';
+    const setTabContentOffset = (tabsSelector) => {
+        if (!document.getElementById(selectors.profileTabsId)) {
+            return;
+        }
+        const targetId = document.querySelectorAll(`${selectors.tabLink}.active`)[0].getAttribute('href');
+        const tabContent = document.querySelector(targetId).closest(selectors.tabContent);
+        const tabContentWrap = tabContent.closest(selectors.tabContentWrap);
+        const tabPane = document.querySelector(targetId);
+        tabContentWrap.style.height = tabContent.getBoundingClientRect().height + 'px';
 
-                const index = [...tabContent.querySelectorAll(selectors.tabPane)].findIndex((item) => {
-                        return item === tabPane;
-                    }
-                    ,);
-                const width = tabContentWrap.getBoundingClientRect().width;
+        const index = [...tabContent.querySelectorAll(selectors.tabPane)].findIndex( (item) => {
+            return item === tabPane;
+        }
+        , );
+        const width = tabContentWrap.getBoundingClientRect().width;
 
-                const translateValue = index * -width;
+        const translateValue = index * -width;
 
-                tabContent.style.cssText = `transform: translate(${translateValue}px, 0);`;
+        tabContent.style.cssText = `transform: translate(${translateValue}px, 0);`;
+    }
+    ;
+
+    document.addEventListener('click', (event) => {
+        if (event.target && event.target.closest(selectors.setNicknameBtn)) {
+            event.preventDefault();
+            const userId = document.querySelector(selectors.userIdInput).value;
+            const value = document.querySelector(selectors.nicknameInput).value;
+            savePlayerName(value, userId);
+            return false;
+        }
+    }
+    );
+
+    document.addEventListener('click', (event) => {
+        if (event.target && event.target.closest(selectors.setProfileImageBtn)) {
+            event.preventDefault();
+            const userId = document.querySelector(selectors.userIdInput).value;
+            const value = document.querySelector(selectors.profileImageInput).value;
+            savePlayerAvatar(value, userId);
+            return false;
+        }
+    }
+    );
+
+    document.addEventListener('click', (event) => {
+        if (event.target && event.target.closest(selectors.tabLink)) {
+            if (!document.getElementById(selectors.profileTabsId)) {
+                return;
             }
+            event.preventDefault();
+            document.querySelectorAll(selectors.tabLink).forEach( (item) => item.classList.remove('active'));
+            event.target.classList.add('active');
+            const targetId = event.target.getAttribute('href');
+
+            setTabContentOffset(`#${selectors.profileTabsId}`);
+        }
+    }
+    );
+
+    document.addEventListener('click', (event) => {
+        if (event.target && event.target.closest(selectors.copyBtn)) {
+            event.preventDefault();
+            copyToClipboard(event.target.closest(selectors.copyBtn).getAttribute('href'));
+        }
+    }
+    );
+
+    const onProfileModalLoaded = () => {
+        if (!document.getElementById(selectors.profileTabsId)) {
+            return;
+        }
+
+        const setWidthToPanes = () => {
+            const tabPaneList = document.querySelectorAll(selectors.tabPane) || [];
+            if (tabPaneList.length > 0) {
+                const tabContentWrap = tabPaneList[0].closest(selectors.tabContentWrap);
+                let width = tabContentWrap.getBoundingClientRect().width + 'px';
+
+                for (let i = 0; i < tabPaneList.length; i++) {
+                    tabPaneList[i].style.width = width;
+                    const currentWidth = tabContentWrap.getBoundingClientRect().width + 'px';
+                    if (currentWidth !== width) {
+                        width = currentWidth;
+                        i = 0;
+                    }
+                }
+            }
+        }
         ;
 
-        document.addEventListener('click', (event) => {
-                if (event.target && event.target.closest(selectors.setNicknameBtn)) {
-                    event.preventDefault();
-                    const userId = document.querySelector(selectors.userIdInput).value;
-                    const value = document.querySelector(selectors.nicknameInput).value;
-                    savePlayerName(value, userId);
-                    return false;
-                }
-            }
-        );
+        setWidthToPanes();
+        setTabContentOffset(`#${selectors.profileTabsId}`);
 
-        document.addEventListener('click', (event) => {
-                if (event.target && event.target.closest(selectors.setProfileImageBtn)) {
-                    event.preventDefault();
-                    const userId = document.querySelector(selectors.userIdInput).value;
-                    const value = document.querySelector(selectors.profileImageInput).value;
-                    savePlayerAvatar(value, userId);
-                    return false;
-                }
-            }
-        );
-
-        document.addEventListener('click', (event) => {
-                if (event.target && event.target.closest(selectors.tabLink)) {
-                    if (!document.getElementById(selectors.profileTabsId)) {
-                        return;
-                    }
-                    event.preventDefault();
-                    document.querySelectorAll(selectors.tabLink).forEach((item) => item.classList.remove('active'));
-                    event.target.classList.add('active');
-                    const targetId = event.target.getAttribute('href');
-
-                    setTabContentOffset(`#${selectors.profileTabsId}`);
-                }
-            }
-        );
-
-        document.addEventListener('click', (event) => {
-                if (event.target && event.target.closest(selectors.copyBtn)) {
-                    event.preventDefault();
-                    copyToClipboard(event.target.closest(selectors.copyBtn).getAttribute('href'));
-                }
-            }
-        );
-
-        const onProfileModalLoaded = () => {
+        if (!window.profileTabslistenerAttached) {
+            window.addEventListener('resize', () => {
                 if (!document.getElementById(selectors.profileTabsId)) {
                     return;
                 }
-
-                const setWidthToPanes = () => {
-                        const tabPaneList = document.querySelectorAll(selectors.tabPane) || [];
-                        if (tabPaneList.length > 0) {
-                            const tabContentWrap = tabPaneList[0].closest(selectors.tabContentWrap);
-                            let width = tabContentWrap.getBoundingClientRect().width + 'px';
-
-                            for (let i = 0; i < tabPaneList.length; i++) {
-                                tabPaneList[i].style.width = width;
-                                const currentWidth = tabContentWrap.getBoundingClientRect().width + 'px';
-                                if (currentWidth !== width) {
-                                    width = currentWidth;
-                                    i = 0;
-                                }
-                            }
-                        }
-                    }
-                ;
-
                 setWidthToPanes();
                 setTabContentOffset(`#${selectors.profileTabsId}`);
-
-                if (!window.profileTabslistenerAttached) {
-                    window.addEventListener('resize', () => {
-                            if (!document.getElementById(selectors.profileTabsId)) {
-                                return;
-                            }
-                            setWidthToPanes();
-                            setTabContentOffset(`#${selectors.profileTabsId}`);
-                        }
-                    );
-                    window.profileTabslistenerAttached = true;
-                }
-
-                window.dispatchEvent(new Event('resize'));
             }
-        ;
+            );
+            window.profileTabslistenerAttached = true;
+        }
 
-        window.profileModal = {
-            onProfileModalLoaded
-        };
+        window.dispatchEvent(new Event('resize'));
     }
+    ;
+
+    window.profileModal = {
+        onProfileModalLoaded
+    };
+}
 )();
 
-const btnFAQClickHandler = (backButton = true) => {
-        bootbox.hideAll();
+const btnFAQClickHandler = (backButton=true) => {
+    bootbox.hideAll();
 
-        getFAQModal().then(html => {
+    getFAQModal().then(html => {
 
-                dialog = bootbox.dialog({
-                    message: html,
-                    locale: lang === 'RU' ? 'ru' : 'en',
-                    className: 'modal-settings  modal-faq',
-                    closeButton: false,
-                    buttons: {
-                        ok: {
-                            label: backButton ? 'Back' : 'OK',
-                            //lang === 'RU' ? 'Назад' : 'Back',
-                            className: 'btn-sm ml-auto mr-0',
-                            callback: function () {
-                                if (backButton) {
-                                    fetchGlobal(STATUS_CHECKER_SCRIPT).then((data) => {
-                                            commonCallback(data);
-                                            gameStates['chooseGame']['action'](data)
-                                        }
-                                    );
-                                } else {
-                                    bootbox.hideAll();
-                                    canOpenDialog = true;
-                                    canCloseDialog = true;
-                                    dialog = false;
-                                }
+        dialog = bootbox.dialog({
+            message: html,
+            locale: lang === 'RU' ? 'ru' : 'en',
+            className: 'modal-settings  modal-faq',
+            closeButton: false,
+            buttons: {
+                ok: {
+                    label: backButton ? 'Back' : 'OK',
+                    //lang === 'RU' ? 'Назад' : 'Back',
+                    className: 'btn-sm ml-auto mr-0',
+                    callback: function() {
+                        if (backButton) {
+                            fetchGlobal(STATUS_CHECKER_SCRIPT).then( (data) => {
+                                commonCallback(data);
+                                gameStates['chooseGame']['action'](data)
                             }
-                        },
+                            );
+                        } else {
+                            bootbox.hideAll();
+                            canOpenDialog = true;
+                            canCloseDialog = true;
+                            dialog = false;
+                        }
                     }
-                }).off('shown.bs.modal').on('shown.bs.modal', function () {
-                    if (tabsModule) {
-                        tabsModule.initTabs();
-                    }
-                }).find('.modal-content').css({
-                    'background-color': 'rgba(230, 255, 230, 1)',
-                });
-
+                },
             }
-        ).catch(error => {
-                console.error(error);
+        }).off('shown.bs.modal').on('shown.bs.modal', function() {
+            if (tabsModule) {
+                tabsModule.initTabs();
             }
-        );
+        }).find('.modal-content').css({
+            'background-color': 'rgba(230, 255, 230, 1)',
+        });
 
-        return false;
     }
+    ).catch(error => {
+        console.error(error);
+    }
+    );
+
+    return false;
+}
 ;
 
 document.addEventListener('click', (e) => {
-        if (e.target && e.target.matches('#btn-faq')) {
-            e.preventDefault();
-            btnFAQClickHandler();
-        }
+    if (e.target && e.target.matches('#btn-faq')) {
+        e.preventDefault();
+        btnFAQClickHandler();
     }
+}
 );
 
 function StatsPage({json, BASE_URL}) {
     // const BASE_URL = 'http://127.0.0.1:5500';
 
     const CardList = ({list}) => {
-            const types = {
-                day: 'stone_card',
-                week: 'bronze_card',
-                month: 'silver_card',
-                year: 'gold_card',
-            };
+        const types = {
+            day: 'stone_card',
+            week: 'bronze_card',
+            month: 'silver_card',
+            year: 'gold_card',
+        };
 
-            let result = list.map(({event_type, event_period, record_type_text, event_type_text, points_text, reward, income, date_achieved,}) => {
-                    const date = new Date(date_achieved);
-                    let strDate = `0${date.getDate()}`.slice(-2) + '.' + `0${date.getMonth() + 1}`.slice(-2) + '.' + date.getFullYear();
+        let result = list.map( ({event_type, event_period, record_type_text, event_type_text, points_text, reward, income, date_achieved, }) => {
+            const date = new Date(date_achieved);
+            let strDate = `0${date.getDate()}`.slice(-2) + '.' + `0${date.getMonth() + 1}`.slice(-2) + '.' + date.getFullYear();
 
-                    return `
+            return `
                 <li>
                     <div class="card_item full_card ${types[event_period]}">
                         <h3 class="card_record">
@@ -4750,23 +4749,23 @@ function StatsPage({json, BASE_URL}) {
                     <span class="date">${strDate}</span>
                 </li>
             `;
-                }
-                ,).join('');
-
-            result = `<ul class="card_list full_cards">${result}</ul>`;
-
-            return result;
         }
+        , ).join('');
+
+        result = `<ul class="card_list full_cards">${result}</ul>`;
+
+        return result;
+    }
     ;
 
     const GameList = ({games}) => {
-            let gameList = '';
-            if (!games.length) {
-                return gameList;
-            }
-            gameList = games.map((item) => {
-                    const matchResultClass = ['victory', 'победа'].includes(item.your_result.toLocaleLowerCase(),) ? 'match-history--win' : 'match-history--lose';
-                    return `
+        let gameList = '';
+        if (!games.length) {
+            return gameList;
+        }
+        gameList = games.map( (item) => {
+            const matchResultClass = ['victory', 'победа'].includes(item.your_result.toLocaleLowerCase(), ) ? 'match-history--win' : 'match-history--lose';
+            return `
                 <li class="match-history-item ${matchResultClass} box d-flex">
                     <div class="match-history-date">${item.game_ended_date}</div>
                     <div class="match-history-result">
@@ -4785,45 +4784,45 @@ function StatsPage({json, BASE_URL}) {
                     </div>
                 </li>
             `;
-                }
-            ).join('');
-
-            gameList = `<ul>${gameList}</ul>`;
-
-            return gameList;
         }
+        ).join('');
+
+        gameList = `<ul>${gameList}</ul>`;
+
+        return gameList;
+    }
     ;
 
     const Pagination = ({pagination}) => {
-            let result = '';
-            for (const key in pagination) {
-                if (Object.prototype.hasOwnProperty.call(pagination, key)) {
-                    const element = pagination[key];
-                    const isActive = !element.is_link;
-                    if (isActive) {
-                        result += `<li class="active"><span>${key}</span></li>`;
-                    } else {
-                        result += `<li><a href="${element.value}">${key}</a></li>`;
-                    }
+        let result = '';
+        for (const key in pagination) {
+            if (Object.prototype.hasOwnProperty.call(pagination, key)) {
+                const element = pagination[key];
+                const isActive = !element.is_link;
+                if (isActive) {
+                    result += `<li class="active"><span>${key}</span></li>`;
+                } else {
+                    result += `<li><a href="${element.value}">${key}</a></li>`;
                 }
             }
+        }
 
-            return `
+        return `
                 <nav class="pagination-wrap">
                     <ul class="pagination">
                         ${result}
                     </ul>
                 </nav>
             `;
-        }
+    }
     ;
 
     const OpponentStats = ({opponent_stats}) => {
-            const isPositiveWinRate = +opponent_stats[0].delta_rating > 0;
-            const resultClass = isPositiveWinRate ? 'color-win' : 'color-lose';
-            const prefix = isPositiveWinRate ? '+' : '';
+        const isPositiveWinRate = +opponent_stats[0].delta_rating > 0;
+        const resultClass = isPositiveWinRate ? 'color-win' : 'color-lose';
+        const prefix = isPositiveWinRate ? '+' : '';
 
-            return `
+        return `
 				<div class="total box">
 
 					<div class="col">
@@ -4845,136 +4844,134 @@ function StatsPage({json, BASE_URL}) {
 
 				</div>
             `;
-        }
+    }
     ;
 
     (function statsModal() {
-            const selectors = {
-                modal: '.modal-stats',
-                paginationWrap: '.pagination-wrap',
-                gameList: '.match-history-table ul',
-                opponentStats: '.opponent-stats',
-                opponentName: '.opponent-name',
-                activeAwards: '#active-awards-tab-pane .card-list-wrap',
-                pastAwards: '#past-awards-tab-pane .card-list-wrap',
-                btnRemoveFilter: '.js-remove-filter',
-            };
+        const selectors = {
+            modal: '.modal-stats',
+            paginationWrap: '.pagination-wrap',
+            gameList: '.match-history-table ul',
+            opponentStats: '.opponent-stats',
+            opponentName: '.opponent-name',
+            activeAwards: '#active-awards-tab-pane .card-list-wrap',
+            pastAwards: '#past-awards-tab-pane .card-list-wrap',
+            btnRemoveFilter: '.js-remove-filter',
+        };
 
-            const onStatsModalLoaded = () => {
-                    const modalContainer = document.querySelector(selectors.modal);
-                    const links = modalContainer.querySelectorAll(selectors.paginationWrap + ' a');
-                    const opponentLinks = modalContainer.querySelectorAll(selectors.gameList + ' a');
-                    const opponentStats = modalContainer.querySelector(selectors.opponentStats);
-                    const opponentName = modalContainer.querySelector(selectors.opponentName);
-                    const activeAwards = modalContainer.querySelector(selectors.activeAwards);
-                    const pastAwards = modalContainer.querySelector(selectors.past_achieves);
-                    const btnRemoveFilter = modalContainer.querySelector(selectors.btnRemoveFilter);
+        const onStatsModalLoaded = () => {
+            const modalContainer = document.querySelector(selectors.modal);
+            const links = modalContainer.querySelectorAll(selectors.paginationWrap + ' a');
+            const opponentLinks = modalContainer.querySelectorAll(selectors.gameList + ' a');
+            const opponentStats = modalContainer.querySelector(selectors.opponentStats);
+            const opponentName = modalContainer.querySelector(selectors.opponentName);
+            const activeAwards = modalContainer.querySelector(selectors.activeAwards);
+            const pastAwards = modalContainer.querySelector(selectors.past_achieves);
+            const btnRemoveFilter = modalContainer.querySelector(selectors.btnRemoveFilter);
 
-                    const updateHtml = (json) => {
-                            const paginationEl = document.querySelector(selectors.paginationWrap);
-                            const gameListEl = document.querySelector(selectors.gameList);
-                            paginationEl.outerHTML = Pagination(json);
-                            gameListEl.outerHTML = GameList(json);
+            const updateHtml = (json) => {
+                const paginationEl = document.querySelector(selectors.paginationWrap);
+                const gameListEl = document.querySelector(selectors.gameList);
+                paginationEl.outerHTML = Pagination(json);
+                gameListEl.outerHTML = GameList(json);
 
-                            tabsModule.update();
+                tabsModule.update();
 
-                            if (Object.hasOwn(json, 'opponent_stats')) {
-                                opponentStats.innerHTML = OpponentStats(json);
-                                opponentName.innerHTML = json.games[0].opponent_name;
-                                opponentName.parentElement.classList.remove('invisible');
-                                opponentStats.classList.remove('d-none');
+                if (Object.hasOwn(json, 'opponent_stats')) {
+                    opponentStats.innerHTML = OpponentStats(json);
+                    opponentName.innerHTML = json.games[0].opponent_name;
+                    opponentName.parentElement.classList.remove('invisible');
+                    opponentStats.classList.remove('d-none');
 
-                                btnRemoveFilter.classList.remove('d-none');
-                                btnRemoveFilter.setAttribute('data-url', json.games[0].opponent_filter_url);
-                            } else {
-                                btnRemoveFilter.classList.add('d-none');
-                                opponentName.parentElement.classList.add('invisible');
-                                opponentStats.classList.add('d-none');
-                            }
-
-                            onStatsModalLoaded();
-                            tabsModule.update();
-                        }
-                    ;
-
-                    const linkHandler = (e) => {
-                            e.preventDefault();
-                            let url = e.target.getAttribute('href');
-                            if (!url) {
-                                url = e.target.getAttribute('data-url');
-                            }
-
-                            if (url) {
-                                // console.log(`${BASE_URL}/${url}`);
-
-                                return fetch(`${BASE_URL}/${url}`, {
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                }).then((response) => {
-                                        if (!response.ok) {
-                                            throw new Error(`Response status: ${response.status}`);
-                                        }
-                                        return response.json();
-                                    }
-                                ).then((json) => {
-                                        updateHtml(json);
-                                        // prevLink = link;
-                                    }
-                                ).catch((error) => console.error('Ошибка загрузки страницы:', error));
-                            }
-
-                        }
-                    ;
-
-                    [...links, ...opponentLinks, btnRemoveFilter].forEach((link) => {
-                            if (!link.getAttribute('data-attached')) {
-                                link.setAttribute('data-attached', true);
-                                link.addEventListener('click', linkHandler);
-                            }
-                        }
-                    );
-
+                    btnRemoveFilter.classList.remove('d-none');
+                    btnRemoveFilter.setAttribute('data-url', json.games[0].opponent_filter_url);
+                } else {
+                    btnRemoveFilter.classList.add('d-none');
+                    opponentName.parentElement.classList.add('invisible');
+                    opponentStats.classList.add('d-none');
                 }
+
+                onStatsModalLoaded();
+                tabsModule.update();
+            }
             ;
 
-            window.statsModal = {
-                onStatsModalLoaded
-            };
+            const linkHandler = (e) => {
+                e.preventDefault();
+                let url = e.target.getAttribute('href');
+                if (!url) {
+                    url = e.target.getAttribute('data-url');
+                }
+
+                if (url) {
+                    // console.log(`${BASE_URL}/${url}`);
+
+                    return fetch(`${BASE_URL}/${url}`, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    }).then( (response) => {
+                        if (!response.ok) {
+                            throw new Error(`Response status: ${response.status}`);
+                        }
+                        return response.json();
+                    }
+                    ).then( (json) => {
+                        updateHtml(json);
+                        // prevLink = link;
+                    }
+                    ).catch( (error) => console.error('Ошибка загрузки страницы:', error));
+                }
+
+            }
+            ;
+
+            [...links, ...opponentLinks, btnRemoveFilter].forEach( (link) => {
+                if (!link.getAttribute('data-attached')) {
+                    link.setAttribute('data-attached', true);
+                    link.addEventListener('click', linkHandler);
+                }
+            }
+            );
+
         }
+        ;
+
+        window.statsModal = {
+            onStatsModalLoaded
+        };
+    }
     )();
 
     function getStatsModal(json) {
-        return fetch('/stats-modal-tpl.html').then((response) => response.text()).then((template) => {
-                // Заменяем маркеры в шаблоне реальными данными
-                let message = template
-                    .replaceAll('{{name}}', json.player_name).replaceAll('{{imageUrl}}', json.player_avatar_url).replaceAll('{{gameList}}', GameList({
-                        games: json.games
-                    })).replaceAll('{{pagination}}', Pagination({
-                        pagination: json.pagination
-                    })).replaceAll('{{activeAwards}}', CardList({
-                        list: json.current_achieves
-                    })).replaceAll('{{pastAwards}}', CardList({
-                        list: json.past_achieves
-                    }))
-                    .replaceAll('{{Stats}}', 'Stats').replaceAll('{{Past Awards}}', 'Past Awards').replaceAll('{{Parties_Games}}', 'Games').replaceAll('{{Player Awards}}', 'Player Awards').replaceAll('{{Player}}', 'Player').replaceAll('{{VS}}', 'VS').replaceAll('{{Date}}', 'Date').replaceAll('{{Result}}', 'Result').replaceAll('{{Rating}}', 'Rating').replaceAll('{{Opponent}}', 'Opponent').replaceAll('{{Active Awards}}', 'Active Awards');
+        return fetch('/stats-modal-tpl.html').then( (response) => response.text()).then( (template) => {
+            // Заменяем маркеры в шаблоне реальными данными
+            let message = template.replaceAll('{{name}}', json.player_name).replaceAll('{{imageUrl}}', json.player_avatar_url).replaceAll('{{gameList}}', GameList({
+                games: json.games
+            })).replaceAll('{{pagination}}', Pagination({
+                pagination: json.pagination
+            })).replaceAll('{{activeAwards}}', CardList({
+                list: json.current_achieves
+            })).replaceAll('{{pastAwards}}', CardList({
+                list: json.past_achieves
+            })).replaceAll('{{Stats}}', 'Stats').replaceAll('{{Past Awards}}', 'Past Awards').replaceAll('{{Parties_Games}}', 'Games').replaceAll('{{Player Awards}}', 'Player Awards').replaceAll('{{Player}}', 'Player').replaceAll('{{VS}}', 'VS').replaceAll('{{Date}}', 'Date').replaceAll('{{Result}}', 'Result').replaceAll('{{Rating}}', 'Rating').replaceAll('{{Opponent}}', 'Opponent').replaceAll('{{Active Awards}}', 'Active Awards');
 
-                return message;
-            }
-        ).catch((error) => console.error('Ошибка загрузки stats-modal-tpl:', error));
+            return message;
+        }
+        ).catch( (error) => console.error('Ошибка загрузки stats-modal-tpl:', error));
     }
 
     // ON MODAL LOADED
     function init() {
-        return getStatsModal(json).then((html) => {
-                // document.getElementById('test-tpl').innerHTML = html;
+        return getStatsModal(json).then( (html) => {
+            // document.getElementById('test-tpl').innerHTML = html;
 
-                // profileModal.onProfileModalLoaded();
-                statsModal.onStatsModalLoaded();
-                tabsModule.initTabs();
+            // profileModal.onProfileModalLoaded();
+            statsModal.onStatsModalLoaded();
+            tabsModule.initTabs();
 
-                // document.addEventListener("DOMContentLoaded", profileModal.onProfileModalLoaded);
-            }
+            // document.addEventListener("DOMContentLoaded", profileModal.onProfileModalLoaded);
+        }
         );
     }
 
@@ -4988,138 +4985,137 @@ function StatsPage({json, BASE_URL}) {
         onLoad,
     };
 }
-
 /* ------------------------------- END OF FILE ------------------------------ */
 (function tabsModule() {
-        const selectors = {
-            tabLink: 'a[data-toggle="tab"]',
-            tabContent: '.tab-content',
-            tabContentWrap: '.tab-content-wrap',
-            tabPane: '.tab-pane',
-        };
+    const selectors = {
+        tabLink: 'a[data-toggle="tab"]',
+        tabContent: '.tab-content',
+        tabContentWrap: '.tab-content-wrap',
+        tabPane: '.tab-pane',
+    };
 
-        const setTabContentOffset = (i = 0) => {
-                if (!document.querySelectorAll(`${selectors.tabLink}.active`).length) {
-                    return;
-                }
-                const targetId = document.querySelectorAll(`${selectors.tabLink}.active`)[0].getAttribute('href');
-                const tabContent = document.querySelector(targetId).closest(selectors.tabContent);
-                const tabContentWrap = tabContent.closest(selectors.tabContentWrap);
-                const tabPane = document.querySelector(targetId);
+    const setTabContentOffset = (i=0) => {
+        if (!document.querySelectorAll(`${selectors.tabLink}.active`).length) {
+            return;
+        }
+        const targetId = document.querySelectorAll(`${selectors.tabLink}.active`)[0].getAttribute('href');
+        const tabContent = document.querySelector(targetId).closest(selectors.tabContent);
+        const tabContentWrap = tabContent.closest(selectors.tabContentWrap);
+        const tabPane = document.querySelector(targetId);
 
-                if (!tabContent || !targetId || !tabContentWrap || !tabPane) {
-                    return;
-                }
+        if (!tabContent || !targetId || !tabContentWrap || !tabPane) {
+            return;
+        }
 
-                const activeTabContentWrapHeight = tabContent.getBoundingClientRect().height + 'px';
-                tabContentWrap.style.height = activeTabContentWrapHeight;
+        const activeTabContentWrapHeight = tabContent.getBoundingClientRect().height + 'px';
+        tabContentWrap.style.height = activeTabContentWrapHeight;
 
-                // показываем каждый таб в полный размер
-                [...tabContent.querySelectorAll(selectors.tabPane)].forEach((item) => {
-                        item.style.height = 'auto';
-                        item.style.visibility = 'hidden';
-                        item.closest(selectors.tabContentWrap).style.height = item.closest(selectors.tabContent).getBoundingClientRect().height + 'px';
-                    }
-                );
-
-                const maxModalBody = document.querySelector('.modal-body').getBoundingClientRect().height;
-
-                // скрываем
-                [...tabContent.querySelectorAll(selectors.tabPane)].forEach((item) => {
-                        if (!item.matches('.active')) {
-                            item.style.height = '0px';
-                            item.closest(selectors.tabContentWrap).style.height = '';
-                        } else {
-                            item.style.visibility = 'visible';
-                        }
-                    }
-                );
-
-                [...tabContent.querySelectorAll(selectors.tabPane)].forEach((item) => {
-                        item.style.height = '';
-                    }
-                );
-
-                tabContentWrap.style.height = activeTabContentWrapHeight;
-
-                document.querySelector('.modal-body').style.minHeight = maxModalBody + 'px';
-
-                const index = [...tabContent.querySelectorAll(selectors.tabPane)].findIndex((item) => {
-                        return item === tabPane;
-                    }
-                );
-                const width = tabContentWrap.getBoundingClientRect().width;
-
-                const translateValue = index * -width;
-
-                tabContent.style.cssText = `transform: translate(${translateValue}px, 0);`;
-
-                document.querySelectorAll(selectors.tabPane).forEach((item) => {
-                        const width = item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px';
-                        item.style.width = width;
-                    }
-                );
-
-                const diff = Math.abs(tabContentWrap.getBoundingClientRect().height - tabContent.scrollHeight,);
-                // console.log(i, diff);
-
-                if (diff > 1 && i < 100) {
-                    i++;
-
-                    setTimeout(setTabContentOffset, 100, i);
-                }
-            }
-        ;
-
-        const update = () => {
-                setTimeout(() => setTabContentOffset(), 100);
-                onImagesLoaded(document.querySelector('.modal-settings'), setTabContentOffset);
-            }
-        ;
-
-        document.addEventListener('click', (event) => {
-                if (event.target && event.target.closest(selectors.tabLink)) {
-                    event.preventDefault();
-                    document.querySelectorAll(selectors.tabLink).forEach((item) => item.classList.remove('active'));
-                    event.target.classList.add('active');
-
-                    setTabContentOffset();
-                }
-            }
+        // показываем каждый таб в полный размер
+        [...tabContent.querySelectorAll(selectors.tabPane)].forEach( (item) => {
+            item.style.height = 'auto';
+            item.style.visibility = 'hidden';
+            item.closest(selectors.tabContentWrap).style.height = item.closest(selectors.tabContent).getBoundingClientRect().height + 'px';
+        }
         );
 
-        const initTabs = () => {
-                document.querySelectorAll(selectors.tabPane).forEach((item) => (item.style.width = item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px'),);
+        const maxModalBody = document.querySelector('.modal-body').getBoundingClientRect().height;
 
-                if (!window.tabslistenerAttached) {
-                    window.addEventListener('resize', (event) => {
-                            document.querySelectorAll(selectors.tabPane).forEach((item) => {
-                                    const width = item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px';
-                                    item.style.width = width;
-                                }
-                            );
-                            setTabContentOffset();
-                        }
-                    );
-                    window.tabslistenerAttached = true;
-                }
-
-                setTimeout(() => {
-                        window.dispatchEvent(new Event('resize'));
-                        setTimeout(() => {
-                                update();
-                            }
-                            , 500);
-                    }
-                    , 100);
+        // скрываем
+        [...tabContent.querySelectorAll(selectors.tabPane)].forEach( (item) => {
+            if (!item.matches('.active')) {
+                item.style.height = '0px';
+                item.closest(selectors.tabContentWrap).style.height = '';
+            } else {
+                item.style.visibility = 'visible';
             }
-        ;
+        }
+        );
 
-        window.tabsModule = {
-            initTabs,
-            update
-        };
+        [...tabContent.querySelectorAll(selectors.tabPane)].forEach( (item) => {
+            item.style.height = '';
+        }
+        );
+
+        tabContentWrap.style.height = activeTabContentWrapHeight;
+
+        document.querySelector('.modal-body').style.minHeight = maxModalBody + 'px';
+
+        const index = [...tabContent.querySelectorAll(selectors.tabPane)].findIndex( (item) => {
+            return item === tabPane;
+        }
+        );
+        const width = tabContentWrap.getBoundingClientRect().width;
+
+        const translateValue = index * -width;
+
+        tabContent.style.cssText = `transform: translate(${translateValue}px, 0);`;
+
+        document.querySelectorAll(selectors.tabPane).forEach( (item) => {
+            const width = item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px';
+            item.style.width = width;
+        }
+        );
+
+        const diff = Math.abs(tabContentWrap.getBoundingClientRect().height - tabContent.scrollHeight, );
+        // console.log(i, diff);
+
+        if (diff > 1 && i < 100) {
+            i++;
+
+            setTimeout(setTabContentOffset, 100, i);
+        }
     }
+    ;
+
+    const update = () => {
+        setTimeout( () => setTabContentOffset(), 100);
+        onImagesLoaded(document.querySelector('.modal-settings'), setTabContentOffset);
+    }
+    ;
+
+    document.addEventListener('click', (event) => {
+        if (event.target && event.target.closest(selectors.tabLink)) {
+            event.preventDefault();
+            document.querySelectorAll(selectors.tabLink).forEach( (item) => item.classList.remove('active'));
+            event.target.classList.add('active');
+
+            setTabContentOffset();
+        }
+    }
+    );
+
+    const initTabs = () => {
+        document.querySelectorAll(selectors.tabPane).forEach( (item) => (item.style.width = item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px'), );
+
+        if (!window.tabslistenerAttached) {
+            window.addEventListener('resize', (event) => {
+                document.querySelectorAll(selectors.tabPane).forEach( (item) => {
+                    const width = item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px';
+                    item.style.width = width;
+                }
+                );
+                setTabContentOffset();
+            }
+            );
+            window.tabslistenerAttached = true;
+        }
+
+        setTimeout( () => {
+            window.dispatchEvent(new Event('resize'));
+            setTimeout( () => {
+                update();
+            }
+            , 500);
+        }
+        , 100);
+    }
+    ;
+
+    window.tabsModule = {
+        initTabs,
+        update
+    };
+}
 )();
 
 function onImagesLoaded(container, event) {
@@ -5129,7 +5125,7 @@ function onImagesLoaded(container, event) {
         if (images[i].complete) {
             loaded--;
         } else {
-            images[i].addEventListener('load', function () {
+            images[i].addEventListener('load', function() {
                 loaded--;
                 if (loaded == 0) {
                     event();
@@ -5146,38 +5142,38 @@ function getInstructions(lang) {
     const url = 'https://эрудит.club/mvc/faq/getAll?lang=' + lang + version();
 
     return fetch(url).then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Ошибка при получении инструкций');
-            }
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Ошибка при получении инструкций');
         }
+    }
     ).catch(error => console.error('Ошибка загрузки instructions:', error));
 }
 
 function getFAQModal() {
     return fetch('/faq-modal-tpl_' + lang + '.html').then(response => response.text()).then(template => {
 
-            return new Promise((resolve, reject) => {
-                    let message = document.createElement('div');
+        return new Promise( (resolve, reject) => {
+            let message = document.createElement('div');
 
-                    getInstructions(lang).then(instructions => {
+            getInstructions(lang).then(instructions => {
 
-                            message.innerHTML = template;
+                message.innerHTML = template;
 
-                            ['faq_rules', 'faq_rating', 'faq_rewards', 'faq_coins'].forEach(item => {
-                                    if (item in instructions) {
-                                        message.querySelector(`#${item}`).innerHTML = instructions[item];
-                                    }
-                                }
-                            );
-
-                            resolve(message);
-                        }
-                    ).catch(error => reject(error));
+                ['faq_rules', 'faq_rating', 'faq_rewards', 'faq_coins'].forEach(item => {
+                    if (item in instructions) {
+                        message.querySelector(`#${item}`).innerHTML = instructions[item];
+                    }
                 }
-            );
+                );
+
+                resolve(message);
+            }
+            ).catch(error => reject(error));
         }
+        );
+    }
     ).catch(error => console.error('Ошибка загрузки faq-modal:', error));
 }
 
@@ -5187,3 +5183,363 @@ document.body.style.backgroundColor = "#2C3C6C";
 document.body.style.backgroundImage = "url('/img/back2.svg')";
 document.body.style.backgroundSize = 'cover';
 document.body.style.backgroundSize = '100% 500%';
+// const lang = 'ru';
+// const lang = 'ru';
+
+// function getFAQModal(profileData) {
+
+function PlayersPage(json) {
+	function Card({
+		event_type,
+		event_period,
+		record_type_text,
+		event_type_text,
+		points_text,
+		reward,
+		income,
+		date_achieved,
+	} = props) {
+		const types = {
+			day: 'stone_card',
+			week: 'bronze_card',
+			month: 'silver_card',
+			year: 'gold_card',
+		};
+
+		const date = new Date(date_achieved);
+		let strDate =
+			`0${date.getDate()}`.slice(-2) +
+			'.' +
+			`0${date.getMonth() + 1}`.slice(-2) +
+			'.' +
+			date.getFullYear();
+
+		return `
+	
+				<div class="card_item card--big full_card ${types[event_period]}">
+					<h3 class="card_record">
+						${record_type_text} <br>
+						${event_type_text}
+					</h3>
+					<div class="card_points">
+						${points_text}
+					</div>
+					<div class="card_get">
+						<p>Got reward</p>
+						<div class="card_rewardInfo">
+							<p><img class="card_plus" src="./images/plus.png" alt=""></p>
+							<p><img class="card_rewardImage" src="./images/bigMoney.png" alt="money">
+							</p>
+							<span class="card_moneyCount">${reward}</span>
+						</div>
+					</div>
+					<p class="card_passive">Your passive income</p>
+					<div class="card_hour">
+						<img class="card_hourImage" src="./images/smallMoney.png" alt="">
+						<span>x${income}/hour</span>
+					</div>
+
+					<p class="card_effect">Effect lasts until beaten</p>
+				</div>
+				<span class="date">${strDate}</span>
+		
+		`;
+	}
+
+
+	const CardCompact = (props) => {
+		const {
+			event_value,
+			event_period,
+			record_type_text,
+			event_type_text,
+			reward,
+			record_type,
+			event_type,
+		} = props;
+
+		const types = {
+			day: 'stone_card',
+			week: 'bronze_card',
+			month: 'silver_card',
+			year: 'gold_card',
+		};
+
+		return `
+		<div class="award-wrap">
+					<div class="card_item ${types[event_period]}"  data-props='${JSON.stringify(props)}'>
+						<div class="card_record">
+							${record_type_text}
+							<hr class="divider">
+							<div class="card_points">
+                            ${event_type_text}
+							</div>
+						</div>
+						<div class="card_get">
+							<div class="card_rewardInfo">
+								<img class="card_plus" src="./images/plus.png" alt="">
+								<img class="card_rewardImage" src="./images/bigMoney.png" alt="money">
+								<span class="card_moneyCount">x${reward}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+	`;
+	};
+
+	const PlayerBox = (props) => {
+		const {
+			common_id,
+			you,
+			nickname,
+			avatar_url,
+			stats_url,
+			is_balance_hidden,
+			balance,
+			rating,
+			rating_position,
+			games_played,
+			index,
+			achieves = [],
+			top_bage_url = '',
+		} = props;
+
+		if (!props) {
+			return;
+		}
+
+		let boxLabel;
+        let toggleBalanceVisibilityBtn =  '';
+		if (you) {
+			boxLabel = lang === 'ru' ? 'Вы' : 'You';
+            toggleBalanceVisibilityBtn = `<a href="#" class="js-toggle-balance-visibility" data-user-id="${common_id}" data-hidden=${is_balance_hidden}><i class="icon icon-eye ${is_balance_hidden ? 'icon-eye--x' : ''} mx-2"></i></a>`;
+		} else {
+			boxLabel = lang === 'ru' ? 'Игрок ' + index : 'Player ' + (index + 1);
+		}
+
+		let awards;
+		if (top_bage_url) {
+			let cards = achieves
+				.slice(0, 2)
+				.map((item) => {
+					return CardCompact(item);
+				})
+				.join('');
+			awards = `<div class="awards d-flex row-cols-3">
+				<div class="top-rating-img-wrap"><img src="${top_bage_url}" height="80" alt=""></div>
+				${cards}
+			</div>`;
+		} else {
+			let cards = achieves
+				.slice(0, 3)
+				.map((item) => {
+					return CardCompact(item);
+				})
+				.join('');
+			awards = `<div class="awards d-flex row-cols-3">${cards}</div>`;
+		}
+
+
+
+		return `
+		
+		<div class="box box-player">
+			<div class="label box-heading text-center mx-auto fs-4">${boxLabel}</div>
+			<div class="d-flex mb-2">
+				<div class="nickname">${nickname}</div>
+				<button class="btn btn-sm ml-auto js-modal-stats" data-user-id="${common_id}">${lang === 'ru' ? 'Статистика' : 'Stats'}</button>
+			</div>
+			<div class="d-flex">
+				<div class="img-col">
+					<div class="img-wrap">
+						<img src="${avatar_url}" class="img-fluid rounded" alt="avatar">
+					</div>
+				</div>
+				<div class="info-col">
+					<ul>
+						<li>
+							<div class="label">${lang === 'ru' ? 'Рейтинг' : 'Rating'}</div>
+							<div class="pill">${rating}</div>
+						</li>
+						<li>
+							<div class="label">${lang === 'ru' ? 'Позиция в ТОП' : 'Ranking number'}</div>
+							<div class="pill">${rating_position}</div>
+						</li>
+						<li>
+							<div class="label d-flex align-items-center">${
+								lang === 'ru' ? 'Баланс' : 'Balance'
+							} <i class="icon icon-coin ml-2"></i></div>
+							<div class="pill-wrap d-flex ml-auto">
+								${toggleBalanceVisibilityBtn}
+                                <div class="pill">${balance}</div>
+							</div>
+						</li>
+						<li>
+							<div class="label">${lang === 'ru' ? 'Партии' : 'Games Played'}</div>
+							<div class="pill">${games_played}</div>
+						</li>
+					</ul>
+				</div>
+
+
+			</div>
+			${awards}
+		</div>
+	`;
+	};
+
+
+	const cardClickHandler = (e) => {
+		if (e.target && e.target.closest('.modal-players .card_item')) {
+			const props = e.target.closest('.modal-players .card_item').getAttribute('data-props');
+			if (props) {
+				const card = Card(JSON.parse(props));
+				const modalHtml = `
+							<div class="box d-flex align-items-center p-2 mb-2">
+								<div class="box-heading text-center mx-auto fs-4">${lang === 'ru' ? 'Награда' : 'Reward'}</div>
+							</div>
+							<div class="box card-list-wrap">
+								<div class="card_list">
+									<div>${card}</div>
+								</div>
+							</div>`;
+
+				// const m = $('.modal.show');
+				// m.modal('hide');
+				dialog = bootbox.alert({
+					title: '',
+					message: modalHtml,
+					// locale: 'ru',
+					// size: 'large',
+					className: 'modal-settings modal-card modal--footer-compact',
+					buttons: {
+						ok: {
+							label: lang === 'ru' ? 'Назад' : 'Back',
+							className: 'btn btn-sm ml-auto mr-0',
+
+						},
+					},
+					onShown: function (e) {},
+					// callback: () => m.modal('show'),
+					closeButton: false
+				});
+			}
+		}
+		// openModal(modal);
+	};
+
+	function init() {
+
+		if (!window.cardCompactClickHandler) {
+			window.cardCompactClickHandler = cardClickHandler;
+			document.addEventListener('click', cardClickHandler);
+		}
+
+		const playerBoxes = json.map((element, i) => PlayerBox({ ...element, index: i })).join('');
+
+		const html = `<div><div class="box d-flex align-items-center p-2 mb-2">
+						<div class="box-heading text-center mx-auto fs-4">${lang === 'ru' ? 'Игроки' : 'Players'}</div>
+					</div>
+					${playerBoxes}</div>`;
+
+		// document.getElementById('test-tpl').innerHTML = q;
+
+		return html;
+	}
+
+
+    function onLoad() {
+        $('.modal-players .js-modal-stats').click(e => {
+            e.preventDefault();
+            const userId = e.target?.closest('.js-modal-stats').getAttribute('data-user-id');
+
+
+            getStatPageGlobal(userId).then(data => {
+                console.log(data);
+                dialog = bootbox.dialog({
+                    message: data.message,
+                    locale: lang === 'RU' ? 'ru' : 'en',
+                    className: 'modal-settings  modal-stats',
+                    callback: function() {
+                        console.log('stats loaded');
+                    },
+                    onShow: function(e) {
+                        $('.modal-players.show, .modal-players.show + .modal-backdrop.show').hide();
+                    },
+                    buttons: {
+                        removeFilter: {
+                            label: 'Remove filter',
+                            className: 'js-remove-filter btn btn-sm btn-auto mr-0 d-none',
+                            callback: function(e) {
+                                e.preventDefault();
+                                return false;
+                            },
+                        },
+                        ok: {
+                            label: lang === 'ru' ? 'Назад' : 'Back',
+                            className: 'btn-sm ml-auto mr-0',
+                            callback: function() {
+                                $('.modal-players.show, .modal-players.show + .modal-backdrop.show').show();
+                            }
+                        },
+                    }
+                }).off('shown.bs.modal').on('shown.bs.modal', function() {
+                    if (data.onLoad && typeof data.onLoad === 'function') {
+                        data.onLoad();
+                    }
+                }).find('.modal-content').css({
+                    'background-color': 'rgba(230, 255, 230, 1)',
+                });
+            });
+        });
+
+
+        $('.js-toggle-balance-visibility').click((e) => {
+            e.preventDefault();
+            const btn = e.target?.closest('.js-toggle-balance-visibility');
+            if (!btn) {
+                return;
+            }
+            const $that = $(btn);
+            const isHidden = (btn.getAttribute('data-hidden') === 'true');
+            const userId = btn.getAttribute('data-user-id');
+            const newVisibility = isHidden ? 'show' : 'hide';
+
+            const url = `/mvc/players/hideBalance/?common_id=${userId}&hide=${newVisibility}`;
+
+
+            fetch(url).then( (response) => {
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+                return response.json();
+            }
+            ).then( (json) => {
+                // {"balance":"**20**","is_balance_hidden":true} 
+                if ('is_balance_hidden' in json) {
+                    $that.data('balance', json.is_balance_hidden);
+                    if (json.is_balance_hidden) {
+                        $that.find('.icon').removeClass('icon-eye--x');
+                        btn.setAttribute('data-hidden', true);
+                    } else {
+                        btn.setAttribute('data-hidden', false);
+                        $that.find('.icon').addClass('icon-eye--x');
+                    }
+
+                    $that.parent().find('.pill').text(json.balance);
+                }
+
+            }
+            ).catch( (error) => console.error('Ошибка ', error));
+            
+        });
+    }
+
+
+
+	return {
+        buildHtml: init,
+        onLoad,
+    };
+
+}
