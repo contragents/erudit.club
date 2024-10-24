@@ -35,7 +35,11 @@ sessionStorageSet('initParams', initParams);
 if (window.Telegram == undefined) {
     var webAppInitDataUnsafe = {};
     var TG = {};
-    var WebView = {postEvent: function(p1,p2,p3){return;}};
+    var WebView = {
+        postEvent: function(p1, p2, p3) {
+            return;
+        }
+    };
 } else {
     var TG = window.Telegram.WebApp;
     TG.disableVerticalSwipes();
@@ -56,18 +60,16 @@ if (window.Telegram == undefined) {
         for (var key in webAppInitDataUnsafe) {
             var val = webAppInitDataUnsafe[key];
             try {
-                if (val.substr(0, 1) == '{' && val.substr(-1) == '}' ||
-                    val.substr(0, 1) == '[' && val.substr(-1) == ']') {
+                if (val.substr(0, 1) == '{' && val.substr(-1) == '}' || val.substr(0, 1) == '[' && val.substr(-1) == ']') {
                     webAppInitDataUnsafe[key] = JSON.parse(val);
                 }
-            } catch (e) {
-            }
+            } catch (e) {}
         }
     }
 }
 
 function isTgBot() {
-    return ('user' in webAppInitDataUnsafe) && ('id' in webAppInitDataUnsafe.user);
+    return ('user'in webAppInitDataUnsafe) && ('id'in webAppInitDataUnsafe.user);
 }
 
 // Adjusting max-height of bootbox for Telegram. Used in CSS
@@ -78,296 +80,294 @@ window.addEventListener('resize', () => {
     // We execute the same script as before
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
-});
+}
+);
 
 var UIScene = new Phaser.Class({
-   
+
     Extends: Phaser.Scene,
 
-    initialize:
-    //
-function UIScene () {
-        Phaser.Scene.call(this, { key: 'UIScene', active: true });
-    }    ,
+    initialize: //
+    function UIScene() {
+        Phaser.Scene.call(this, {
+            key: 'UIScene',
+            active: true
+        });
+    },
 
-    preload: 
-    ////
-function () {
+    preload: ////
+    function() {
 
-    var progressBar = this.add.graphics();
-    var progressBox = this.add.graphics();
-    progressBox.fillStyle(0x222222, 0.3);
-    progressBox.fillRect(gameWidth / 2 - 320 / 2, gameHeight / 2 - 50 / 5, 320, 50);
+        var progressBar = this.add.graphics();
+        var progressBox = this.add.graphics();
+        progressBox.fillStyle(0x222222, 0.3);
+        progressBox.fillRect(gameWidth / 2 - 320 / 2, gameHeight / 2 - 50 / 5, 320, 50);
 
-    var showCaution = false;
+        var showCaution = false;
 
-    var textWidth = this.cameras.main.width;
-    var textHeight = this.cameras.main.height;
-    var loadingText = this.make.text({
-        x: textWidth / 2,
-        y: textHeight / 2 - 50,
-        text: LOADING_TEXT,
-        style: {
-            font: '20px monospace',
-            fill: '#000000'
-        }
-    });
-    loadingText.setOrigin(0.5, 0.5);
+        var textWidth = this.cameras.main.width;
+        var textHeight = this.cameras.main.height;
+        var loadingText = this.make.text({
+            x: textWidth / 2,
+            y: textHeight / 2 - 50,
+            text: LOADING_TEXT,
+            style: {
+                font: '20px monospace',
+                fill: '#000000'
+            }
+        });
+        loadingText.setOrigin(0.5, 0.5);
 
-    this.load.on('progress', function (value) {
-        progressBar.clear();
-        progressBar.fillStyle(0xffffff, 1);
-        progressBar.fillRect(gameWidth / 2 + 10 - 320 / 2, gameHeight / 2 - 30 / 2 + 15, 300 * value, 30);
-    });
+        this.load.on('progress', function(value) {
+            progressBar.clear();
+            progressBar.fillStyle(0xffffff, 1);
+            progressBar.fillRect(gameWidth / 2 + 10 - 320 / 2, gameHeight / 2 - 30 / 2 + 15, 300 * value, 30);
+        });
 
-    this.load.on('complete', function () {
-        progressBar.destroy();
-        progressBox.destroy();
-        loadingText.destroy();
-        if (showCaution) {
-            androidText1.destroy();
-            androidText2.destroy();
-        }
-    });
+        this.load.on('complete', function() {
+            progressBar.destroy();
+            progressBox.destroy();
+            loadingText.destroy();
+            if (showCaution) {
+                androidText1.destroy();
+                androidText2.destroy();
+            }
+        });
 
-    preloaderObject = this;
+        preloaderObject = this;
 
-    this.load.image('no_network', '/img/no_network_transparent.png');
-    this.load.svg('ground', '/img/' + GROUND_FILE, {'width': 513 * 2, 'height': 500 * 2});
-    this.load.svg('donate', '/img/donate.svg');
-    this.load.image('zvezda', '/img/star_transparent.png');
-    this.load.svg('zvezdaVerh', '/img/star_transparent_2.svg', {scale: 0.025 * 2});
-    this.load.svg('zvezdaCenter', '/img/star_transparent_2.svg', {scale: 0.06 * 2});
-    this.load.atlas('fishka_empty', '/img/fishka_empty.png', '/img/fishka_empty.json');
-    this.load.atlas('megaset', '/img/letters.png', '/img/letters.json');
-    this.load.atlas('digits', '/img/letters.png', '/img/nums.json');
-    this.load.atlas('megaset_english', '/img/letters_english.png', '/img/letters_english.json');
-    this.load.svg('back', '/img/back2.svg', {'height': 1980, 'width': 1080});
+        this.load.image('no_network', '/img/no_network_transparent.png');
+        this.load.svg('ground', '/img/' + GROUND_FILE, {
+            'width': 513 * 2,
+            'height': 500 * 2
+        });
+        this.load.svg('donate', '/img/donate.svg');
+        this.load.image('zvezda', '/img/star_transparent.png');
+        this.load.svg('zvezdaVerh', '/img/star_transparent_2.svg', {
+            scale: 0.025 * 2
+        });
+        this.load.svg('zvezdaCenter', '/img/star_transparent_2.svg', {
+            scale: 0.06 * 2
+        });
+        this.load.atlas('fishka_empty', '/img/fishka_empty.png', '/img/fishka_empty.json');
+        this.load.atlas('megaset', '/img/letters.png', '/img/letters.json');
+        this.load.atlas('digits', '/img/letters.png', '/img/nums.json');
+        this.load.atlas('megaset_english', '/img/letters_english.png', '/img/letters_english.json');
+        this.load.svg('back', '/img/back2.svg', {
+            'height': 1980,
+            'width': 1080
+        });
 
-    for (let k in buttons) {
-        if ('modes' in buttons[k])
-            buttons[k]['modes'].forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg',
-                'width' in buttons[k]
-                    ? {
-                        'width': buttons[k]['width'],
-                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
-                    }
-                    : {
-                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
-                    }
-            ));
-        else
-            modes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg?ver=2',
-                'width' in buttons[k]
-                    ? {
-                        'width': buttons[k]['width'],
-                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
-                    }
-                    : {
-                        'height': 'height' in buttons[k] ? buttons[k].height : buttonHeight,
-                    }
-            ));
-    }
-
-    for (let k in players) {
-        playerBlockModes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + players[k]['filename'] + '.svg',
-            'width' in players[k]
-                ? {
-                    'width': players[k]['width'],
-                    'height': 'height' in players[k] ? players[k].height : buttonHeight,
-                }
-                : {
-                    'height': 'height' in players[k] ? players[k].height : buttonHeight,
-                }
-        ));
-    }
-
-
-    playerBlockModes.forEach(mode => {
-        for (let k in digits.playerDigits[mode]) {
-            this.load.svg(mode + '_' + 'player_' + k, '/img/' + mode.toLowerCase() + '/' + digits.playerDigits[mode][k]['filename'] + '.svg',
-                {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1), 'width': buttonHeight * 0.23 * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1)}
-            );
-
-            this.load.svg(mode + '_' + 'timer_' + k, '/img/' + mode.toLowerCase() + '/' + digits.timerDigits[mode][k]['filename'] + '_' + modesColors[mode] + '.svg',
-                {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1), 'width': buttonHeight * 0.4 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)}
-            );
+        for (let k in buttons) {
+            if ('modes'in buttons[k])
+                buttons[k]['modes'].forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg', 'width'in buttons[k] ? {
+                    'width': buttons[k]['width'],
+                    'height': 'height'in buttons[k] ? buttons[k].height : buttonHeight,
+                } : {
+                    'height': 'height'in buttons[k] ? buttons[k].height : buttonHeight,
+                }));
+            else
+                modes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + buttons[k]['filename'] + '.svg?ver=2', 'width'in buttons[k] ? {
+                    'width': buttons[k]['width'],
+                    'height': 'height'in buttons[k] ? buttons[k].height : buttonHeight,
+                } : {
+                    'height': 'height'in buttons[k] ? buttons[k].height : buttonHeight,
+                }));
         }
 
-        this.load.svg(mode + '_' + 'dvoetoch', '/img/' + mode.toLowerCase() + '/numbers/' + 'dvoetoch'  + '_' + modesColors[mode]+ '.svg',
-            {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1), 'width': buttonHeight * 0.15 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)}
+        for (let k in players) {
+            playerBlockModes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + players[k]['filename'] + '.svg', 'width'in players[k] ? {
+                'width': players[k]['width'],
+                'height': 'height'in players[k] ? players[k].height : buttonHeight,
+            } : {
+                'height': 'height'in players[k] ? players[k].height : buttonHeight,
+            }));
+        }
+
+        playerBlockModes.forEach(mode => {
+            for (let k in digits.playerDigits[mode]) {
+                this.load.svg(mode + '_' + 'player_' + k, '/img/' + mode.toLowerCase() + '/' + digits.playerDigits[mode][k]['filename'] + '.svg', {
+                    'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1),
+                    'width': buttonHeight * 0.23 * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1)
+                });
+
+                this.load.svg(mode + '_' + 'timer_' + k, '/img/' + mode.toLowerCase() + '/' + digits.timerDigits[mode][k]['filename'] + '_' + modesColors[mode] + '.svg', {
+                    'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1),
+                    'width': buttonHeight * 0.4 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)
+                });
+            }
+
+            this.load.svg(mode + '_' + 'dvoetoch', '/img/' + mode.toLowerCase() + '/numbers/' + 'dvoetoch' + '_' + modesColors[mode] + '.svg', {
+                'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1),
+                'width': buttonHeight * 0.15 * 0.5 / (buttonHeightKoef < 1 ? 0.8 : 1)
+            });
+        }
         );
-    });
 
-    loadFishkiSet(userFishkaSet);
-}
-    ,
+        loadFishkiSet(userFishkaSet);
+    },
 
-    create: 
-    ////
-function () {
-    var letters = [];
-    var atlasTexture = this.textures.get('megaset');
+    create: ////
+    function() {
+        var letters = [];
+        var atlasTexture = this.textures.get('megaset');
 
-    var frames = atlasTexture.getFrameNames();
+        var frames = atlasTexture.getFrameNames();
 
+        noNetworkImg = this.add.image(200, 200, 'no_network');
 
-    noNetworkImg = this.add.image(200, 200, 'no_network');
+        var back = this.add.sprite(gameWidth / 2, gameHeight / 2, 'back');
+        back.displayWidth = this.sys.canvas.width;
+        back.displayHeight = this.sys.canvas.height;
 
-    var back = this.add.sprite(gameWidth / 2, gameHeight / 2, 'back');
-    back.displayWidth = this.sys.canvas.width;
-    back.displayHeight = this.sys.canvas.height;
-
-    WebView.postEvent('web_app_set_header_color', false, {
-        color: '#2C3C6C',
-    });
-
-    var ground = this.add.image(385, 375, 'ground');
-    ground.setOrigin(0, 0);
-    ground.x = game.config.width - ground.width;
-    ground.y = screenOrient === HOR
-        ? 0
-        : topHeight;
-    ground.setCrop(16 * 2, 3 * 2, 550 * 2, 550 * 2);
-
-    stepX = game.config.width - ground.width;
-    stepY = (screenOrient === HOR) ? 0 : topHeight;
-    initLotok();
-
-    initCellsGlobal();
-
-    for (let k in buttons) {
-
-        if ('preCalc' in buttons[k])
-            buttons[k]['preCalc']();
-
-        buttons[k]['svgObject'] = getSVGButton(buttons[k]['x'], buttons[k]['y'], k, this);
-
-        buttons[k]['svgObject'].on('pointerup', function () {
-            buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
-            if ('pointerupFunction' in buttons[k])
-                buttons[k]['pointerupFunction']();
+        WebView.postEvent('web_app_set_header_color', false, {
+            color: '#2C3C6C',
         });
 
-        buttons[k]['svgObject'].on('pointerdown', function () {
-            buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Najatie'));
-        });
+        var ground = this.add.image(385, 375, 'ground');
+        ground.setOrigin(0, 0);
+        ground.x = game.config.width - ground.width;
+        ground.y = screenOrient === HOR ? 0 : topHeight;
+        ground.setCrop(16 * 2, 3 * 2, 550 * 2, 550 * 2);
 
-        buttons[k]['svgObject'].on('pointerover', function () {
-            if (k == 'chatButton') {
-                if (buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).getData('alarm') !== true)
-                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Navedenie'));
-            } else
-                buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Navedenie'));
-        });
+        stepX = game.config.width - ground.width;
+        stepY = (screenOrient === HOR) ? 0 : topHeight;
+        initLotok();
 
-        buttons[k]['svgObject'].on('pointerout', function () {
-            if (k == 'chatButton') {
-                if (buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).getData('alarm') !== true)
-                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
-            } else if ('enabled' in buttons[k]) {
-                if (gameState in buttons[k]['enabled'])
-                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
-            } else
+        initCellsGlobal();
+
+        for (let k in buttons) {
+
+            if ('preCalc'in buttons[k])
+                buttons[k]['preCalc']();
+
+            buttons[k]['svgObject'] = getSVGButton(buttons[k]['x'], buttons[k]['y'], k, this);
+
+            buttons[k]['svgObject'].on('pointerup', function() {
                 buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
+                if ('pointerupFunction'in buttons[k])
+                    buttons[k]['pointerupFunction']();
+            });
+
+            buttons[k]['svgObject'].on('pointerdown', function() {
+                buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Najatie'));
+            });
+
+            buttons[k]['svgObject'].on('pointerover', function() {
+                if (k == 'chatButton') {
+                    if (buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).getData('alarm') !== true)
+                        buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Navedenie'));
+                } else
+                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Navedenie'));
+            });
+
+            buttons[k]['svgObject'].on('pointerout', function() {
+                if (k == 'chatButton') {
+                    if (buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).getData('alarm') !== true)
+                        buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
+                } else if ('enabled'in buttons[k]) {
+                    if (gameState in buttons[k]['enabled'])
+                        buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
+                } else
+                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
+            });
+        }
+
+        let numTopButtons = 0;
+        let sumWidth = 0;
+        for (let tbK in topButtons) {
+            numTopButtons++;
+            topButtons[tbK].displayWidth = buttons[tbK]['svgObject'].displayWidth;
+            sumWidth += topButtons[tbK].displayWidth;
+        }
+        let stepXTopButtons = (knopkiWidth - sumWidth) / (numTopButtons + 1);
+
+        let currentWidth = 0;
+        for (let tbK in topButtons) {
+            buttons[tbK]['svgObject'].x = stepXTopButtons + currentWidth + buttons[tbK]['svgObject'].displayWidth / 2;
+            currentWidth += stepXTopButtons + buttons[tbK]['svgObject'].displayWidth;
+        }
+
+        buttons['razdvButton']['svgObject'].disableInteractive();
+        buttons['razdvButton']['svgObject'].visible = false;
+
+        if (buttons['submitButton']['svgObject'] !== false) {
+            buttons['submitButton']['svgObject'].disableInteractive();
+            buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
+        }
+
+        for (let k in players) {
+            players[k]['svgObject'] = getSVGBlock(players[k]['x'], players[k]['y'], k, this, players[k].scalable, 'numbers'in players[k]);
+            players[k]['svgObject'].bringToTop(players[k]['svgObject'].getByName(k + OTJAT_MODE));
+            players[k]['svgObject'].getByName(k + ALARM_MODE).setVisible(false);
+        }
+
+        //    
+        this.input.on('dragstart', function(pointer, gameObject) {
+            gameObject.depth = 100;
+            let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
+            let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
+            if ((cellX <= 14) && (cellX >= 0) && (cellY <= 14) && (cellY >= 0)) {
+                cells[cellX][cellY][0] = false;
+                cells[cellX][cellY][1] = false;
+                cells[cellX][cellY][2] = false;
+                cells[cellX][cellY][3] = DEFAULT_FISHKA_SET;
+
+                gameObject.setData('cellX', false);
+                gameObject.setData('cellY', false);
+
+                gameObject.setData('oldCellX', cellX);
+                gameObject.setData('oldCellY', cellY);
+            } else {
+                gameObject.setData('oldCellX', false);
+                gameObject.setData('oldCellY', false);
+            }
+
+            if ((gameObject.getData('lotokX') !== false) && (gameObject.getData('lotokY') !== false)) {
+                gameObject.setData('oldLotokX', gameObject.getData('lotokX'));
+                gameObject.setData('oldLotokY', gameObject.getData('lotokY'));
+
+                lotokFreeXY(gameObject.getData('lotokX'), gameObject.getData('lotokY'));
+
+                gameObject.setData('lotokX', false);
+                gameObject.setData('lotokY', false);
+            } else {
+                gameObject.setData('oldLotokX', false);
+                gameObject.setData('oldLotokY', false);
+            }
         });
-    }
 
-    let numTopButtons = 0;
-    let sumWidth = 0;
-    for (let tbK in topButtons) {
-        numTopButtons++;
-        topButtons[tbK].displayWidth = buttons[tbK]['svgObject'].displayWidth;
-        sumWidth += topButtons[tbK].displayWidth;
-    }
-    let stepXTopButtons = (knopkiWidth - sumWidth) / (numTopButtons + 1);
+        this.input.on('drag', function(pointer, gameObject, dragX, dragY) {
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+        });
 
-    let currentWidth = 0;
-    for (let tbK in topButtons) {
-        buttons[tbK]['svgObject'].x = stepXTopButtons + currentWidth + buttons[tbK]['svgObject'].displayWidth / 2;
-        currentWidth += stepXTopButtons + buttons[tbK]['svgObject'].displayWidth;
-    }
+        this.input.on('dragend', function(pointer, gameObject) {
+            if (gameObject.x > stepX && gameObject.y < (ground.height + stepY)) {
+                let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
+                if (cellX < 0) {
+                    cellX = 0;
+                }
+                if (cellX > 14) {
+                    cellX = 14
+                }
 
-    buttons['razdvButton']['svgObject'].disableInteractive();
-    buttons['razdvButton']['svgObject'].visible = false;
+                let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
+                if (cellY < 0) {
+                    cellY = 0;
+                }
+                if (cellY > 14) {
+                    cellY = 14
+                }
 
-    if (buttons['submitButton']['svgObject'] !== false) {
-        buttons['submitButton']['svgObject'].disableInteractive();
-        buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
-    }
+                console.log('x', gameObject.x, 'y', gameObject.y, 'cellX', cellX, 'cellY', cellY);
+                findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
+            } else {
+                console.log('x', gameObject.x, 'y', gameObject.y, 'stepX', stepX, 'stepY', stepY);
+                checkZvezdaGlobal(gameObject);
+            }
 
-    for (let k in players) {
-        players[k]['svgObject'] = getSVGBlock(players[k]['x'], players[k]['y'], k, this, players[k].scalable, 'numbers' in players[k]);
-        players[k]['svgObject'].bringToTop(players[k]['svgObject'].getByName(k + OTJAT_MODE));
-        players[k]['svgObject'].getByName(k + ALARM_MODE).setVisible(false);
-    }
-
-//    
-this.input.on('dragstart', function (pointer, gameObject) {
-    gameObject.depth = 100;
-    let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
-    let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
-    if ((cellX <= 14) && (cellX >= 0) && (cellY <= 14) && (cellY >= 0)) {
-        cells[cellX][cellY][0] = false;
-        cells[cellX][cellY][1] = false;
-        cells[cellX][cellY][2] = false;
-        cells[cellX][cellY][3] = DEFAULT_FISHKA_SET;
-
-        gameObject.setData('cellX', false);
-        gameObject.setData('cellY', false);
-
-        gameObject.setData('oldCellX', cellX);
-        gameObject.setData('oldCellY', cellY);
-    } else {
-        gameObject.setData('oldCellX', false);
-        gameObject.setData('oldCellY', false);
-    }
-
-    if ((gameObject.getData('lotokX') !== false) && (gameObject.getData('lotokY') !== false)) {
-        gameObject.setData('oldLotokX', gameObject.getData('lotokX'));
-        gameObject.setData('oldLotokY', gameObject.getData('lotokY'));
-
-        lotokFreeXY(gameObject.getData('lotokX'), gameObject.getData('lotokY'));
-
-        gameObject.setData('lotokX', false);
-        gameObject.setData('lotokY', false);
-    } else {
-        gameObject.setData('oldLotokX', false);
-        gameObject.setData('oldLotokY', false);
-    }
-});
-
-this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-    gameObject.x = dragX;
-    gameObject.y = dragY;
-});
-
-this.input.on('dragend', function (pointer, gameObject) {
-    if (gameObject.x > stepX && gameObject.y < (ground.height + stepY)) {
-        let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
-        if (cellX < 0) {
-            cellX = 0;
-        }
-        if (cellX > 14) {
-            cellX = 14
-        }
-
-        let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
-        if (cellY < 0) {
-            cellY = 0;
-        }
-        if (cellY > 14) {
-            cellY = 14
-        }
-
-        console.log('x', gameObject.x, 'y', gameObject.y, 'cellX', cellX, 'cellY', cellY);
-        findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
-    } else {
-        console.log('x', gameObject.x, 'y', gameObject.y, 'stepX', stepX, 'stepY', stepY);
-        checkZvezdaGlobal(gameObject);
-    }
-
-    /*if (gameObject.x > stepX && gameObject.y < ground.height + topHeight && gameObject.y > topHeight) {
+            /*if (gameObject.x > stepX && gameObject.y < ground.height + topHeight && gameObject.y > topHeight) {
         let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
         let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
         findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
@@ -375,266 +375,229 @@ this.input.on('dragend', function (pointer, gameObject) {
         checkZvezdaGlobal(gameObject);
     }*/
 
-    gameObject.depth = 1;
-});
-//    
-function getSVGButton(X, Y, buttonName, _this) {
-    var elements = [];
-    var elementNumber = 0;
-    if ('modes' in buttons[buttonName]) {
-        for (let mode in buttons[buttonName]['modes']) {
-            elements[elementNumber] = _this.add.image(0, 0, buttonName + buttons[buttonName]['modes'][mode])
-                .setName(buttonName + buttons[buttonName]['modes'][mode])
-                .setScale(1, buttonHeightKoef);
-            elementNumber++;
-        }
-    } else {
-        for (let mode in modes) {
-            elements[elementNumber] = _this.add.image(0, 0, buttonName + modes[mode])
-                .setName(buttonName + modes[mode])
-                .setScale(1, buttonHeightKoef);
-            elementNumber++;
-        }
-    }
-
-    var container = _this.add.container(X, Y, elements);
-    container.setSize(elements[0].displayWidth, elements[0].displayHeight);
-    container.setInteractive();
-
-    return container;
-}
-
-function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits = false) {
-    let elements = [];
-    let elementNumber = 0;
-
-    for (let mode in playerBlockModes) {
-        elements[elementNumber] = _this.add.image(0, 0, buttonName + playerBlockModes[mode])
-            .setName(buttonName + playerBlockModes[mode]);
-        if(scalable) {
-            elements[elementNumber].setScale(1, buttonHeightKoef);
-        }
-        elementNumber++;
-    }
-
-    if (hasDigits) {
-        let imgName = 'numbersX3' in players[buttonName] ? 'timer_' : 'player_';
-        let y = 'numbersY' in players[buttonName] ? players[buttonName].numbersY : 0;
-        let x3 = 'numbersX3' in players[buttonName] ? players[buttonName].numbersX3 : elements[0].displayWidth * 0.75 * 0.5;
-        let x2 = 'numbersX2' in players[buttonName] ? players[buttonName].numbersX2: elements[0].displayWidth * 0.6 * 0.5;
-        let x1 = 'numbersX1' in players[buttonName] ? players[buttonName].numbersX1 : elements[0].displayWidth * 0.45 * 0.5;
-
-        playerBlockModes.forEach(mode => {
-            if ('dvoetochX' in players[buttonName]) {
-                elements[elementNumber] = _this.add.image(
-                    players[buttonName].dvoetochX
-                    , y
-                    , mode + '_' + 'dvoetoch')
-                    .setName(mode + '_' + 'dvoetoch')
-                    .setVisible(false);
-
-                elementNumber++;
-            }
-
-            for (let k in digits.playerDigits[mode]) {
-                elements[elementNumber] = _this.add.image(
-                    x3
-                    , y
-                    , mode + '_' + imgName + k)
-                    .setName(mode + '_' + k.replace('digit_', '') + '_3')
-                    .setVisible(false);
-
-                elementNumber++;
-            }
+            gameObject.depth = 1;
         });
-
-        playerBlockModes.forEach(mode => {
-            for (let k in digits.playerDigits[mode]) {
-                elements[elementNumber] = _this.add.image(
-                    x2
-                    , y
-                    , mode + '_' + imgName + k)
-                    .setName(mode + '_' + k.replace('digit_', '') + '_2')
-                    .setVisible(false);
-
-                if(scalable) {
-                    elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
+        //    
+        function getSVGButton(X, Y, buttonName, _this) {
+            var elements = [];
+            var elementNumber = 0;
+            if ('modes'in buttons[buttonName]) {
+                for (let mode in buttons[buttonName]['modes']) {
+                    elements[elementNumber] = _this.add.image(0, 0, buttonName + buttons[buttonName]['modes'][mode]).setName(buttonName + buttons[buttonName]['modes'][mode]).setScale(1, buttonHeightKoef);
+                    elementNumber++;
                 }
-
-                elementNumber++;
-            }
-        });
-
-        playerBlockModes.forEach(mode => {
-            for (let k in digits.playerDigits[mode]) {
-                elements[elementNumber] = _this.add.image(
-                    x1
-                    , y
-                    , mode + '_' + imgName + k)
-                    .setName(mode + '_' + k.replace('digit_', '') + '_1')
-                    .setVisible(false);
-
-                if(scalable) {
-                    elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
-                }
-
-                elementNumber++;
-            }
-        });
-    }
-
-    let container = _this.add.container(X, Y, elements);
-    container.setSize(elements[0].displayWidth, elements[0].displayHeight);
-
-    if (hasDigits) {
-        container.setAlpha(INACTIVE_USER_ALPHA);
-    }
-
-    return container;
-}
-
-
-    ochki = this.add.text(lotokX - lotokCellStep / 2 + 5,
-        buttons['newGameButton']['svgObject'].y + buttons['newGameButton']['svgObject'].height - 15,
-        'Ваши очки:0',
-        {
-            color: 'black',
-            font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
-        }).setVisible(false); // todo delete ochki
-
-    vremia = this.add.text(ochki.x, ochki.y + ochki.height + 15, 'Время на ход 2:00',
-        {
-            color: 'black',
-            font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
-        }).setVisible(false); // todo delete vremia
-}    ,
-    
-    update : 
-    ////
-function (time, delta) {
-
-    if (requestSended && ((new Date()).getTime() - requestTimestamp > normalRequestTimeout)) {
-        if (noNetworkImg !== false) {
-        noNetworkImg.visible = true;
-        noNetworkImg.alpha = ((new Date()).getTime() - requestTimestamp) < (normalRequestTimeout * 2)
-            ? ((new Date()).getTime() - requestTimestamp - normalRequestTimeout) / 1000
-            : 1;
-        }
-    } else {
-        if (noNetworkImg !== false) {
-            noNetworkImg.visible = false;
-        }
-    }
-
-    if (gameState == 'chooseGame' && (queryNumber > 1))
-        return;
-    if (newCells.constructor === Array && Array.isArray(newCells[15])) {
-
-        for (k = 100; k >= 0; k--)
-            if (k in container) {
-                if (container[k].getData('lotokX') !== false)
-                    lotokFreeXY(container[k].getData('lotokX'), container[k].getData('lotokY'));
-                container[k].destroy();
-                container.splice(k, 1);
-            }
-
-        if (newCells[15].length > 0) {
-            for (var $fishkaNum = 0; $fishkaNum < newCells[15].length; $fishkaNum++)
-                if (newCells[15][$fishkaNum] !== undefined) {
-                    let lotokXY = lotokFindSlotXY();
-                    container.push(getFishkaGlobal(newCells[15][$fishkaNum], lotokGetX(lotokXY[0], lotokXY[1]), lotokGetY(lotokXY[0], lotokXY[1]), this, true, userFishkaSet).setData('lotokX', lotokXY[0]).setData('lotokY', lotokXY[1]));
-                }
-
-
-        }
-        newCells.splice(15, 1);
-    }
-    var flor = Math.floor(time / 1000);
-    //if ( (Math.random() > (1-(1/gameStates[gameState]['refresh']/60))) || (queryNumber == 1) ) {
-    if (
-        (
-            (flor > lastQueryTime)
-            && ((flor % gameStates[gameState]['refresh']) === 0)
-        )
-        || (queryNumber === 1)
-    ) {
-        if (requestToServerEnabled) {
-            lastQueryTime = flor;
-            fetchGlobal(STATUS_CHECKER_SCRIPT)
-                .then((data) => {
-                    commonCallback(data);
-                });
-        }
-    }
-
-    if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'startGame') {
-        if (flor > lastTimeCorrection) {
-            lastTimeCorrection = flor;
-            if ((vremiaMinutes > 0) || (vremiaSeconds > 0)) {
-                vremiaSeconds--;
-                if (vremiaSeconds < 0) {
-                    vremiaMinutes--;
-                    vremiaSeconds = 59;
-                }
-
-                displayTimeGlobal(+vremiaMinutes * 100 + +vremiaSeconds);
-            }
-        }
-    }
-
-    if (gameState == MY_TURN_STATE) {
-        if ((vremiaMinutes === 0) && (vremiaSeconds <= 10) && buttons['submitButton']['svgObject'].input.enabled) {
-            if ((flor % 2) === 0) {
-                buttons['submitButton']['svgObject']
-                    .bringToTop(buttons['submitButton']['svgObject']
-                        .getByName('submitButton' + ALARM_MODE));
             } else {
-                buttons['submitButton']['svgObject']
-                    .bringToTop(buttons['submitButton']['svgObject']
-                        .getByName('submitButton' + OTJAT_MODE));
+                for (let mode in modes) {
+                    elements[elementNumber] = _this.add.image(0, 0, buttonName + modes[mode]).setName(buttonName + modes[mode]).setScale(1, buttonHeightKoef);
+                    elementNumber++;
+                }
+            }
+
+            var container = _this.add.container(X, Y, elements);
+            container.setSize(elements[0].displayWidth, elements[0].displayHeight);
+            container.setInteractive();
+
+            return container;
+        }
+
+        function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits=false) {
+            let elements = [];
+            let elementNumber = 0;
+
+            for (let mode in playerBlockModes) {
+                elements[elementNumber] = _this.add.image(0, 0, buttonName + playerBlockModes[mode]).setName(buttonName + playerBlockModes[mode]);
+                if (scalable) {
+                    elements[elementNumber].setScale(1, buttonHeightKoef);
+                }
+                elementNumber++;
+            }
+
+            if (hasDigits) {
+                let imgName = 'numbersX3'in players[buttonName] ? 'timer_' : 'player_';
+                let y = 'numbersY'in players[buttonName] ? players[buttonName].numbersY : 0;
+                let x3 = 'numbersX3'in players[buttonName] ? players[buttonName].numbersX3 : elements[0].displayWidth * 0.75 * 0.5;
+                let x2 = 'numbersX2'in players[buttonName] ? players[buttonName].numbersX2 : elements[0].displayWidth * 0.6 * 0.5;
+                let x1 = 'numbersX1'in players[buttonName] ? players[buttonName].numbersX1 : elements[0].displayWidth * 0.45 * 0.5;
+
+                playerBlockModes.forEach(mode => {
+                    if ('dvoetochX'in players[buttonName]) {
+                        elements[elementNumber] = _this.add.image(players[buttonName].dvoetochX, y, mode + '_' + 'dvoetoch').setName(mode + '_' + 'dvoetoch').setVisible(false);
+
+                        elementNumber++;
+                    }
+
+                    for (let k in digits.playerDigits[mode]) {
+                        elements[elementNumber] = _this.add.image(x3, y, mode + '_' + imgName + k).setName(mode + '_' + k.replace('digit_', '') + '_3').setVisible(false);
+
+                        elementNumber++;
+                    }
+                }
+                );
+
+                playerBlockModes.forEach(mode => {
+                    for (let k in digits.playerDigits[mode]) {
+                        elements[elementNumber] = _this.add.image(x2, y, mode + '_' + imgName + k).setName(mode + '_' + k.replace('digit_', '') + '_2').setVisible(false);
+
+                        if (scalable) {
+                            elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
+                        }
+
+                        elementNumber++;
+                    }
+                }
+                );
+
+                playerBlockModes.forEach(mode => {
+                    for (let k in digits.playerDigits[mode]) {
+                        elements[elementNumber] = _this.add.image(x1, y, mode + '_' + imgName + k).setName(mode + '_' + k.replace('digit_', '') + '_1').setVisible(false);
+
+                        if (scalable) {
+                            elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
+                        }
+
+                        elementNumber++;
+                    }
+                }
+                );
+            }
+
+            let container = _this.add.container(X, Y, elements);
+            container.setSize(elements[0].displayWidth, elements[0].displayHeight);
+
+            if (hasDigits) {
+                container.setAlpha(INACTIVE_USER_ALPHA);
+            }
+
+            return container;
+        }
+
+        ochki = this.add.text(lotokX - lotokCellStep / 2 + 5, buttons['newGameButton']['svgObject'].y + buttons['newGameButton']['svgObject'].height - 15, 'Ваши очки:0', {
+            color: 'black',
+            font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
+        }).setVisible(false);
+        // todo delete ochki
+
+        vremia = this.add.text(ochki.x, ochki.y + ochki.height + 15, 'Время на ход 2:00', {
+            color: 'black',
+            font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
+        }).setVisible(false);
+        // todo delete vremia
+    },
+
+    update: ////
+    function(time, delta) {
+
+        if (requestSended && ((new Date()).getTime() - requestTimestamp > normalRequestTimeout)) {
+            if (noNetworkImg !== false) {
+                noNetworkImg.visible = true;
+                noNetworkImg.alpha = ((new Date()).getTime() - requestTimestamp) < (normalRequestTimeout * 2) ? ((new Date()).getTime() - requestTimestamp - normalRequestTimeout) / 1000 : 1;
+            }
+        } else {
+            if (noNetworkImg !== false) {
+                noNetworkImg.visible = false;
+            }
+        }
+
+        if (gameState == 'chooseGame' && (queryNumber > 1))
+            return;
+        if (newCells.constructor === Array && Array.isArray(newCells[15])) {
+
+            for (k = 100; k >= 0; k--)
+                if (k in container) {
+                    if (container[k].getData('lotokX') !== false)
+                        lotokFreeXY(container[k].getData('lotokX'), container[k].getData('lotokY'));
+                    container[k].destroy();
+                    container.splice(k, 1);
+                }
+
+            if (newCells[15].length > 0) {
+                for (var $fishkaNum = 0; $fishkaNum < newCells[15].length; $fishkaNum++)
+                    if (newCells[15][$fishkaNum] !== undefined) {
+                        let lotokXY = lotokFindSlotXY();
+                        container.push(getFishkaGlobal(newCells[15][$fishkaNum], lotokGetX(lotokXY[0], lotokXY[1]), lotokGetY(lotokXY[0], lotokXY[1]), this, true, userFishkaSet).setData('lotokX', lotokXY[0]).setData('lotokY', lotokXY[1]));
+                    }
+
+            }
+            newCells.splice(15, 1);
+        }
+        var flor = Math.floor(time / 1000);
+        //if ( (Math.random() > (1-(1/gameStates[gameState]['refresh']/60))) || (queryNumber == 1) ) {
+        if (((flor > lastQueryTime) && ((flor % gameStates[gameState]['refresh']) === 0)) || (queryNumber === 1)) {
+            if (requestToServerEnabled) {
+                lastQueryTime = flor;
+                fetchGlobal(STATUS_CHECKER_SCRIPT).then( (data) => {
+                    commonCallback(data);
+                }
+                );
+            }
+        }
+
+        if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'startGame') {
+            if (flor > lastTimeCorrection) {
+                lastTimeCorrection = flor;
+                if ((vremiaMinutes > 0) || (vremiaSeconds > 0)) {
+                    vremiaSeconds--;
+                    if (vremiaSeconds < 0) {
+                        vremiaMinutes--;
+                        vremiaSeconds = 59;
+                    }
+
+                    displayTimeGlobal(+vremiaMinutes * 100 + +vremiaSeconds);
+                }
+            }
+        }
+
+        if (gameState == MY_TURN_STATE) {
+            if ((vremiaMinutes === 0) && (vremiaSeconds <= 10) && buttons['submitButton']['svgObject'].input.enabled) {
+                if ((flor % 2) === 0) {
+                    buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + ALARM_MODE));
+                } else {
+                    buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
+                }
+            }
+        }
+
+        if (gameState == MY_TURN_STATE || gameState == PRE_MY_TURN_STATE || gameState == OTHER_TURN_STATE) {
+            let activeUserBlockName = (gameState == MY_TURN_STATE) ? 'youBlock' : ('player' + (+activeUser + 1) + 'Block');
+            if ((flor % 2) === 0) {
+                buttonSetModeGlobal(players, activeUserBlockName, ALARM_MODE);
+            } else {
+                buttonSetModeGlobal(players, activeUserBlockName, OTJAT_MODE);
+            }
+        }
+
+        if (gameState == 'gameResults') {
+            if ((flor % 2) === 0) {
+                buttons['newGameButton']['svgObject'].bringToTop(buttons['newGameButton']['svgObject'].getByName('newGameButton' + ALARM_MODE));
+            } else {
+                buttons['newGameButton']['svgObject'].bringToTop(buttons['newGameButton']['svgObject'].getByName('newGameButton' + OTJAT_MODE));
             }
         }
     }
-
-    if (gameState == MY_TURN_STATE || gameState == PRE_MY_TURN_STATE || gameState == OTHER_TURN_STATE) {
-        let activeUserBlockName = (gameState == MY_TURN_STATE) ? 'youBlock' : ('player' + (+activeUser + 1) + 'Block');
-        if ((flor % 2) === 0) {
-            buttonSetModeGlobal(players, activeUserBlockName, ALARM_MODE);
-        } else {
-            buttonSetModeGlobal(players, activeUserBlockName, OTJAT_MODE);
-        }
-    }
-
-
-
-    if (gameState == 'gameResults') {
-        if ((flor % 2) === 0) {
-            buttons['newGameButton']['svgObject']
-                .bringToTop(buttons['newGameButton']['svgObject']
-                    .getByName('newGameButton' + ALARM_MODE));
-        } else {
-            buttons['newGameButton']['svgObject']
-                .bringToTop(buttons['newGameButton']['svgObject']
-                    .getByName('newGameButton' + OTJAT_MODE));
-        }
-    }
-}});
+});
 
 //
 //
-var lang = 'RU';
+var lang = 'EN';
 
-const INVITE_FRIEND_PROMPT = 'Присоединяйся к онлайн игре Эрудит в Telegram! Набери максимальный рейтинг, зарабатывай монеты и выводи токены на кошелек';
-const GAME_BOT_URL = 'https://t.me/erudit_club_bot';
-const LOADING_TEXT = 'Загружаем игру...';
+const chooseFile = "'Choose file'";
+document.documentElement.style.setProperty('--choose-file', chooseFile);
+
+const INVITE_FRIEND_PROMPT = 'Join the online game Scrabble on Telegram! Get the maximum rating, earn coins and withdraw tokens to your wallet';
+const GAME_BOT_URL = 'https://t.me/scrabble_online_bot';
+const LOADING_TEXT = 'Scrabble is loading...';
+const errorServerMessage = 'Server connecting error. Please try again';
 
 var preloaderObject = false;
 
-const GROUND_FILE = 'field_source_nd_20.svg';
+const GROUND_FILE = 'field_source_scrabble.svg';
 const DEFAULT_FISHKA_SET = 'default';
 const MAXS_FISHKA_SET = 'MaxS';
 const GIRL_FISHKA_SET = 'Girl';
-const FISHKA_AVAILABLE_SETS = {MaxS: 30, Girl: 30};
+const FISHKA_AVAILABLE_SETS = {
+    MaxS: 30,
+    Girl: 30
+};
 const FISHKA_SET_NAMES = [MAXS_FISHKA_SET, GIRL_FISHKA_SET];
 var fishkiLoaded = {};
 var userFishkaSet = (lang === 'EN' ? GIRL_FISHKA_SET : MAXS_FISHKA_SET);
@@ -655,7 +618,7 @@ const SET_PLAYER_NAME_SCRIPT = 'set_player_name.php';
 const DELETE_BAN_URL = 'mvc/ban/remove?common_id=';
 const STATS_URL = 'mvc/stats/viewV2/?common_id='
 const NEW_GAME_SCRIPT = 'new_game.php';
-const PLAYER_RATING_SCRIPT = 'players_ratings.php';
+const PLAYER_RATING_SCRIPT = lang == 'EN' ? 'mvc/players/info/' : 'players_ratings.php';
 const CHANGE_FISHKI_SCRIPT = 'change_fishki.php';
 const COOKIE_CHECKER_SCRIPT = 'cookie_checker.php';
 const CABINET_SCRIPT = 'player_cabinet.php';
@@ -688,11 +651,36 @@ var commonId = false;
 var commonIdHash = false;
 var isUserBlockActive = false;
 var playerScores = {
-    youBlock: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
-    player1Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
-    player2Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
-    player3Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
-    player4Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+    youBlock: {
+        mode: OTJAT_MODE,
+        digit3: 0,
+        digit2: 0,
+        digit1: 0
+    },
+    player1Block: {
+        mode: OTJAT_MODE,
+        digit3: 0,
+        digit2: 0,
+        digit1: 0
+    },
+    player2Block: {
+        mode: OTJAT_MODE,
+        digit3: 0,
+        digit2: 0,
+        digit1: 0
+    },
+    player3Block: {
+        mode: OTJAT_MODE,
+        digit3: 0,
+        digit2: 0,
+        digit1: 0
+    },
+    player4Block: {
+        mode: OTJAT_MODE,
+        digit3: 0,
+        digit2: 0,
+        digit1: 0
+    },
 }
 
 var timerState = {
@@ -761,9 +749,18 @@ if (windowInnerWidth > windowInnerHeight) {
     var topHeight = gameHeight * TOP_PERCENT;
     var fishkiHeight = gameHeight * FISHKI_PERCENT;
     var botHeight = gameHeight * BOTTOM_PERCENT;
-    var topXY = {x: 0, y: 0};
-    var fishkiXY = {x: 0, y: topHeight};
-    var botXY = {x: 0, y: topHeight + fishkiHeight};
+    var topXY = {
+        x: 0,
+        y: 0
+    };
+    var fishkiXY = {
+        x: 0,
+        y: topHeight
+    };
+    var botXY = {
+        x: 0,
+        y: topHeight + fishkiHeight
+    };
 
     var lotokX = fishkiXY.x + 30 * 2;
     var lotokY = fishkiXY.y + 20 * 2;
@@ -771,7 +768,10 @@ if (windowInnerWidth > windowInnerHeight) {
     var lotokCellStepY = lotokCellStep;
     var lotokCapacityX = 10;
     var lotokCapacityY = 2;
-    var fullscreenXY = {x: gameWidth - gameHeight - fullscreenButtonSize / 2, y: fullscreenButtonSize / 2 + 16};
+    var fullscreenXY = {
+        x: gameWidth - gameHeight - fullscreenButtonSize / 2,
+        y: fullscreenButtonSize / 2 + 16
+    };
     var backY = (gameHeight - 2000) * Math.random();
     var backX = (gameWidth - 2000) * Math.random();
 } else {
@@ -792,14 +792,24 @@ if (windowInnerWidth > windowInnerHeight) {
     var gameWidth = standardVerticalWidth;
     var gameHeight = (gameWidth * propKoef);
 
-    var knopkiWidth = gameWidth; // size of buttons block
+    var knopkiWidth = gameWidth;
+    // size of buttons block
 
     var topHeight = (gameHeight - gameWidth) * TOP_PERCENT;
     var fishkiHeight = (gameHeight - gameWidth) * FISHKI_PERCENT;
     var botHeight = (gameHeight - gameWidth) * BOTTOM_PERCENT;
-    var topXY = {x: 0, y: 0};
-    var fishkiXY = {x: 0, y: topHeight + gameWidth};
-    var botXY = {x: 0, y: topHeight + gameWidth + fishkiHeight};
+    var topXY = {
+        x: 0,
+        y: 0
+    };
+    var fishkiXY = {
+        x: 0,
+        y: topHeight + gameWidth
+    };
+    var botXY = {
+        x: 0,
+        y: topHeight + gameWidth + fishkiHeight
+    };
 
     var lotokX = fishkiXY.x + 30 * 2;
     var lotokY = fishkiXY.y + 20 * buttonHeightKoef * 2;
@@ -818,10 +828,14 @@ if (windowInnerWidth > windowInnerHeight) {
     buttonStepY = buttonStepY * buttonHeightKoef;
 
     var lotokCapacityY = 1;
-    var fullscreenXY = {x: gameWidth - fullscreenButtonSize / 2 - 8, y: gameHeight - fullscreenButtonSize / 2 - 8};
+    var fullscreenXY = {
+        x: gameWidth - fullscreenButtonSize / 2 - 8,
+        y: gameHeight - fullscreenButtonSize / 2 - 8
+    };
     var backY = 100 + (gameWidth - 50) * Math.random();
     var backX = -1 * gameWidth * Math.random();
-    var backScale = 1; // не используем, хз как работает setscale в Фазере
+    var backScale = 1;
+    // не используем, хз как работает setscale в Фазере
 }
 
 var buttonHeight = topHeight;
@@ -872,33 +886,33 @@ var useLocalStorage = localStorage.erudit_user_session_ID ? true : false;
 
 var soundPlayed = false;
 var instruction = `<h2 id="nav1">Об игре</h2>
-                            <p>Эрудит &mdash; настольная игра со словами, в которую могут играть от 2 до 4 человек, выкладывая слова из имеющихся у них букв на поле размером 15x15.</p>
+                            <p>Эрудит на английском &mdash; настольная игра со словами, в которую могут играть от 2 до 4 человек, выкладывая слова из имеющихся у них букв на поле размером 15x15.</p>
                             <div class="fon-right">
                                 <h2 id="nav2">Игровое поле</h2>
-                                <p>Игровое поле состоит из 15х15, то есть 225 квадратов, на которые участники игры выкладывают буквы, составляя тем самым&nbsp;слова. В начале игры каждый игрок получает 7 случайных букв (всего их в игре 102). 
+                                <p>Игровое поле состоит из 15х15, то есть 225 квадратов, на которые участники игры выкладывают буквы, составляя тем самым&nbsp;слова. В начале игры каждый игрок получает 7 случайных букв. 
                                 <p>На середину игрового поля выкладывается первое&nbsp;слово. К этому слову по возможности, нужно приставить осташиеся буквы так, чтобы на пересечении получились новые слова.</p>
                                 <p>Затем следующий игрок должен выставить свои&nbsp;буквы&nbsp;&laquo;на пересечение&raquo; или приставить их к уже составленным словам.</p>
                                 <p>Слова&nbsp;выкладываются либо слева направо, либо сверху вниз.</p>
                             </div>
                             <div class="fon-right">
                                 <h2 id="nav3">Словарь</h2>
-                                <p>Разрешается использовать все&nbsp;слова, приведенные в стандартном словаре языка за исключением&nbsp;слов, пишущихся с прописных букв, сокращений, и слов, которые пишутся через апостроф или дефис.</p>
-                                <p>Разрешено использовать только нарицательные имена существительные в именительном падеже и единственном числе (либо во множественном при отсутствии у слова формы единственного числа, ЛИБО, если слово во множественном числе содержится в одном из словарей Игры - см. значение слова в меню ЛОГ).</p>
-                                <p>Чтобы посмотреть, какие слова составили игроки в предыдущих ходах, а также узнать их значение и &laquo;стоимость&raquo;, кликните на кнопку <img src="/img/otjat/log.svg" height="64"/></p>
+                                <p>Разрешается использовать все&nbsp;слова, приведенные в кэмбриджском англо-русском словаре (https://dictionary.cambridge.org/ru/ ), включая наиболее <a href="#" onclick="$('#abbr').css({ display: 'block' });return false;" style="cursor: pointer;" title="ad AGM AIDS ATM BA BBC BSc BSE CCTV CD CEO CFC Corp dab DIY DNA DVD EFL ELT er ESL FA FAQ FM GCSE GDP GMO GMT GNP GP GPS HIV HQ ICT IOU IPA IQ ISP it ITV IVF JP JPEG LAN LCD LPG MA MBA MEP MP MPV MRI MRSA Ms MSc MTV NATO OAP PC PDA PE pin POW PR pt QC ram RSI SARS SASE SATNAV SGML SIDS SMS SPF SUV TB TEFL TESOL TV UFO UK USA VAT VCR VDU VIP WC WMD www XML">употребительные аббревиатуры</a>.<span id="abbr" style="display:none;">ad AGM AIDS ATM BA BBC BSc BSE CCTV CD CEO CFC Corp dab DIY DNA DVD EFL ELT er ESL FA FAQ FM GCSE GDP GMO GMT GNP GP GPS HIV HQ ICT IOU IPA IQ ISP it ITV IVF JP JPEG LAN LCD LPG MA MBA MEP MP MPV MRI MRSA Ms MSc MTV NATO OAP PC PDA PE pin POW PR pt QC ram RSI SARS SASE SATNAV SGML SIDS SMS SPF SUV TB TEFL TESOL TV UFO UK USA VAT VCR VDU VIP WC WMD www XML</span></p>
+                                <p>Разрешено использовать только нарицательные имена существительные в единственном числе (либо во множественном при отсутствии у слова формы единственного числа).</p>
+                                <p>Чтобы посмотреть, какие слова составили игроки в предыдущих ходах, а также узнать их значение и &laquo;стоимость&raquo;, кликните на кнопку <img src="/img/otjat/log2.svg" height="64"/></p>
                             </div>
                             <div class="fon-right">
                                 <h2 id="nav4">Ход игры</h2>
                                 <p>В начале игры каждому дается по 7 фишек. За один ход можно выложить несколько&nbsp;слов. Каждое новое&nbsp;слово&nbsp;должно соприкасаться (иметь общую букву или буквы) с ранее выложенными&nbsp;словами.&nbsp;Слова&nbsp;читаются только по горизонтали слева направо и по вертикали сверху вниз.</p>
                                 <p>Первое выложенное&nbsp;слово&nbsp;должно проходить через центральную клетку.</p>
                                 <p>
-                                Отправить свою комбинацию можно, нажав кнопку <br /><img src="/img/otjat/otpravit.svg" width="80%"/>
+                                Отправить свою комбинацию можно, нажав кнопку <br /><img src="/img/otjat/otpravit2.svg" width="80%"/>
                                 <br />
-                                Если в данный момент ход не Ваш - кнопка станет неактивной <br /><img src="/img/inactive/otpravit.svg" width="80%"/>
+                                Если в данный момент ход не Ваш - кнопка станет неактивной <br /><img src="/img/inactive/otpravit2.svg" width="80%"/>
                                 <br />
                                 Если кнопка ОТПРАВИТЬ начала мигать красным - время Вашего хода заканчивается. Скорее отправляйте свою комбинацию!
                                 </p>
                                 <p>Если игрок не хочет или не может выложить ни одного слова, - он имеет право поменять любое количество своих букв, пропустив при этом ход.
-                                <br /><img src="/img/otjat/pomenyat.svg" width="80%"/>
+                                <br /><img src="/img/otjat/pomenyat2.svg" width="80%"/>
                                 </p>
                                 <p>Любая последовательность букв по горизонтали и вертикали должна являться&nbsp;словом. Т.е. в игре не допускается появление на поле случайных буквосочетаний, не представляющих собою&nbsp;слов, соответствующих вышеприведенным критериям.</p>
                                 <p>После каждого хода необходимо добрать новых букв до 7.</p>
@@ -915,168 +929,138 @@ var instruction = `<h2 id="nav1">Об игре</h2>
                                         </tr>
                                         <tr>
                                             <td><strong>*</strong></td>
-                                            <td>3 шт.</td>
+                                            <td>10 шт.</td>
                                             <td></td>
                                         </tr>
                                         <tr>
-                                            <td>А</td>
-                                            <td>8 шт.</td>
-                                            <td>1 очко</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Б</td>
-                                            <td>2 шт.</td>
-                                            <td>3 очка</td>
-                                        </tr>
-                                        <tr>
-                                            <td>В</td>
-                                            <td>4 шт.</td>
-                                            <td>1 очко</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Г</td>
-                                            <td>2 шт.</td>
-                                            <td>3 очка</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Д</td>
-                                            <td>4 шт.</td>
-                                            <td>2 очка</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Е</td>
+                                            <td>A</td>
                                             <td>9 шт.</td>
                                             <td>1 очко</td>
                                         </tr>
                                         <tr>
-                                            <td>Ж</td>
-                                            <td>1 шт.</td>
-                                            <td>5 очков</td>
-                                        </tr>
-                                        <tr>
-                                            <td>З</td>
+                                            <td>B</td>
                                             <td>2 шт.</td>
-                                            <td>5 очков</td>
+                                            <td>3 очка</td>
                                         </tr>
                                         <tr>
-                                            <td>И</td>
-                                            <td>6 шт.</td>
+                                            <td>C</td>
+                                            <td>2 шт.</td>
+                                            <td>3 очка</td>
+                                        </tr>
+                                        <tr>
+                                            <td>D</td>
+                                            <td>4 шт.</td>
+                                            <td>2 очка</td>
+                                        </tr>
+                                        <tr>
+                                            <td>E</td>
+                                            <td>12 шт.</td>
                                             <td>1 очко</td>
                                         </tr>
                                         <tr>
-                                            <td>Й</td>
-                                            <td>1 шт.</td>
+                                            <td>F</td>
+                                            <td>2 шт.</td>
                                             <td>4 очка</td>
                                         </tr>
                                         <tr>
-                                            <td>К</td>
-                                            <td>4 шт.</td>
-                                            <td>2 очка</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Л</td>
-                                            <td>4 шт.</td>
-                                            <td>2 очка</td>
-                                        </tr>
-                                        <tr>
-                                            <td>М</td>
+                                            <td>G</td>
                                             <td>3 шт.</td>
                                             <td>2 очка</td>
                                         </tr>
                                         <tr>
-                                            <td>Н</td>
-                                            <td>5 шт.</td>
-                                            <td>1 очко</td>
-                                        </tr>
-                                        <tr>
-                                            <td>О</td>
-                                            <td>10 шт.</td>
-                                            <td>1 очко</td>
-                                        </tr>
-                                        <tr>
-                                            <td>П</td>
-                                            <td>4 шт.</td>
-                                            <td>2 очка</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Р</td>
-                                            <td>5 шт.</td>
-                                            <td>1 очко</td>
-                                        </tr>
-                                        <tr>
-                                            <td>С</td>
-                                            <td>5 шт.</td>
-                                            <td>1 очко</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Т</td>
-                                            <td>5 шт.</td>
-                                            <td>1 очко</td>
-                                        </tr>
-                                        <tr>
-                                            <td>У</td>
-                                            <td>4 шт.</td>
-                                            <td>2 очка</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ф</td>
-                                            <td>1 шт.</td>
-                                            <td>8 очков</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Х</td>
-                                            <td>1 шт.</td>
-                                            <td>5 очков</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ц</td>
-                                            <td>1 шт.</td>
-                                            <td>5 очков</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ч</td>
-                                            <td>1 шт.</td>
-                                            <td>5 очков</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ш</td>
-                                            <td>1 шт.</td>
-                                            <td>8 очков</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Щ</td>
-                                            <td>1 шт.</td>
-                                            <td>10 очков</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ъ</td>
-                                            <td>1 шт.</td>
-                                            <td>15 очков</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ы</td>
+                                            <td>H</td>
                                             <td>2 шт.</td>
                                             <td>4 очка</td>
                                         </tr>
                                         <tr>
-                                            <td>Ь</td>
-                                            <td>2 шт.</td>
-                                            <td>3 очка</td>
+                                            <td>I</td>
+                                            <td>9 шт.</td>
+                                            <td>1 очко</td>
                                         </tr>
                                         <tr>
-                                            <td>Э</td>
+                                            <td>J</td>
                                             <td>1 шт.</td>
                                             <td>8 очков</td>
                                         </tr>
                                         <tr>
-                                            <td>Ю</td>
+                                            <td>K</td>
+                                            <td>1 шт.</td>
+                                            <td>5 очков</td>
+                                        </tr>
+                                        <tr>
+                                            <td>L</td>
+                                            <td>4 шт.</td>
+                                            <td>1 очко</td>
+                                        </tr>
+                                        <tr>
+                                            <td>M</td>
+                                            <td>2 шт.</td>
+                                            <td>3 очка</td>
+                                        </tr>
+                                        <tr>
+                                            <td>N</td>
+                                            <td>6 шт.</td>
+                                            <td>1 очко</td>
+                                        </tr>
+                                        <tr>
+                                            <td>O</td>
+                                            <td>8 шт.</td>
+                                            <td>1 очко</td>
+                                        </tr>
+                                        <tr>
+                                            <td>P</td>
+                                            <td>2 шт.</td>
+                                            <td>3 очка</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Q</td>
+                                            <td>1 шт.</td>
+                                            <td>10 очков</td>
+                                        </tr>
+                                        <tr>
+                                            <td>R</td>
+                                            <td>6 шт.</td>
+                                            <td>1 очко</td>
+                                        </tr>
+                                        <tr>
+                                            <td>S</td>
+                                            <td>4 шт.</td>
+                                            <td>1 очко</td>
+                                        </tr>
+                                        <tr>
+                                            <td>T</td>
+                                            <td>6 шт.</td>
+                                            <td>1 очко</td>
+                                        </tr>
+                                        <tr>
+                                            <td>U</td>
+                                            <td>4 шт.</td>
+                                            <td>1 очко</td>
+                                        </tr>
+                                        <tr>
+                                            <td>V</td>
+                                            <td>2 шт.</td>
+                                            <td>4 очка</td>
+                                        </tr>
+                                        <tr>
+                                            <td>W</td>
+                                            <td>2 шт.</td>
+                                            <td>4 очка</td>
+                                        </tr>
+                                        <tr>
+                                            <td>X</td>
                                             <td>1 шт.</td>
                                             <td>8 очков</td>
                                         </tr>
                                         <tr>
-                                            <td>Я</td>
+                                            <td>Y</td>
                                             <td>2 шт.</td>
-                                            <td>3 очка</td>
+                                            <td>4 очка</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Z</td>
+                                            <td>1 шт.</td>
+                                            <td>10 очков</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1095,7 +1079,7 @@ var instruction = `<h2 id="nav1">Об игре</h2>
                             </div>
                             <div class="fon-right">
                                 <h2 id="nav7">Звёздочка</h2>
-                                <p>Также, в наборе фишек присутствуют три звёздочки. Такая фишка может быть использована как любая буква на выбор игрока. Например, игрок может выставить слово &laquo;ТЕ*ЕФОН&raquo;, где роль буквы &laquo;Л&raquo; будет играть звездочка.</p>
+                                <p>Также, в наборе фишек присутствуют три звёздочки. Такая фишка может быть использована как любая буква на выбор игрока. Например, игрок может выставить слово &laquo;P*ONE&raquo;, где роль буквы &laquo;H&raquo; будет играть звездочка.</p>
                                 <p>Как только игрок выставит на поле звездочку, игра сразу предложит выбрать заменяемую ею букву. При перестановке звездочки выбор буквы будет предлагаться вновь.</p>
                                 <p>Звездочка приносит столько очков, сколько бы принесла буква, роль которой она играет.&nbsp;</p>
                                 <h3>Повторное использование звёздочки&nbsp;</h3>
@@ -1109,33 +1093,42 @@ function shareTgGlobal() {
         return;
     }
 
-    botUrl = GAME_BOT_URL + '/?start=inv_'
-    + (commonId ? commonId : ('id_' + webAppInitDataUnsafe.user.id));
+    botUrl = GAME_BOT_URL + '/?start=inv_' + (commonId ? commonId : ('id_' + webAppInitDataUnsafe.user.id));
 
-    shareUrl = '/share/url?url='
-        + encodeURIComponent(botUrl)
-        + '&text=' + encodeURIComponent(INVITE_FRIEND_PROMPT);
+    shareUrl = '/share/url?url=' + encodeURIComponent(botUrl) + '&text=' + encodeURIComponent(INVITE_FRIEND_PROMPT);
 
-    WebView.postEvent(
-        'web_app_open_tg_link',
-        false,
-        {path_full: shareUrl,}
-    );
+    WebView.postEvent('web_app_open_tg_link', false, {
+        path_full: shareUrl,
+    });
 }
 ////
-var topButtons = {newGameButton: {displayWidth: 0}, instructButton: {displayWidth: 0}, prizesButton: {displayWidth: 0}, inviteButton: {displayWidth: 0}};
+var topButtons = {
+    newGameButton: {
+        displayWidth: 0
+    },
+    instructButton: {
+        displayWidth: 0
+    },
+    prizesButton: {
+        displayWidth: 0
+    },
+    inviteButton: {
+        displayWidth: 0
+    }
+};
 
 var modes = [OTJAT_MODE, ALARM_MODE, 'Inactive', 'Navedenie', 'Najatie'];
 
 var buttons = {
     newGameButton: {
-        filename: 'new_game2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'new_game2' + (lang === 'RU' ? '_ru' : ''),
         x: topXY.x + lotokX + buttonWidth / 2 - lotokCellStep / 2 + 5,
         y: (topXY.y + topHeight) / 2,
         caption: 'New#Game',
         width: buttonWidth,
-        object: false, svgObject: false,
-        pointerupFunction: function () {
+        object: false,
+        svgObject: false,
+        pointerupFunction: function() {
             newGameButtonFunction();
         }
     },
@@ -1148,8 +1141,13 @@ var buttons = {
         width: buttonWidth / 2,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
-            shareButtonFunction();
+        pointerupFunction: function() {
+            if (bootBoxIsOpenedGlobal()) {
+                return;
+            }
+
+            btnFAQClickHandler(false);
+            // shareButtonFunction();
         }
     },
     prizesButton: {
@@ -1162,7 +1160,11 @@ var buttons = {
         //height: topHeight,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
+            if (bootBoxIsOpenedGlobal()) {
+                return;
+            }
+
             return;
         }
     },
@@ -1175,8 +1177,12 @@ var buttons = {
         width: buttonWidth / 2,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             {
+                if (bootBoxIsOpenedGlobal()) {
+                    return;
+                }
+
                 shareTgGlobal();
 
                 return false;
@@ -1184,40 +1190,49 @@ var buttons = {
         }
     },
     submitButton: {
-        filename: 'otpravit2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'otpravit2' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
         y: botXY.y + botHeight * 0.125,
-        caption: 'отправить',
+        caption: 'send',
         width: buttonWidth,
-        object: false, svgObject: false,
-        enabled: {myTurn: 1},
-        pointerupFunction: function () {
+        object: false,
+        svgObject: false,
+        enabled: {
+            myTurn: 1
+        },
+        pointerupFunction: function() {
             submitButtonFunction();
         }
     },
     resetButton: {
-        filename: 'steret2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'steret2' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
         y: botXY.y + botHeight * (0.25 + 0.125),
-        caption: 'стереть',
+        caption: 'clear',
         width: buttonWidth,
         object: false,
         svgObject: false,
-        enabled: {myTurn: 1, preMyTurn: 1, otherTurn: 1},
-        pointerupFunction: function () {
+        enabled: {
+            myTurn: 1,
+            preMyTurn: 1,
+            otherTurn: 1
+        },
+        pointerupFunction: function() {
             resetButtonFunction();
         }
     },
     changeButton: {
-        filename: 'pomenyat2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'pomenyat2' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
         y: botXY.y + botHeight * (0.5 + 0.125),
-        caption: 'поменять',
+        caption: 'change',
         width: buttonWidth,
         object: false,
         svgObject: false,
-        enabled: {myTurn: 1},
-        pointerupFunction: function () {
+        enabled: {
+            myTurn: 1
+        },
+        pointerupFunction: function() {
             changeButtonFunction();
         }
     },
@@ -1225,23 +1240,28 @@ var buttons = {
         filename: 'igroki2',
         x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
         y: botXY.y + botHeight * (0.75 + 0.125),
-        caption: 'игроки',
+        caption: 'players',
         width: buttonWidth / 2,
-        object: false, svgObject: false,
-        pointerupFunction: function () {
+        object: false,
+        svgObject: false,
+        pointerupFunction: function() {
             playersButtonFunction();
         }
     },
     checkButton: {
-        filename: 'proveryt2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'proveryt2' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth / 2,
         y: botXY.y + botHeight * 0.125,
-        caption: 'проверить',
+        caption: 'check',
         width: buttonWidth,
         object: false,
         svgObject: false,
-        enabled: {myTurn: 1, preMyTurn: 1, otherTurn: 1},
-        pointerupFunction: function () {
+        enabled: {
+            myTurn: 1,
+            preMyTurn: 1,
+            otherTurn: 1
+        },
+        pointerupFunction: function() {
             checkButtonFunction();
         }
     },
@@ -1249,11 +1269,11 @@ var buttons = {
         filename: 'chat2',
         x: botXY.x + knopkiWidth / 2,
         y: botXY.y + botHeight * (0.75 + 0.125),
-        caption: 'чат',
+        caption: 'chat',
         width: buttonWidth / 2,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             chatButtonFunction();
         },
     },
@@ -1261,11 +1281,11 @@ var buttons = {
         filename: 'log2',
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * (0.75 + 0.125),
-        caption: 'лог',
+        caption: 'log',
         width: buttonWidth / 2,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             logButtonFunction();
         },
     },
@@ -1274,11 +1294,11 @@ var buttons = {
         modes: [OTJAT_MODE, 'Navedenie', 'Najatie'],
         x: fullscreenXY['x'],
         y: fullscreenXY['y'],
-        caption: 'Во весь экран',
+        caption: 'full screen',
         //width: fullscreenButtonSize,
         object: false,
         svgObject: false,
-        pointerupFunction: function () {
+        pointerupFunction: function() {
             document.body.requestFullscreen();
         }
     }
@@ -1290,54 +1310,134 @@ var digitPositions = [3, 2, 1];
 var digits = {
     playerDigits: {
         Otjat: {
-            digit_0: {filename: 'numbers/player_digit_0'},
-            digit_1: {filename: 'numbers/player_digit_1'},
-            digit_2: {filename: 'numbers/player_digit_2'},
-            digit_3: {filename: 'numbers/player_digit_3'},
-            digit_4: {filename: 'numbers/player_digit_4'},
-            digit_5: {filename: 'numbers/player_digit_5'},
-            digit_6: {filename: 'numbers/player_digit_6'},
-            digit_7: {filename: 'numbers/player_digit_7'},
-            digit_8: {filename: 'numbers/player_digit_8'},
-            digit_9: {filename: 'numbers/player_digit_9'}
+            digit_0: {
+                filename: 'numbers/player_digit_0'
+            },
+            digit_1: {
+                filename: 'numbers/player_digit_1'
+            },
+            digit_2: {
+                filename: 'numbers/player_digit_2'
+            },
+            digit_3: {
+                filename: 'numbers/player_digit_3'
+            },
+            digit_4: {
+                filename: 'numbers/player_digit_4'
+            },
+            digit_5: {
+                filename: 'numbers/player_digit_5'
+            },
+            digit_6: {
+                filename: 'numbers/player_digit_6'
+            },
+            digit_7: {
+                filename: 'numbers/player_digit_7'
+            },
+            digit_8: {
+                filename: 'numbers/player_digit_8'
+            },
+            digit_9: {
+                filename: 'numbers/player_digit_9'
+            }
         },
         Alarm: {
-            digit_0: {filename: 'numbers/player_digit_0'},
-            digit_1: {filename: 'numbers/player_digit_1'},
-            digit_2: {filename: 'numbers/player_digit_2'},
-            digit_3: {filename: 'numbers/player_digit_3'},
-            digit_4: {filename: 'numbers/player_digit_4'},
-            digit_5: {filename: 'numbers/player_digit_5'},
-            digit_6: {filename: 'numbers/player_digit_6'},
-            digit_7: {filename: 'numbers/player_digit_7'},
-            digit_8: {filename: 'numbers/player_digit_8'},
-            digit_9: {filename: 'numbers/player_digit_9'}
+            digit_0: {
+                filename: 'numbers/player_digit_0'
+            },
+            digit_1: {
+                filename: 'numbers/player_digit_1'
+            },
+            digit_2: {
+                filename: 'numbers/player_digit_2'
+            },
+            digit_3: {
+                filename: 'numbers/player_digit_3'
+            },
+            digit_4: {
+                filename: 'numbers/player_digit_4'
+            },
+            digit_5: {
+                filename: 'numbers/player_digit_5'
+            },
+            digit_6: {
+                filename: 'numbers/player_digit_6'
+            },
+            digit_7: {
+                filename: 'numbers/player_digit_7'
+            },
+            digit_8: {
+                filename: 'numbers/player_digit_8'
+            },
+            digit_9: {
+                filename: 'numbers/player_digit_9'
+            }
         },
     },
     timerDigits: {
         Otjat: {
-            digit_0: {filename: 'numbers/timer_digit_0'},
-            digit_1: {filename: 'numbers/timer_digit_1'},
-            digit_2: {filename: 'numbers/timer_digit_2'},
-            digit_3: {filename: 'numbers/timer_digit_3'},
-            digit_4: {filename: 'numbers/timer_digit_4'},
-            digit_5: {filename: 'numbers/timer_digit_5'},
-            digit_6: {filename: 'numbers/timer_digit_6'},
-            digit_7: {filename: 'numbers/timer_digit_7'},
-            digit_8: {filename: 'numbers/timer_digit_8'},
-            digit_9: {filename: 'numbers/timer_digit_9'}
+            digit_0: {
+                filename: 'numbers/timer_digit_0'
+            },
+            digit_1: {
+                filename: 'numbers/timer_digit_1'
+            },
+            digit_2: {
+                filename: 'numbers/timer_digit_2'
+            },
+            digit_3: {
+                filename: 'numbers/timer_digit_3'
+            },
+            digit_4: {
+                filename: 'numbers/timer_digit_4'
+            },
+            digit_5: {
+                filename: 'numbers/timer_digit_5'
+            },
+            digit_6: {
+                filename: 'numbers/timer_digit_6'
+            },
+            digit_7: {
+                filename: 'numbers/timer_digit_7'
+            },
+            digit_8: {
+                filename: 'numbers/timer_digit_8'
+            },
+            digit_9: {
+                filename: 'numbers/timer_digit_9'
+            }
         },
         Alarm: {
-            digit_0: {filename: 'numbers/timer_digit_0'},
-            digit_1: {filename: 'numbers/timer_digit_1'},
-            digit_2: {filename: 'numbers/timer_digit_2'},
-            digit_3: {filename: 'numbers/timer_digit_3'},
-            digit_4: {filename: 'numbers/timer_digit_4'},
-            digit_5: {filename: 'numbers/timer_digit_5'},
-            digit_6: {filename: 'numbers/timer_digit_6'},
-            digit_7: {filename: 'numbers/timer_digit_7'},
-            digit_8: {filename: 'numbers/timer_digit_8'},
-            digit_9: {filename: 'numbers/timer_digit_9'}
+            digit_0: {
+                filename: 'numbers/timer_digit_0'
+            },
+            digit_1: {
+                filename: 'numbers/timer_digit_1'
+            },
+            digit_2: {
+                filename: 'numbers/timer_digit_2'
+            },
+            digit_3: {
+                filename: 'numbers/timer_digit_3'
+            },
+            digit_4: {
+                filename: 'numbers/timer_digit_4'
+            },
+            digit_5: {
+                filename: 'numbers/timer_digit_5'
+            },
+            digit_6: {
+                filename: 'numbers/timer_digit_6'
+            },
+            digit_7: {
+                filename: 'numbers/timer_digit_7'
+            },
+            digit_8: {
+                filename: 'numbers/timer_digit_8'
+            },
+            digit_9: {
+                filename: 'numbers/timer_digit_9'
+            }
         },
     }
 }
@@ -1348,7 +1448,7 @@ var modesColors = {
 
 var players = {
     youBlock: {
-        filename: 'you' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'you' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * 0.1,
         width: buttonWidth,
@@ -1357,7 +1457,7 @@ var players = {
         numbers: true,
     },
     player1Block: {
-        filename: 'player1' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'player1' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * 0.1,
         width: buttonWidth,
@@ -1366,7 +1466,7 @@ var players = {
         numbers: true,
     },
     player2Block: {
-        filename: 'player2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'player2' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * (0.2 + 0.1),
         width: buttonWidth,
@@ -1375,7 +1475,7 @@ var players = {
         numbers: true,
     },
     player3Block: {
-        filename: 'player3' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'player3' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * (0.4 + 0.1),
         width: buttonWidth,
@@ -1384,7 +1484,7 @@ var players = {
         numbers: true,
     },
     player4Block: {
-        filename: 'player4' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'player4' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * (0.6 + 0.1),
         width: buttonWidth,
@@ -1401,7 +1501,7 @@ var players = {
         svgObject: false,
     },
     timerBlock: {
-        // todo цифры таймера нужно загружать отдельно с учетом вертикального коэффициента
+        // todo сделать мигающие цифры таймера
         filename: 'timer',
         x: botXY.x + knopkiWidth / 2,
         y: botXY.y + botHeight * 0.75 * 0.5 + buttonHeight / 2,
@@ -1419,8 +1519,7 @@ var players = {
     },
 };
 
-function displayScoreGlobal(score, blockName, isActive = false)
-{
+function displayScoreGlobal(score, blockName, isActive=false) {
     let mode = isActive ? ALARM_MODE : OTJAT_MODE;
 
     let container = players[blockName].svgObject;
@@ -1430,15 +1529,15 @@ function displayScoreGlobal(score, blockName, isActive = false)
     let secondDigit = ((score - thirdDigit) % 100) / 10;
     let firstDigit = (score - secondDigit * 10 - thirdDigit) / 100;
 
-    if(thirdDigit !== playerScores[blockName].digit3 || mode !== playerScores[blockName].mode) {
+    if (thirdDigit !== playerScores[blockName].digit3 || mode !== playerScores[blockName].mode) {
         container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit3 + '_' + '3').setVisible(false);
     }
 
-    if(secondDigit !== playerScores[blockName].digit2 || mode !== playerScores[blockName].mode) {
+    if (secondDigit !== playerScores[blockName].digit2 || mode !== playerScores[blockName].mode) {
         container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit2 + '_' + '2').setVisible(false);
     }
 
-    if(firstDigit !== playerScores[blockName].digit1 || mode !== playerScores[blockName].mode) {
+    if (firstDigit !== playerScores[blockName].digit1 || mode !== playerScores[blockName].mode) {
         container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit1 + '_' + '1').setVisible(false);
     }
 
@@ -1446,7 +1545,6 @@ function displayScoreGlobal(score, blockName, isActive = false)
     playerScores[blockName].digit3 = thirdDigit;
     playerScores[blockName].digit2 = secondDigit;
     playerScores[blockName].digit1 = firstDigit;
-
 
     container.getByName(mode + '_' + thirdDigit + '_3').setVisible(true);
 
@@ -1459,8 +1557,7 @@ function displayScoreGlobal(score, blockName, isActive = false)
     }
 }
 
-function displayTimeGlobal(time, forceShowAll = false)
-{
+function displayTimeGlobal(time, forceShowAll=false) {
     let mode = (time < 20) ? ALARM_MODE : OTJAT_MODE;
     let disabledMode = (!(time < 20)) ? ALARM_MODE : OTJAT_MODE;
 
@@ -1479,17 +1576,17 @@ function displayTimeGlobal(time, forceShowAll = false)
         container.getByName(disabledMode + '_' + 'dvoetoch').setVisible(false);
     }
 
-    if(thirdDigit !== timerState.digit3 || mode !== timerState.mode || forceShowAll) {
+    if (thirdDigit !== timerState.digit3 || mode !== timerState.mode || forceShowAll) {
         container.getByName(timerState.mode + '_' + timerState.digit3 + '_' + '3').setVisible(false);
         container.getByName(mode + '_' + thirdDigit + '_3').setVisible(true);
     }
 
-    if(secondDigit !== timerState.digit2 || mode !== timerState.mode || forceShowAll) {
+    if (secondDigit !== timerState.digit2 || mode !== timerState.mode || forceShowAll) {
         container.getByName(timerState.mode + '_' + timerState.digit2 + '_' + '2').setVisible(false);
         container.getByName(mode + '_' + secondDigit + '_2').setVisible(true);
     }
 
-    if(firstDigit !== timerState.digit1 || mode !== timerState.mode || forceShowAll) {
+    if (firstDigit !== timerState.digit1 || mode !== timerState.mode || forceShowAll) {
         container.getByName(timerState.mode + '_' + timerState.digit1 + '_' + '1').setVisible(false);
         container.getByName(mode + '_' + firstDigit + '_1').setVisible(true);
     }
@@ -1500,8 +1597,7 @@ function displayTimeGlobal(time, forceShowAll = false)
     timerState.digit1 = firstDigit;
 }
 
-function buttonSetModeGlobal(objectSet, objectName, mode)
-{
+function buttonSetModeGlobal(objectSet, objectName, mode) {
     let svgObject = objectSet[objectName].svgObject;
     svgObject.bringToTop(svgObject.getByName(objectName + mode));
 
@@ -1514,19 +1610,14 @@ function buttonSetModeGlobal(objectSet, objectName, mode)
     }
 }
 
-
-
-
-
-
 ////
 var gameStates = {
     register: {
         1: 'waiting',
         refresh: 1,
-        action: function (data) {
+        action: function(data) {
             useLocalStorage = true;
-            if (!('erudit_user_session_ID' in localStorage)) {
+            if (!('erudit_user_session_ID'in localStorage)) {
                 localStorage.erudit_user_session_ID = data['cookie'];
             }
             queryNumber = 1;
@@ -1535,63 +1626,65 @@ var gameStates = {
     cookieTest: {
         1: 'waiting',
         refresh: 10000000,
-        action: function (data) {
-            fetchGlobal(COOKIE_CHECKER_SCRIPT, '', '12=12')
-                .then((data) => {
-                    if ('gameState' in data) {
-                        if (data.gameState == 'register') {
-                            gameStates.register.action(data);
-                        } else {
-                            //queryNumber = 1;
-                            commonCallback(data);
-                        }
+        action: function(data) {
+            fetchGlobal(COOKIE_CHECKER_SCRIPT, '', '12=12').then( (data) => {
+                if ('gameState'in data) {
+                    if (data.gameState == 'register') {
+                        gameStates.register.action(data);
                     } else {
-                        var responseText = 'Ошибка';
-                        alert(responseText);
-                        queryNumber = 1;
+                        //queryNumber = 1;
+                        commonCallback(data);
                     }
-                })
-            ;
+                } else {
+                    var responseText = 'Ошибка';
+                    alert(responseText);
+                    queryNumber = 1;
+                }
+            }
+            );
         },
     },
     desync: {
-        1: 'waiting', 2: 'done',
+        1: 'waiting',
+        2: 'done',
         refresh: 5,
         noDialog: true,
-        action: function (data) {
+        action: function(data) {
             gameState = gameOldState;
             gameSubState = gameOldSubState;
             enableButtons();
-            if ('queryNumber' in data) {
+            if ('queryNumber'in data) {
                 queryNumber = data['queryNumber'];
             }
         },
         //message: 'Синхронизация с сервером...'
     },
     noGame: {
-        1: 'waiting', 2: 'done',
+        1: 'waiting',
+        2: 'done',
         noDialog: true,
         refresh: 10,
     },
     startGame: {
-        1: 'waiting', 2: 'done',
+        1: 'waiting',
+        2: 'done',
         message: 'Игра начата!',
         refresh: 10,
-        action: function (data) {
+        action: function(data) {
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
             gameStates['myTurn']['from_noGame'](data);
             gameStates['gameResults']['action'](data);
         },
-        from_initGame: function () {
+        from_initGame: function() {
             while (fixedContainer.length)
                 fixedContainer.pop().destroy();
             cells = [];
             newCells = [];
             initCellsGlobal();
         },
-        from_initRatingGame: function () {
+        from_initRatingGame: function() {
             gameStates['startGame']['from_initGame']();
         }
     },
@@ -1601,24 +1694,20 @@ var gameStates = {
         refresh: 1000000,
         message: '',
         noDialog: true,
-        action: function (data) {
+        action: function(data) {
             /*data = {
                 players: {0: 30, 1900: 25, 2000:20, 2100:15, thisUserRating: 2400},
                 prefs:{from_rating: 2100}
             };*/
 
-            let under1800 = 'Только для игроков с рейтингом 1800+';
-            let noRatingPlayers = 'Недостаточно игроков с рейтингом 1900+ онлайн';
-            let haveRatingPlayers = 'Выберите минимальный рейтинг соперников';
+            let under1800 = 'Only for players rated 1800+';
+            let noRatingPlayers = 'Not enough 1900+ rated players online';
+            let haveRatingPlayers = 'Select the minimum opponent rating';
             let title = '';
             let onlinePlayers = '';
             let chooseDisabled = '';
-            if ('players' in data
-            ) {
-                if (
-                    'thisUserRating' in data['players'] &&
-                    data['players']['thisUserRating'] < 1800
-                ) {
+            if ('players'in data) {
+                if ('thisUserRating'in data['players'] && data['players']['thisUserRating'] < 1800) {
                     chooseDisabled = 'disabled';
                     title = under1800;
                 } else {
@@ -1631,27 +1720,13 @@ var gameStates = {
 
                 let checked_0 = 'checked';
 
-                if (
-                    'prefs' in data &&
-                    data['prefs'] !== false &&
-                    'from_rating' in data['prefs'] &&
-                    data['prefs']['from_rating'] > 0
-                ) {
+                if ('prefs'in data && data['prefs'] !== false && 'from_rating'in data['prefs'] && data['prefs']['from_rating'] > 0) {
                     checked_0 = '';
                 }
 
                 /* ----------------------------------- NEW ---------------------------------- */
                 const ratingRadio = (props) => {
-                    const {
-                        title = '',
-                        text = '',
-                        inputValue = 0,
-                        inputId = '0',
-                        isChecked = false,
-                        isDisabled = false,
-                        extraClass = '',
-                        extraInputAttrString = '',
-                    } = props;
+                    const {title='', text='', inputValue=0, inputId='0', isChecked=false, isDisabled=false, extraClass='', extraInputAttrString='', } = props;
 
                     const html = `
 									<div title="${title}"
@@ -1666,100 +1741,84 @@ var gameStates = {
 									</div>`;
 
                     return html;
-                };
+                }
+                ;
 
                 // ratingValues: number[] ([2000, 2100, 2200, ...])
-                const getRatingList = (ratingValues = [], data = {}) => {
+                const getRatingList = (ratingValues=[], data={}) => {
                     let resultHtml = '';
-                    ratingValues.forEach((ratingValue) => {
-                        if (
-                            'players' in data &&
-                            ratingValue in data['players'] &&
-                            data['players'][ratingValue] > 0
-                        ) {
+                    ratingValues.forEach( (ratingValue) => {
+                        if ('players'in data && ratingValue in data['players'] && data['players'][ratingValue] > 0) {
                             let isChecked = false;
-                            if (
-                                'prefs' in data &&
-                                data['prefs'] !== false &&
-                                'from_rating' in data['prefs'] &&
-                                data['prefs']['from_rating'] == ratingValue
-                            ) {
+                            if ('prefs'in data && data['prefs'] !== false && 'from_rating'in data['prefs'] && data['prefs']['from_rating'] == ratingValue) {
                                 isChecked = true;
                             }
                             resultHtml += ratingRadio({
-                                title: data['players'][ratingValue] + ' в игре',
-                                text: `OT ${ratingValue} (${data['players'][ratingValue]})`,
+                                title: data['players'][ratingValue] + ' in game',
+                                text: `Above ${ratingValue} (${data['players'][ratingValue]})`,
                                 inputValue: ratingValue,
                                 inputId: `from_${ratingValue}`,
                                 isChecked,
                                 isDisabled: chooseDisabled.toString(),
                             });
                         }
-                    });
+                    }
+                    );
 
                     return resultHtml;
-                };
+                }
+                ;
 
                 onlinePlayers = `<div class="box-title-wrap">
-												<span>Рейтинг соперника</span>
+												<span>Opponent's rating</span>
 											</div>`;
 
                 onlinePlayers += `<div class="label-row">
 												<div class="form-check">`;
                 onlinePlayers += ratingRadio({
                     title: title,
-                    text: 'Любой (' +  (0 in data['players'] ? data['players'][0] : '0') + '&nbsp;онлайн)',
+                    text: 'Any (' + (0 in data['players'] ? data['players'][0] : '0') + '&nbsp;online)',
                     inputValue: 0,
                     inputId: 'from_0',
                     isChecked: checked_0,
                     isDisabled: chooseDisabled.toString(),
                 });
 
-                const ratings = Object.keys(data.players).filter(
-                    (item) => !isNaN(Number(item)) && data.players[item] > 0
-                );
+                const ratings = Object.keys(data.players).filter( (item) => !isNaN(Number(item)) && data.players[item] > 0);
                 // console.log(Object.keys(data.players), ratings);
 
                 ratings.shift();
-                onlinePlayers += getRatingList(
-                    ratings.slice(0, ratings.length / 2),
-                    data
-                );
+                onlinePlayers += getRatingList(ratings.slice(0, ratings.length / 2), data);
 
-                onlinePlayers += `</div>`; // end col
+                onlinePlayers += `</div>`;
+                // end col
                 onlinePlayers += `	<div class="form-check">`;
 
                 if (ratings.slice(ratings.length / 2).length > 0) {
                     // console.log(ratings.slice(ratings.length / 2));
-                    onlinePlayers += getRatingList(
-                        ratings.slice(ratings.length / 2),
-                        data
-                    );
+                    onlinePlayers += getRatingList(ratings.slice(ratings.length / 2), data);
                 }
 
-                onlinePlayers += `	</div>`; // end col
-                onlinePlayers += `</div>`; // end label-row
+                onlinePlayers += `	</div>`;
+                // end col
+                onlinePlayers += `</div>`;
+                // end label-row
 
                 onlinePlayers = `<div class="box box-rating">${onlinePlayers}</div>`;
 
                 /* --------------------------------- END NEW -------------------------------- */
-            } // end if 'players'
+            }
+            // end if 'players'
 
-            let radioButtons =
-                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly">Только два игрока</label></div>';
-            radioButtons +=
-                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore">До четырех игроков</label></div>';
+            let radioButtons = '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly">Just two players</label></div>';
+            radioButtons += '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore">Up to four players</label></div>';
 
             let wish = '';
 
             let checked_200 = 'checked';
             let checked_300 = '';
 
-            if (
-                'prefs' in data &&
-                data['prefs'] !== false &&
-                'ochki_num' in data['prefs']
-            ) {
+            if ('prefs'in data && data['prefs'] !== false && 'ochki_num'in data['prefs']) {
                 checked_200 = data['prefs']['ochki_num'] == 200 ? 'checked' : '';
                 checked_300 = data['prefs']['ochki_num'] == 300 ? 'checked' : '';
             }
@@ -1768,7 +1827,7 @@ var gameStates = {
             let radioOchki = `
                             <div class="box">
                                 <div class="box-title-wrap">
-                                    <span>Игра до</span>
+                                    <span>Game goal</span>
                                 </div>
                                 <div class="label-row">
                                     <div class="form-check form-check-inline">
@@ -1800,11 +1859,7 @@ var gameStates = {
             let wish_120 = 'checked';
             let wish_60 = '';
 
-            if (
-                'prefs' in data &&
-                data['prefs'] !== false &&
-                'turn_time' in data['prefs']
-            ) {
+            if ('prefs'in data && data['prefs'] !== false && 'turn_time'in data['prefs']) {
                 wish_120 = data['prefs']['turn_time'] == 120 ? 'checked' : '';
                 wish_60 = data['prefs']['turn_time'] == 60 ? 'checked' : '';
             }
@@ -1813,7 +1868,7 @@ var gameStates = {
             let wishTime = `
 				            <div class="box pb-1">
                                 <div class="box-title-wrap mb-0">
-                                    <span>Время на ход</span>
+                                    <span>Turn time</span>
                                 </div>
 
                                 <div class="label-row">
@@ -1821,7 +1876,7 @@ var gameStates = {
 
                                         <input class="form-check-input" type="radio" id="dve" name="turn_time"
                                             value="120" ${wish_120} />
-                                        <label class="form-check-label text-accent" for="dve">2 минуты</label>
+                                        <label class="form-check-label text-accent" for="dve">2 minutes</label>
                                     </div>
 
 									<div class="time-img-wrap">
@@ -1832,7 +1887,7 @@ var gameStates = {
 
                                         <input class="form-check-input" type="radio" id="odna" name="turn_time"
                                             value="60" ${wish_60} />
-                                        <label class="form-check-label text-accent" for="odna">1 минута</label>
+                                        <label class="form-check-label text-accent" for="odna">1 minute</label>
                                     </div>
                                 </div>
                             </div>
@@ -1841,7 +1896,7 @@ var gameStates = {
             let formHead = `<div class="box">
                             <div class="d-flex flex-row align-items-center">
 
-                                <span>ПОДБОР ИГРЫ ПО ПАРАМЕТРАМ</span>
+                                <span>CHOOSE GAME OPTIONS</span>
 
                                 <div class="ml-auto"><a href="#" id="btn-faq" class="btn">FAQ</a>
                                 </div>
@@ -1849,21 +1904,15 @@ var gameStates = {
                         </div>
 			`;
 
-            window.modalData = { instruction };
+            window.modalData = {
+                instruction
+            };
 
             /* --------------------------------- END NEW -------------------------------- */
 
             // let formHead = '<h5>Параметры игры (будут учтены при подборе)</h5>';
 
-            let gameform =
-                formHead +
-                '<form onsubmit="return false" id="myGameForm">' +
-                radioButtons +
-                wish +
-                radioOchki +
-                wishTime +
-                onlinePlayers +
-                '</form>';
+            let gameform = formHead + '<form onsubmit="return false" id="myGameForm">' + radioButtons + wish + radioOchki + wishTime + onlinePlayers + '</form>';
 
             dialog = bootbox.dialog({
                 title: gameStates['chooseGame']['message'],
@@ -1874,50 +1923,54 @@ var gameStates = {
                 closeButton: false,
                 buttons: {
                     cabinet: {
-                        label: 'Профиль',
+                        label: 'Profile',
                         className: 'btn-outline-success',
-                        callback: function () {
-                            setTimeout(function () {
-                                fetchGlobal(CABINET_SCRIPT, '', 12).then((dataCabinet) => {
-                                    if (dataCabinet == '') var responseText = 'Ошибка';
-                                    else var responseArr = JSON.parse(dataCabinet['message']);
+                        callback: function() {
+                            setTimeout(function() {
+                                fetchGlobal(CABINET_SCRIPT, '', 12).then( (dataCabinet) => {
+                                    if (dataCabinet == '')
+                                        var responseText = 'Error';
+                                    else
+                                        var responseArr = JSON.parse(dataCabinet['message']);
 
                                     /* ------------------------------ PROFILE DATA ------------------------------ */
                                     const profileData = {
                                         name: responseArr.name ? responseArr.name : 'Nickname',
-                                        common_id: responseArr.common_id, // id игрока
-                                        imageUrl: responseArr.url, // url картинки
-                                        imageTitle: responseArr.img_title, // альт картинки
-                                        rating: responseArr.info.rating ? responseArr.info.rating : 0, // рейтинг
-                                        placement: responseArr.info.top, // место в рейтинге
-                                        balance: responseArr.info.SUDOKU_BALANCE, // баланс
-                                        ratingByCoins: responseArr.info.SUDOKU_TOP, // рейтинг по монетам
-                                        tgWallet: '', // telegram wallet
-                                        bonusAccrual: responseArr.info.rewards, // начисление бонусов
-                                        balanceSudoku: responseArr.info.SUDOKU_BALANCE, // баланс SUDOKU
+                                        common_id: responseArr.common_id,
+                                        // id игрока
+                                        imageUrl: responseArr.url,
+                                        // url картинки
+                                        imageTitle: responseArr.img_title,
+                                        // альт картинки
+                                        rating: responseArr.info.rating ? responseArr.info.rating : 0,
+                                        // рейтинг
+                                        placement: responseArr.info.top,
+                                        // место в рейтинге
+                                        balance: responseArr.info.SUDOKU_BALANCE,
+                                        // баланс
+                                        ratingByCoins: responseArr.info.SUDOKU_TOP,
+                                        // рейтинг по монетам
+                                        tgWallet: '',
+                                        // telegram wallet
+                                        bonusAccrual: responseArr.info.rewards,
+                                        // начисление бонусов
+                                        balanceSudoku: responseArr.info.SUDOKU_BALANCE,
+                                        // баланс SUDOKU
                                         referrals: responseArr.refs ? responseArr.refs : [],
                                     };
 
-                                    profileData.cookie = responseArr.form.filter(
-                                        (item) => item.inputName === 'cookie',
-                                    );
-                                    profileData.MAX_FILE_SIZE = responseArr.form.filter(
-                                        (item) => item.inputName === 'MAX_FILE_SIZE',
-                                    );
+                                    profileData.cookie = responseArr.form.filter( (item) => item.inputName === 'cookie', );
+                                    profileData.MAX_FILE_SIZE = responseArr.form.filter( (item) => item.inputName === 'MAX_FILE_SIZE', );
 
                                     // делаем верстку из массива referrals
                                     let referralList = '';
-                                    if ('referrals' in profileData && profileData.referrals.length > 0) {
-                                        referralList = profileData.referrals
-                                            .map(
-                                                (ref) => `
+                                    if ('referrals'in profileData && profileData.referrals.length > 0) {
+                                        referralList = profileData.referrals.map( (ref) => `
 								<li class="box">
 									<span class="name d-block">${ref[0]}</span>
 									<div class="pill-wrap"><span class="pill">${ref[1]}</span></div>
 								</li>
-						`,
-                                            )
-                                            .join('');
+						`, ).join('');
 
                                         referralList = `
 								<ul class="referral-list">
@@ -1927,55 +1980,24 @@ var gameStates = {
                                     }
 
                                     function getProfileModal(profileData) {
-                                        return fetch('/profile-modal-tpl.html'+ '?ver=' + Math.floor(Date.now()))
-                                            .then((response) => response.text())
-                                            .then((template) => {
-                                                // Заменяем маркеры в шаблоне реальными данными
-                                                let message = template
-                                                    .replaceAll('{{Profile}}', 'Профиль')
-                                                    .replaceAll('{{Wallet}}', 'Кошелек')
-                                                    .replaceAll('{{Referrals}}', 'Рефералы')
-                                                    .replaceAll('{{Player ID}}', 'ID Игрока')
-                                                    .replaceAll('{{Save}}', 'Сохранить')
-                                                    .replaceAll('{{Input new nickname}}', 'Задайте новый ник')
-                                                    .replaceAll('{{Your rank}}', 'Ваш Рейтинг')
-                                                    .replaceAll('{{Ranking number}}', 'Позиция в ТОП')
-                                                    .replaceAll('{{Balance}}', 'Баланс')
-                                                    .replaceAll('{{Rating by coins}}', 'Рейтинг по монетам')
-                                                    .replaceAll('{{Link}}', 'Привязать') // Привязать
-                                                    .replaceAll('{{Bonuses accrued}}', 'Начислено бонусов') // Начислено бонусов
-                                                    .replaceAll('{{SUDOKU Balance}}', 'Баланс SUDOKU') // Баланс SUDOKU
-                                                    .replaceAll('{{Claim}}', 'Забрать<br>(скоро)') // Забрать
-                                                    .replaceAll('{{Name}}', 'Имя')
-                                                    //.replaceAll('{{Profile}}', 'Профиль')
-
-
-
+                                        return fetch('/profile-modal-tpl.html' + '?ver=' + Math.floor(Date.now())).then( (response) => response.text()).then( (template) => {
+                                            let message = template.replaceAll('{{Profile}}', 'Profile').replaceAll('{{Wallet}}', 'Wallet').replaceAll('{{Referrals}}', 'Referrals').replaceAll('{{Player ID}}', 'Player ID').replaceAll('{{Save}}', 'Save').replaceAll('{{Input new nickname}}', 'Input new nickname').replaceAll('{{Your rank}}', 'Your rank').replaceAll('{{Ranking number}}', 'Ranking number').replaceAll('{{Balance}}', 'Balance').replaceAll('{{Rating by coins}}', 'Rating by coins').replaceAll('{{Link}}', 'Link')// Привязать
+                                            .replaceAll('{{Bonuses accrued}}', 'Bonuses accrued')// Начислено бонусов
+                                            .replaceAll('{{SUDOKU Balance}}', 'SUDOKU Balance')// Баланс SUDOKU
+                                            .replaceAll('{{Claim}}', 'Claim <br>(soon)')// Забрать
+                                            .replaceAll('{{Name}}', 'Name').replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE).replaceAll('{{cookie}}', profileData.cookie)/* хз зачем
                                                     .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE[0].value)
                                                     .replaceAll('{{cookie}}', profileData.cookie[0].value)
-                                                    .replaceAll('{{common_id}}', profileData.common_id)
-                                                    .replaceAll('{{name}}', profileData.name)
-                                                    .replaceAll('{{imageUrl}}', profileData.imageUrl)
-                                                    .replaceAll('{{imageTitle}}', profileData.imageTitle)
-                                                    .replaceAll('{{rating}}', profileData.rating)
-                                                    .replaceAll('{{placement}}', profileData.placement)
-                                                    .replaceAll('{{balance}}', profileData.balance)
-                                                    .replaceAll('{{ratingByCoins}}', profileData.ratingByCoins)
-                                                    .replaceAll('{{tgWallet}}', profileData.tgWallet)
-                                                    .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
-                                                    .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
-                                                    .replaceAll('{{balanceSudoku}}', profileData.balanceSudoku)
-                                                    .replaceAll('{{referralList}}', referralList);
+                                                    */
+                                            .replaceAll('{{common_id}}', profileData.common_id).replaceAll('{{name}}', profileData.name).replaceAll('{{imageUrl}}', profileData.imageUrl).replaceAll('{{imageTitle}}', profileData.imageTitle).replaceAll('{{rating}}', profileData.rating).replaceAll('{{placement}}', profileData.placement).replaceAll('{{balance}}', profileData.balance).replaceAll('{{ratingByCoins}}', profileData.ratingByCoins).replaceAll('{{tgWallet}}', profileData.tgWallet).replaceAll('{{bonusAccrual}}', profileData.bonusAccrual).replaceAll('{{bonusAccrual}}', profileData.bonusAccrual).replaceAll('{{balanceSudoku}}', profileData.balanceSudoku).replaceAll('{{referralList}}', referralList);
 
-                                                return message;
-                                            })
-                                            .catch((error) =>
-                                                console.error('Ошибка загрузки profile-modal:', error),
-                                            );
+                                            return message;
+                                        }
+                                        ).catch( (error) => console.error('Ошибка загрузки profile-modal:', error), );
                                     }
                                     /* ---------------------------- END PROFILE DATA ---------------------------- */
 
-                                    getProfileModal(profileData).then((html) => {
+                                    getProfileModal(profileData).then( (html) => {
                                         // document.getElementById('test-tpl').innerHTML = html;
 
                                         dialog = bootbox.alert({
@@ -1984,257 +2006,118 @@ var gameStates = {
                                             locale: 'ru',
                                             // size: 'large',
                                             className: 'modal-settings modal-profile',
-                                            closeButton: false,
                                             buttons: {
                                                 ok: {
-                                                    label: 'Назад',
+                                                    label: 'Back',
                                                     className: 'btn-sm ml-auto mr-0',
                                                 },
                                             },
-                                            onShown: function (e) {
+                                            onShown: function(e) {
                                                 profileModal.onProfileModalLoaded();
                                                 // document.addEventListener("DOMContentLoaded", profileModal.onProfileModalLoaded);
                                             },
-                                            callback: function () {
+                                            callback: function() {
                                                 gameStates['chooseGame']['action'](data);
                                             },
                                         });
-                                    });
+                                    }
+                                    );
 
                                     return false;
-                                });
-                            }, 100);
-                        },
-                    },
-                    /*cabinet: {
-                        label: 'Профиль',
-                        className: 'btn-outline-success',
-                        callback: function () {
-                            setTimeout(function () {
-                                fetchGlobal(CABINET_SCRIPT, '', 12).then(
-                                    (dataCabinet) => {
-                                        if (dataCabinet == '')
-                                            var responseText = 'Ошибка';
-                                        else
-                                            var responseArr = JSON.parse(
-                                                dataCabinet['message']
-                                            );
-                                        var message = '<form id="superForm" >';
-                                        for (k in responseArr['form']) {
-                                            message +=
-                                                '<div class="form-group"' +
-                                                ('type' in responseArr['form'][k] &&
-                                                responseArr['form'][k]['type'] ===
-                                                'hidden'
-                                                    ? ' style="display:none" '
-                                                    : '') +
-                                                '><div class="col-sm-6">' +
-                                                '<label for="' +
-                                                responseArr['form'][k]['inputId'] +
-                                                '">' +
-                                                responseArr['form'][k]['prompt'] +
-                                                '</label>' +
-                                                '</div>';
-                                            message +=
-                                                '<div class="form-row align-items-center">' +
-                                                '<div class="col-sm-8">' +
-                                                '<input ';
-
-                                            if ('value' in responseArr['form'][k]) {
-                                                message +=
-                                                    'value="' +
-                                                    responseArr['form'][k][
-                                                        'value'
-                                                        ] +
-                                                    '"';
-                                                if (
-                                                    'readonly' in
-                                                    responseArr['form'][k]
-                                                ) {
-                                                    message += ' readonly ';
-                                                }
-                                            } else {
-                                                message +=
-                                                    'placeholder="' +
-                                                    responseArr['form'][k][
-                                                        'placeholder'
-                                                        ] +
-                                                    '"';
-                                            }
-
-                                            message +=
-                                                ('type' in responseArr['form'][k]
-                                                    ? 'type="' +
-                                                    responseArr['form'][k][
-                                                        'type'
-                                                        ] +
-                                                    '"'
-                                                    : 'type="text"') +
-                                                ' class="form-control" name="' +
-                                                responseArr['form'][k][
-                                                    'inputName'
-                                                    ] +
-                                                '" id="' +
-                                                responseArr['form'][k]['inputId'] +
-                                                '" ' +
-                                                ('required' in
-                                                responseArr['form'][k]
-                                                    ? ' required '
-                                                    : '') +
-                                                '></div>';
-                                            message += !(
-                                                'type' in responseArr['form'][k] &&
-                                                responseArr['form'][k]['type'] ===
-                                                'hidden'
-                                            )
-                                                ? '<div class="col-sm-4 col-form-label">' +
-                                                '<button type="submit" class="form-control btn btn-outline-secondary" onclick="' +
-                                                responseArr['form'][k][
-                                                    'onclick'
-                                                    ] +
-                                                "($('#" +
-                                                responseArr['form'][k][
-                                                    'inputId'
-                                                    ] +
-                                                "').val()," +
-                                                responseArr['common_id'] +
-                                                ');return false;">' +
-                                                responseArr['form'][k][
-                                                    'buttonCaption'
-                                                    ] +
-                                                '</button></div>'
-                                                : '' + '</div>';
-                                            message += '</div>';
-                                        }
-                                        message += '</form>';
-                                        dialog = bootbox.alert({
-                                            title:
-                                                'Ваш профиль, <span id="playersNikname">' +
-                                                responseArr['name'] +
-                                                '</span>' +
-                                                '<span id="playersAvatar">&nbsp;' +
-                                                '<img style="cursor: pointer;" title="' +
-                                                responseArr['img_title'] +
-                                                '" src="' +
-                                                responseArr['url'] +
-                                                '" width="100px" max-height = "100px" />' +
-                                                '</span>',
-                                            message: responseArr['text'] + message,
-                                            locale: 'ru',
-                                            size: 'large',
-                                            callback: function () {
-                                                gameStates['chooseGame']['action'](
-                                                    data
-                                                );
-                                            },
-                                        });
-                                        return false;
-                                    }
+                                }
                                 );
                             }, 100);
                         },
-                    },*/
-
-                    // пока скроем через d-none
+                    },
                     instruction: {
                         label: 'FAQ',
                         className: 'btn-outline-success d-none',
-                        callback: function () {
-                            dialog = bootbox
-                                .alert({
-                                    message: instruction,
-                                    locale: 'ru',
-                                })
-                                .off('shown.bs.modal');
+                        callback: function() {
+                            dialog = bootbox.alert({
+                                message: instruction,
+                                locale: 'ru',
+                            }).off('shown.bs.modal');
 
                             return false;
                         },
                     },
-
                     beginGame: {
-                        label: 'Начать',
+                        label: 'Start',
                         className: 'btn-primary',
-                        callback: function () {
+                        callback: function() {
                             activateFullScreenForMobiles();
                             gameState = 'noGame';
-                            fetchGlobal(
-                                INIT_GAME_SCRIPT,
-                                '',
-                                $('.bootbox-body #myGameForm').serialize()
-                            ).then((data) => {
-                                if (data == '') var responseText = 'Ошибка';
+                            fetchGlobal(INIT_GAME_SCRIPT, '', $('.bootbox-body #myGameForm').serialize()).then( (data) => {
+                                if (data == '')
+                                    var responseText = 'Error';
                                 else {
                                     commonCallback(data);
                                 }
-                            });
+                            }
+                            );
 
                             return true;
                         },
                     },
                     stats: {
-                        label: 'Статистика',
+                        label: 'Stats',
                         className: 'btn-outline-success',
                         callback: function() {
                             activateFullScreenForMobiles();
                             getStatPageGlobal().then(data => {
                                 console.log(data);
-                                dialog = bootbox
-                                    .dialog({
-                                        message: data.message,
-                                        locale: lang === 'RU' ? 'ru' : 'en',
-                                        className: 'modal-settings  modal-stats',
-                                        callback: function () {
-                                            console.log('stats loaded');
+                                dialog = bootbox.dialog({
+                                    message: data.message,
+                                    locale: lang === 'RU' ? 'ru' : 'en',
+                                    className: 'modal-settings  modal-stats',
+                                    callback: function() {
+                                        console.log('stats loaded');
+                                    },
+                                    buttons: {
+                                        removeFilter: {
+                                            label: 'Remove filter',
+                                            className: 'js-remove-filter btn btn-sm btn-auto mr-0 d-none',
+                                            callback: function(e) {
+                                                e.preventDefault();
+                                                return false;
+                                            },
                                         },
-                                        buttons: {
-                                            removeFilter: {
-                                                label: 'Снять фильтр',
-                                                className: 'js-remove-filter btn btn-sm btn-auto mr-0 d-none',
-                                                callback: function (e) {
-                                                    e.preventDefault();
-                                                    return false;
-                                                },
-                                            },
-                                            ok: {
-                                                label: 'Назад',
-                                                className: 'btn-sm ml-auto mr-0',
-                                                callback: function () {
-                                                    //gameStates['chooseGame']['action'](data);
-                                                    fetchGlobal(STATUS_CHECKER_SCRIPT)
-                                                        .then((data) => {
-                                                            commonCallback(data);
-                                                            gameStates['chooseGame']['action'](data)
-                                                        });
+                                        ok: {
+                                            label: 'Back',
+                                            className: 'btn-sm ml-auto mr-0',
+                                            callback: function() {
+                                                //gameStates['chooseGame']['action'](data);
+                                                fetchGlobal(STATUS_CHECKER_SCRIPT).then( (data) => {
+                                                    commonCallback(data);
+                                                    gameStates['chooseGame']['action'](data)
                                                 }
-                                            },
-                                        }
-                                    })
-                                    .off('shown.bs.modal')
-                                    .on('shown.bs.modal', function() {
-                                        // Вызовите onLoad после того, как модальное окно будет показано
-                                        if (data.onLoad && typeof data.onLoad === 'function') {
-                                            data.onLoad();
-                                        }
-                                    })
-                                    .find('.modal-content')
-                                    .css({
-                                        'background-color': 'rgba(230, 255, 230, 1)',
-                                    });
+                                                );
+                                            }
+                                        },
+                                    }
+                                }).off('shown.bs.modal').on('shown.bs.modal', function() {
+                                    if (data.onLoad && typeof data.onLoad === 'function') {
+                                        data.onLoad();
+                                    }
+                                }).find('.modal-content').css({
+                                    'background-color': 'rgba(230, 255, 230, 1)',
+                                });
 
                                 return false;
-                            }).catch(error => {
+                            }
+                            ).catch(error => {
                                 console.error(error);
-                            });
+                            }
+                            );
 
                         },
                     },
                     ...(!isTgBot() && {
                         telegram: {
-                            label: 'Играть в',
+                            label: 'Play on',
                             className: 'btn-tg',
-                            callback: function () {
-                                document.location = GAME_BOT_URL + '/?start='
-                                    + ((commonId && commonIdHash) ? (commonId + '_' + commonIdHash) : '');
+                            callback: function() {
+                                document.location = GAME_BOT_URL + '/?start=' + ((commonId && commonIdHash) ? (commonId + '_' + commonIdHash) : '');
 
                                 return false;
                             },
@@ -2242,9 +2125,9 @@ var gameStates = {
                     }),
                     ...(isTgBot() && {
                         invite: {
-                            label: 'Пригласить друга',
+                            label: 'Invite a friend',
                             className: 'btn-danger',
-                            callback: function () {
+                            callback: function() {
                                 shareTgGlobal();
 
                                 return false;
@@ -2256,100 +2139,108 @@ var gameStates = {
         },
     },
     initGame: {
-        1: 'waiting', 2: 'done',
-        action: function (data) {
+        1: 'waiting',
+        2: 'done',
+        action: function(data) {
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
         },
-        message: 'Подбор игры - ожидайте',
+        message: 'Game selection - please wait',
         refresh: 10
     },
     initRatingGame: {
-        1: 'waiting', 2: 'done',
-        action: function (data) {
+        1: 'waiting',
+        2: 'done',
+        action: function(data) {
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
         },
-        message: 'Подбор игры - ожидайте',
+        message: 'Game selection - please wait',
         refresh: 10
     },
 
     myTurn: {
-        1: 'thinking', 2: 'checking', 3: 'submiting', 4: 'done',
-        message: 'Ваш ход!',
+        1: 'thinking',
+        2: 'checking',
+        3: 'submiting',
+        4: 'done',
+        message: 'Your turn!',
         refresh: 15,
-        action: function (data) {
+        action: function(data) {
             gameStates['gameResults']['action'](data);
             buttons['submitButton']['svgObject'].setInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
         },
-        from_initRatingGame: function (data) {
+        from_initRatingGame: function(data) {
             gameStates['startGame']['from_initGame']();
             gameStates['myTurn']['from_noGame'](data);
         },
-        from_initGame: function (data) {
+        from_initGame: function(data) {
             gameStates['startGame']['from_initGame']();
             gameStates['myTurn']['from_noGame'](data);
         },
-        from_noGame: function (data) {
-            if ('fishki' in data)
+        from_noGame: function(data) {
+            if ('fishki'in data)
                 placeFishki(data['fishki']);
         },
-        from_desync: function (data) {
-            if ('fishki' in data)
+        from_desync: function(data) {
+            if ('fishki'in data)
                 placeFishki(data['fishki']);
         },
-        from_gameResults: function () {
+        from_gameResults: function() {
             gameStates['startGame']['from_initGame']();
         },
-        from_preMyTurn: function () {
+        from_preMyTurn: function() {
             resetButtonFunction(true);
             gameStates['startGame']['from_initGame']();
         },
-        from_startGame: function () {
+        from_startGame: function() {
             resetButtonFunction(true);
             gameStates['startGame']['from_initGame']();
         }
     },
     preMyTurn: {
-        1: 'waiting', 2: 'done',
-        message: 'Приготовьтесь - Ваш ход следующий!',
+        1: 'waiting',
+        2: 'done',
+        message: 'Get ready - your turn is next!',
         refresh: 5,
-        action: function (data) {
+        action: function(data) {
             gameStates['gameResults']['action'](data);
 
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
         },
-        from_desync: function (data) {
-            if ('fishki' in data)
+        from_desync: function(data) {
+            if ('fishki'in data)
                 placeFishki(data['fishki']);
         },
-        from_initRatingGame: function (data) {
+        from_initRatingGame: function(data) {
             gameStates['startGame']['from_initGame']();
             gameStates['myTurn']['from_noGame'](data);
         },
-        from_initGame: function (data) {
+        from_initGame: function(data) {
             gameStates['startGame']['from_initGame']();
             gameStates['myTurn']['from_noGame'](data);
         },
-        from_noGame: function (data) {
+        from_noGame: function(data) {
             gameStates['myTurn']['from_noGame'](data)
         },
-        from_myTurn: function (data) {
+        from_myTurn: function(data) {
             gameStates['myTurn']['from_noGame'](data)
         },
-        from_otherTurn: function (data) {
+        from_otherTurn: function(data) {
             gameStates['myTurn']['from_noGame'](data)
         },
-        from_gameResults: function () {
+        from_gameResults: function() {
             gameStates['startGame']['from_initGame']()
         },
     },
     otherTurn: {
-        1: 'waiting', 2: 'done', message: 'Отдохните - Ваш ход через один',
+        1: 'waiting',
+        2: 'done',
+        message: 'Take a break - your move in one',
         refresh: 5,
-        action: function (data) {
+        action: function(data) {
             gameStates['gameResults']['action'](data);
 
             gameStates['myTurn']['from_noGame'](data);
@@ -2357,108 +2248,104 @@ var gameStates = {
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
         },
-        from_desync: function (data) {
-            if ('fishki' in data)
+        from_desync: function(data) {
+            if ('fishki'in data)
                 placeFishki(data['fishki']);
         },
-        from_initRatingGame: function (data) {
+        from_initRatingGame: function(data) {
             gameStates['startGame']['from_initGame']();
         },
-        from_initGame: function (data) {
+        from_initGame: function(data) {
             gameStates['startGame']['from_initGame']();
         },
-        from_gameResults: function () {
+        from_gameResults: function() {
             gameStates['startGame']['from_initGame']();
         }
     },
     gameResults: {
-        1: 'waiting', 2: 'done',
-        messageFunction: function (mes) {
+        1: 'waiting',
+        2: 'done',
+        messageFunction: function(mes) {
             return mes;
         },
         refresh: 10,
-        action: function (data) {
-            if ("desk" in data && data.desk.length > 0) {
+        action: function(data) {
+            if ("desk"in data && data.desk.length > 0) {
                 parseDeskGlobal(data['desk']);
             }
-            if ("score" in data) {
+            if ("score"in data) {
                 userScores(data);
             }
-            if ('activeUser' in data) {
+            if ('activeUser'in data) {
                 activeUser = data.activeUser;
             }
         },
-        results: function (data) {
+        results: function(data) {
             if (dialog && canCloseDialog)
                 dialog.modal('hide');
-            var okButtonCaption = 'Отказаться';
-            if ('inviteStatus' in data && data['inviteStatus'] == 'waiting') {
+            var okButtonCaption = 'Refuse';
+            if ('inviteStatus'in data && data['inviteStatus'] == 'waiting') {
                 var okButtonCaption = 'OK';
             }
 
             dialog = bootbox.dialog({
-                //title: 'Игра завершена',
                 message: data['comments'],
-                //size: 'small',
                 onEscape: false,
                 closeButton: false,
                 buttons: {
                     invite: {
-                        label: 'Предложить игру',
+                        label: 'Offer a game',
                         className: 'btn-primary',
-                        callback: function () {
-                            setTimeout(function () {
-                                fetchGlobal(INVITE_SCRIPT, '', 12)
-                                    .then((dataInvite) => {
-                                        if (dataInvite == '')
-                                            var responseText = 'Запрос отклонен';
-                                        else
-                                            var responseText = dataInvite['message'];
-                                        if ('inviteStatus' in dataInvite) {
-                                            if (dataInvite['inviteStatus'] == 'newGameStarting')
-                                                document.location.reload(true);
+                        callback: function() {
+                            setTimeout(function() {
+                                fetchGlobal(INVITE_SCRIPT, '', 12).then( (dataInvite) => {
+                                    if (dataInvite == '')
+                                        var responseText = 'Request rejected';
+                                    else
+                                        var responseText = dataInvite['message'];
+                                    if ('inviteStatus'in dataInvite) {
+                                        if (dataInvite['inviteStatus'] == 'newGameStarting')
+                                            document.location.reload(true);
+                                    }
+                                    dialogResponse = bootbox.alert({
+                                        message: responseText,
+                                        locale: 'ru',
+                                        size: 'small',
+                                        callback: function() {
+                                            dialogResponse.modal('hide');
+                                            dataInvite['comments'] = data['comments'];
+                                            gameStates['gameResults']['results'](dataInvite);
                                         }
-                                        dialogResponse = bootbox.alert({
-                                            message: responseText,
-                                            locale: 'ru',
-                                            size: 'small',
-                                            callback: function () {
-                                                dialogResponse.modal('hide');
-                                                dataInvite['comments'] = data['comments'];
-                                                gameStates['gameResults']['results'](dataInvite);
-                                            }
-                                        });
-
-                                        setTimeout(
-                                            function () {
-                                                dialogResponse.find(".bootbox-close-button").trigger("click");
-                                            }
-                                            , 2000
-                                        );
-
-                                        return false;
                                     });
+
+                                    setTimeout(function() {
+                                        dialogResponse.find(".bootbox-close-button").trigger("click");
+                                    }, 2000);
+
+                                    return false;
+                                }
+                                );
                             }, 100);
                         }
                     },
                     ok: {
                         label: okButtonCaption,
                         className: 'btn-info',
-                        callback: function () {
+                        callback: function() {
                             return true;
                         }
                     },
                     new: {
-                        label: 'Новая игра',
+                        label: 'New game',
                         className: 'btn-danger',
-                        callback: function () {
+                        callback: function() {
                             newGameButtonFunction(true);
                         }
                     }
                 }
             });
         },
-        decision: function (data) {
+        decision: function(data) {
             if (dialog && canCloseDialog) {
                 dialog.modal('hide');
             }
@@ -2467,61 +2354,56 @@ var gameStates = {
             }
 
             dialog = bootbox.dialog({
-                //title: 'Игра завершена',
                 message: data['comments'],
-                //size: 'small',
                 onEscape: false,
                 closeButton: false,
                 buttons: {
                     invite: {
-                        label: 'Принять приглашение',
+                        label: 'Accept invitation',
                         className: 'btn-primary',
-                        callback: function () {
-                            setTimeout(function () {
-                                fetchGlobal(INVITE_SCRIPT, '', 12)
-                                    .then((dataInvite) => {
-                                        if (dataInvite == '') {
-                                            var responseText = 'Запрос отклонен';
-                                        } else {
-                                            var responseText = dataInvite['message'];
+                        callback: function() {
+                            setTimeout(function() {
+                                fetchGlobal(INVITE_SCRIPT, '', 12).then( (dataInvite) => {
+                                    if (dataInvite == '') {
+                                        var responseText = 'Request rejected';
+                                    } else {
+                                        var responseText = dataInvite['message'];
+                                    }
+                                    if ('inviteStatus'in dataInvite) {
+                                        if (dataInvite['inviteStatus'] == 'newGameStarting')
+                                            document.location.reload(true);
+                                    }
+                                    dialogResponse = bootbox.alert({
+                                        message: responseText,
+                                        locale: 'ru',
+                                        size: 'small',
+                                        callback: function() {
+                                            dialogResponse.modal('hide');
+                                            dataInvite['comments'] = data['comments'];
                                         }
-                                        if ('inviteStatus' in dataInvite) {
-                                            if (dataInvite['inviteStatus'] == 'newGameStarting')
-                                                document.location.reload(true);
-                                        }
-                                        dialogResponse = bootbox.alert({
-                                            message: responseText,
-                                            locale: 'ru',
-                                            size: 'small',
-                                            callback: function () {
-                                                dialogResponse.modal('hide');
-                                                dataInvite['comments'] = data['comments'];
-                                            }
-                                        });
-
-                                        setTimeout(
-                                            function () {
-                                                dialogResponse.find(".bootbox-close-button").trigger("click");
-                                            }
-                                            , 2000
-                                        );
-
-                                        return false;
                                     });
+
+                                    setTimeout(function() {
+                                        dialogResponse.find(".bootbox-close-button").trigger("click");
+                                    }, 2000);
+
+                                    return false;
+                                }
+                                );
                             }, 100);
                         }
                     },
                     ok: {
-                        label: 'Отказаться',
+                        label: 'Refuse',
                         className: 'btn-info',
-                        callback: function () {
+                        callback: function() {
                             return true;
                         }
                     },
                     new: {
-                        label: 'Новая игра',
+                        label: 'New game',
                         className: 'btn-danger',
-                        callback: function () {
+                        callback: function() {
                             newGameButtonFunction(true);
                         }
                     }
@@ -2529,7 +2411,9 @@ var gameStates = {
             });
         }
     },
-    afterSubmit: {refresh: 1}
+    afterSubmit: {
+        refresh: 1
+    }
 }
 
 var gameState = 'noGame';
@@ -2539,26 +2423,26 @@ var lastQueryTime = 0;
 var gameOldState = '';
 
 function commonCallback(data) {
-    if (('gameState' in data) && !(data['gameState'] in gameStates)) {
+    if (('gameState'in data) && !(data['gameState']in gameStates)) {
         return;
     }
 
-    if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
+    if ('http_status'in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
         console.log(data['message']);
         return;
     }
 
-    if ('query_number' in data && data['query_number'] != (queryNumber - 1)) {
+    if ('query_number'in data && data['query_number'] != (queryNumber - 1)) {
         return;
     }
 
     gameOldState = gameState;
     gameOldSubState = gameSubState;
 
-    if ('gameState' in data && gameState != data['gameState']) {
+    if ('gameState'in data && gameState != data['gameState']) {
         gameState = data['gameState'];
 
-        if('gameNumber' in data) {
+        if ('gameNumber'in data) {
             gameNumber = data['gameNumber'];
         }
     }
@@ -2577,7 +2461,7 @@ function commonCallback(data) {
         }
     }
 
-    if ('lang' in data && data['lang'] != lang) {
+    if ('lang'in data && data['lang'] != lang) {
         lang = data['lang'];
         if (lang === 'EN') {
             // ToDo not working under Yandex
@@ -2585,25 +2469,25 @@ function commonCallback(data) {
         }
     }
 
-    if ('common_id' in data && !commonId) {
+    if ('common_id'in data && !commonId) {
         commonId = data.common_id;
     }
 
-    if ('common_id_hash' in data && !commonIdHash) {
+    if ('common_id_hash'in data && !commonIdHash) {
         commonIdHash = data.common_id_hash;
     }
 
     if (myUserNum === false)
-        if ('yourUserNum' in data)
+        if ('yourUserNum'in data)
             myUserNum = data['yourUserNum']
 
-    if ('gameSubState' in data)
+    if ('gameSubState'in data)
         gameSubState = data['gameSubState'];
 
     console.log(gameOldState + '->' + gameState);
 
     if ((gameOldState != gameState) || (gameOldSubState != gameSubState)) {
-        if ('active_users' in data && data['active_users'] == 0) {
+        if ('active_users'in data && data['active_users'] == 0) {
             clearTimeout(requestToServerEnabledTimeout);
             requestToServerEnabled = false;
         }
@@ -2617,32 +2501,31 @@ function commonCallback(data) {
         if (canOpenDialog) {
             if (gameState == 'initGame' || gameState == 'initRatingGame') {
                 dialog = bootbox.confirm({
-                    message: ('comments' in data) ? data['comments'] : gameStates[gameState]['message'],
+                    message: ('comments'in data) ? data['comments'] : gameStates[gameState]['message'],
                     size: 'small',
                     buttons: {
                         confirm: {
                             label: 'Ok',
                         },
                         cancel: {
-                            label: 'Новая игра',
+                            label: 'New game',
                             className: 'btn-danger'
                         }
                     },
-                    callback: function (result) {
+                    callback: function(result) {
                         if (!result) {
                             newGameButtonFunction(true);
                         }
                     }
                 });
-                if ('gameWaitLimit' in data) {
-                    dialog.init(function () {
-                        intervalId = setInterval(function () {
+                if ('gameWaitLimit'in data) {
+                    dialog.init(function() {
+                        intervalId = setInterval(function() {
                             var igrokiWaiting = '';
-                            if ('gameSubState' in data)
-                                igrokiWaiting = "<br />Найдено игроков: " + data['gameSubState'];
+                            if ('gameSubState'in data)
+                                igrokiWaiting = "<br />Players ready: " + data['gameSubState'];
 
-
-                            if ('timeWaiting' in data) {
+                            if ('timeWaiting'in data) {
                                 if (!tWaiting) {
                                     tWaiting = data['timeWaiting'];
                                 }
@@ -2658,14 +2541,14 @@ function commonCallback(data) {
                                 }
                             }
 
-                            let content = data['comments'] + igrokiWaiting + '<br />Время подбора: ' + (tWaiting++) + '<br />Среднее время ожидания: ' + (gWLimit) + 'с';
+                            let content = data['comments'] + igrokiWaiting + '<br />Time elapsed: ' + (tWaiting++) + '<br />Average waiting time: ' + (gWLimit) + 's';
                             dialog.find('.bootbox-body').html(content);
                         }, 1000);
                     });
-                } else if ('ratingGameWaitLimit' in data)
-                    dialog.init(function () {
-                        intervalId = setInterval(function () {
-                            if ('timeWaiting' in data)
+                } else if ('ratingGameWaitLimit'in data)
+                    dialog.init(function() {
+                        intervalId = setInterval(function() {
+                            if ('timeWaiting'in data)
                                 if (!tWaiting)
                                     tWaiting = data['timeWaiting'];
                                 else {
@@ -2673,19 +2556,12 @@ function commonCallback(data) {
                                     if (!tWaiting)
                                         tWaiting = data['timeWaiting'];
                                 }
-                            dialog.find('.bootbox-body').html(data['comments'] +
-                                '<br />Время подбора: ' +
-                                (tWaiting++) +
-                                'с' +
-                                '<br />Лимит по времени: ' +
-                                data['ratingGameWaitLimit'] +
-                                'c' +
-                                '<hr>Вы можете начать новую игру, если долго ждать..');
+                            dialog.find('.bootbox-body').html(data['comments'] + '<br />Time elapsed: ' + (tWaiting++) + 'с' + '<br />Time limit: ' + data['ratingGameWaitLimit'] + 'c' + '<hr>You can start a new game if you wait for a long time');
                         }, 1000);
                     });
 
             } else if (gameState == 'gameResults') {
-                if ('inviteStatus' in data) {
+                if ('inviteStatus'in data) {
                     if (data['inviteStatus'] == 'newGameStarting') {
                         document.location.reload(true);
                     } else if (data['inviteStatus'] == 'waiting') {
@@ -2696,74 +2572,69 @@ function commonCallback(data) {
                 } else {
                     gameStates['gameResults']['results'](data);
                 }
-            } else if (!('noDialog' in gameStates[gameState])) {
-                setTimeout(function () {
-                        var message = '';
-                        var cancelLabel = 'Закрывать через 5 секунд';
+            } else if (!('noDialog'in gameStates[gameState])) {
+                setTimeout(function() {
+                    var message = '';
+                    var cancelLabel = 'Close after 5 seconds';
 
-                        if ('comments' in data && (data['comments'] !== null)) {
+                    if ('comments'in data && (data['comments'] !== null)) {
 
-                            if ('messageFunction' in gameStates[gameState]) {
-                                message = gameStates[gameState]['messageFunction'](data['comments']);
-                            } else {
-                                message = data['comments'];
-                            }
-                        } else if ('message' in gameStates[gameState]) {
-                            message = gameStates[gameState]['message'];
+                        if ('messageFunction'in gameStates[gameState]) {
+                            message = gameStates[gameState]['messageFunction'](data['comments']);
+                        } else {
+                            message = data['comments'];
                         }
+                    } else if ('message'in gameStates[gameState]) {
+                        message = gameStates[gameState]['message'];
+                    }
 
-                        if (turnAutocloseDialog) {
-                            if (timeToCloseDilog == 5) {
-                                cancelLabel = 'Закрывать сразу';
-                            } else {
-                                cancelLabel = 'Закроется автоматически';
-                            }
-                        }
-
-                        dialogTurn = bootbox.confirm({
-                            message: message,
-                            size: 'medium',
-                            buttons: {
-                                confirm: {
-                                    label: 'OK',
-                                    className: 'btn-primary'
-                                },
-                                cancel: {
-                                    label: cancelLabel,
-                                    className: 'btn btn-outline-secondary'
-                                }
-                            },
-                            callback: function (result) {
-                                if (!result) {
-                                    turnAutocloseDialog = true;
-
-                                    if (!timeToCloseDilog) {
-                                        timeToCloseDilog = 5;
-                                    } else if (!automaticDialogClosed) {
-                                        timeToCloseDilog = 1.5;
-                                    }
-
-                                    automaticDialogClosed = false;
-                                }
-                                activateFullScreenForMobiles();
-                            }
-                        });
-                        dialogTurn
-                            .find('.modal-content').css({'background-color': 'rgba(255, 255, 255, 0.7)'})
-                            .find('img').css('background-color', 'rgba(0, 0, 0, 0)');
-
-                        if (turnAutocloseDialog) {
-                            setTimeout(
-                                function () {
-                                    automaticDialogClosed = true;
-                                    dialogTurn.find(".bootbox-close-button").trigger("click");
-                                }
-                                , timeToCloseDilog * 1000
-                            );
+                    if (turnAutocloseDialog) {
+                        if (timeToCloseDilog == 5) {
+                            cancelLabel = 'Close immediately';
+                        } else {
+                            cancelLabel = 'Will close automatically';
                         }
                     }
-                    , 500
-                );
+
+                    dialogTurn = bootbox.confirm({
+                        message: message,
+                        size: 'medium',
+                        buttons: {
+                            confirm: {
+                                label: 'OK',
+                                className: 'btn-primary'
+                            },
+                            cancel: {
+                                label: cancelLabel,
+                                className: 'btn btn-outline-secondary'
+                            }
+                        },
+                        callback: function(result) {
+                            if (!result) {
+                                turnAutocloseDialog = true;
+
+                                if (!timeToCloseDilog) {
+                                    timeToCloseDilog = 5;
+                                } else if (!automaticDialogClosed) {
+                                    timeToCloseDilog = 1.5;
+                                }
+
+                                automaticDialogClosed = false;
+                            }
+                            activateFullScreenForMobiles();
+                        }
+                    });
+                    dialogTurn.find('.modal-content').css({
+                        'background-color': 'rgba(255, 255, 255, 0.7)'
+                    }).find('img').css('background-color', 'rgba(0, 0, 0, 0)');
+
+                    if (turnAutocloseDialog) {
+                        setTimeout(function() {
+                            automaticDialogClosed = true;
+                            dialogTurn.find(".bootbox-close-button").trigger("click");
+                        }, timeToCloseDilog * 1000);
+                    }
+                }, 500);
             }
         }
 
@@ -2772,11 +2643,11 @@ function commonCallback(data) {
         if ('from_' + gameOldState in gameStates[gameState])
             gameStates[gameState]['from_' + gameOldState](data);
 
-        if ('action' in gameStates[gameState])
+        if ('action'in gameStates[gameState])
             gameStates[gameState]['action'](data);
     }
 
-    if ('timeLeft' in data) {
+    if ('timeLeft'in data) {
         vremia.text = data['timeLeft'];
         vremiaMinutes = data['minutesLeft'];
         vremiaSeconds = data['secondsLeft'];
@@ -2784,18 +2655,14 @@ function commonCallback(data) {
         displayTimeGlobal(+vremiaMinutes * 100 + +vremiaSeconds, true);
     }
 
-    if ('log' in data)
+    if ('log'in data)
         for (k in data['log'])
             gameLog.unshift(data['log'][k]);
 
-    if ('chat' in data) {
+    if ('chat'in data) {
         for (k in data['chat']) {
 
-            if (!
-                (((data['chat'][k].indexOf('Вы') + 1) === 1)
-                    ||
-                    ((data['chat'][k].indexOf('Новости') + 1) === 1))
-            ) {
+            if (!(((data['chat'][k].indexOf('You') + 1) === 1) || ((data['chat'][k].indexOf('News') + 1) === 1))) {
                 hasIncomingMessages = true;
                 buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE));
                 buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).setData('alarm', true);
@@ -2805,7 +2672,7 @@ function commonCallback(data) {
         }
     }
 
-    if ('winScore' in data) {
+    if ('winScore'in data) {
         if (!winScore) {
             buttonSetModeGlobal(players, 'goalBlock', data.winScore == 200 ? OTJAT_MODE : ALARM_MODE);
         }
@@ -2816,15 +2683,15 @@ function commonCallback(data) {
     responseData = data;
 
     if (pageActive == 'hidden' && gameState != 'chooseGame') {
-        fetchGlobal(STATUS_CHECKER_SCRIPT)
-            .then((data) => {
-                commonCallback(data);
-            });
+        fetchGlobal(STATUS_CHECKER_SCRIPT).then( (data) => {
+            commonCallback(data);
+        }
+        );
     }
 }
 
 function userScores(data) {
-    if ("score_arr" in data) {
+    if ("score_arr"in data) {
         for (let k in data['score_arr']) {
             if (k == data['yourUserNum']) {
                 let youBlock = players.youBlock.svgObject;
@@ -2862,12 +2729,10 @@ function userScores(data) {
                     players[playerBlockName].svgObject.setAlpha(1);
                 }
 
-                if (('userNames' in data) && (k in data['userNames']) && (data['userNames'][k] === '')) {
+                if (('userNames'in data) && (k in data['userNames']) && (data['userNames'][k] === '')) {
                     players[playerBlockName].svgObject.setAlpha(INACTIVE_USER_ALPHA);
                 }
             }
-
-
         }
 
         if (ochki_arr === false) {
@@ -2879,102 +2744,10 @@ function userScores(data) {
     }
 }
 ////
-var letterPrices = new Map([
-    [0, 1],
-    [1, 3],
-    [2, 1],
-    [3, 3],
-    [4, 2],
-    [5, 1],
-    [6, 5],
-    [7, 5],
-    [8, 1],
-    [9, 4],
-    [10, 2],
-    [11, 2],
-    [12, 2],
-    [13, 1],
-    [14, 1],
-    [15, 2],
-    [16, 1],
-    [17, 1],
-    [18, 1],
-    [19, 2],
-    [20, 8],
-    [21, 5],
-    [22, 5],
-    [23, 5],
-    [24, 8],
-    [25, 10],
-    [26, 15],
-    [27, 4],
-    [28, 3],
-    [29, 8],
-    [30, 8],
-    [31, 3],
-    [34, 1],
-    [35, 3],
-    [36, 3],
-    [37, 2],
-    [38, 1],
-    [39, 4],
-    [40, 2],
-    [41, 4],
-    [42, 1],
-    [43, 8],
-    [44, 5],
-    [45, 1],
-    [46, 3],
-    [47, 1],
-    [48, 1],
-    [49, 3],
-    [50, 10],
-    [51, 1],
-    [52, 1],
-    [53, 1],
-    [54, 1],
-    [55, 4],
-    [56, 4],
-    [57, 8],
-    [58, 4],
-    [59, 10]
-]);  ////
-var rusLetters = new Map([
-  ['а', 0],
-  ['б', 1],
-  ['в', 2],
-  ['г', 3],
-  ['д', 4],
-  ['е', 5],
-  ['ж', 6],
-  ['з', 7],
-  ['и', 8],
-  ['й', 9],
-  ['к', 10],
-  ['л', 11],
-  ['м', 12],
-  ['н', 13],
-  ['о', 14],
-  ['п', 15],
-  ['р', 16],
-  ['с', 17],
-  ['т', 18],
-  ['у', 19],
-  ['ф', 20],
-  ['х', 21],
-  ['ц', 22],
-  ['ч', 23],
-  ['ш', 24],
-  ['щ', 25],
-  ['ъ', 26],
-  ['ы', 27],
-  ['ь', 28],
-  ['э', 29],
-  ['ю', 30],
-  ['я', 31],
-  ['ё', 32],
-  ['#', 33]
-]);  ////
+var letterPrices = new Map([[0, 1], [1, 3], [2, 1], [3, 3], [4, 2], [5, 1], [6, 5], [7, 5], [8, 1], [9, 4], [10, 2], [11, 2], [12, 2], [13, 1], [14, 1], [15, 2], [16, 1], [17, 1], [18, 1], [19, 2], [20, 8], [21, 5], [22, 5], [23, 5], [24, 8], [25, 10], [26, 15], [27, 4], [28, 3], [29, 8], [30, 8], [31, 3], [34, 1], [35, 3], [36, 3], [37, 2], [38, 1], [39, 4], [40, 2], [41, 4], [42, 1], [43, 8], [44, 5], [45, 1], [46, 3], [47, 1], [48, 1], [49, 3], [50, 10], [51, 1], [52, 1], [53, 1], [54, 1], [55, 4], [56, 4], [57, 8], [58, 4], [59, 10]]);
+////
+var rusLetters = new Map([['а', 0], ['б', 1], ['в', 2], ['г', 3], ['д', 4], ['е', 5], ['ж', 6], ['з', 7], ['и', 8], ['й', 9], ['к', 10], ['л', 11], ['м', 12], ['н', 13], ['о', 14], ['п', 15], ['р', 16], ['с', 17], ['т', 18], ['у', 19], ['ф', 20], ['х', 21], ['ц', 22], ['ч', 23], ['ш', 24], ['щ', 25], ['ъ', 26], ['ы', 27], ['ь', 28], ['э', 29], ['ю', 30], ['я', 31], ['ё', 32], ['#', 33]]);
+////
 /*
 var snd = new Audio("data:audio/mpeg;base64,//uQRAAAAWMSLwUIYAAsYkXgoQwAEaYLWfkWgAI0wWs/ItAAAGDgYtAgAyN+QWaAAihwMWm4G8QQRDiMcCBcH3Cc+CDv/7xA4Tvh9Rz/y8QADBwMWgQAZG/ILNAARQ4GLTcDeIIIhxGOBAuD7hOfBB3/94gcJ3w+o5/5eIAIAAAVwWgQAVQ2ORaIQwEMAJiDg95G4nQL7mQVWI6GwRcfsZAcsKkJvxgxEjzFUgfHoSQ9Qq7KNwqHwuB13MA4a1q/DmBrHgPcmjiGoh//EwC5nGPEmS4RcfkVKOhJf+WOgoxJclFz3kgn//dBA+ya1GhurNn8zb//9NNutNuhz31f////9vt///z+IdAEAAAK4LQIAKobHItEIYCGAExBwe8jcToF9zIKrEdDYIuP2MgOWFSE34wYiR5iqQPj0JIeoVdlG4VD4XA67mAcNa1fhzA1jwHuTRxDUQ//iYBczjHiTJcIuPyKlHQkv/LHQUYkuSi57yQT//uggfZNajQ3Vmz+Zt//+mm3Wm3Q576v////+32///5/EOgAAADVghQAAAAA//uQZAUAB1WI0PZugAAAAAoQwAAAEk3nRd2qAAAAACiDgAAAAAAABCqEEQRLCgwpBGMlJkIz8jKhGvj4k6jzRnqasNKIeoh5gI7BJaC1A1AoNBjJgbyApVS4IDlZgDU5WUAxEKDNmmALHzZp0Fkz1FMTmGFl1FMEyodIavcCAUHDWrKAIA4aa2oCgILEBupZgHvAhEBcZ6joQBxS76AgccrFlczBvKLC0QI2cBoCFvfTDAo7eoOQInqDPBtvrDEZBNYN5xwNwxQRfw8ZQ5wQVLvO8OYU+mHvFLlDh05Mdg7BT6YrRPpCBznMB2r//xKJjyyOh+cImr2/4doscwD6neZjuZR4AgAABYAAAABy1xcdQtxYBYYZdifkUDgzzXaXn98Z0oi9ILU5mBjFANmRwlVJ3/6jYDAmxaiDG3/6xjQQCCKkRb/6kg/wW+kSJ5//rLobkLSiKmqP/0ikJuDaSaSf/6JiLYLEYnW/+kXg1WRVJL/9EmQ1YZIsv/6Qzwy5qk7/+tEU0nkls3/zIUMPKNX/6yZLf+kFgAfgGyLFAUwY//uQZAUABcd5UiNPVXAAAApAAAAAE0VZQKw9ISAAACgAAAAAVQIygIElVrFkBS+Jhi+EAuu+lKAkYUEIsmEAEoMeDmCETMvfSHTGkF5RWH7kz/ESHWPAq/kcCRhqBtMdokPdM7vil7RG98A2sc7zO6ZvTdM7pmOUAZTnJW+NXxqmd41dqJ6mLTXxrPpnV8avaIf5SvL7pndPvPpndJR9Kuu8fePvuiuhorgWjp7Mf/PRjxcFCPDkW31srioCExivv9lcwKEaHsf/7ow2Fl1T/9RkXgEhYElAoCLFtMArxwivDJJ+bR1HTKJdlEoTELCIqgEwVGSQ+hIm0NbK8WXcTEI0UPoa2NbG4y2K00JEWbZavJXkYaqo9CRHS55FcZTjKEk3NKoCYUnSQ0rWxrZbFKbKIhOKPZe1cJKzZSaQrIyULHDZmV5K4xySsDRKWOruanGtjLJXFEmwaIbDLX0hIPBUQPVFVkQkDoUNfSoDgQGKPekoxeGzA4DUvnn4bxzcZrtJyipKfPNy5w+9lnXwgqsiyHNeSVpemw4bWb9psYeq//uQZBoABQt4yMVxYAIAAAkQoAAAHvYpL5m6AAgAACXDAAAAD59jblTirQe9upFsmZbpMudy7Lz1X1DYsxOOSWpfPqNX2WqktK0DMvuGwlbNj44TleLPQ+Gsfb+GOWOKJoIrWb3cIMeeON6lz2umTqMXV8Mj30yWPpjoSa9ujK8SyeJP5y5mOW1D6hvLepeveEAEDo0mgCRClOEgANv3B9a6fikgUSu/DmAMATrGx7nng5p5iimPNZsfQLYB2sDLIkzRKZOHGAaUyDcpFBSLG9MCQALgAIgQs2YunOszLSAyQYPVC2YdGGeHD2dTdJk1pAHGAWDjnkcLKFymS3RQZTInzySoBwMG0QueC3gMsCEYxUqlrcxK6k1LQQcsmyYeQPdC2YfuGPASCBkcVMQQqpVJshui1tkXQJQV0OXGAZMXSOEEBRirXbVRQW7ugq7IM7rPWSZyDlM3IuNEkxzCOJ0ny2ThNkyRai1b6ev//3dzNGzNb//4uAvHT5sURcZCFcuKLhOFs8mLAAEAt4UWAAIABAAAAAB4qbHo0tIjVkUU//uQZAwABfSFz3ZqQAAAAAngwAAAE1HjMp2qAAAAACZDgAAAD5UkTE1UgZEUExqYynN1qZvqIOREEFmBcJQkwdxiFtw0qEOkGYfRDifBui9MQg4QAHAqWtAWHoCxu1Yf4VfWLPIM2mHDFsbQEVGwyqQoQcwnfHeIkNt9YnkiaS1oizycqJrx4KOQjahZxWbcZgztj2c49nKmkId44S71j0c8eV9yDK6uPRzx5X18eDvjvQ6yKo9ZSS6l//8elePK/Lf//IInrOF/FvDoADYAGBMGb7FtErm5MXMlmPAJQVgWta7Zx2go+8xJ0UiCb8LHHdftWyLJE0QIAIsI+UbXu67dZMjmgDGCGl1H+vpF4NSDckSIkk7Vd+sxEhBQMRU8j/12UIRhzSaUdQ+rQU5kGeFxm+hb1oh6pWWmv3uvmReDl0UnvtapVaIzo1jZbf/pD6ElLqSX+rUmOQNpJFa/r+sa4e/pBlAABoAAAAA3CUgShLdGIxsY7AUABPRrgCABdDuQ5GC7DqPQCgbbJUAoRSUj+NIEig0YfyWUho1VBBBA//uQZB4ABZx5zfMakeAAAAmwAAAAF5F3P0w9GtAAACfAAAAAwLhMDmAYWMgVEG1U0FIGCBgXBXAtfMH10000EEEEEECUBYln03TTTdNBDZopopYvrTTdNa325mImNg3TTPV9q3pmY0xoO6bv3r00y+IDGid/9aaaZTGMuj9mpu9Mpio1dXrr5HERTZSmqU36A3CumzN/9Robv/Xx4v9ijkSRSNLQhAWumap82WRSBUqXStV/YcS+XVLnSS+WLDroqArFkMEsAS+eWmrUzrO0oEmE40RlMZ5+ODIkAyKAGUwZ3mVKmcamcJnMW26MRPgUw6j+LkhyHGVGYjSUUKNpuJUQoOIAyDvEyG8S5yfK6dhZc0Tx1KI/gviKL6qvvFs1+bWtaz58uUNnryq6kt5RzOCkPWlVqVX2a/EEBUdU1KrXLf40GoiiFXK///qpoiDXrOgqDR38JB0bw7SoL+ZB9o1RCkQjQ2CBYZKd/+VJxZRRZlqSkKiws0WFxUyCwsKiMy7hUVFhIaCrNQsKkTIsLivwKKigsj8XYlwt/WKi2N4d//uQRCSAAjURNIHpMZBGYiaQPSYyAAABLAAAAAAAACWAAAAApUF/Mg+0aohSIRobBAsMlO//Kk4soosy1JSFRYWaLC4qZBYWFRGZdwqKiwkNBVmoWFSJkWFxX4FFRQWR+LsS4W/rFRb/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////VEFHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU291bmRib3kuZGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMjAwNGh0dHA6Ly93d3cuc291bmRib3kuZGUAAAAAAAAAACU=");
 */
@@ -3008,10 +2781,10 @@ document.addEventListener("fullscreenchange", function() {
     if (!document.fullscreenElement) {
         bootbox.confirm({
             size: 'small',
-            message: 'Вернуться в полноэкранный режим?',
-            locale: 'ru',
+            message: 'Return to fullscreen mode?',
+            locale: 'en',
             callback: function(result) {
-                if(result) {
+                if (result) {
                     document.body.requestFullscreen();
                 }
             }
@@ -3035,90 +2808,145 @@ async function mobileShare() {
     }
 }
 
-function genDivGlobal(i, isChange = false) {
+function genDivGlobal(i, isChange=false) {
     if (i <= 31) {
         return '<div class="letter_' + i + '"></div>';
     }
 
     let coords = {
-        32: {x: 526, y: 640},
-        33: {x: 182, y: 24},
-        34: {x: 507, y: 259},
-        35: {x: 598, y: 259},
-        36: {x: 691, y: 259},
-        37: {x: 786, y: 259},
-        38: {x: 881, y: 259},
-        39: {x: 964, y: 259},
-        40: {x: 3, y: 385},
-        41: {x: 101, y: 385},
-        42: {x: 186, y: 385},
-        43: {x: 247, y: 396},
-        44: {x: 324, y: 385},
-        45: {x: 411, y: 385},
-        46: {x: 503, y: 380},
-        47: {x: 612, y: 385},
-        48: {x: 714, y: 385},
-        49: {x: 812, y: 385},
-        50: {x: 908, y: 384},
-        51: {x: 1001, y: 385},
-        52: {x: 1080, y: 385},
-        53: {x: 1, y: 507},
-        54: {x: 92, y: 507},
-        55: {x: 186, y: 507},
-        56: {x: 295, y: 507},
-        57: {x: 408, y: 507},
-        58: {x: 502, y: 507},
-        59: {x: 592, y: 507}
+        32: {
+            x: 526,
+            y: 640
+        },
+        33: {
+            x: 182,
+            y: 24
+        },
+        34: {
+            x: 507,
+            y: 259
+        },
+        35: {
+            x: 598,
+            y: 259
+        },
+        36: {
+            x: 691,
+            y: 259
+        },
+        37: {
+            x: 786,
+            y: 259
+        },
+        38: {
+            x: 881,
+            y: 259
+        },
+        39: {
+            x: 964,
+            y: 259
+        },
+        40: {
+            x: 3,
+            y: 385
+        },
+        41: {
+            x: 101,
+            y: 385
+        },
+        42: {
+            x: 186,
+            y: 385
+        },
+        43: {
+            x: 247,
+            y: 396
+        },
+        44: {
+            x: 324,
+            y: 385
+        },
+        45: {
+            x: 411,
+            y: 385
+        },
+        46: {
+            x: 503,
+            y: 380
+        },
+        47: {
+            x: 612,
+            y: 385
+        },
+        48: {
+            x: 714,
+            y: 385
+        },
+        49: {
+            x: 812,
+            y: 385
+        },
+        50: {
+            x: 908,
+            y: 384
+        },
+        51: {
+            x: 1001,
+            y: 385
+        },
+        52: {
+            x: 1080,
+            y: 385
+        },
+        53: {
+            x: 1,
+            y: 507
+        },
+        54: {
+            x: 92,
+            y: 507
+        },
+        55: {
+            x: 186,
+            y: 507
+        },
+        56: {
+            x: 295,
+            y: 507
+        },
+        57: {
+            x: 408,
+            y: 507
+        },
+        58: {
+            x: 502,
+            y: 507
+        },
+        59: {
+            x: 592,
+            y: 507
+        }
     };
     let koef = 44 / 76;
     let imgWidth = Math.round(1187 * koef);
     let styleBeg = 'display: inline-block; background: url(/img/letters_english.png); background-color:grey;background-position:-';
     let divTpl = '<div onmouseover="this.style.backgroundColor=\'green\';" onmouseout="this.style.backgroundColor=\'grey\';" style="display: inline-block; background: url(/img/letters_english.png); background-color:grey;background-position:-';
-    let styleEnd = ' background-size: ' + imgWidth + 'px;'
-        + ' width: 44px;'
-        + ' height: 54px;'
-        + ' border-radius: 5px;';
-    let divEnd = ' background-size: ' + imgWidth + 'px;'
-        + ' width: 44px;'
-        + ' height: 54px;'
-        + ' border-radius: 5px;'
-        + '"></div>';
+    let styleEnd = ' background-size: ' + imgWidth + 'px;' + ' width: 44px;' + ' height: 54px;' + ' border-radius: 5px;';
+    let divEnd = ' background-size: ' + imgWidth + 'px;' + ' width: 44px;' + ' height: 54px;' + ' border-radius: 5px;' + '"></div>';
 
     if (i == 53) {
-        return (isChange ? styleBeg : divTpl)
-            + Math.round(coords[i].x * koef) + 'px -'
-            + Math.round(coords[i].y * koef) + 'px; '
-            + (isChange ? styleEnd : divEnd);
+        return (isChange ? styleBeg : divTpl) + Math.round(coords[i].x * koef) + 'px -' + Math.round(coords[i].y * koef) + 'px; ' + (isChange ? styleEnd : divEnd);
     } else if (i == 43) {
-        return (isChange ? styleBeg : divTpl)
-            + Math.round(coords[i]['x'] * koef) + 'px -'
-            + Math.round((coords[i]['y'] - 8) * koef) + 'px; '
-            + (isChange ? styleEnd : divEnd);
+        return (isChange ? styleBeg : divTpl) + Math.round(coords[i]['x'] * koef) + 'px -' + Math.round((coords[i]['y'] - 8) * koef) + 'px; ' + (isChange ? styleEnd : divEnd);
     } else if (i == 46) {
-        return (isChange ? styleBeg : divTpl)
-            + Math.round(coords[i]['x'] * koef) + 'px -'
-            + Math.round((coords[i]['y'] + 6) * koef) + 'px; '
-            + (isChange ? styleEnd : divEnd);
+        return (isChange ? styleBeg : divTpl) + Math.round(coords[i]['x'] * koef) + 'px -' + Math.round((coords[i]['y'] + 6) * koef) + 'px; ' + (isChange ? styleEnd : divEnd);
     } else if (i == 40) {
-        return (isChange ? styleBeg : divTpl)
-            + Math.round(coords[i]['x'] * koef) + 'px -'
-            + Math.round((coords[i]['y'] - 2) * koef) + 'px; '
-            + (isChange ? styleEnd : divEnd);
+        return (isChange ? styleBeg : divTpl) + Math.round(coords[i]['x'] * koef) + 'px -' + Math.round((coords[i]['y'] - 2) * koef) + 'px; ' + (isChange ? styleEnd : divEnd);
     } else if (i == 56) {
-        return (isChange ? styleBeg : divTpl)
-            + Math.round(coords[i]['x'] * koef * 0.9) + 'px -'
-            + Math.round((coords[i]['y'] - 2) * koef * 0.9) + 'px;'
-            + ' background-size: ' + Math.round(imgWidth * 0.9) + 'px;'
-            + ' width: 44px;'
-            + ' height: 54px;'
-            + ' border-radius: 5px;'
-            + (isChange ? '' : '"></div>');
+        return (isChange ? styleBeg : divTpl) + Math.round(coords[i]['x'] * koef * 0.9) + 'px -' + Math.round((coords[i]['y'] - 2) * koef * 0.9) + 'px;' + ' background-size: ' + Math.round(imgWidth * 0.9) + 'px;' + ' width: 44px;' + ' height: 54px;' + ' border-radius: 5px;' + (isChange ? '' : '"></div>');
     }
 
-    return ((isChange ? styleBeg : divTpl)
-        + Math.round((coords[i]['x'] + 3) * koef) + 'px -'
-        + Math.round(coords[i]['y'] * koef) + 'px; '
-        + (isChange ? styleEnd : divEnd));
+    return ((isChange ? styleBeg : divTpl) + Math.round((coords[i]['x'] + 3) * koef) + 'px -' + Math.round(coords[i]['y'] * koef) + 'px; ' + (isChange ? styleEnd : divEnd));
 
 }
 
@@ -3129,35 +2957,28 @@ function asyncCSS(href) {
     document.head.appendChild(css);
 }
 
-window.onbeforeunload = function () {
-    if (gameState == 'myTurn'
-        || gameState == 'preMyTurn'
-        || gameState == 'otherTurn'
-        || gameState == 'initGame'
-        || gameState == 'initRatingGame') {
+window.onbeforeunload = function() {
+    if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'initGame' || gameState == 'initRatingGame') {
         fetchGlobal(SET_INACTIVE_SCRIPT, '', '');
         return "Вы в игре - уверены, что хотите выйти?";
     }
-};
+}
+;
 
-document.addEventListener("visibilitychange", function () {
+document.addEventListener("visibilitychange", function() {
     pageActive = document.visibilityState;
 
-    if (gameState == 'myTurn'
-        || gameState == 'preMyTurn'
-        || gameState == 'otherTurn'
-        || gameState == 'initGame'
-        || gameState == 'initRatingGame') {
+    if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'initGame' || gameState == 'initRatingGame') {
         if (pageActive == 'hidden') {
-            fetchGlobal(STATUS_CHECKER_SCRIPT)
-                .then((data) => {
-                    commonCallback(data);
-                });
+            fetchGlobal(STATUS_CHECKER_SCRIPT).then( (data) => {
+                commonCallback(data);
+            }
+            );
         }
     }
 });
 
-function showFullImage(idImg, width, oldWidth = 198) {
+function showFullImage(idImg, width, oldWidth=198) {
     if ($('#' + idImg).width() < width) {
         if (fullImgID !== false) {
             $('#' + fullImgID).css('z-index', '50');
@@ -3186,23 +3007,24 @@ function showFullImage(idImg, width, oldWidth = 198) {
 
 function mergeTheIDs(oldKey, commonID) {
     if (oldKey.trim() == '') {
-        let resp = {result: 'error', message: 'Задано пустое значение'};
+        let resp = {
+            result: 'error',
+            message: 'Задано пустое значение'
+        };
         showCabinetActionResult(resp);
 
         return;
     }
 
-    fetchGlobal(MERGE_IDS_SCRIPT, '', 'oldKey=' + btoa(oldKey) + '&commonID=' + commonID)
-        .then((resp) => {
-            showCabinetActionResult(resp);
-        });
+    fetchGlobal(MERGE_IDS_SCRIPT, '', 'oldKey=' + btoa(oldKey) + '&commonID=' + commonID).then( (resp) => {
+        showCabinetActionResult(resp);
+    }
+    );
 }
 
 function showCabinetActionResult(response) {
-    if ('message' in response) {
-        let background = (response['result'].indexOf('error') + 1)
-            ? '#f99'
-            : '#9f9';
+    if ('message'in response) {
+        let background = (response['result'].indexOf('error') + 1) ? '#f99' : '#9f9';
         cabinetAlert = bootbox.alert({
             message: response['message'],
             locale: 'ru',
@@ -3215,7 +3037,7 @@ function showCabinetActionResult(response) {
     }
 }
 
-function copyKeyForID(key, commonID = '') {
+function copyKeyForID(key, commonID='') {
     $('#key_for_id').select();
     document.execCommand("copy");
 }
@@ -3226,27 +3048,30 @@ function copyDonateKey() {
 }
 
 function deleteBan(commonID) {
-    fetchGlobalMVC(DELETE_BAN_URL + commonID, '', 'commonID=' + commonID)
-        .then((resp) => {
-            showCabinetActionResult(resp);
-        });
+    fetchGlobalMVC(DELETE_BAN_URL + commonID, '', 'commonID=' + commonID).then( (resp) => {
+        showCabinetActionResult(resp);
+    }
+    );
 }
 
-function savePlayerName(name, commonIdParam = '') {
+function savePlayerName(name, commonIdParam='') {
     if (name.trim() == '') {
-        let resp = {result: 'error', message: 'Задано пустое значение'};
+        let resp = {
+            result: 'error',
+            message: 'Задано пустое значение'
+        };
         showCabinetActionResult(resp);
 
         return;
     }
 
-    fetchGlobal(SET_PLAYER_NAME_SCRIPT, '', 'name=' + encodeURIComponent(name) + '&commonID=' + (commonIdParam != '' ? commonIdParam : commonId))
-        .then((resp) => {
-            if (resp['result'] == 'saved') {
-                $('#playersNikname').text(name);
-            }
-            showCabinetActionResult(resp);
-        });
+    fetchGlobal(SET_PLAYER_NAME_SCRIPT, '', 'name=' + encodeURIComponent(name) + '&commonID=' + (commonIdParam != '' ? commonIdParam : commonId)).then( (resp) => {
+        if (resp['result'] == 'saved') {
+            $('#playersNikname').text(name);
+        }
+        showCabinetActionResult(resp);
+    }
+    );
 }
 
 function savePlayerAvatar(url, commonIdParam) {
@@ -3268,22 +3093,7 @@ function savePlayerAvatar(url, commonIdParam) {
         requestTimestamp = (new Date()).getTime();
     }
 
-    let URL = useLocalStorage
-        ? (
-            '/yandex1.0.1.1/php/yowser/index.php'
-            + '?cooki='
-            + localStorage.erudit_user_session_ID
-            + '&script='
-            + AVATAR_UPLOAD_SCRIPT
-            + '&'
-            + commonParams()
-        )
-        : (
-            '/yandex1.0.1.1/php/'
-            + AVATAR_UPLOAD_SCRIPT
-            + '?'
-            + commonParams()
-        );
+    let URL = useLocalStorage ? ('/scrabble1.0.1.6/php/yowser/index.php' + '?cooki=' + localStorage.erudit_user_session_ID + '&script=' + AVATAR_UPLOAD_SCRIPT + '&' + commonParams()) : ('/scrabble1.0.1.6/php/' + AVATAR_UPLOAD_SCRIPT + '?' + commonParams());
 
     $.ajax({
         url: URL,
@@ -3293,7 +3103,7 @@ function savePlayerAvatar(url, commonIdParam) {
         cache: false,
         contentType: false,
         processData: false,
-        success: function (returndata) {
+        success: function(returndata) {
             resp = JSON.parse(returndata);
 
             if (resp['result'] === 'saved') {
@@ -3320,15 +3130,19 @@ function refreshId(element_id, url) {
         cache: false,
         contentType: false,
         processData: false,
-        success: function (returndata) {
+        success: function(returndata) {
             resp = JSON.parse(returndata);
             $('#' + element_id).html(resp.message + resp.pagination);
         }
     });
 }
 
+function version() {
+    return '&ver=' + Math.floor(Date.now());
+}
+
 async function getStatPageGlobal() {
-    let urlPart = STATS_URL + commonId + '&lang=' + lang;
+    let urlPart = STATS_URL + commonId + '&lang=' + lang + version();
     let respMessage = 'Ошибка загрузки статистики';
 
     if (commonId) {
@@ -3346,9 +3160,13 @@ async function getStatPageGlobal() {
                 throw new Error(`Ошибка запроса: ${response.status}`);
             }
 
-            const returndata = await response.json(); // Получаем JSON
+            const returndata = await response.json();
+            // Получаем JSON
 
-            const s = StatsPage({ json: returndata, BASE_URL: '' });
+            const s = StatsPage({
+                json: returndata,
+                BASE_URL: ''
+            });
             const message = await s.buildHtml();
 
             return {
@@ -3370,18 +3188,21 @@ async function getStatPageGlobal() {
 
 function savePlayerAvatarUrl(url, commonID) {
     if (url.trim() == '') {
-        let resp = {result: 'error', message: 'Задано пустое значение'};
+        let resp = {
+            result: 'error',
+            message: 'Задано пустое значение'
+        };
         showCabinetActionResult(resp);
 
         return;
     }
 
-    fetchGlobal(SET_AVATAR_SCRIPT, '', 'avatar=' + encodeURIComponent(url) + '&commonID=' + commonID)
-        .then((resp) => {
-            if (resp['result'] == 'saved')
-                $('#playersAvatar').html('<img src="' + url + '" width="100px" max-height = "100px"/>');
-            showCabinetActionResult(resp);
-        });
+    fetchGlobal(SET_AVATAR_SCRIPT, '', 'avatar=' + encodeURIComponent(url) + '&commonID=' + commonID).then( (resp) => {
+        if (resp['result'] == 'saved')
+            $('#playersAvatar').html('<img src="' + url + '" width="100px" max-height = "100px"/>');
+        showCabinetActionResult(resp);
+    }
+    );
 }
 
 function initLotok() {
@@ -3394,29 +3215,27 @@ function initLotok() {
 
 function lotokFindSlotXY() {
     let XY = [];
-    outer:
-        for (var i = 0; i < lotokCapacityY; i++)
-            for (var j = 0; j < lotokCapacityX; j++)
-                if (lotokCells[i][j] === false) {
-                    XY[0] = j;
-                    XY[1] = i;
-                    lotokCells[i][j] = true;
-                    break outer;
-                }
+    outer: for (var i = 0; i < lotokCapacityY; i++)
+        for (var j = 0; j < lotokCapacityX; j++)
+            if (lotokCells[i][j] === false) {
+                XY[0] = j;
+                XY[1] = i;
+                lotokCells[i][j] = true;
+                break outer;
+            }
     return XY;
 }
 
 function lotokFindSlotReverseXY() {
     let XY = [];
-    outer:
-        for (var i = lotokCapacityY - 1; i >= 0; i--)
-            for (var j = lotokCapacityX - 1; j >= 0; j--)
-                if (lotokCells[i][j] === false) {
-                    XY[0] = j;
-                    XY[1] = i;
-                    lotokCells[i][j] = true;
-                    break outer;
-                }
+    outer: for (var i = lotokCapacityY - 1; i >= 0; i--)
+        for (var j = lotokCapacityX - 1; j >= 0; j--)
+            if (lotokCells[i][j] === false) {
+                XY[0] = j;
+                XY[1] = i;
+                lotokCells[i][j] = true;
+                break outer;
+            }
     return XY;
 }
 
@@ -3460,21 +3279,17 @@ function disableButtons() {
 function enableButtons() {
     //if (bootBoxIsOpenedGlobal()) return;
     for (let k in buttons)
-        if ('enabled' in buttons[k]) {
+        if ('enabled'in buttons[k]) {
             if (gameState in buttons[k]['enabled']) {
                 if (buttons[k]['svgObject'] !== false) {
                     buttons[k]['svgObject'].setInteractive();
-                    buttons[k]['svgObject']
-                        .bringToTop(buttons[k]['svgObject']
-                            .getByName(k + OTJAT_MODE));
+                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + OTJAT_MODE));
                 }
 
             } else {
                 if (buttons[k]['svgObject'] !== false) {
                     buttons[k]['svgObject'].disableInteractive();
-                    buttons[k]['svgObject']
-                        .bringToTop(buttons[k]['svgObject']
-                            .getByName(k + 'Inactive'));
+                    buttons[k]['svgObject'].bringToTop(buttons[k]['svgObject'].getByName(k + 'Inactive'));
                 }
 
             }
@@ -3483,7 +3298,6 @@ function enableButtons() {
                 buttons[k]['svgObject'].setInteractive();
         }
 }
-
 
 function placeFishki(fishki) {
     var maxI = 0;
@@ -3518,7 +3332,7 @@ function placeFishki(fishki) {
 }
 
 ////
-function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = DEFAULT_FISHKA_SET) {
+function getFishkaGlobal(numLetter, X, Y, _this, draggable=true, fishkaSet=DEFAULT_FISHKA_SET) {
     if (fishkaSet != DEFAULT_FISHKA_SET) {
         console.log('Not default');
         console.log(numLetter);
@@ -3553,9 +3367,7 @@ function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = D
     fishka.displayWidth = 32 * 2;
     fishka.displayHeight = 32 * 2;
     const correction = 1.5;
-    const correctionLetter = (numLetter % 1000 <= 33
-        ? correction
-        : correction * 1.05);
+    const correctionLetter = (numLetter % 1000 <= 33 ? correction : correction * 1.05);
 
     if (numLetter == 999) {
         let starLetter = _this.add.image(0, 0, 'zvezdaCenter');
@@ -3573,9 +3385,7 @@ function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = D
         starLetter.x = fishka.displayWidth - 13 * 2 - starLetter.displayWidth;
         starLetter.y = fishka.displayHeight - 27 * 2 - starLetter.displayHeight;
 
-        let testLetter = (numLetter <= 1033
-            ? _this.add.image(0, 0, 'megaset', frames[numLetter - 999 - 1])
-            : _this.add.image(0, 0, 'megaset_english', framesEnglish[numLetter - 999 - 1]));
+        let testLetter = (numLetter <= 1033 ? _this.add.image(0, 0, 'megaset', frames[numLetter - 999 - 1]) : _this.add.image(0, 0, 'megaset_english', framesEnglish[numLetter - 999 - 1]));
 
         testLetter.displayWidth = fishka.displayWidth / correctionLetter;
         testLetter.scaleY = testLetter.scaleX;
@@ -3591,9 +3401,7 @@ function getFishkaGlobal(numLetter, X, Y, _this, draggable = true, fishkaSet = D
         let atlasTextureEnglish = _this.textures.get('megaset_english');
         let framesEnglish = atlasTextureEnglish.getFrameNames();
 
-        let testLetter = (numLetter <= 33
-            ? _this.add.image(0, 0, 'megaset', frames[numLetter])
-            : _this.add.image(0, 0, 'megaset_english', framesEnglish[numLetter]));
+        let testLetter = (numLetter <= 33 ? _this.add.image(0, 0, 'megaset', frames[numLetter]) : _this.add.image(0, 0, 'megaset_english', framesEnglish[numLetter]));
 
         testLetter.displayWidth = fishka.displayWidth / correctionLetter;
         testLetter.scaleY = testLetter.scaleX;
@@ -3651,7 +3459,7 @@ async function loadFishkiSet(fishkaSet) {
 
     console.log(lang);
 
-    CODES[lang].forEach(function (numLetter) {
+    CODES[lang].forEach(function(numLetter) {
         imgName = fishkaSet + numLetter;
         preloaderObject.load.svg(imgName, '/img/fishki_sets/' + fishkaSet + '/' + numLetter + '.svg');
         if (numLetter != 999) {
@@ -3662,8 +3470,8 @@ async function loadFishkiSet(fishkaSet) {
     });
 
     preloaderObject.load.start();
-    preloaderObject.load.on('complete', function () {
-        CODES[lang].forEach(function (numLetter) {
+    preloaderObject.load.on('complete', function() {
+        CODES[lang].forEach(function(numLetter) {
             imgName = fishkaSet + numLetter;
             fishkiLoaded[fishkaSet][numLetter] = imgName;
             if (numLetter != 999) {
@@ -3673,14 +3481,23 @@ async function loadFishkiSet(fishkaSet) {
             }
         });
     });
-}////
-async function fetchGlobal(script, param_name = '', param_data = '') {
+}
+////
+async function fetchGlobal(script, param_name='', param_data='') {
     if (pageActive == 'hidden' && gameState == 'chooseGame' && script === STATUS_CHECKER_SCRIPT) {
-        return {message: "Выберите параметры игры", http_status: BAD_REQUEST, status: "error"};
+        return {
+            message: "Выберите параметры игры",
+            http_status: BAD_REQUEST,
+            status: "error"
+        };
     }
 
     if (!requestToServerEnabled && script === STATUS_CHECKER_SCRIPT) {
-        return {message: "Ошибка связи с сервером. Пожалуйста, повторите", http_status: BAD_REQUEST, status: "error"};
+        return {
+            message: errorServerMessage,
+            http_status: BAD_REQUEST,
+            status: "error"
+        };
     }
 
     if (script === SUBMIT_SCRIPT) {
@@ -3693,15 +3510,10 @@ async function fetchGlobal(script, param_name = '', param_data = '') {
     }
 
     requestToServerEnabled = false;
-    requestToServerEnabledTimeout = setTimeout(
-        function () {
-            requestToServerEnabled = true;
-            isSubmitResponseAwaining = false;
-        },
-        isSubmitResponseAwaining
-            ? 1000
-            : 500
-    )
+    requestToServerEnabledTimeout = setTimeout(function() {
+        requestToServerEnabled = true;
+        isSubmitResponseAwaining = false;
+    }, isSubmitResponseAwaining ? 1000 : 500)
 
     if (pageActive != 'hidden') {
         requestSended = true;
@@ -3716,127 +3528,132 @@ async function fetchGlobal(script, param_name = '', param_data = '') {
 }
 
 async function fetchGlobalMVC(urlPart, param_name, param_data) {
-    const response = await fetch(
-        '/' + urlPart,
-        {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, *cors, same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'include', // include, *same-origin, omit
-            headers: {
-                //'Content-Type': 'application/json'
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: (param_name !== '' ? param_name + '=' + encodeURIComponent(JSON.stringify(param_data)) : param_data)
-        }
-    );
+    const response = await fetch('/' + urlPart, {
+        method: 'POST',
+        // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors',
+        // no-cors, *cors, same-origin
+        cache: 'no-cache',
+        // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'include',
+        // include, *same-origin, omit
+        headers: {
+            //'Content-Type': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: (param_name !== '' ? param_name + '=' + encodeURIComponent(JSON.stringify(param_data)) : param_data)
+    });
 
     requestSended = false;
 
     if (response.status === BAD_REQUEST || response.status === PAGE_NOT_FOUND) {
-        return {message: response.statusText, status: "error", http_status: response.status};
+        return {
+            message: response.statusText,
+            status: "error",
+            http_status: response.status
+        };
     }
 
     if (!response.ok) {
         console.log(`An error has occured: ${response.status}`);
-        return {message: "Ошибка связи с сервером. Попробуйте еще раз...", status: "error"};
-    }
-
-    return await response.json(); // parses JSON response into native JavaScript objects
-}
-
-function commonParams() {
-    return 'queryNumber='
-        + (queryNumber++)
-        + '&lang='
-        + lang
-        + '&gameNumber='
-        + (gameNumber ? gameNumber : 0)
-        + '&gameState='
-        + gameState
-        + (pageActive == 'hidden' ? '&page_hidden=true' : '')
-        + ('hash' in webAppInitDataUnsafe ? ('&tg_hash=' + webAppInitDataUnsafe.hash) : '')
-        + ('user' in webAppInitDataUnsafe && 'id' in webAppInitDataUnsafe.user ? ('&tg_id=' + webAppInitDataUnsafe.user.id) : '') ;
-}
-
-async function fetchGlobalNominal(script, param_name, param_data) {
-    const response = await fetch('/yandex1.0.1.1/php/'
-        + script
-        + '?'
-        + commonParams(),
-        {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, *cors, same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'include', // include, *same-origin, omit
-            headers: {
-                //'Content-Type': 'application/json'
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            //redirect: 'follow', // manual, *follow, error
-            //referrerPolicy: 'no-referrer', // no-referrer, *client
-            body: (param_name != '' ? param_name + '=' + encodeURIComponent(JSON.stringify(param_data)) : param_data) //JSON.stringify(data) // body data type must match "Content-Type" header
-        }
-    );
-
-    requestSended = false;
-
-    if (response.status === BAD_REQUEST || response.status === PAGE_NOT_FOUND) {
-        return {message: response.statusText, status: "error", http_status: response.status};
-    }
-
-    if (!response.ok) {
-        console.log(`An error has occured: ${response.status}`);
-        return {message: "Ошибка связи с сервером. Попробуйте еще раз...", status: "error"};
-    }
-
-    return await response.json(); // parses JSON response into native JavaScript objects
-}
-
-async function fetchGlobalYowser(script, param_name, param_data) {
-    const response = await fetch('/yandex1.0.1.1/php/yowser/index.php'
-        + '?cooki='
-        + localStorage.erudit_user_session_ID
-        + '&script='
-        + script
-        + '&'
-        + commonParams(),
-        {
-            method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: (param_name != ''
-                ? param_name + '=' + encodeURIComponent(JSON.stringify(param_data))
-                : param_data)
-        }
-    );
-
-    requestSended = false;
-
-    if (response.status === BAD_REQUEST || response.status === PAGE_NOT_FOUND) {
-        return {message: response.statusText, status: "error", http_status: response.status};
-    }
-
-    if (!response.ok) {
-        console.log(`An error has occured: ${response.status}`);
-        return {message: "Ошибка связи с сервером. Попробуйте еще раз...", status: "error"};
+        return {
+            message: errorServerMessage,
+            status: "error"
+        };
     }
 
     return await response.json();
-}////
-function parseDeskGlobal(newDesc) {
+    // parses JSON response into native JavaScript objects
+}
 
+function commonParams() {
+    return 'queryNumber=' + (queryNumber++) + '&lang=' + lang + '&gameNumber=' + (gameNumber ? gameNumber : 0) + '&gameState=' + gameState + (pageActive == 'hidden' ? '&page_hidden=true' : '') + ('hash'in webAppInitDataUnsafe ? ('&tg_hash=' + webAppInitDataUnsafe.hash) : '') + ('user'in webAppInitDataUnsafe && 'id'in webAppInitDataUnsafe.user ? ('&tg_id=' + webAppInitDataUnsafe.user.id) : '');
+}
+
+async function fetchGlobalNominal(script, param_name, param_data) {
+    const response = await fetch('/scrabble1.0.1.6/php/' + script + '?' + commonParams(), {
+        method: 'POST',
+        // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors',
+        // no-cors, *cors, same-origin
+        cache: 'no-cache',
+        // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'include',
+        // include, *same-origin, omit
+        headers: {
+            //'Content-Type': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        //redirect: 'follow', // manual, *follow, error
+        //referrerPolicy: 'no-referrer', // no-referrer, *client
+        body: (param_name != '' ? param_name + '=' + encodeURIComponent(JSON.stringify(param_data)) : param_data)//JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+
+    requestSended = false;
+
+    if (response.status === BAD_REQUEST || response.status === PAGE_NOT_FOUND) {
+        return {
+            message: response.statusText,
+            status: "error",
+            http_status: response.status
+        };
+    }
+
+    if (!response.ok) {
+        console.log(`An error has occured: ${response.status}`);
+        return {
+            message: errorServerMessage,
+            status: "error"
+        };
+    }
+
+    return await response.json();
+    // parses JSON response into native JavaScript objects
+}
+
+async function fetchGlobalYowser(script, param_name, param_data) {
+    const response = await fetch('/scrabble1.0.1.6/php/yowser/index.php' + '?cooki=' + localStorage.erudit_user_session_ID + '&script=' + script + '&' + commonParams(), {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: (param_name != '' ? param_name + '=' + encodeURIComponent(JSON.stringify(param_data)) : param_data)
+    });
+
+    requestSended = false;
+
+    if (response.status === BAD_REQUEST || response.status === PAGE_NOT_FOUND) {
+        return {
+            message: response.statusText,
+            status: "error",
+            http_status: response.status
+        };
+    }
+
+    if (!response.ok) {
+        console.log(`An error has occured: ${response.status}`);
+        return {
+            message: errorServerMessage,
+            status: "error"
+        };
+    }
+
+    return await response.json();
+}
+////
+function parseDeskGlobal(newDesc) {
 
     newCells = newDesc;
     for (var i = 0; i <= 14; i++)
         for (var j = 0; j <= 14; j++) {
-            cells[i][j][0] = false;//newCells[i][j][0];
+            cells[i][j][0] = false;
+            //newCells[i][j][0];
             cells[i][j][1] = newCells[i][j][1];
-            cells[i][j][2] = false;//newCells[i][j][2];
+            cells[i][j][2] = false;
+            //newCells[i][j][2];
             cells[i][j][3] = newCells[i][j][3];
         }
 
@@ -3865,7 +3682,8 @@ function initCellsGlobal() {
             cells[i][j] = [false, false, false, userFishkaSet];
         }
     }
-}////
+}
+////
 function checkZvezdaGlobal(gameObject) {
     if (gameObject.getData('letter') > '999') {
 
@@ -3981,8 +3799,10 @@ function containerFishkaPresent(i, j) {
 }
 
 function chooseLetterGlobal(gameObject) {
-    if (gameObject.getData('cellX') === false) return;
-    if (gameObject.getData('cellY') === false) return;
+    if (gameObject.getData('cellX') === false)
+        return;
+    if (gameObject.getData('cellY') === false)
+        return;
     disableButtons();
     chooseFishka = gameObject;
     var bukvy = '';
@@ -4002,7 +3822,7 @@ function chooseLetterGlobal(gameObject) {
         buttons1[i] = {
             label: bukvy,
             className: lang == 'EN' ? 'button1' : 'button1',
-            callback: function () {
+            callback: function() {
                 switchFishkaGlobal(i + 1 + 999, gameObject);
                 chooseFishka = false;
 
@@ -4031,16 +3851,15 @@ function switchFishkaGlobal(letterNum, gameObject) {
     if (gameObject.getData('isTemporary') == true) {
         newLetter.setData('isTemporary', true);
         newLetter.setData('zvezdaFrom', gameObject.getData('zvezdaFrom'));
-        if(newLetter.getData('cellX') !== false) {
+        if (newLetter.getData('cellX') !== false) {
             cells[0 + newLetter.getData('cellX')][0 + newLetter.getData('cellY')][2] = newLetter.getData('zvezdaFrom');
         }
     }
 
-    if(newLetter.getData('cellX') !== false) {
+    if (newLetter.getData('cellX') !== false) {
         cells[0 + newLetter.getData('cellX')][0 + newLetter.getData('cellY')][1] = newLetter.getData('letter');
         cells[0 + newLetter.getData('cellX')][0 + newLetter.getData('cellY')][3] = userFishkaSet;
     }
-
 
     for (let k in container)
         if (container[k] == gameObject) {
@@ -4053,13 +3872,14 @@ function switchFishkaGlobal(letterNum, gameObject) {
 }
 ////
 function changeFishkiGlobal(fishkiRequest) {
-    fetchGlobal(CHANGE_FISHKI_SCRIPT,'',fishkiRequest)
-            .then((data) => {
-                commonCallback(data);
-            });
-            
+    fetchGlobal(CHANGE_FISHKI_SCRIPT, '', fishkiRequest).then( (data) => {
+        commonCallback(data);
+    }
+    );
+
     return;
-}////
+}
+////
 function bootBoxIsOpenedGlobal() {
     if (!canOpenDialog) {
         return true;
@@ -4068,7 +3888,7 @@ function bootBoxIsOpenedGlobal() {
     if (dialog) {
         if (dialog[0].clientHeight > 0) {
             return true;
-        } else if ('ariaHidden' in dialog[0]) {
+        } else if ('ariaHidden'in dialog[0]) {
             if (dialog[0].ariaHidden !== "true") {
                 return true;
             }
@@ -4078,7 +3898,7 @@ function bootBoxIsOpenedGlobal() {
     if (dialogTurn) {
         if (dialogTurn[0].clientHeight > 0) {
             return true;
-        } else if ('ariaHidden' in dialogTurn[0]) {
+        } else if ('ariaHidden'in dialogTurn[0]) {
             if (dialogTurn[0].ariaHidden !== "true") {
                 return true;
             }
@@ -4086,23 +3906,29 @@ function bootBoxIsOpenedGlobal() {
     }
 
     return false;
-}////
-async function openWindowGlobal(word){
-    const response = await fetch('/yandex1.0.1.1/php/word.php?ingame=yes&word='+word, {
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    mode: 'cors', // no-cors, *cors, same-origin
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: 'include', // include, *same-origin, omit
-    headers: {
-      //'Content-Type': 'application/json'
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    //redirect: 'follow', // manual, *follow, error
-    //referrerPolicy: 'no-referrer', // no-referrer, *client
-    body: '12=12' //JSON.stringify(data) // body data type must match "Content-Type" header
-  });
+}
+////
+async function openWindowGlobal(word) {
+    const response = await fetch('/scrabble1.0.1.6/php/word.php?ingame=yes&word=' + word, {
+        method: 'POST',
+        // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors',
+        // no-cors, *cors, same-origin
+        cache: 'no-cache',
+        // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'include',
+        // include, *same-origin, omit
+        headers: {
+            //'Content-Type': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        //redirect: 'follow', // manual, *follow, error
+        //referrerPolicy: 'no-referrer', // no-referrer, *client
+        body: '12=12'//JSON.stringify(data) // body data type must match "Content-Type" header
+    });
 
-  return await response.text(); // parses JSON response into native JavaScript objects
+    return await response.text();
+    // parses JSON response into native JavaScript objects
 }
 
 ////
@@ -4118,26 +3944,23 @@ function submitButtonFunction() {
     buttons['submitButton']['svgObject'].disableInteractive();
     buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
-    setTimeout(function () {
-        fetchGlobal(SUBMIT_SCRIPT, 'cells', cells)
-            .then((data) => {
-                if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
-                    buttons['submitButton']['svgObject'].setInteractive();
-                    buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
-                    dialog = bootbox.alert({
-                        message: ('message' in data && data['message'] !== '')
-                            ? (data['message'] + '<br /> Попробуйте отправить заново')
-                            : '<strong>Ошибка связи с сервером!<br /> Попробуйте отправить заново</strong>',
-                        size: 'small'
-                    });
-                } else {
-                    gameState = 'afterSubmit';
-                    parseDeskGlobal(data); // JSON data parsed by `response.json()` call
-                }
-            });
+    setTimeout(function() {
+        fetchGlobal(SUBMIT_SCRIPT, 'cells', cells).then( (data) => {
+            if ('http_status'in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
+                buttons['submitButton']['svgObject'].setInteractive();
+                buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
+                dialog = bootbox.alert({
+                    message: ('message'in data && data['message'] !== '') ? (data['message'] + '<br /> Try sending again') : '<strong>Error connecting to server!<br /> Try sending again</strong>',
+                    size: 'small'
+                });
+            } else {
+                gameState = 'afterSubmit';
+                parseDeskGlobal(data);
+            }
+        }
+        );
     }, 100);
 }
-
 
 function checkButtonFunction() {
     if (!checkButtonActive()) {
@@ -4147,35 +3970,25 @@ function checkButtonFunction() {
     buttons['checkButton']['svgObject'].disableInteractive();
     buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + 'Inactive'));
 
-    setTimeout(function () {
-        fetchGlobal(WORD_CHECKER_SCRIPT, 'cells', cells)
-            .then((data) => {
-                if (data == '')
-                    var responseText = 'Вы не составили ни одного слова!';
-                else
-                    var responseText = data;
-                dialog = bootbox.alert({
-                    message: responseText,
-                    size: 'small'
-                });
-
-                buttons['checkButton']['svgObject'].setInteractive();
-                buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + OTJAT_MODE));
+    setTimeout(function() {
+        fetchGlobal(WORD_CHECKER_SCRIPT, 'cells', cells).then( (data) => {
+            if (data == '')
+                var responseText = 'You haven`t composed a single word!';
+            else
+                var responseText = data;
+            dialog = bootbox.alert({
+                message: responseText,
+                size: 'small'
             });
+
+            buttons['checkButton']['svgObject'].setInteractive();
+            buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + OTJAT_MODE));
+        }
+        );
     }, 100);
-};
+}
 
-function shareButtonFunction() {
-    if (bootBoxIsOpenedGlobal())
-        return;
-
-    dialog = bootbox.alert({
-        message: instruction,
-        locale: 'ru'
-    }).off("shown.bs.modal");
-};
-
-function newGameButtonFunction(ignoreDialog = false) {
+function newGameButtonFunction(ignoreDialog=false) {
     if (!ignoreDialog && bootBoxIsOpenedGlobal()) {
         return;
     }
@@ -4185,27 +3998,27 @@ function newGameButtonFunction(ignoreDialog = false) {
     if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'startGame') {
         dialog = bootbox.dialog({
             // title: 'Требуется подтверждение',
-            message: 'Вы проиграете, если выйдете из игры! ПРОДОЛЖИТЬ?',
+            message: 'You will lose if you quit the game! CONTINUE?',
             size: 'medium',
             // onEscape: false,
             closeButton: true,
             buttons: {
                 cancel: {
-                    label: 'Отмена',
-                    className: 'btn-outline-success',//''btn btn-success',
-                    callback: function () {
+                    label: 'Cancel',
+                    className: 'btn-outline-success',
+                    callback: function() {
                         return true;
                     }
                 },
                 confirm: {
-                    label: 'Подтвердить',
+                    label: 'Confirm',
                     className: 'btn-primary',
-                    callback: function () {
+                    callback: function() {
                         requestToServerEnabled = true;
-                        fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState)
-                            .then((data) => {
-                                document.location.reload(true);
-                            });
+                        fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState).then( (data) => {
+                            document.location.reload(true);
+                        }
+                        );
 
                         buttons['newGameButton']['svgObject'].setInteractive();
 
@@ -4213,37 +4026,34 @@ function newGameButtonFunction(ignoreDialog = false) {
                     }
                 },
                 invite: {
-                    label: 'Реванш!',
+                    label: 'Revenge!',
                     className: 'btn-info',
-                    callback: function () {
-                        setTimeout(function () {
-                            fetchGlobal(INVITE_SCRIPT, '', 'gameState=' + gameState)
-                                .then((dataInvite) => {
-                                    let responseText = 'Запрос отклонен';
-                                    if (dataInvite != '') {
-                                        responseText = dataInvite['message'];
+                    callback: function() {
+                        setTimeout(function() {
+                            fetchGlobal(INVITE_SCRIPT, '', 'gameState=' + gameState).then( (dataInvite) => {
+                                let responseText = 'Request rejected';
+                                if (dataInvite != '') {
+                                    responseText = dataInvite['message'];
+                                }
+
+                                dialogResponse = bootbox.alert({
+                                    message: responseText,
+                                    locale: 'ru',
+                                    size: 'small',
+                                    callback: function() {
+                                        dialogResponse.modal('hide');
+                                        gameStates['gameResults']['results'](dataInvite);
                                     }
-
-                                    dialogResponse = bootbox.alert({
-                                        message: responseText,
-                                        locale: 'ru',
-                                        size: 'small',
-                                        callback: function () {
-                                            dialogResponse.modal('hide');
-                                            gameStates['gameResults']['results'](dataInvite);
-                                        }
-                                    });
-
-                                    setTimeout(
-                                        function () {
-                                            dialogResponse.find(".bootbox-close-button").trigger("click");
-                                        }
-                                        , 2000
-                                    );
-
-                                    buttons['newGameButton']['svgObject'].setInteractive();
-
                                 });
+
+                                setTimeout(function() {
+                                    dialogResponse.find(".bootbox-close-button").trigger("click");
+                                }, 2000);
+
+                                buttons['newGameButton']['svgObject'].setInteractive();
+
+                            }
+                            );
                         }, 100);
 
                         return true;
@@ -4251,40 +4061,24 @@ function newGameButtonFunction(ignoreDialog = false) {
                 },
             }
         });
-        /*
-        dialog = bootbox.confirm({
-            message: 'Вы проиграете, если выйдете из игры! ПРОДОЛЖИТЬ?',
-            locale: 'ru',
-            callback: function (result) {
-                if (result) {
-                    requestToServerEnabled = true;
-                    fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState)
-                        .then((data) => {
-                            document.location.reload(true);
-                        });
-                } else {
-                    buttons['newGameButton']['svgObject'].setInteractive();
-                }
-            }
-        });*/
     } else {
         let lastState = gameState;
         gameState = 'chooseGame';
 
         buttons['newGameButton']['svgObject'].bringToTop(buttons['newGameButton']['svgObject'].getByName('newGameButton' + 'Inactive'));
 
-        fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState)
-            .then((data) => {
-                document.location.reload(true);
-                setTimeout(function () {
-                    gameState = lastState;
-                }, 100);
+        fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState).then( (data) => {
+            document.location.reload(true);
+            setTimeout(function() {
+                gameState = lastState;
+            }, 100);
 
-            });
+        }
+        );
     }
-};
-
-function resetButtonFunction(ignoreBootBox = false) {
+}
+;
+function resetButtonFunction(ignoreBootBox=false) {
     if (ignoreBootBox === false)
         if (bootBoxIsOpenedGlobal())
             return;
@@ -4314,8 +4108,8 @@ function resetButtonFunction(ignoreBootBox = false) {
             }
         }
 
-};
-
+}
+;
 function changeButtonFunction() {
     if (bootBoxIsOpenedGlobal())
         return;
@@ -4328,35 +4122,12 @@ function changeButtonFunction() {
     var formInner = '<div class="form-group">';
     var zvezdaStyle = '999" title="Зачем?';
     for (let k in container)
-        formInner += '<div style="display:inline-block;"><input type="checkbox" style="opacity:80%; transform: scale(2);" id="fishka_'
-            +
-            k
-            +
-            '_'
-            + container[k].getData('letter')
-            + '" name="fishka_'
-            + k
-            + '_'
-            + container[k].getData('letter')
-            + '"'
-            + (container[k].getData('letter') < 999 ? 'checked' : '')
-            + '><label for="fishka_'
-            + k
-            + '_'
-            + container[k].getData('letter')
-            + '"><div style="margin-left:-12px;margin-right:13px;' + (container[k].getData('letter') > 33 && container[k].getData('letter') < 999 ? genDivGlobal(container[k].getData('letter'), true) : '')
-            + '" class="letter_'
-            + (container[k].getData('letter') < 999 ? container[k].getData('letter') : zvezdaStyle)
-            + '" onclick="$(\'#fishka_'
-            + k
-            + '_'
-            + container[k].getData('letter')
-            + '\').trigger(\'click\');return false;"></div></label></div>';
+        formInner += '<div style="display:inline-block;"><input type="checkbox" style="opacity:80%; transform: scale(2);" id="fishka_' + k + '_' + container[k].getData('letter') + '" name="fishka_' + k + '_' + container[k].getData('letter') + '"' + (container[k].getData('letter') < 999 ? 'checked' : '') + '><label for="fishka_' + k + '_' + container[k].getData('letter') + '"><div style="margin-left:-12px;margin-right:13px;' + (container[k].getData('letter') > 33 && container[k].getData('letter') < 999 ? genDivGlobal(container[k].getData('letter'), true) : '') + '" class="letter_' + (container[k].getData('letter') < 999 ? container[k].getData('letter') : zvezdaStyle) + '" onclick="$(\'#fishka_' + k + '_' + container[k].getData('letter') + '\').trigger(\'click\');return false;"></div></label></div>';
 
     dialog = bootbox.confirm({
         message: 'Выберите фишки для замены<br /><br />' + formHeader + formInner + formFooter,
         locale: 'ru',
-        callback: function (result) {
+        callback: function(result) {
             canOpenDialog = true;
             canCloseDialog = true;
 
@@ -4365,8 +4136,8 @@ function changeButtonFunction() {
         }
     });
 
-};
-
+}
+;
 function chatButtonFunction() {
     if (bootBoxIsOpenedGlobal())
         return;
@@ -4377,15 +4148,15 @@ function chatButtonFunction() {
     let message = '<ul style="margin-left:-30px;margin-right:-5px;">' + msgSpan + '</span>';
     let i = 0;
     for (k in chatLog) {
-        if (i >= 10) break;
+        if (i >= 10)
+            break;
         message = message + '<li>' + chatLog[k] + "</li>";
         i++;
     }
 
-
     let noMsgSpan = '<span id="no_msg_span">';
     if (i == 0) {
-        message += noMsgSpan + 'Сообщений пока нет' + '</span>';
+        message += noMsgSpan + 'No messages yet' + '</span>';
     } else {
         message += noMsgSpan + '</span>';
     }
@@ -4394,43 +4165,32 @@ function chatButtonFunction() {
 
     let isSelectedPlaced = false;
     if (ochki_arr.length > 1) {
-        radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="chatall" name="chatTo" value="all" checked> <label class="form-check-label" for="chatall">Для всех</label></div>';
+        radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="chatall" name="chatTo" value="all" checked> <label class="form-check-label" for="chatall">For everyone</label></div>';
         isSelectedPlaced = true;
     }
 
     for (k in ochki_arr) {
         if (k != myUserNum) {
-            radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_' + (k == 0 ? '0' : k) + '" name="chatTo" value="' + (k == 0 ? '0' : k) + '" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_' + (k == 0 ? '0' : k) + '">Игроку ' + (parseInt(k, 10) + 1) + '</label></div>';
+            radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_' + (k == 0 ? '0' : k) + '" name="chatTo" value="' + (k == 0 ? '0' : k) + '" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_' + (k == 0 ? '0' : k) + '">To Player' + (parseInt(k, 10) + 1) + '</label></div>';
             isSelectedPlaced = true;
         }
     }
 
-    radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_words" name="chatTo" value="words" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_words">Подбор слов</label></div>';
+    radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_words" name="chatTo" value="words" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_words">Word matching</label></div>';
 
     let textInput = '<div class="input-group input-group-lg">  <div class="input-group-prepend"></div>  <input type="text" id="chattext" class="form-control" name="messageText"></div>';
 
-
     dialog = bootbox.dialog({
-        title: '</h5>'
-            + (
-                !isYandexAppGlobal()
-                    ? (
-                        '<h6>Поддержка и чат игроков в <a target="_blank" title="Вступить в группу" href="'
-                        + (gameWidth < gameHeight ? 'https://t.me/eruditclub' : 'https://web.telegram.org/#/im?p=@eruditclub')
-                        + '">Telegram</a> </h6>'
-                    )
-                    : ''
-            )
-            + '<h5>Отправьте сообщение в игре',
+        title: '</h5>' + (!isYandexAppGlobal() ? ('<h6>Player support and chat at <a target="_blank" title="Join group" href="' + (gameWidth < gameHeight ? 'https://t.me/eruditclub' : 'https://web.telegram.org/#/im?p=@eruditclub') + '">Telegram</a> </h6>') : '') + '<h5>Send an in-game message',
         message: '<form onsubmit="return false" id="myChatForm">' + radioButtons + textInput + '</form>',
         locale: 'ru',
         size: 'large',
         closeButton: false,
         buttons: {
             confirm: {
-                label: 'Отправить',
+                label: 'Send',
                 className: 'btn-primary',
-                callback: function () {
+                callback: function() {
                     canOpenDialog = true;
                     canCloseDialog = true;
 
@@ -4442,53 +4202,49 @@ function chatButtonFunction() {
                         buttons['chatButton']['svgObject'].disableInteractive();
                         buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + 'Inactive'));
 
-                        fetchGlobal(CHAT_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
-                            .then((data) => {
-                                    if (data == '')
-                                        var responseText = 'Ошибка';
-                                    else {
-                                        var responseText = data['message'];
+                        fetchGlobal(CHAT_SCRIPT, '', $(".bootbox-body #myChatForm").serialize()).then( (data) => {
+                            if (data == '')
+                                var responseText = 'Error';
+                            else {
+                                var responseText = data['message'];
 
-                                        if (data['message'] === 'Сообщение отправлено') {
-                                            $('#no_msg_span').html('');
-                                            $('#msg_span').html('<li>' + $('#chattext').val() + '</li>' + $('#msg_span').html());
-                                        }
-
-                                        $('#chattext').val('');
-                                    }
-
-                                    if (data['message'] !== 'Сообщение отправлено') {
-                                        if (data['gameState'] == 'wordQuery') {
-                                            $('#no_msg_span').html('');
-                                            $('#msg_span').html('<li>' + data['message'] + '</li>');
-                                        } else {
-                                            dialog2 = bootbox.alert({
-                                                message: responseText,
-                                                size: 'small'
-                                            });
-                                            setTimeout(
-                                                function () {
-                                                    dialog2.find(".bootbox-close-button").trigger("click");
-                                                }
-                                                , 2000
-                                            );
-                                        }
-                                    }
-
-                                    buttons['chatButton']['svgObject'].setInteractive();
-                                    buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + OTJAT_MODE));
-                                    buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).setData('alarm', false);
+                                if (data['message'] === 'Message sent') {
+                                    $('#no_msg_span').html('');
+                                    $('#msg_span').html('<li>' + $('#chattext').val() + '</li>' + $('#msg_span').html());
                                 }
-                            );
+
+                                $('#chattext').val('');
+                            }
+
+                            if (data['message'] !== 'Message sent') {
+                                if (data['gameState'] == 'wordQuery') {
+                                    $('#no_msg_span').html('');
+                                    $('#msg_span').html('<li>' + data['message'] + '</li>');
+                                } else {
+                                    dialog2 = bootbox.alert({
+                                        message: responseText,
+                                        size: 'small'
+                                    });
+                                    setTimeout(function() {
+                                        dialog2.find(".bootbox-close-button").trigger("click");
+                                    }, 2000);
+                                }
+                            }
+
+                            buttons['chatButton']['svgObject'].setInteractive();
+                            buttons['chatButton']['svgObject'].bringToTop(buttons['chatButton']['svgObject'].getByName('chatButton' + OTJAT_MODE));
+                            buttons['chatButton']['svgObject'].getByName('chatButton' + ALARM_MODE).setData('alarm', false);
+                        }
+                        );
                     }
 
                     return false;
                 }
             },
             cancel: {
-                label: 'Выход',
+                label: 'Exit',
                 className: 'ml-5 btn-secondary btn-default bootbox-cancel',
-                callback: function () {
+                callback: function() {
                     canOpenDialog = true;
                     canCloseDialog = true;
 
@@ -4496,27 +4252,24 @@ function chatButtonFunction() {
                 }
             },
             complain: {
-                label: 'Пожаловаться',
+                label: 'Appeal',
                 className: 'ml-5 ' + (hasIncomingMessages ? 'btn-danger' : 'btn-light'),
-                callback: function () {
+                callback: function() {
                     if (hasIncomingMessages) {
-                        fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
-                            .then((data) => {
-                                if (data == '')
-                                    var responseText = 'Ошибка';
-                                else
-                                    var responseText = data['message'];
-                                dialog2 = bootbox.alert({
-                                    message: responseText,
-                                    size: 'small'
-                                });
-                                setTimeout(
-                                    function () {
-                                        dialog2.find(".bootbox-close-button").trigger("click");
-                                    }
-                                    , 5000
-                                );
+                        fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize()).then( (data) => {
+                            if (data == '')
+                                var responseText = 'Error';
+                            else
+                                var responseText = data['message'];
+                            dialog2 = bootbox.alert({
+                                message: responseText,
+                                size: 'small'
                             });
+                            setTimeout(function() {
+                                dialog2.find(".bootbox-close-button").trigger("click");
+                            }, 5000);
+                        }
+                        );
                     }
 
                     return false;
@@ -4526,7 +4279,6 @@ function chatButtonFunction() {
     });
 }
 ;
-
 function logButtonFunction() {
     if (bootBoxIsOpenedGlobal())
         return;
@@ -4537,34 +4289,35 @@ function logButtonFunction() {
     let message = '<br /><ul style="margin-left:-30px;margin-right:-5px;">';
     let i = 0;
     for (k in gameLog) {
-        if (i >= 10) break;
+        if (i >= 10)
+            break;
         message = message + '<li>' + gameLog[k] + "</li>";
         i++;
     }
     message = message + '</ul>';
     if (i == 0)
-        message = message + 'Событий пока нет';
+        message = message + 'There are no events yet';
 
     notDialog = bootbox.dialog({
         message: message,
         size: 'small',
-        onEscape: function () {
+        onEscape: function() {
             activateFullScreenForMobiles();
             canOpenDialog = true;
             canCloseDialog = true;
         },
         buttons: {
             cancel: {
-                label: "Играем до <strong>" + winScore + "</strong>",
+                label: "Playing to <strong>" + winScore + "</strong>",
                 className: 'btn btn-outline-secondary',
-                callback: function () {
+                callback: function() {
                     return false;
                 }
             },
             confirm: {
                 label: "OK",
                 className: 'btn-primary',
-                callback: function () {
+                callback: function() {
                     activateFullScreenForMobiles();
                     canOpenDialog = true;
                     canCloseDialog = true;
@@ -4572,18 +4325,15 @@ function logButtonFunction() {
                 }
             }
         },
-        callback: function (result) {
+        callback: function(result) {
             canOpenDialog = true;
             canCloseDialog = true;
         }
-    })
-        .off("shown.bs.modal")
-        .find('button.btn.btn.btn-sm.btn-info')
-        .prop('disabled', true);
+    }).off("shown.bs.modal").find('button.btn.btn.btn-sm.btn-info').prop('disabled', true);
 
     return;
-};
-
+}
+;
 function makeCheckButtonInactive(dialog) {
     dialog.addClass(CHECK_BUTTON_INACTIVE_CLASS);
 }
@@ -4601,8 +4351,13 @@ function submitButtonActive() {
 }
 
 function playersButtonFunction() {
-    if (bootBoxIsOpenedGlobal())
+    if (bootBoxIsOpenedGlobal()) {
         return;
+    }
+
+    if (!gameNumber) {
+        return;
+    }
 
     if (window.innerWidth < window.innerHeight) {
         var orient = 'vertical';
@@ -4613,44 +4368,45 @@ function playersButtonFunction() {
     buttons['playersButton']['svgObject'].disableInteractive();
     buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + 'Inactive'));
 
-    setTimeout(function () {
-        fetchGlobal(PLAYER_RATING_SCRIPT, '', orient)
-            .then((data) => {
+    setTimeout(function() {
+        (lang == 'EN' ? fetchGlobalMVC(PLAYER_RATING_SCRIPT + '?game_id=' + gameNumber + '&common_id=' + commonId + '&lang=' + lang, '', orient) : fetchGlobal(PLAYER_RATING_SCRIPT, '', orient)).then( (data) => {
 
-                canOpenDialog = false;
-                canCloseDialog = false;
+            canOpenDialog = false;
+            canCloseDialog = false;
 
-                if (data == '')
-                    var responseText = 'Ошибка';
-                else
-                    var responseText = data['message'];
-                dialog = bootbox.alert({
-                    title: 'Рейтинг соперников',
-                    message: responseText,
-                    size: 'large',
-                    callback: function () {
-                        canOpenDialog = true;
-                        canCloseDialog = true;
-                    }
-                });
-                dialog
-                    .find('.modal-content').css({'background-color': 'rgba(255, 255, 255, 0.7)'})
-                    .find('img').css('background-color', 'rgba(0, 0, 0, 0)');
-
-                makeCheckButtonInactive(dialog);
-                makeSubmitButtonInactive(dialog);
-                
-                buttons['playersButton']['svgObject'].setInteractive();
-                buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
-
+            if (data == '')
+                var responseText = 'Error';
+            else
+                var responseText = JSON.stringify(data);
+            dialog = bootbox.alert({
+                title: 'Rating of opponents',
+                message: responseText,
+                size: 'large',
+                callback: function() {
+                    canOpenDialog = true;
+                    canCloseDialog = true;
+                }
             });
+            dialog.find('.modal-content').css({
+                'background-color': 'rgba(255, 255, 255, 0.7)'
+            }).find('img').css('background-color', 'rgba(0, 0, 0, 0)');
+
+            makeCheckButtonInactive(dialog);
+            makeSubmitButtonInactive(dialog);
+
+            buttons['playersButton']['svgObject'].setInteractive();
+            buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
+
+        }
+        );
     }, 100);
 
-    setTimeout(function () {
+    setTimeout(function() {
         buttons['playersButton']['svgObject'].setInteractive();
         buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
     }, 3000);
-}////
+}
+////
 function isAndroidAppGlobal() {
     if (getCookieGlobal('DEVICE') === 'Android') {
         return true;
@@ -4663,7 +4419,6 @@ function isAndroidAppGlobal() {
     return window.location.href.indexOf('app=1') > -1;
 }
 
-
 function isVerstkaTestGlobal() {
     return window.location.href.indexOf('verstka=1') > -1;
 }
@@ -4671,12 +4426,15 @@ function isVerstkaTestGlobal() {
 function isMobileDeviceGlobal() {
     const ua = navigator.userAgent;
     if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
-        return true;//tablet
+        return true;
+        //tablet
     } else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
-        return true;//mobile
+        return true;
+        //mobile
     }
 
-    return false;//desktop
+    return false;
+    //desktop
 }
 
 function isTabletDeviceGlobal() {
@@ -4757,25 +4515,23 @@ function copyToClipboard(selector) {
         if (!document.getElementById(selectors.profileTabsId)) {
             return;
         }
-        const targetId = document
-            .querySelectorAll(`${selectors.tabLink}.active`)[0]
-            .getAttribute('href');
+        const targetId = document.querySelectorAll(`${selectors.tabLink}.active`)[0].getAttribute('href');
         const tabContent = document.querySelector(targetId).closest(selectors.tabContent);
         const tabContentWrap = tabContent.closest(selectors.tabContentWrap);
         const tabPane = document.querySelector(targetId);
         tabContentWrap.style.height = tabContent.getBoundingClientRect().height + 'px';
 
-        const index = [...tabContent.querySelectorAll(selectors.tabPane)].findIndex(
-            (item) => {
-                return item === tabPane;
-            },
-        );
+        const index = [...tabContent.querySelectorAll(selectors.tabPane)].findIndex( (item) => {
+            return item === tabPane;
+        }
+        , );
         const width = tabContentWrap.getBoundingClientRect().width;
 
         const translateValue = index * -width;
 
         tabContent.style.cssText = `transform: translate(${translateValue}px, 0);`;
-    };
+    }
+    ;
 
     document.addEventListener('click', (event) => {
         if (event.target && event.target.closest(selectors.setNicknameBtn)) {
@@ -4785,7 +4541,8 @@ function copyToClipboard(selector) {
             savePlayerName(value, userId);
             return false;
         }
-    });
+    }
+    );
 
     document.addEventListener('click', (event) => {
         if (event.target && event.target.closest(selectors.setProfileImageBtn)) {
@@ -4795,7 +4552,8 @@ function copyToClipboard(selector) {
             savePlayerAvatar(value, userId);
             return false;
         }
-    });
+    }
+    );
 
     document.addEventListener('click', (event) => {
         if (event.target && event.target.closest(selectors.tabLink)) {
@@ -4803,22 +4561,22 @@ function copyToClipboard(selector) {
                 return;
             }
             event.preventDefault();
-            document
-                .querySelectorAll(selectors.tabLink)
-                .forEach((item) => item.classList.remove('active'));
+            document.querySelectorAll(selectors.tabLink).forEach( (item) => item.classList.remove('active'));
             event.target.classList.add('active');
             const targetId = event.target.getAttribute('href');
 
             setTabContentOffset(`#${selectors.profileTabsId}`);
         }
-    });
+    }
+    );
 
     document.addEventListener('click', (event) => {
         if (event.target && event.target.closest(selectors.copyBtn)) {
             event.preventDefault();
             copyToClipboard(event.target.closest(selectors.copyBtn).getAttribute('href'));
         }
-    });
+    }
+    );
 
     const onProfileModalLoaded = () => {
         if (!document.getElementById(selectors.profileTabsId)) {
@@ -4840,7 +4598,8 @@ function copyToClipboard(selector) {
                     }
                 }
             }
-        };
+        }
+        ;
 
         setWidthToPanes();
         setTabContentOffset(`#${selectors.profileTabsId}`);
@@ -4852,68 +4611,82 @@ function copyToClipboard(selector) {
                 }
                 setWidthToPanes();
                 setTabContentOffset(`#${selectors.profileTabsId}`);
-            });
+            }
+            );
             window.profileTabslistenerAttached = true;
         }
 
         window.dispatchEvent(new Event('resize'));
+    }
+    ;
+
+    window.profileModal = {
+        onProfileModalLoaded
     };
+}
+)();
 
-    window.profileModal = { onProfileModalLoaded };
-})();
-
-const btnFAQClickHandler = () => {
+const btnFAQClickHandler = (backButton=true) => {
     bootbox.hideAll();
-    
+
     getFAQModal().then(html => {
 
-        dialog = bootbox
-            .dialog({
-                message: html,
-                locale: lang === 'RU' ? 'ru' : 'en',
-                className: 'modal-settings  modal-faq',
-                closeButton: false,
-                buttons: {
-                    ok: {
-                        label: lang === 'RU' ? 'Назад' : 'Back',
-                        className: 'btn-sm ml-auto mr-0',
-                        callback: function() {
-                            
-                            fetchGlobal(STATUS_CHECKER_SCRIPT).then((data) => {
+        dialog = bootbox.dialog({
+            message: html,
+            locale: lang === 'RU' ? 'ru' : 'en',
+            className: 'modal-settings  modal-faq',
+            closeButton: false,
+            buttons: {
+                ok: {
+                    label: backButton ? 'Back' : 'OK',
+                    //lang === 'RU' ? 'Назад' : 'Back',
+                    className: 'btn-sm ml-auto mr-0',
+                    callback: function() {
+                        if (backButton) {
+                            fetchGlobal(STATUS_CHECKER_SCRIPT).then( (data) => {
                                 commonCallback(data);
                                 gameStates['chooseGame']['action'](data)
-                            });
+                            }
+                            );
+                        } else {
+                            bootbox.hideAll();
+                            canOpenDialog = true;
+                            canCloseDialog = true;
+                            dialog = false;
                         }
-                    },
-                }
-            })
-            .off('shown.bs.modal').on('shown.bs.modal', function() {
-                if (tabsModule) {
-                    tabsModule.initTabs();
-                }
-            }).find('.modal-content').css({
-                'background-color': 'rgba(230, 255, 230, 1)',
-            });
-
-
-        }).catch(error => {
-            console.error(error);
+                    }
+                },
+            }
+        }).off('shown.bs.modal').on('shown.bs.modal', function() {
+            if (tabsModule) {
+                tabsModule.initTabs();
+            }
+        }).find('.modal-content').css({
+            'background-color': 'rgba(230, 255, 230, 1)',
         });
-    
+
+    }
+    ).catch(error => {
+        console.error(error);
+    }
+    );
+
     return false;
-};
+}
+;
 
 document.addEventListener('click', (e) => {
     if (e.target && e.target.matches('#btn-faq')) {
         e.preventDefault();
         btnFAQClickHandler();
     }
-});
+}
+);
 
-function StatsPage({ json, BASE_URL }) {
+function StatsPage({json, BASE_URL}) {
     // const BASE_URL = 'http://127.0.0.1:5500';
 
-    const CardList = ({ list }) => {
+    const CardList = ({list}) => {
         const types = {
             day: 'stone_card',
             week: 'bronze_card',
@@ -4921,27 +4694,11 @@ function StatsPage({ json, BASE_URL }) {
             year: 'gold_card',
         };
 
-        let result = list
-            .map(
-                ({
-                     event_type,
-                     event_period,
-                     record_type_text,
-                     event_type_text,
-                     points_text,
-                     reward,
-                     income,
-                     date_achieved,
-                 }) => {
-                    const date = new Date(date_achieved);
-                    let strDate =
-                        `0${date.getDate()}`.slice(-2) +
-                        '.' +
-                        `0${date.getMonth() + 1}`.slice(-2) +
-                        '.' +
-                        date.getFullYear();
+        let result = list.map( ({event_type, event_period, record_type_text, event_type_text, points_text, reward, income, date_achieved, }) => {
+            const date = new Date(date_achieved);
+            let strDate = `0${date.getDate()}`.slice(-2) + '.' + `0${date.getMonth() + 1}`.slice(-2) + '.' + date.getFullYear();
 
-                    return `
+            return `
                 <li>
                     <div class="card_item full_card ${types[event_period]}">
                         <h3 class="card_record">
@@ -4952,7 +4709,7 @@ function StatsPage({ json, BASE_URL }) {
                             ${points_text}
                         </div>
                         <div class="card_get">
-                            <p>Получена награда</p>
+                            <p>Got reward</p>
                             <div class="card_rewardInfo">
                                 <p><img class="card_plus" src="./images/plus.png" alt=""></p>
                                 <p><img class="card_rewardImage" src="./images/bigMoney.png" alt="money">
@@ -4960,39 +4717,34 @@ function StatsPage({ json, BASE_URL }) {
                                 <span class="card_moneyCount">${reward}</span>
                             </div>
                         </div>
-                        <p class="card_passive">Пассивный заработок</p>
+                        <p class="card_passive">Your passive income</p>
                         <div class="card_hour">
                             <img class="card_hourImage" src="./images/smallMoney.png" alt="">
-                            <span>x${income}/час</span>
+                            <span>x${income}/hour</span>
                         </div>
 
-                        <p class="card_effect">Начисляется, пока не перебито</p>
+                        <p class="card_effect">Effect lasts until beaten</p>
                     </div>
                     <span class="date">${strDate}</span>
                 </li>
             `;
-                },
-            )
-            .join('');
+        }
+        , ).join('');
 
         result = `<ul class="card_list full_cards">${result}</ul>`;
 
         return result;
-    };
+    }
+    ;
 
-    const GameList = ({ games }) => {
+    const GameList = ({games}) => {
         let gameList = '';
         if (!games.length) {
             return gameList;
         }
-        gameList = games
-            .map((item) => {
-                const matchResultClass = ['victory', 'победа'].includes(
-                    item.your_result.toLocaleLowerCase(),
-                )
-                    ? 'match-history--win'
-                    : 'match-history--lose';
-                return `
+        gameList = games.map( (item) => {
+            const matchResultClass = ['victory', 'победа'].includes(item.your_result.toLocaleLowerCase(), ) ? 'match-history--win' : 'match-history--lose';
+            return `
                 <li class="match-history-item ${matchResultClass} box d-flex">
                     <div class="match-history-date">${item.game_ended_date}</div>
                     <div class="match-history-result">
@@ -5011,15 +4763,16 @@ function StatsPage({ json, BASE_URL }) {
                     </div>
                 </li>
             `;
-            })
-            .join('');
+        }
+        ).join('');
 
         gameList = `<ul>${gameList}</ul>`;
 
         return gameList;
-    };
+    }
+    ;
 
-    const Pagination = ({ pagination }) => {
+    const Pagination = ({pagination}) => {
         let result = '';
         for (const key in pagination) {
             if (Object.prototype.hasOwnProperty.call(pagination, key)) {
@@ -5040,9 +4793,10 @@ function StatsPage({ json, BASE_URL }) {
                     </ul>
                 </nav>
             `;
-    };
+    }
+    ;
 
-    const OpponentStats = ({ opponent_stats }) => {
+    const OpponentStats = ({opponent_stats}) => {
         const isPositiveWinRate = +opponent_stats[0].delta_rating > 0;
         const resultClass = isPositiveWinRate ? 'color-win' : 'color-lose';
         const prefix = isPositiveWinRate ? '+' : '';
@@ -5069,7 +4823,8 @@ function StatsPage({ json, BASE_URL }) {
 
 				</div>
             `;
-    };
+    }
+    ;
 
     (function statsModal() {
         const selectors = {
@@ -5082,9 +4837,6 @@ function StatsPage({ json, BASE_URL }) {
             pastAwards: '#past-awards-tab-pane .card-list-wrap',
             btnRemoveFilter: '.js-remove-filter',
         };
-
-
-
 
         const onStatsModalLoaded = () => {
             const modalContainer = document.querySelector(selectors.modal);
@@ -5120,9 +4872,8 @@ function StatsPage({ json, BASE_URL }) {
 
                 onStatsModalLoaded();
                 tabsModule.update();
-            };
-
-
+            }
+            ;
 
             const linkHandler = (e) => {
                 e.preventDefault();
@@ -5135,71 +4886,65 @@ function StatsPage({ json, BASE_URL }) {
                     // console.log(`${BASE_URL}/${url}`);
 
                     return fetch(`${BASE_URL}/${url}`, {
-                        headers: { 'Content-Type': 'application/json' },
-                    })
-                        .then((response) => {
-                            if (!response.ok) {
-                                throw new Error(`Response status: ${response.status}`);
-                            }
-                            return response.json();
-                        })
-                        .then((json) => {
-                            updateHtml(json);
-                            // prevLink = link;
-                        })
-                        .catch((error) => console.error('Ошибка загрузки страницы:', error));
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    }).then( (response) => {
+                        if (!response.ok) {
+                            throw new Error(`Response status: ${response.status}`);
+                        }
+                        return response.json();
+                    }
+                    ).then( (json) => {
+                        updateHtml(json);
+                        // prevLink = link;
+                    }
+                    ).catch( (error) => console.error('Ошибка загрузки страницы:', error));
                 }
 
-            };
+            }
+            ;
 
-
-            [...links, ...opponentLinks, btnRemoveFilter].forEach((link) => {
+            [...links, ...opponentLinks, btnRemoveFilter].forEach( (link) => {
                 if (!link.getAttribute('data-attached')) {
                     link.setAttribute('data-attached', true);
                     link.addEventListener('click', linkHandler);
                 }
-            });
+            }
+            );
 
+        }
+        ;
 
+        window.statsModal = {
+            onStatsModalLoaded
         };
-
-        window.statsModal = { onStatsModalLoaded };
-    })();
+    }
+    )();
 
     function getStatsModal(json) {
-        return fetch('/stats-modal-tpl.html')
-            .then((response) => response.text())
-            .then((template) => {
-                // Заменяем маркеры в шаблоне реальными данными
-                let message = template
+        return fetch('/stats-modal-tpl.html').then( (response) => response.text()).then( (template) => {
+            // Заменяем маркеры в шаблоне реальными данными
+            let message = template
+            .replaceAll('{{name}}', json.player_name).replaceAll('{{imageUrl}}', json.player_avatar_url).replaceAll('{{gameList}}', GameList({
+                games: json.games
+            })).replaceAll('{{pagination}}', Pagination({
+                pagination: json.pagination
+            })).replaceAll('{{activeAwards}}', CardList({
+                list: json.current_achieves
+            })).replaceAll('{{pastAwards}}', CardList({
+                list: json.past_achieves
+            }))
+            .replaceAll('{{Stats}}', 'Stats').replaceAll('{{Past Awards}}', 'Past Awards').replaceAll('{{Parties_Games}}', 'Games').replaceAll('{{Player Awards}}', 'Player Awards').replaceAll('{{Player}}', 'Player').replaceAll('{{VS}}', 'VS').replaceAll('{{Date}}', 'Date').replaceAll('{{Result}}', 'Result').replaceAll('{{Rating}}', 'Rating').replaceAll('{{Opponent}}', 'Opponent').replaceAll('{{Active Awards}}', 'Active Awards');
 
-                    .replaceAll('{{name}}', json.player_name)
-                    .replaceAll('{{imageUrl}}', json.player_avatar_url)
-                    .replaceAll('{{gameList}}', GameList({ games: json.games }))
-                    .replaceAll('{{pagination}}', Pagination({ pagination: json.pagination }))
-                    .replaceAll('{{activeAwards}}', CardList({ list: json.current_achieves }))
-                    .replaceAll('{{pastAwards}}', CardList({ list: json.past_achieves }))
-
-                    .replaceAll('{{Stats}}', 'Статистика')
-                    .replaceAll('{{Past Awards}}', 'Прошлые награды')
-                    .replaceAll('{{Parties_Games}}', 'Партии')
-                    .replaceAll('{{Player Awards}}', 'Награды игрока')
-                    .replaceAll('{{Player}}', 'Игрок')
-                    .replaceAll('{{VS}}', 'Против')
-                    .replaceAll('{{Date}}', 'Дата')
-                    .replaceAll('{{Result}}', 'Результат')
-                    .replaceAll('{{Rating}}', 'Рейтинг')
-                    .replaceAll('{{Opponent}}', 'Соперник')
-                    .replaceAll('{{Active Awards}}', 'Награды');
-
-                return message;
-            })
-            .catch((error) => console.error('Ошибка загрузки stats-modal-tpl:', error));
+            return message;
+        }
+        ).catch( (error) => console.error('Ошибка загрузки stats-modal-tpl:', error));
     }
 
     // ON MODAL LOADED
     function init() {
-        return getStatsModal(json).then((html) => {
+        return getStatsModal(json).then( (html) => {
             // document.getElementById('test-tpl').innerHTML = html;
 
             // profileModal.onProfileModalLoaded();
@@ -5207,25 +4952,14 @@ function StatsPage({ json, BASE_URL }) {
             tabsModule.initTabs();
 
             // document.addEventListener("DOMContentLoaded", profileModal.onProfileModalLoaded);
-        });
+        }
+        );
     }
 
     function onLoad() {
         statsModal.onStatsModalLoaded();
         tabsModule.initTabs();
     }
-
-    // document.addEventListener('DOMContentLoaded', (e) => {
-    // 	getStatsModal(json).then((html) => {
-    // 		// document.getElementById('test-tpl').innerHTML = html;
-
-    // 		// profileModal.onProfileModalLoaded();
-    // 		statsModal.onStatsModalLoaded();
-    // 		tabsModule.initTabs();
-
-    // 		// document.addEventListener("DOMContentLoaded", profileModal.onProfileModalLoaded);
-    // 	});
-    // });
 
     return {
         buildHtml: () => getStatsModal(json),
@@ -5234,9 +4968,6 @@ function StatsPage({ json, BASE_URL }) {
 }
 /* ------------------------------- END OF FILE ------------------------------ */
 (function tabsModule() {
-    // on modal loaded
-    // document.addEventListener("DOMContentLoaded", initTabs);
-
     const selectors = {
         tabLink: 'a[data-toggle="tab"]',
         tabContent: '.tab-content',
@@ -5244,13 +4975,11 @@ function StatsPage({ json, BASE_URL }) {
         tabPane: '.tab-pane',
     };
 
-    const setTabContentOffset = (i = 0) => {
+    const setTabContentOffset = (i=0) => {
         if (!document.querySelectorAll(`${selectors.tabLink}.active`).length) {
             return;
         }
-        const targetId = document
-            .querySelectorAll(`${selectors.tabLink}.active`)[0]
-            .getAttribute('href');
+        const targetId = document.querySelectorAll(`${selectors.tabLink}.active`)[0].getAttribute('href');
         const tabContent = document.querySelector(targetId).closest(selectors.tabContent);
         const tabContentWrap = tabContent.closest(selectors.tabContentWrap);
         const tabPane = document.querySelector(targetId);
@@ -5263,114 +4992,112 @@ function StatsPage({ json, BASE_URL }) {
         tabContentWrap.style.height = activeTabContentWrapHeight;
 
         // показываем каждый таб в полный размер
-        [...tabContent.querySelectorAll(selectors.tabPane)].forEach((item) => {
+        [...tabContent.querySelectorAll(selectors.tabPane)].forEach( (item) => {
             item.style.height = 'auto';
             item.style.visibility = 'hidden';
-            item.closest(selectors.tabContentWrap).style.height =
-                item.closest(selectors.tabContent).getBoundingClientRect().height + 'px';
-        });
+            item.closest(selectors.tabContentWrap).style.height = item.closest(selectors.tabContent).getBoundingClientRect().height + 'px';
+        }
+        );
 
         const maxModalBody = document.querySelector('.modal-body').getBoundingClientRect().height;
 
         // скрываем
-        [...tabContent.querySelectorAll(selectors.tabPane)].forEach((item) => {
+        [...tabContent.querySelectorAll(selectors.tabPane)].forEach( (item) => {
             if (!item.matches('.active')) {
                 item.style.height = '0px';
                 item.closest(selectors.tabContentWrap).style.height = '';
             } else {
                 item.style.visibility = 'visible';
             }
-        });
+        }
+        );
 
-        [...tabContent.querySelectorAll(selectors.tabPane)].forEach((item) => {
+        [...tabContent.querySelectorAll(selectors.tabPane)].forEach( (item) => {
             item.style.height = '';
-        });
+        }
+        );
 
         tabContentWrap.style.height = activeTabContentWrapHeight;
 
         document.querySelector('.modal-body').style.minHeight = maxModalBody + 'px';
 
-        const index = [...tabContent.querySelectorAll(selectors.tabPane)].findIndex((item) => {
+        const index = [...tabContent.querySelectorAll(selectors.tabPane)].findIndex( (item) => {
             return item === tabPane;
-        });
+        }
+        );
         const width = tabContentWrap.getBoundingClientRect().width;
 
         const translateValue = index * -width;
 
         tabContent.style.cssText = `transform: translate(${translateValue}px, 0);`;
 
-        document.querySelectorAll(selectors.tabPane).forEach((item) => {
-            const width =
-                item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px';
+        document.querySelectorAll(selectors.tabPane).forEach( (item) => {
+            const width = item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px';
             item.style.width = width;
-        });
-
-        const diff = Math.abs(
-            tabContentWrap.getBoundingClientRect().height - tabContent.scrollHeight,
+        }
         );
+
+        const diff = Math.abs(tabContentWrap.getBoundingClientRect().height - tabContent.scrollHeight, );
         // console.log(i, diff);
 
         if (diff > 1 && i < 100) {
             i++;
-            // console.log(i, diff);
 
             setTimeout(setTabContentOffset, 100, i);
         }
-    };
+    }
+    ;
 
     const update = () => {
-        setTimeout(() => setTabContentOffset(), 100);
+        setTimeout( () => setTabContentOffset(), 100);
         onImagesLoaded(document.querySelector('.modal-settings'), setTabContentOffset);
-    };
+    }
+    ;
 
     document.addEventListener('click', (event) => {
         if (event.target && event.target.closest(selectors.tabLink)) {
             event.preventDefault();
-            document
-                .querySelectorAll(selectors.tabLink)
-                .forEach((item) => item.classList.remove('active'));
+            document.querySelectorAll(selectors.tabLink).forEach( (item) => item.classList.remove('active'));
             event.target.classList.add('active');
 
             setTabContentOffset();
         }
-    });
+    }
+    );
 
     const initTabs = () => {
-        document
-            .querySelectorAll(selectors.tabPane)
-            .forEach(
-                (item) =>
-                    (item.style.width =
-                        item.closest(selectors.tabContentWrap).getBoundingClientRect().width +
-                        'px'),
-            );
+        document.querySelectorAll(selectors.tabPane).forEach( (item) => (item.style.width = item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px'), );
 
         if (!window.tabslistenerAttached) {
             window.addEventListener('resize', (event) => {
-                document.querySelectorAll(selectors.tabPane).forEach((item) => {
-                    const width =
-                        item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px';
+                document.querySelectorAll(selectors.tabPane).forEach( (item) => {
+                    const width = item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px';
                     item.style.width = width;
-                });
+                }
+                );
                 setTabContentOffset();
-            });
+            }
+            );
             window.tabslistenerAttached = true;
         }
 
-        setTimeout(() => {
+        setTimeout( () => {
             window.dispatchEvent(new Event('resize'));
-            setTimeout(() => {
+            setTimeout( () => {
                 update();
-            }, 500);
-        }, 100);
+            }
+            , 500);
+        }
+        , 100);
+    }
+    ;
+
+    window.tabsModule = {
+        initTabs,
+        update
     };
-
-    window.tabsModule = { initTabs, update };
-
-    // return {
-    //     onProfileModalLoaded
-    // }
-})();
+}
+)();
 
 function onImagesLoaded(container, event) {
     var images = container.getElementsByTagName('img');
@@ -5379,7 +5106,7 @@ function onImagesLoaded(container, event) {
         if (images[i].complete) {
             loaded--;
         } else {
-            images[i].addEventListener('load', function () {
+            images[i].addEventListener('load', function() {
                 loaded--;
                 if (loaded == 0) {
                     event();
@@ -5392,46 +5119,48 @@ function onImagesLoaded(container, event) {
     }
 }
 
-
 function getInstructions(lang) {
-    const url = 'https://эрудит.club/mvc/faq/getAll?lang=' + lang;
-    // const url = 'faq.json?lang=' + lang;
+    const url = 'https://эрудит.club/mvc/faq/getAll?lang=' + lang + version();
 
-    return fetch(url)
-       .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Ошибка при получении инструкций');
-            }
-        }).catch(error => console.error('Ошибка загрузки instructions:', error));
+    return fetch(url).then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Ошибка при получении инструкций');
+        }
+    }
+    ).catch(error => console.error('Ошибка загрузки instructions:', error));
 }
 
 function getFAQModal() {
-    return fetch('/faq-modal-tpl.html')
-        .then(response => response.text())
-        .then(template => {
-            
-            return new Promise((resolve, reject) => {
-                let message = document.createElement('div');
+    return fetch('/faq-modal-tpl_' + lang + '.html').then(response => response.text()).then(template => {
 
-                getInstructions(lang).then(instructions => {
+        return new Promise( (resolve, reject) => {
+            let message = document.createElement('div');
 
-                    message.innerHTML = template;
+            getInstructions(lang).then(instructions => {
 
-                    ['faq_rules', 'faq_rating', 'faq_rewards', 'faq_coins'].forEach(item => {
-                        if (item in instructions) {
-                            message.querySelector(`#${item}`).innerHTML = instructions[item];
-                        }
-                    });
+                message.innerHTML = template;
 
-                    resolve(message);
-                }).catch(error => reject(error));
-            });
-        })
-        .catch(error => console.error('Ошибка загрузки faq-modal:', error));
+                ['faq_rules', 'faq_rating', 'faq_rewards', 'faq_coins'].forEach(item => {
+                    if (item in instructions) {
+                        message.querySelector(`#${item}`).innerHTML = instructions[item];
+                    }
+                }
+                );
+
+                resolve(message);
+            }
+            ).catch(error => reject(error));
+        }
+        );
+    }
+    ).catch(error => console.error('Ошибка загрузки faq-modal:', error));
 }
 
 var game = new Phaser.Game(config);
 
-document.body.style.backgroundColor = "#dddddd";
+document.body.style.backgroundColor = "#2C3C6C";
+document.body.style.backgroundImage = "url('/img/back2.svg')";
+document.body.style.backgroundSize = 'cover';
+document.body.style.backgroundSize = '100% 500%';
