@@ -618,7 +618,6 @@ var gameStates = {
         message: '<?= T::S('Game selection - please wait') ?>',
         refresh: 10
     },
-
     myTurn: {
         1: 'thinking', 2: 'checking', 3: 'submiting', 4: 'done',
         message: '<?= T::S('Your turn!') ?>',
@@ -934,12 +933,15 @@ function commonCallback(data) {
         commonIdHash = data.common_id_hash;
     }
 
-    if (myUserNum === false)
-        if ('yourUserNum' in data)
-            myUserNum = data['yourUserNum']
+    if (myUserNum === false) {
+        if ('yourUserNum' in data) {
+            myUserNum = data['yourUserNum'];
+        }
+    }
 
-    if ('gameSubState' in data)
+    if ('gameSubState' in data) {
         gameSubState = data['gameSubState'];
+    }
 
     console.log(gameOldState + '->' + gameState);
 

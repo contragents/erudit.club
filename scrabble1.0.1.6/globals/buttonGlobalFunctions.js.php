@@ -25,7 +25,18 @@ function submitButtonFunction() {
                     });
                 } else {
                     gameState = 'afterSubmit';
-                    parseDeskGlobal(data);
+
+                    if ('desk' in data) {
+                        parseDeskGlobal(data.desk);
+                    }
+
+                    if ('fishki' in data) {
+                        placeFishki(data.fishki);
+                    }
+
+                    if ('gameState' in data) {
+                        commonCallback(data);
+                    }
                 }
             });
     }, 100);

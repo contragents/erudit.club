@@ -1532,11 +1532,13 @@ class Game
         $this->destruct();
         //Сохранили статус игры
 
-        print json_encode(
-            array_merge(
-                $ochkiZaHod ? ($cells ?: []) : ($saveDesk ?: []),
-                [$this->gameStatus['users'][$this->numUser]['fishki']],
-            )
+        return json_encode(
+            [
+                'desk' => $ochkiZaHod
+                    ? ($cells ?: [])
+                    : ($saveDesk ?: []),
+                'fishki' => $this->gameStatus['users'][$this->numUser]['fishki'],
+            ]
         );
         //Сделать через отправку статуса
     }
