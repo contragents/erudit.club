@@ -3149,11 +3149,11 @@ function version() {
     return '&ver=' + Math.floor(Date.now());
 }
 
-async function getStatPageGlobal() {
-    let urlPart = STATS_URL + commonId + '&lang=' + lang + version();
+async function getStatPageGlobal(userId = commonId) {
+    let urlPart = STATS_URL + userId + '&lang=' + lang + version();
     let respMessage = 'Ошибка загрузки статистики';
 
-    if (commonId) {
+    if (userId) {
         try {
             const response = await fetch('/' + urlPart, {
                 method: 'GET',
@@ -4389,6 +4389,19 @@ function playersButtonFunction() {
     buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + 'Inactive'));
 
     setTimeout(function () {
+        // ! MOCK
+        /*
+        fetch('data.json').then( (response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Ошибка');
+            }
+        }
+        ).then(data => {
+        */
+        // ! END MOCK
+
         (lang == 'EN' ? fetchGlobalMVC(PLAYER_RATING_SCRIPT + '?game_id=' + gameNumber + '&common_id=' + commonId + '&lang=' + lang, '', orient) : fetchGlobal(PLAYER_RATING_SCRIPT, '', orient)).then((data) => {
 
                 canOpenDialog = false;
@@ -4398,18 +4411,29 @@ function playersButtonFunction() {
                     var responseText = 'Error';
                 else
                     var responseText = JSON.stringify(data);
+
+
+                const p = PlayersPage(data);
+                const html = p.buildHtml();
+                const onLoad = p.onLoad;
+
+
                 dialog = bootbox.alert({
-                    title: 'Rating of opponents',
-                    message: responseText,
-                    size: 'large',
-                    callback: function () {
-                        canOpenDialog = true;
-                        canCloseDialog = true;
-                    }
+                    title: '',
+                    message: html,
+                    className: 'modal-settings modal-players',
+                    buttons: {
+                        ok: {
+                            label: lang === 'ru' ? 'Назад' : 'Back',
+                            className: 'btn btn-sm ml-auto mr-0',
+                        },
+                    },
+                    onShown: function (e) {
+                        onLoad();
+                    },
+                    closeButton: false, //
+                    callback: () => $('.modal-players').modal('hide')
                 });
-                dialog.find('.modal-content').css({
-                    'background-color': 'rgba(255, 255, 255, 0.7)'
-                }).find('img').css('background-color', 'rgba(0, 0, 0, 0)');
 
                 makeCheckButtonInactive(dialog);
                 makeSubmitButtonInactive(dialog);
@@ -4947,17 +4971,15 @@ function StatsPage({json, BASE_URL}) {
     function getStatsModal(json) {
         return fetch('/stats-modal-tpl.html').then((response) => response.text()).then((template) => {
                 // Заменяем маркеры в шаблоне реальными данными
-                let message = template
-                    .replaceAll('{{name}}', json.player_name).replaceAll('{{imageUrl}}', json.player_avatar_url).replaceAll('{{gameList}}', GameList({
-                        games: json.games
-                    })).replaceAll('{{pagination}}', Pagination({
-                        pagination: json.pagination
-                    })).replaceAll('{{activeAwards}}', CardList({
-                        list: json.current_achieves
-                    })).replaceAll('{{pastAwards}}', CardList({
-                        list: json.past_achieves
-                    }))
-                    .replaceAll('{{Stats}}', 'Stats').replaceAll('{{Past Awards}}', 'Past Awards').replaceAll('{{Parties_Games}}', 'Games').replaceAll('{{Player Awards}}', 'Player Awards').replaceAll('{{Player}}', 'Player').replaceAll('{{VS}}', 'VS').replaceAll('{{Date}}', 'Date').replaceAll('{{Result}}', 'Result').replaceAll('{{Rating}}', 'Rating').replaceAll('{{Opponent}}', 'Opponent').replaceAll('{{Active Awards}}', 'Active Awards');
+                let message = template.replaceAll('{{name}}', json.player_name).replaceAll('{{imageUrl}}', json.player_avatar_url).replaceAll('{{gameList}}', GameList({
+                    games: json.games
+                })).replaceAll('{{pagination}}', Pagination({
+                    pagination: json.pagination
+                })).replaceAll('{{activeAwards}}', CardList({
+                    list: json.current_achieves
+                })).replaceAll('{{pastAwards}}', CardList({
+                    list: json.past_achieves
+                })).replaceAll('{{Stats}}', 'Stats').replaceAll('{{Past Awards}}', 'Past Awards').replaceAll('{{Parties_Games}}', 'Games').replaceAll('{{Player Awards}}', 'Player Awards').replaceAll('{{Player}}', 'Player').replaceAll('{{VS}}', 'VS').replaceAll('{{Date}}', 'Date').replaceAll('{{Result}}', 'Result').replaceAll('{{Rating}}', 'Rating').replaceAll('{{Opponent}}', 'Opponent').replaceAll('{{Active Awards}}', 'Active Awards');
 
                 return message;
             }
@@ -5187,3 +5209,362 @@ document.body.style.backgroundColor = "#2C3C6C";
 document.body.style.backgroundImage = "url('/img/back2.svg')";
 document.body.style.backgroundSize = 'cover';
 document.body.style.backgroundSize = '100% 500%';
+// const lang = 'ru';
+// const lang = 'ru';
+
+// function getFAQModal(profileData) {
+
+function PlayersPage(json) {
+    function Card({
+                      event_type,
+                      event_period,
+                      record_type_text,
+                      event_type_text,
+                      points_text,
+                      reward,
+                      income,
+                      date_achieved,
+                  } = props) {
+        const types = {
+            day: 'stone_card',
+            week: 'bronze_card',
+            month: 'silver_card',
+            year: 'gold_card',
+        };
+
+        const date = new Date(date_achieved);
+        let strDate =
+            `0${date.getDate()}`.slice(-2) +
+            '.' +
+            `0${date.getMonth() + 1}`.slice(-2) +
+            '.' +
+            date.getFullYear();
+
+        return `
+	
+				<div class="card_item card--big full_card ${types[event_period]}">
+					<h3 class="card_record">
+						${record_type_text} <br>
+						${event_type_text}
+					</h3>
+					<div class="card_points">
+						${points_text}
+					</div>
+					<div class="card_get">
+						<p>Got reward</p>
+						<div class="card_rewardInfo">
+							<p><img class="card_plus" src="./images/plus.png" alt=""></p>
+							<p><img class="card_rewardImage" src="./images/bigMoney.png" alt="money">
+							</p>
+							<span class="card_moneyCount">${reward}</span>
+						</div>
+					</div>
+					<p class="card_passive">Your passive income</p>
+					<div class="card_hour">
+						<img class="card_hourImage" src="./images/smallMoney.png" alt="">
+						<span>x${income}/hour</span>
+					</div>
+
+					<p class="card_effect">Effect lasts until beaten</p>
+				</div>
+				<span class="date">${strDate}</span>
+		
+		`;
+    }
+
+
+    const CardCompact = (props) => {
+        const {
+            event_value,
+            event_period,
+            record_type_text,
+            event_type_text,
+            reward,
+            record_type,
+            event_type,
+        } = props;
+
+        const types = {
+            day: 'stone_card',
+            week: 'bronze_card',
+            month: 'silver_card',
+            year: 'gold_card',
+        };
+
+        return `
+		<div class="award-wrap">
+					<div class="card_item ${types[event_period]}"  data-props='${JSON.stringify(props)}'>
+						<div class="card_record">
+							${record_type_text}
+							<hr class="divider">
+							<div class="card_points">
+                            ${event_type_text}
+							</div>
+						</div>
+						<div class="card_get">
+							<div class="card_rewardInfo">
+								<img class="card_plus" src="./images/plus.png" alt="">
+								<img class="card_rewardImage" src="./images/bigMoney.png" alt="money">
+								<span class="card_moneyCount">x${reward}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+	`;
+    };
+
+    const PlayerBox = (props) => {
+        const {
+            common_id,
+            you,
+            nickname,
+            avatar_url,
+            stats_url,
+            is_balance_hidden,
+            balance,
+            rating,
+            rating_position,
+            games_played,
+            index,
+            achieves = [],
+            top_bage_url = '',
+        } = props;
+
+        if (!props) {
+            return;
+        }
+
+        let boxLabel;
+        let toggleBalanceVisibilityBtn = '';
+        if (you) {
+            boxLabel = lang === 'ru' ? 'Вы' : 'You';
+            toggleBalanceVisibilityBtn = `<a href="#" class="js-toggle-balance-visibility" data-user-id="${common_id}" data-hidden=${is_balance_hidden}><i class="icon icon-eye ${is_balance_hidden ? 'icon-eye--x' : ''} mx-2"></i></a>`;
+        } else {
+            boxLabel = lang === 'ru' ? 'Игрок ' + index : 'Player ' + (index + 1);
+        }
+
+        let awards;
+        if (top_bage_url) {
+            let cards = achieves
+                .slice(0, 2)
+                .map((item) => {
+                    return CardCompact(item);
+                })
+                .join('');
+            awards = `<div class="awards d-flex row-cols-3">
+				<div class="top-rating-img-wrap"><img src="${top_bage_url}" height="80" alt=""></div>
+				${cards}
+			</div>`;
+        } else {
+            let cards = achieves
+                .slice(0, 3)
+                .map((item) => {
+                    return CardCompact(item);
+                })
+                .join('');
+            awards = `<div class="awards d-flex row-cols-3">${cards}</div>`;
+        }
+
+
+        return `
+		
+		<div class="box box-player">
+			<div class="label box-heading text-center mx-auto fs-4">${boxLabel}</div>
+			<div class="d-flex mb-2">
+				<div class="nickname">${nickname}</div>
+				<button class="btn btn-sm ml-auto js-modal-stats" data-user-id="${common_id}">${lang === 'ru' ? 'Статистика' : 'Stats'}</button>
+			</div>
+			<div class="d-flex">
+				<div class="img-col">
+					<div class="img-wrap">
+						<img src="${avatar_url}" class="img-fluid rounded" alt="avatar">
+					</div>
+				</div>
+				<div class="info-col">
+					<ul>
+						<li>
+							<div class="label">${lang === 'ru' ? 'Рейтинг' : 'Rating'}</div>
+							<div class="pill">${rating}</div>
+						</li>
+						<li>
+							<div class="label">${lang === 'ru' ? 'Позиция в ТОП' : 'Ranking number'}</div>
+							<div class="pill">${rating_position}</div>
+						</li>
+						<li>
+							<div class="label d-flex align-items-center">${
+            lang === 'ru' ? 'Баланс' : 'Balance'
+        } <i class="icon icon-coin ml-2"></i></div>
+							<div class="pill-wrap d-flex ml-auto">
+								${toggleBalanceVisibilityBtn}
+                                <div class="pill">${balance}</div>
+							</div>
+						</li>
+						<li>
+							<div class="label">${lang === 'ru' ? 'Партии' : 'Games Played'}</div>
+							<div class="pill">${games_played}</div>
+						</li>
+					</ul>
+				</div>
+
+
+			</div>
+			${awards}
+		</div>
+	`;
+    };
+
+
+    const cardClickHandler = (e) => {
+        if (e.target && e.target.closest('.modal-players .card_item')) {
+            const props = e.target.closest('.modal-players .card_item').getAttribute('data-props');
+            if (props) {
+                const card = Card(JSON.parse(props));
+                const modalHtml = `
+							<div class="box d-flex align-items-center p-2 mb-2">
+								<div class="box-heading text-center mx-auto fs-4">${lang === 'ru' ? 'Награда' : 'Reward'}</div>
+							</div>
+							<div class="box card-list-wrap">
+								<div class="card_list">
+									<div>${card}</div>
+								</div>
+							</div>`;
+
+                // const m = $('.modal.show');
+                // m.modal('hide');
+                dialog = bootbox.alert({
+                    title: '',
+                    message: modalHtml,
+                    // locale: 'ru',
+                    // size: 'large',
+                    className: 'modal-settings modal-card modal--footer-compact',
+                    buttons: {
+                        ok: {
+                            label: lang === 'ru' ? 'Назад' : 'Back',
+                            className: 'btn btn-sm ml-auto mr-0',
+
+                        },
+                    },
+                    onShown: function (e) {
+                    },
+                    // callback: () => m.modal('show'),
+                    closeButton: false
+                });
+            }
+        }
+        // openModal(modal);
+    };
+
+    function init() {
+
+        if (!window.cardCompactClickHandler) {
+            window.cardCompactClickHandler = cardClickHandler;
+            document.addEventListener('click', cardClickHandler);
+        }
+
+        const playerBoxes = json.map((element, i) => PlayerBox({...element, index: i})).join('');
+
+        const html = `<div><div class="box d-flex align-items-center p-2 mb-2">
+						<div class="box-heading text-center mx-auto fs-4">${lang === 'ru' ? 'Игроки' : 'Players'}</div>
+					</div>
+					${playerBoxes}</div>`;
+
+        // document.getElementById('test-tpl').innerHTML = q;
+
+        return html;
+    }
+
+
+    function onLoad() {
+        $('.modal-players .js-modal-stats').click(e => {
+            e.preventDefault();
+            const userId = e.target?.closest('.js-modal-stats').getAttribute('data-user-id');
+
+
+            getStatPageGlobal(userId).then(data => {
+                console.log(data);
+                dialog = bootbox.dialog({
+                    message: data.message,
+                    locale: lang === 'RU' ? 'ru' : 'en',
+                    className: 'modal-settings  modal-stats',
+                    callback: function () {
+                        console.log('stats loaded');
+                    },
+                    onShow: function (e) {
+                        $('.modal-players.show, .modal-players.show + .modal-backdrop.show').hide();
+                    },
+                    buttons: {
+                        removeFilter: {
+                            label: 'Remove filter',
+                            className: 'js-remove-filter btn btn-sm btn-auto mr-0 d-none',
+                            callback: function (e) {
+                                e.preventDefault();
+                                return false;
+                            },
+                        },
+                        ok: {
+                            label: lang === 'ru' ? 'Назад' : 'Back',
+                            className: 'btn-sm ml-auto mr-0',
+                            callback: function () {
+                                $('.modal-players.show, .modal-players.show + .modal-backdrop.show').show();
+                            }
+                        },
+                    }
+                }).off('shown.bs.modal').on('shown.bs.modal', function () {
+                    if (data.onLoad && typeof data.onLoad === 'function') {
+                        data.onLoad();
+                    }
+                }).find('.modal-content').css({
+                    'background-color': 'rgba(230, 255, 230, 1)',
+                });
+            });
+        });
+
+
+        $('.js-toggle-balance-visibility').click((e) => {
+            e.preventDefault();
+            const btn = e.target?.closest('.js-toggle-balance-visibility');
+            if (!btn) {
+                return;
+            }
+            const $that = $(btn);
+            const isHidden = (btn.getAttribute('data-hidden') === 'true');
+            const userId = btn.getAttribute('data-user-id');
+            const newVisibility = isHidden ? 'show' : 'hide';
+
+            const url = `/mvc/players/hideBalance/?common_id=${userId}&hide=${newVisibility}`;
+
+
+            fetch(url).then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Response status: ${response.status}`);
+                    }
+                    return response.json();
+                }
+            ).then((json) => {
+                    // {"balance":"**20**","is_balance_hidden":true}
+                    if ('is_balance_hidden' in json) {
+                        $that.data('balance', json.is_balance_hidden);
+                        if (json.is_balance_hidden) {
+                            $that.find('.icon').removeClass('icon-eye--x');
+                            btn.setAttribute('data-hidden', true);
+                        } else {
+                            btn.setAttribute('data-hidden', false);
+                            $that.find('.icon').addClass('icon-eye--x');
+                        }
+
+                        $that.parent().find('.pill').text(json.balance);
+                    }
+
+                }
+            ).catch((error) => console.error('Ошибка ', error));
+
+        });
+    }
+
+
+    return {
+        buildHtml: init,
+        onLoad,
+    };
+
+}

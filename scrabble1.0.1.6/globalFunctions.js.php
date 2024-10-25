@@ -334,11 +334,11 @@ function version() {
     return '&ver=' + Math.floor(Date.now());
 }
 
-async function getStatPageGlobal() {
-    let urlPart = STATS_URL + commonId + '&lang=' + lang + version();
+async function getStatPageGlobal(userId = commonId) {
+    let urlPart = STATS_URL + userId + '&lang=' + lang + version();
     let respMessage = 'Ошибка загрузки статистики';
 
-    if (commonId) {
+    if (userId) {
         try {
             const response = await fetch('/' + urlPart, {
                 method: 'GET',
@@ -353,9 +353,13 @@ async function getStatPageGlobal() {
                 throw new Error(`Ошибка запроса: ${response.status}`);
             }
 
-            const returndata = await response.json(); // Получаем JSON
+            const returndata = await response.json();
+            // Получаем JSON
 
-            const s = StatsPage({ json: returndata, BASE_URL: '' });
+            const s = StatsPage({
+                json: returndata,
+                BASE_URL: ''
+            });
             const message = await s.buildHtml();
 
             return {

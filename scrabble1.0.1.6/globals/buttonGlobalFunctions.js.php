@@ -489,38 +489,52 @@ function playersButtonFunction() {
     buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + 'Inactive'));
 
     setTimeout(function () {
-        (lang == 'EN'
-            ? fetchGlobalMVC(PLAYER_RATING_SCRIPT + '?game_id=' + gameNumber + '&common_id=' + commonId + '&lang=' + lang, '', orient)
-            : fetchGlobal(PLAYER_RATING_SCRIPT, '', orient))
-            .then((data) => {
-
+        fetchGlobalMVC(PLAYER_RATING_SCRIPT + '?game_id=' + gameNumber + '&common_id=' + commonId + '&lang=' + lang, '', orient).then((data) => {
                 canOpenDialog = false;
                 canCloseDialog = false;
 
                 if (data == '')
-                    var responseText = '<?= T::S('Error') ?>';
+                    var responseText = 'Error';
                 else
-                    var responseText = lang == 'EN' ? JSON.stringify(data) : data['message'];
+                    var responseText = JSON.stringify(data);
+
+
+                const p = PlayersPage(data);
+                const html = p.buildHtml();
+                const onLoad = p.onLoad;
+
+
                 dialog = bootbox.alert({
-                    title: '<?= T::S('Rating of opponents') ?>',
-                    message: responseText,
-                    size: 'large',
-                    callback: function () {
+                    title: '',
+                    message: html,
+                    className: 'modal-settings modal-players',
+                    buttons: {
+                        ok: {
+                            label: lang === 'RU' ? 'Назад' : 'Back',
+                            className: 'btn btn-sm ml-auto mr-0',
+                        },
+                    },
+                    onShown: function (e) {
+                        onLoad();
+                    },
+                    closeButton: false, //
+                    callback: () => {
+                        $('.modal-players').modal('hide');
+
+                        bootbox.hideAll();
                         canOpenDialog = true;
                         canCloseDialog = true;
+                        dialog = false;
                     }
                 });
-                dialog
-                    .find('.modal-content').css({'background-color': 'rgba(255, 255, 255, 0.7)'})
-                    .find('img').css('background-color', 'rgba(0, 0, 0, 0)');
 
                 makeCheckButtonInactive(dialog);
                 makeSubmitButtonInactive(dialog);
-                
+
                 buttons['playersButton']['svgObject'].setInteractive();
                 buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
-
-            });
+            }
+        );
     }, 100);
 
     setTimeout(function () {
