@@ -929,7 +929,7 @@ function PlayersPage(json) {
                 dialog = bootbox.dialog({
                     message: data.message,
                     locale: lang === 'RU' ? 'ru' : 'en',
-                    className: 'modal-settings  modal-stats',
+                    className: 'modal-settings modal-stats',
                     callback: function () {
                         console.log('stats loaded');
                     },
@@ -938,7 +938,7 @@ function PlayersPage(json) {
                     },
                     buttons: {
                         removeFilter: {
-                            label: 'Remove filter',
+                            label: '<?= T::S('Remove filter') ?>',
                             className: 'js-remove-filter btn btn-sm btn-auto mr-0 d-none',
                             callback: function (e) {
                                 e.preventDefault();
