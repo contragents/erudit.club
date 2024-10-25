@@ -146,6 +146,9 @@ class T
             self::EN_LANG => 'games played',
             self::RU_LANG => 'сыграно партий'
         ],
+        'Games Played' => [
+            self::RU_LANG => 'Партии'
+        ],
         'top' => [
             self::RU_LANG => 'топ'
         ],
@@ -406,6 +409,9 @@ class T
         'Players ready:' => [
             self::RU_LANG => 'Готово играть:'
         ],
+        'Players' => [
+            self::RU_LANG => 'Игроки'
+        ],
         'Try sending again' => [
             self::RU_LANG => 'Попробуйте отправить заново'
         ],
@@ -455,6 +461,9 @@ class T
             self::RU_LANG => 'Поиск других игроков'
         ],
         'Game goal:' => [
+            self::RU_LANG => 'Игра до'
+        ],
+        'Game goal' => [
             self::RU_LANG => 'Игра до'
         ],
         'Rating of opponents' => [
@@ -874,6 +883,9 @@ class T
         'faq_rewards' => [
             self::EN_LANG => Faq::REWARDS[self::EN_LANG],
             self::RU_LANG => Faq::REWARDS[self::RU_LANG],
+        ],
+        'Reward' =>  [
+            self::RU_LANG => 'Награда'
         ],
         'faq_coins' => [
             self::EN_LANG => Faq::COINS[self::EN_LANG],
