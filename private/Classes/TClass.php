@@ -30,7 +30,7 @@ class T
     {
         $res = self::PHRASES[$keyPhrase][self::$lang] ?? $keyPhrase;
 
-        if (strpos($res, Macros::PATTERN)) {
+        if (strpos($res, Macros::PATTERN) !== false) {
             return Macros::applyMacros($res);
         }
 
@@ -558,6 +558,27 @@ class T
 
         "Opponent's rating" => [
             self::RU_LANG => 'Рейтинг соперника'
+        ],
+        'Choose your MAX bet' => [
+            self::RU_LANG => 'Выберите максимальную ставку'
+        ],
+        'Searching for players with corresponding bet' => [
+            self::RU_LANG => 'Подбор игроков с соответствующей ставкой'
+        ],
+        'Coins written off the balance sheet' => [
+            self::RU_LANG => 'Списано монет с баланса'
+        ],
+        'Number of coins on the line' => [
+            self::RU_LANG => 'Количество монет на кону'
+        ],
+        'gets a win' => [
+            self::RU_LANG => 'получает за победу'
+        ],
+        'Bid' => [
+            self::RU_LANG => 'Ставка'
+        ],
+        'No coins' => [
+            self::RU_LANG => 'Без монет'
         ],
         'Any' => [
             self::RU_LANG => 'Любой'

@@ -158,19 +158,6 @@ var buttons = {
             logButtonFunction();
         },
     },
-    razdvButton: {
-        filename: 'razdv2',
-        modes: [OTJAT_MODE, 'Navedenie', 'Najatie'],
-        x: fullscreenXY['x'],
-        y: fullscreenXY['y'],
-        caption: 'full screen',
-        //width: fullscreenButtonSize,
-        object: false,
-        svgObject: false,
-        pointerupFunction: function () {
-            document.body.requestFullscreen();
-        }
-    }
 };
 
 var playerBlockModes = [OTJAT_MODE, ALARM_MODE];
@@ -288,6 +275,18 @@ var players = {
         width: buttonWidth,
         object: false,
         svgObject: false,
+    },
+    bankBlock: {
+        filename: 'bank_',
+        x: botXY.x + buttonStepX + buttonWidth / 2,
+        y: botXY.y + botHeight * 0.75 * (1 + 0.1),
+        width: buttonWidth,
+        object: false,
+        svgObject: false,
+        preload: false,
+        pointerupFunction: function () {
+            console.log(gameBid);
+        },
     },
     timerBlock: {
         // todo сделать мигающие цифры таймера

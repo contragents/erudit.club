@@ -3,6 +3,9 @@
 class DB
 {
     private static bool $is_transaction_started =  false;
+    private static int $transactionNestLevel = 0;
+    private static bool $isLogBegin = false;
+    private static int $logCounter = 0;
 
     private static $_instance = null;
 
@@ -13,7 +16,36 @@ class DB
         self::connect();
     }
 
+    private static function transactionLog(string $method) {
+        $logKey = 'transaction_log';
+
+        if(!self::$isLogBegin) {
+            Cache::del($logKey);
+        }
+
+        self::$isLogBegin = true;
+
+        Cache::rpush($logKey,
+        [
+            'method' => $method,
+            'counter' => ++self::$logCounter,
+            'transaction_started' => self::$is_transaction_started,
+            'nest_level' => self::$transactionNestLevel
+        ]
+        );
+    }
+
     public static function transactionRollback() {
+        self::transactionLog(__METHOD__);
+
+        self::$transactionNestLevel = 0; // Сбросили уровень вложенности
+
+        if (!self::$is_transaction_started) {
+            // Попытка вызвать роллбек на неначатой транзакции
+
+            return false;
+        }
+
         self::$is_transaction_started = false;
 
         if (self::$DBConnect === null) {
@@ -24,17 +56,37 @@ class DB
     }
 
     public static function transactionCommit() {
+        self::transactionLog(__METHOD__);
+
+        if (!self::$is_transaction_started) {
+            // Попытка вызвать коммит на неначатой транзакции
+            self::$transactionNestLevel = 0; // Сбросили уровень вложенности
+
+            return false;
+        }
+
+        if (--self::$transactionNestLevel > 0) {
+            return true; // Вложенная транзакция - не коммитим
+        }
+
         self::$is_transaction_started = false;
 
         if (self::$DBConnect === null) {
+            self::$transactionNestLevel = 0; // Соединение разорвалось - сбрасываем уровень вложенности транзакций
+
             return false;
         } else {
             return mysqli_commit(self::$DBConnect);
         }
     }
 
-    public static function transactionStart(): bool {
-        if (self::$is_transaction_started) {
+    public static function transactionStart(): bool
+    {
+        self::transactionLog(__METHOD__);
+
+        self::$transactionNestLevel++;
+
+        if (self::$is_transaction_started) { // внешняя транзакция уже начата
             return true;
         }
 
@@ -42,10 +94,12 @@ class DB
             self::connect();
         }
 
-        if (!mysqli_begin_transaction(self::$DBConnect)) {
-            self::connect();
+        self::$is_transaction_started = mysqli_begin_transaction(self::$DBConnect);
 
-            return self::$is_transaction_started = mysqli_begin_transaction(self::$DBConnect);
+        if (!self::$is_transaction_started) {
+            self::$transactionNestLevel = 0; // Сбрасываем уровень вложенности, если транзакция не стартанула
+
+            return false;
         }
 
         return true;

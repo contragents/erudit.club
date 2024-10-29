@@ -37,7 +37,7 @@ class PlayersController extends BaseController
                 $user->_is_balance_hidden = $hide === self::HIDE;
 
                 if ($user->save()) {
-                    $balance = BalanceModel::getBalance($user->_id) ?: 0;
+                    $balance = BalanceModel::getBalance($user->_id);
                     $res['balance'] = $user->_is_balance_hidden
                         ? "**$balance**"
                         : $balance;
@@ -88,7 +88,7 @@ class PlayersController extends BaseController
 
                     $res[$numUser][UserModel::BALANCE_HIDDEN_FIELD] = ($thisUser->_is_balance_hidden ?? false);
 
-                    $balance = BalanceModel::getBalance($thisUser->_id) ?: 0;
+                    $balance = BalanceModel::getBalance($thisUser->_id);
                     $res[$numUser]['balance'] = !($thisUser->_is_balance_hidden ?? false)
                         ? $balance
                         : (

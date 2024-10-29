@@ -77,6 +77,10 @@ function () {
     }
 
     for (let k in players) {
+        if ('preload' in players[k] && !players[k].preload) {
+            continue;
+        }
+
         playerBlockModes.forEach(mode => this.load.svg(k + mode, '/img/' + mode.toLowerCase() + '/' + players[k]['filename'] + '.svg',
             'width' in players[k]
                 ? {
@@ -88,7 +92,6 @@ function () {
                 }
         ));
     }
-
 
     playerBlockModes.forEach(mode => {
         for (let k in digits.playerDigits[mode]) {

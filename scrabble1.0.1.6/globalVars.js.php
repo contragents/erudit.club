@@ -108,6 +108,10 @@ const standardHorizontalWidth = 960 * 2;
 const standardHorizontalHeight = standardVerticalWidth;
 
 var gameNumber = false;
+var gameBid = false;
+var gameBank = false;
+var gameBankString = '';
+var faserObject = false;
 var graphics;
 var letterMin = 0;
 var letterMax = 31;

@@ -8,7 +8,7 @@ class BalanceModel extends BaseModel
 
     const HIDDEN_BALANCE_REPLACEMENT = '*****';
 
-    const SYSTEM_COMMON_ID = 0;
+    const SYSTEM_ID = 0;
 
     public static function changeBalance(
         int $commonId,
@@ -18,7 +18,7 @@ class BalanceModel extends BaseModel
         ?int $ref = null
     ): bool
     {
-        if (self::getBalance($commonId) === false) {
+        if (!self::exists($commonId)) {
             if(!self::createBalance($commonId)) {
                 return false;
             }
@@ -53,12 +53,11 @@ class BalanceModel extends BaseModel
         DB::transactionCommit();
 
         return true;
-
     }
 
-    public static function getBalance(int $commonId)
+    public static function getBalance(int $commonId): int
     {
-        return DB::queryValue(
+        return (int)DB::queryValue(
             ORM::select([self::SUDOKU_BALANCE_FIELD], self::TABLE_NAME)
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
         );

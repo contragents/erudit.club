@@ -72,6 +72,9 @@ var gameStates = {
         },
         from_initRatingGame: function () {
             gameStates['startGame']['from_initGame']();
+        },
+        from_initCoinGame: function () {
+            gameStates['startGame']['from_initGame']();
         }
     },
     chooseGame: {
@@ -128,6 +131,7 @@ var gameStates = {
                         inputId = '0',
                         isChecked = false,
                         isDisabled = false,
+                        name = 'from_rating',
                         extraClass = '',
                         extraInputAttrString = '',
                     } = props;
@@ -135,16 +139,48 @@ var gameStates = {
                     const html = `
 									<div title="${title}"
 										class="form-check form-check-inline ${extraClass}">
-										<input class="form-check-input" type="radio" id="${inputId}" name="from_rating"
+										<input class="form-check-input" type="radio" id="${inputId}" name="${name}"
 										value="${inputValue}"
 										${isChecked ? `checked` : ''}
 										${isDisabled ? `disabled` : ''}
 										${extraInputAttrString ? extraInputAttrString : ''}
 											/>
-										<label class="form-check-label" for="${inputId}">${text}</label>
+										<label onClick="clickGlobal(this.id); return true;" id="div_${inputId}" class="form-check-label" for="${inputId}">${text}</label>
 									</div>`;
 
                     return html;
+                };
+
+                const getBidList = (bidValues = [], data = {}) => {
+                    let resultHtml = '';
+                    bidValues.forEach((bidValue) => {
+                        if (
+                            'coin_players' in data &&
+                            bidValue in data['coin_players'] &&
+                            data['coin_players'][bidValue] >= 0
+                        ) {
+                            let isChecked = false;
+                            if (
+                                'prefs' in data &&
+                                data['prefs'] !== false &&
+                                'bid' in data['prefs'] &&
+                                data['prefs']['bid'] == bidValue
+                            ) {
+                                isChecked = true;
+                            }
+                            resultHtml += ratingRadio({
+                                title: data['coin_players'][bidValue] + ' <?= T::S('in game') ?>',
+                                text: `<?= T::S('{{sudoku_icon_15}}') ?> ${bidValue} (${data['coin_players'][bidValue]})`,
+                                inputValue: bidValue,
+                                inputId: `bid_${bidValue}`,
+                                isChecked,
+                                isDisabled: '',
+                                name: 'bid'
+                            });
+                        }
+                    });
+
+                    return resultHtml;
                 };
 
                 // ratingValues: number[] ([2000, 2100, 2200, ...])
@@ -217,6 +253,45 @@ var gameStates = {
                 }
 
                 onlinePlayers += `	</div>`; // end col
+                onlinePlayers += `</div>`; // end label-row
+
+                onlinePlayers += `<div class="box-title-wrap">
+												<span><?= T::S('Choose your MAX bet') ?></span>
+											</div>`;
+
+                const bids = Object.keys(data.coin_players).filter(
+                    (item) => !isNaN(Number(item)) && data.coin_players[item] >= 0
+                );
+
+                onlinePlayers += `<div class="label-row">`;
+
+                onlinePlayers += `<div class="form-check">`;
+
+                onlinePlayers += ratingRadio({
+                    title: title,
+                    text: '<?= T::S('No coins') ?> (' +  (0 in data['players'] ? data['players'][0] : '0') + '&nbsp;<?= T::S('online')?>)',
+                    inputValue: 0,
+                    inputId: 'bid_0',
+                    isChecked: false,
+                    isDisabled: false,
+                    name: 'bid'
+                });
+
+                onlinePlayers += getBidList(
+                    bids.slice(0, bids.length / 2),
+                    data
+                );
+                onlinePlayers += `	</div>`; // end col
+
+                onlinePlayers += `	<div class="form-check">`;
+                if (bids.slice(bids.length / 2).length > 0) {
+                    onlinePlayers += getBidList(
+                        bids.slice(bids.length / 2),
+                        data
+                    );
+                }
+                onlinePlayers += `	</div>`; // end col
+
                 onlinePlayers += `</div>`; // end label-row
 
                 onlinePlayers = `<div class="box box-rating">${onlinePlayers}</div>`;
@@ -618,6 +693,15 @@ var gameStates = {
         message: '<?= T::S('Game selection - please wait') ?>',
         refresh: 10
     },
+    initCoinGame: {
+        1: 'waiting', 2: 'done',
+        action: function (data) {
+            buttons['submitButton']['svgObject'].disableInteractive();
+            buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
+        },
+        message: '<?= T::S('Game selection - please wait') ?>',
+        refresh: 10
+    },
     myTurn: {
         1: 'thinking', 2: 'checking', 3: 'submiting', 4: 'done',
         message: '<?= T::S('Your turn!') ?>',
@@ -628,6 +712,10 @@ var gameStates = {
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
         },
         from_initRatingGame: function (data) {
+            gameStates['startGame']['from_initGame']();
+            gameStates['myTurn']['from_noGame'](data);
+        },
+        from_initCoinGame: function (data) {
             gameStates['startGame']['from_initGame']();
             gameStates['myTurn']['from_noGame'](data);
         },
@@ -673,6 +761,10 @@ var gameStates = {
             gameStates['startGame']['from_initGame']();
             gameStates['myTurn']['from_noGame'](data);
         },
+        from_initCoinGame: function (data) {
+            gameStates['startGame']['from_initGame']();
+            gameStates['myTurn']['from_noGame'](data);
+        },
         from_initGame: function (data) {
             gameStates['startGame']['from_initGame']();
             gameStates['myTurn']['from_noGame'](data);
@@ -706,6 +798,9 @@ var gameStates = {
                 placeFishki(data['fishki']);
         },
         from_initRatingGame: function (data) {
+            gameStates['startGame']['from_initGame']();
+        },
+        from_initCoinGame: function (data) {
             gameStates['startGame']['from_initGame']();
         },
         from_initGame: function (data) {
@@ -958,7 +1053,7 @@ function commonCallback(data) {
             intervalId = 0;
         }
         if (canOpenDialog) {
-            if (gameState == 'initGame' || gameState == 'initRatingGame') {
+            if (gameState == 'initGame' || gameState == 'initRatingGame' || gameState == 'initCoinGame') {
                 dialog = bootbox.confirm({
                     message: ('comments' in data) ? data['comments'] : gameStates[gameState]['message'],
                     size: 'small',
@@ -1127,6 +1222,37 @@ function commonCallback(data) {
         displayTimeGlobal(+vremiaMinutes * 100 + +vremiaSeconds, true);
     }
 
+    if ('bid' in data && gameBid === false) {
+        gameBid = data.bid;
+        gameBank = data.bank;
+        gameBankString = data.bank_string;
+        console.log(gameBid, gameBank, gameBankString);
+
+        buttons.logButton.svgObject.x = buttons.chatButton.svgObject.x - (buttons.checkButton.svgObject.width - buttons.logButton.svgObject.width)/2;
+        buttons.playersButton.svgObject.x += (buttons.changeButton.svgObject.width - buttons.playersButton.svgObject.width) / 2
+        buttons.chatButton.svgObject.x = buttons.logButton.svgObject.x + (buttons.playersButton.svgObject.x - buttons.logButton.svgObject.x) / 2;
+
+        preloaderObject.load.svg('bankBlockOtjat', `/img/otjat/${players.bankBlock.filename}${gameBankString}.svg`,
+            {
+                ...('width' in players.bankBlock && {
+                    'width': players.bankBlock.width,
+                }),
+                'height':
+                    'height' in players.bankBlock ? players.bankBlock.height : buttonHeight,
+            }
+        );
+
+        preloaderObject.load.start();
+
+        preloaderObject.load.on('complete', function () {
+            console.log('players.bankBlock.svgObject', players.bankBlock.svgObject);
+            playerBlockModes = [OTJAT_MODE];
+            players.bankBlock.svgObject = getSVGBlockGlobal(players.bankBlock.x, players.bankBlock.y, 'bankBlock', faserObject, players.bankBlock.scalable, false);
+            players.bankBlock.svgObject.bringToTop(players.bankBlock.svgObject.getByName(k + OTJAT_MODE));
+            playerBlockModes = [OTJAT_MODE, ALARM_MODE];
+        });
+    }
+
     if ('log' in data)
         for (k in data['log'])
             gameLog.unshift(data['log'][k]);
@@ -1218,4 +1344,47 @@ function userScores(data) {
             }
         }
     }
+}
+
+function clickGlobal(id) {
+    console.log('clicked', id);
+    // div_bid_0 - bid ids
+    // div_from_0 - rating ids
+
+    if (id.indexOf('bid') > 0) {
+        bid = id.substring(8);
+        if (+bid === 0) {
+            return false;
+        }
+
+        const ratingInputs = document.querySelectorAll("input[name='from_rating']");
+        ratingInputs.forEach(item => {
+            if(item.id === 'from_0') {
+                item.checked = true;
+            } else {
+                item.checked = false;
+            }
+            console.log(item.id, item.checked);
+        });
+    }
+
+    if (id.indexOf('from') > 0) {
+        fromRating = id.substring(9);
+        if (+fromRating === 0) {
+            return false;
+        }
+
+        const bidInputs = document.querySelectorAll("input[name='bid']");
+
+        bidInputs.forEach(item => {
+            if(item.id === 'bid_0') {
+                item.checked = true;
+            } else {
+                item.checked = false;
+            }
+            console.log(item.id, item.checked);
+        });
+    }
+
+    return true;
 }

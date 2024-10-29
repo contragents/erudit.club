@@ -25,7 +25,7 @@ function getSVGButton(X, Y, buttonName, _this) {
     return container;
 }
 
-function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits = false) {
+/*function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits = false) {
     let elements = [];
     let elementNumber = 0;
 
@@ -112,4 +112,4 @@ function getSVGBlock(X, Y, buttonName, _this, scalable, hasDigits = false) {
     }
 
     return container;
-}
+}*/

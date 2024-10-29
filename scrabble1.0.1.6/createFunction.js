@@ -31,7 +31,6 @@ function () {
     initCellsGlobal();
 
     for (let k in buttons) {
-
         if ('preCalc' in buttons[k])
             buttons[k]['preCalc']();
 
@@ -82,8 +81,10 @@ function () {
         currentWidth += stepXTopButtons + buttons[tbK]['svgObject'].displayWidth;
     }
 
+    /*
     buttons['razdvButton']['svgObject'].disableInteractive();
     buttons['razdvButton']['svgObject'].visible = false;
+    */
 
     if (buttons['submitButton']['svgObject'] !== false) {
         buttons['submitButton']['svgObject'].disableInteractive();
@@ -91,7 +92,11 @@ function () {
     }
 
     for (let k in players) {
-        players[k]['svgObject'] = getSVGBlock(players[k]['x'], players[k]['y'], k, this, players[k].scalable, 'numbers' in players[k]);
+        if ('preload' in players[k] && !players[k].preload) {
+            continue;
+        }
+
+        players[k]['svgObject'] = getSVGBlockGlobal(players[k]['x'], players[k]['y'], k, this, players[k].scalable, 'numbers' in players[k]);
         players[k]['svgObject'].bringToTop(players[k]['svgObject'].getByName(k + OTJAT_MODE));
         players[k]['svgObject'].getByName(k + ALARM_MODE).setVisible(false);
     }
@@ -100,6 +105,7 @@ function () {
 
 //    <?php include('create/getSVGButtonFunction.js')?>
 
+    faserObject = this;
 
     ochki = this.add.text(lotokX - lotokCellStep / 2 + 5,
         buttons['newGameButton']['svgObject'].y + buttons['newGameButton']['svgObject'].height - 15,
