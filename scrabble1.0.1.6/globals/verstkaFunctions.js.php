@@ -925,7 +925,6 @@ function PlayersPage(json) {
             const userId = e.target?.closest('.js-modal-stats').getAttribute('data-user-id');
 
             getStatPageGlobal(userId).then(data => {
-                console.log(data);
                 dialog = bootbox.dialog({
                     message: data.message,
                     locale: lang === 'RU' ? 'ru' : 'en',

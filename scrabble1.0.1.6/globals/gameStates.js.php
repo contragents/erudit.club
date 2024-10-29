@@ -419,6 +419,8 @@ var gameStates = {
                 onlinePlayers +
                 '</form>';
 
+            bootbox.hideAll();
+
             dialog = bootbox.dialog({
                 title: gameStates['chooseGame']['message'],
                 message: gameform,
@@ -835,6 +837,8 @@ var gameStates = {
                 var okButtonCaption = 'OK';
             }
 
+            bootbox.hideAll();
+
             dialog = bootbox.dialog({
                 message: data['comments'],
                 onEscape: false,
@@ -902,6 +906,8 @@ var gameStates = {
             if (dialogResponse) {
                 dialogResponse.modal('hide');
             }
+
+            bootbox.hideAll();
 
             dialog = bootbox.dialog({
                 message: data['comments'],
@@ -1134,10 +1140,12 @@ function commonCallback(data) {
                 } else {
                     gameStates['gameResults']['results'](data);
                 }
-            } else if (!('noDialog' in gameStates[gameState])) {
-                setTimeout(function () {
+            } else
+                if (!('noDialog' in gameStates[gameState])) {
+                    setTimeout(function () {
+                        bootbox.hideAll();
                         var message = '';
-                        var cancelLabel = '<?= T::S('Close after 5 seconds') ?>';
+                        var cancelLabel = '<?= T::S('Close in 5 seconds') ?>';
 
                         if ('comments' in data && (data['comments'] !== null)) {
 
@@ -1245,10 +1253,8 @@ function commonCallback(data) {
         preloaderObject.load.start();
 
         preloaderObject.load.on('complete', function () {
-            console.log('players.bankBlock.svgObject', players.bankBlock.svgObject);
             playerBlockModes = [OTJAT_MODE];
             players.bankBlock.svgObject = getSVGBlockGlobal(players.bankBlock.x, players.bankBlock.y, 'bankBlock', faserObject, players.bankBlock.scalable, false);
-            players.bankBlock.svgObject.bringToTop(players.bankBlock.svgObject.getByName(k + OTJAT_MODE));
             playerBlockModes = [OTJAT_MODE, ALARM_MODE];
         });
     }

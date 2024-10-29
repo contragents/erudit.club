@@ -258,7 +258,7 @@ class Queue
 
     protected function waitCoinPlayer($User)
     {
-        if (isset($this->POST['bid']) && ($this->POST['bid'] == 0)) {
+        if (isset($this->POST['bid']) && !in_array($this->POST['bid'], MonetizationService::BIDS)/*($this->POST['bid'] == 0)*/) {
             return false;
         }
 
@@ -550,7 +550,7 @@ class Queue
         return true;
     }
 
-    protected function makeGame($queue, $maxNumUsers = 2, $wishRating = null, $bid = null)
+    protected function makeGame($queue, $maxNumUsers = 2, $wishRating = null, $bid = false)
     { try {
         $newGameId = Cache::incr(static::GAMES_COUNTER);
 
@@ -605,6 +605,7 @@ class Queue
 
             $data = unserialize($data);
 
+            // Проверка ставки - в очереди на соин-игру у всех прописаны ставки
             if ($bid && !($data['bid'] ?? 0)) {
                 continue;
             }
@@ -683,7 +684,7 @@ class Queue
                         $this->caller->currentGame
                     )) {
                     DB::transactionRollback();
-                    $bid = null;
+                    $bid = false;
                 }
             }
 

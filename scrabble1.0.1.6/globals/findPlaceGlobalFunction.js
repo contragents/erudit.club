@@ -143,6 +143,9 @@ function chooseLetterGlobal(gameObject) {
             }
         }
     }
+
+    bootbox.hideAll();
+
     dialog = bootbox.dialog({
         message: "Выберите букву",
         size: 'large',

@@ -2215,8 +2215,8 @@ try {
                 //Добавили в респонс очки игроков
             }
 
-            //if(isset($this->gameStatus['bid'])) {
-                $bid = 2500000;//$this->gameStatus['bid'] ?: 0;
+            if(isset($this->gameStatus['bid'])) {
+                $bid = $this->gameStatus['bid'] ?: 0;
                 $bank = $bid * count($this->gameStatus['users']);
                 $arr = array_merge(
                     $arr,
@@ -2224,14 +2224,13 @@ try {
                         'bid' => $bid,
                         'bank' => $bank,
                         'bank_string' => $bank < 1000
-                            ? /*((string)(100) . 'K')*/$bank
+                            ? $bank
                             : ($bank < 1000000
                                 ? ((string)(round($bank / 1000)) . 'K')
                                 : ((string)(round($bank / 1000000)) . 'M'))
                     ]
                 );
-            //}
-
+            }
 
             if ($this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] > 0) {
                 $turnTimeLeft = ($this->gameStatus['aquiringTimes'][$this->gameStatus['turnNumber']] + $this->gameStatus['turnTime']) - date(

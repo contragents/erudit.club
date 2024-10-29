@@ -77,6 +77,9 @@ function newGameButtonFunction(ignoreDialog = false) {
     buttons['newGameButton']['svgObject'].disableInteractive();
 
     if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'startGame') {
+
+        bootbox.hideAll();
+
         dialog = bootbox.dialog({
             // title: 'Требуется подтверждение',
             message: '<?= T::S('You will lose if you quit the game! CONTINUE?') ?>',
@@ -280,6 +283,8 @@ function chatButtonFunction() {
 
     let textInput = '<div class="input-group input-group-lg">  <div class="input-group-prepend"></div>  <input type="text" id="chattext" class="form-control" name="messageText"></div>';
 
+    bootbox.hideAll();
+
     dialog = bootbox.dialog({
         title: '</h5>'
             + (
@@ -414,6 +419,8 @@ function logButtonFunction() {
     message = message + '</ul>';
     if (i == 0)
         message = message + '<?= T::S('There are no events yet') ?>';
+
+    bootbox.hideAll();
 
     notDialog = bootbox.dialog({
         message: message,

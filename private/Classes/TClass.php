@@ -442,7 +442,7 @@ class T
         'You can start a new game if you wait for a long time' => [
             self::RU_LANG => 'Вы можете начать новую игру, если долго ждать..'
         ],
-        'Close after 5 seconds' => [
+        'Close in 5 seconds' => [
             self::RU_LANG => 'Закрывать через 5 секунд'
         ],
         'Close immediately' => [
