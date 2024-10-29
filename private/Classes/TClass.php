@@ -574,6 +574,15 @@ class T
         'gets a win' => [
             self::RU_LANG => 'получает за победу'
         ],
+        'The bank of' => [
+            self::RU_LANG => 'Банк в размере'
+        ],
+        'goes to you' => [
+            self::RU_LANG => 'достается вам'
+        ],
+        'is taken by the opponent' => [
+            self::RU_LANG => 'забирает противник'
+        ],
         'Bid' => [
             self::RU_LANG => 'Ставка'
         ],

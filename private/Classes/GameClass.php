@@ -1795,19 +1795,28 @@ class Game
     protected function playerGameResultsRendered(bool $isWinner, array $ratingsChanged): string
     {
         return
-            VH::tag(
-                'strong',
+            VH::strong(
                 $isWinner ? T::S('you_won') : T::S('you_lost'),
                 ['style' => 'color:' . ($isWinner ? 'green' : 'red') . ';']
             )
-
             . VH::br()
             . T::S('rating_changed')
             . "{$ratingsChanged['prev_rating']} -> "
-            . VH::tag(
-                'strong',
+            . VH::strong(
                 "{$ratingsChanged['new_rating']} (" . ($isWinner ? '+' : '') . "{$ratingsChanged['delta_rating']})",
                 ['style' => 'color:' . ($isWinner ? 'green' : 'red') . ';']
+            )
+            . ($this->gameStatus['bid'] ?? false
+                    ? (
+                    VH::br()
+                    . T::S('The bank of') . ' '
+                    . VH::strong(
+                        number_format($this->gameStatus['bid'] * count($this->gameStatus['users']), 0, '.', ',')
+                    )
+                        . T::S('{{sudoku_icon_15}}') . ' '
+                        . ($isWinner ? T::S('goes to you') : T::S('is taken by the opponent'))
+                    )
+                    : ''
             )
             . VH::br()
             . T::S('start_new_game');
