@@ -16,14 +16,17 @@ class BalanceHistoryModel extends BaseModel
     const DEPOSIT_TYPE = 'deposit';
     const WITHDRAW_TYPE = 'withdraw';
     const MOTIVATION_TYPE = 'motivation';
+    const GREETING_DEPOSIT_TYPE = 'greeting';
 
     const TYPE_IDS = [
         self::GAME_TYPE => 0,
         self::ACHIEVE_TYPE => 1,
         self::DEPOSIT_TYPE => 2,
         self::WITHDRAW_TYPE => 3,
-        self::MOTIVATION_TYPE => 4
+        self::MOTIVATION_TYPE => 4,
+        self::GREETING_DEPOSIT_TYPE => 5
     ];
+
 
     public static function addTransaction(
         int $commonId,

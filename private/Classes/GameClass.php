@@ -1247,14 +1247,20 @@ class Game
             }
         }
 
-        //try {
-            $resultRatings = RatingService::processGameResult($this->gameStatus);
-            foreach ($this->gameStatus['users'] as &$user) {
-                $user['result_ratings'] = $resultRatings[$user['common_id']];
+        $resultRatings = RatingService::processGameResult($this->gameStatus);
+        foreach ($this->gameStatus['users'] as &$user) {
+            $user['result_ratings'] = $resultRatings[$user['common_id']];
+
+            if(RatingHistoryModel::getNumGamesPlayed($user['common_id']) % 100 == 0) {
+                // Начисляем бонус за каждые 100 игр
+                BalanceModel::changeBalance(
+                    $user['common_id'],
+                    MonetizationService::REWARD[AchievesModel::DAY_PERIOD],
+                    '100-game bonus',
+                    BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::MOTIVATION_TYPE]
+                );
             }
-        //} catch(Throwable $e) {
-        //    Cache::setex(self::LOG_BOT_ERRORS_KEY . 'ratings', 3600, $e->__toString());
-        //}
+        }
 
     }
 

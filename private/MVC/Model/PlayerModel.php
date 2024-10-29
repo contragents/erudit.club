@@ -104,6 +104,14 @@ class PlayerModel extends BaseModel
 
                 self::$cache[$cookie]['common_id'] = $id;
 
+                // Начисляем приветственный бонус
+                BalanceModel::changeBalance(
+                    $id,
+                    MonetizationService::REWARD[AchievesModel::DAY_PERIOD],
+                    BalanceHistoryModel::GREETING_DEPOSIT_TYPE,
+                    BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::GREETING_DEPOSIT_TYPE]
+                );
+
                 return $id;
             }
         }
