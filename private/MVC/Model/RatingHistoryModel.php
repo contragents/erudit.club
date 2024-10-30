@@ -35,9 +35,9 @@ class RatingHistoryModel extends BaseModel
         return DB::queryValue(
             ORM::select(['count(1)'], self::TABLE_NAME)
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
-            . in_array($gameName, self::GAME_IDS)
+            . (in_array($gameName, self::GAME_IDS)
                 ? ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', self::GAME_IDS[$gameName], true)
-                : ''
+                : '')
         ) ?: 0;
     }
 
