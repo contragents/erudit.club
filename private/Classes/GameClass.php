@@ -618,18 +618,18 @@ class Game
 
         $refs = RefModel::getCustomO(RefModel::COMMON_ID_FIELD, '=', $this->commonId, true);
 
+        $message['refs'] = [];
         if ($refs) {
-            $message['refs'] = [];
             foreach($refs as $ref) {
-                $message['refs'][] = [$ref->_name, MonetizationService::REWARD[AchievesModel::DAY_PERIOD]];
+                $message['refs'][] = [$ref->_name, MonetizationService::REWARD[AchievesModel::DAY_PERIOD] . '&nbsp;' . T::S('{{sudoku_icon_20}}')];
             }
-        } else {
+        } /*else {
             $message['refs'] = [
                 ['Peter Pervyy', MonetizationService::REWARD[AchievesModel::DAY_PERIOD]],
                 ['Nickolay Vtoroy', MonetizationService::REWARD[AchievesModel::DAY_PERIOD]],
                 ['Aleksey Tretiy', MonetizationService::REWARD[AchievesModel::DAY_PERIOD]]
             ];
-        }
+        }*/
 
         $message['common_id'] = $this->commonId;
 

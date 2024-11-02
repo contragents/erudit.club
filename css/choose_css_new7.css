@@ -1321,7 +1321,7 @@ label.file-label:active:before {
 	display: block;
 	flex: 1 1 auto;
 }
-.wallet-info-wrap > div:first-child .pill:before {
+.wallet-info-wrap > div:first-child /*.pill:before*/ {
 	content: '';
 	position: absolute;
 	display: block;
@@ -1402,8 +1402,8 @@ label.file-label:active:before {
 	width: 20px;
 	height: 20px;
 	margin-right: 3px;
-	background: url(../images/coin.png) 0 0 no-repeat;
-	background-size: cover;
+	/*background: url(../images/coin.png) 0 0 no-repeat;
+	background-size: cover;*/
 }
 
 .referral-list::-webkit-scrollbar {
@@ -1547,10 +1547,7 @@ label.file-label:active:before {
 .modal-settings.modal-stats .modal-body {
 	padding: 9px;
 }
-/* --------------------------------- УДАЛИТЬ -------------------------------- */
-/* .modal-settings.modal-stats .modal-body {
-	overflow-y: hidden;
-} */
+
 .modal-settings.modal-stats .nav-item::after {
 	bottom: 2px;
 }
@@ -1653,9 +1650,6 @@ label.file-label:active:before {
 	padding-left: 8px;
 	padding-right: 8px;
 }
-/* .modal-stats .match-history-table .th:last-of-type {
-	max-width: 100px;
-} */
 .color-win {
 	color: #4ddb62;
 }
@@ -1724,13 +1718,6 @@ label.file-label:active:before {
 	font-weight: 700;
 	word-wrap: anywhere;
 }
-/* .modal-stats .match-history-table ul {
-	overscroll-behavior: contain;
-	scroll-snap-type: both mandatory;
-	scrollbar-color: #8585ad hsla(227, 56%, 21%, 0.75);
-	scrollbar-width: thin;
-	overflow-y: auto;
-} */
 .awards-title {
 	padding-left: 6px;
 	font-weight: 900;
@@ -1785,6 +1772,10 @@ label.file-label:active:before {
 	flex-basis: auto;
 	padding-left: 6px;
 	padding-right: 6px;
+}
+
+.bonuses-accrued {
+    padding-right: 6px;
 }
 
 /* ---------------------------------- CARDS --------------------------------- */

@@ -469,7 +469,7 @@ var gameStates = {
                                                 (ref) => `
 								<li class="box">
 									<span class="name d-block">${ref[0]}</span>
-									<div class="pill-wrap"><span class="pill">${ref[1]}</span></div>
+									<div class="pill-wrap"><span class="pill-nopill">${ref[1]}</span></div>
 								</li>
 						`,
                                             )

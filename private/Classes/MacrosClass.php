@@ -16,6 +16,7 @@ class Macros
         'stoneIncome' => '{{stone_income}}',
         'sudokuIcon' => '{{sudoku_icon}}',
         'sudokuIcon15' => '{{sudoku_icon_15}}',
+        'sudokuIcon20' => '{{sudoku_icon_20}}',
     ];
 
     const SUDOKU_IMG_URL = '<img src="/images/coin.png" alt="SUDOKU coin image" width="30%">';
@@ -28,6 +29,9 @@ class Macros
         return str_replace('30%', '15%', self::SUDOKU_IMG_URL);
     }
 
+    public static function sudokuIcon20(): string {
+        return str_replace('30%', '20%', self::SUDOKU_IMG_URL);
+    }
 
     public static function goldReward(): string {
         return MonetizationService::REWARD[AchievesModel::YEAR_PERIOD];
