@@ -98,7 +98,11 @@ class BaseModel
         }
     }
 
-    private static function arrayToObject(array $row): object
+    /**
+     * @param array $row
+     * @return static
+     */
+    protected static function arrayToObject(array $row): object
     {
         $res = new static();
         $properties = get_object_vars($res);
@@ -143,7 +147,7 @@ class BaseModel
      * @param string $condition
      * @param $value
      * @param bool $isRaw
-     * @return BaseModel[]
+     * @return static[]
      */
     public static function getCustomO(string $field, string $condition, $value, bool $isRaw = false): array
     {

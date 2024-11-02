@@ -5,6 +5,10 @@ class PlayersController extends BaseController
     const GAME_ID_PARAM = 'game_id';
     const HIDE_PARAM = 'hide'; // hide/show
 
+    const SIGN_PARAM = 'sign';
+    const REF_TG_ID_PARAM = 'ref_tg_id';
+    const ADD_REF_PARAMS_ORDER = [self::COMMON_ID_PARAM, self::REF_TG_ID_PARAM];
+
     const PARAM_VALUES = [
         self::HIDE_PARAM => [self::HIDE, self::SHOW],
     ];
@@ -19,6 +23,34 @@ class PlayersController extends BaseController
         ini_set("display_errors", 1); error_reporting(E_ALL);
 
         return parent::Run();
+    }
+
+    public function addRefAction(): string
+    {
+        $salt = Config::$envConfig['SALT'];
+        $method = 'addRef';
+
+        $sign = md5($salt . $method . implode('', array_map(fn($key) => $key . self::$Request[$key] ?? '', self::ADD_REF_PARAMS_ORDER)));
+        $res = ['status' => 'error'];
+
+        if($sign !== self::$Request[self::SIGN_PARAM]) {
+            return json_encode($res);
+        }
+
+        /**
+         * @var ?RefModel $ref
+         */
+        $ref = RefModel::getCustomO(RefModel::REF_TG_ID_FIELD, '=', self::$Request[self::REF_TG_ID_PARAM], true)[0] ?? null;
+
+        if (!$ref) {
+            return json_encode($res);
+        }
+
+        if (BalanceModel::changeBalance(self::$Request[self::COMMON_ID_PARAM], MonetizationService::REWARD[AchievesModel::DAY_PERIOD], 'Referral bonus for ' . $ref->_name, BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::MOTIVATION_TYPE])) {
+            $res['status'] = 'success';
+        }
+
+        return json_encode($res);
     }
 
     public function hideBalanceAction(): string

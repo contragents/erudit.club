@@ -616,7 +616,20 @@ class Game
         $message['info']['SUDOKU_TOP'] = BalanceModel::getTopByBalance($message['info']['SUDOKU_BALANCE']);
         $message['info']['rewards'] = IncomeModel::getIncome($this->commonId);
 
-        $message['refs'] = [['Peter Pervyy', 10], ['Nickolay Vtoroy', 10], ['Aleksey Tretiy', 10]];
+        $refs = RefModel::getCustomO(RefModel::COMMON_ID_FIELD, '=', $this->commonId, true);
+
+        if ($refs) {
+            $message['refs'] = [];
+            foreach($refs as $ref) {
+                $message['refs'][] = [$ref->_name, MonetizationService::REWARD[AchievesModel::DAY_PERIOD]];
+            }
+        } else {
+            $message['refs'] = [
+                ['Peter Pervyy', MonetizationService::REWARD[AchievesModel::DAY_PERIOD]],
+                ['Nickolay Vtoroy', MonetizationService::REWARD[AchievesModel::DAY_PERIOD]],
+                ['Aleksey Tretiy', MonetizationService::REWARD[AchievesModel::DAY_PERIOD]]
+            ];
+        }
 
         $message['common_id'] = $this->commonId;
 

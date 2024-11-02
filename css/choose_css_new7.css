@@ -1387,6 +1387,7 @@ label.file-label:active:before {
 .referral-list .name {
 	text-overflow: ellipsis;
 	overflow: hidden;
+    padding-left: 15px;
 }
 .referral-list .pill-wrap {
 	margin-left: auto;
