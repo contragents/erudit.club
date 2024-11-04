@@ -268,12 +268,12 @@ var gameStates = {
                 onlinePlayers += `<div class="form-check">`;
 
                 onlinePlayers += ratingRadio({
-                    title: title,
+                    title: '<?= T::S('Choose your MAX bet') ?>',
                     text: '<?= T::S('No coins') ?> (' +  (0 in data['players'] ? data['players'][0] : '0') + '&nbsp;<?= T::S('online')?>)',
                     inputValue: 0,
                     inputId: 'bid_0',
                     isChecked: false,
-                    isDisabled: false,
+                    isDisabled: 'coin_players' in data && 'thisUserBalance' in data.coin_players && data.coin_players.thisUserBalance > 0,
                     name: 'bid'
                 });
 
@@ -1353,6 +1353,8 @@ function userScores(data) {
 }
 
 function clickGlobal(id) {
+    return true;
+
     console.log('clicked', id);
     // div_bid_0 - bid ids
     // div_from_0 - rating ids

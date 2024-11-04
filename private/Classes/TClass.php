@@ -116,6 +116,9 @@ class T
         'Your passive income' => [
             self::RU_LANG => 'Пассивный заработок'
         ],
+        'will go to the winner' => [
+            self::RU_LANG => 'достанется победителю'
+        ],
         'Effect lasts until beaten' => [
             self::RU_LANG => 'Начисляется, пока не перебито'
         ],

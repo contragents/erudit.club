@@ -252,6 +252,11 @@ class Game
                 if ($thisPlayerBalance < $bid) {
                  unset($coinPlayers[$bid]);
                 }
+
+                // ...а также от мелких ставок
+                if($bid < ($thisPlayerBalance / 20)) {
+                    unset($coinPlayers[$bid]);
+                }
             }
 
             foreach (self::$players as $num => $player) {
@@ -264,6 +269,8 @@ class Game
                     }
                 }
             }
+
+            $coinPlayers['thisUserBalance'] = $thisPlayerBalance;
 
             Cache::setex(
                 static::NUM_COINS_PLAYERS_KEY,
@@ -1063,7 +1070,24 @@ class Game
             . T::S(' is making a turn.')
             . '<br />'
             . T::S('Your current rank')
-            .' - <strong>' . $rating . '</strong>';
+            .' - <strong>' . $rating . '</strong>'
+            . $this->coinsPrompt();
+    }
+
+    protected function coinsPrompt(): string
+    {
+        return ($this->gameStatus['bid'] ?? false
+                ? (
+                    VH::br()
+                    . T::S('The bank of') . ' '
+                    . VH::strong(
+                        number_format($this->gameStatus['bid'] * count($this->gameStatus['users']), 0, '.', ',')
+                    )
+                    . T::S('{{sudoku_icon_15}}') . ' '
+                    . T::S('will go to the winner')
+                )
+                : ''
+        );
     }
 
     protected function statusComments_otherTurn()
@@ -1099,7 +1123,8 @@ class Game
 
             return T::S('Your turn!') . '<br />'. T::S('Game goal:') . '<strong> ' . $this->gameStatus['winScore'] . '</strong> '
                 . T::S('score points')
-                . '<br />' . T::S('Your current rank') . ' - <strong>' . $rating . '</strong>';
+                . '<br />' . T::S('Your current rank') . ' - <strong>' . $rating . '</strong>'
+                . $this->coinsPrompt();
         } else {
             return $this->gameStatus['users'][$this->numUser]['username'] . ' - ' . T::S('Your turn!')
                 . Hints::getHint(
@@ -1133,7 +1158,8 @@ class Game
                 . T::S('score points')
                 . '<br />' . T::S('Your turn is next - get ready!')
                 . '<br />' . T::S('Your current rank')
-                . ' - <strong>' . $rating . '</strong>';
+                . ' - <strong>' . $rating . '</strong>'
+                . $this->coinsPrompt();
         } else {
             return $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' '.T::S(' is making a turn.')
                 .'<br />' . T::S('Your turn is next - get ready!')
@@ -1702,6 +1728,40 @@ class Game
             ->doSomethingWithThisStuff($_GET['lang'] ?? '');
     }
 
+    public function getPrefs(): array {
+        $prefs = Cache::get($this->Queue::PREFS_KEY . $this->User) ?: [];
+        $balance = BalanceModel::getBalance($this->commonId);
+
+        if ($balance > 0) {
+            $prefsBid = $prefs['bid'] ?? 0;
+
+            if ($prefsBid < ($balance / 20)) {
+                foreach (MonetizationService::BIDS as $bid) {
+                    if($bid >= ($balance / 20)) {
+                        $prefs['bid'] = $bid;
+
+                        break;
+                    }
+                }
+            } elseif ($prefsBid > $balance) {
+                $bids = MonetizationService::BIDS;
+                sort($bids);
+
+                foreach ( $bids as $bid) {
+                    if($bid < $balance) {
+                        $prefs['bid'] = $bid;
+
+                        break;
+                    }
+                }
+            }
+        } else {
+            $prefs['bid'] = 0;
+        }
+
+        return $prefs;
+    }
+
     public function checkGameStatus()
     {
         if (!$this->currentGame) {
@@ -1709,15 +1769,50 @@ class Game
                 return (new $this->Queue($this->User, $this, $_POST))->doSomethingWithThisStuff($_GET['lang'] ?? '');
             }
 
+            if ($this->isBot()) {
+                return $this->initGame();
+            }
+
+            /*$prefs = Cache::get($this->Queue::PREFS_KEY . $this->User) ?: [];
+            $balance = BalanceModel::getBalance($this->commonId);
+
+            if ($balance > 0) {
+                $prefsBid = $prefs['bid'] ?? 0;
+
+                if ($prefsBid < ($balance / 20)) {
+                    foreach (MonetizationService::BIDS as $bid) {
+                        if($bid >= ($balance / 20)) {
+                            $prefs['bid'] = $bid;
+
+                            break;
+                        }
+                    }
+                } elseif ($prefsBid > $balance) {
+                    $bids = MonetizationService::BIDS;
+                    sort($bids);
+
+                    foreach ( $bids as $bid) {
+                        if($bid < $balance) {
+                            $prefs['bid'] = $bid;
+
+                            break;
+                        }
+                    }
+                }
+            } else {
+                $prefs['bid'] = 0;
+            }*/
+
             $chooseGameParams = [
                 'gameState' => 'chooseGame',
                 'gameSubState' => 'choosing',
                 'players' => $this->onlinePlayers(),
                 'coin_players' => $this->onlineCoinPlayers(),
-                'prefs' => Cache::get($this->Queue::PREFS_KEY . $this->User)
+                'prefs' => $this->getPrefs(),
             ];
 
-            return $this->isBot() ? $this->initGame() : $this->makeResponse($chooseGameParams);
+            return /*$this->isBot() ? $this->initGame() : */
+                $this->makeResponse($chooseGameParams);
         }
 
         if ($this->activeGameUsers() < 2) {

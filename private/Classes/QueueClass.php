@@ -10,8 +10,6 @@ class Queue
         'erudit.4ENplayers_waiters' => 'erudit.4ENplayers_waiters',
         'erudit.inviteplayers_waiters' => 'erudit.inviteplayers_waiters',
         'erudit.inviteENplayers_waiters' => 'erudit.inviteENplayers_waiters',
-        'erudit.coinplayers_waiters' => 'erudit.coinplayers_waiters',
-        'erudit.coinENplayers_waiters' => 'erudit.coinENplayers_waiters',
     ];
 
     const QUEUE_NUMS = [
@@ -131,7 +129,7 @@ class Queue
             'gameSubState' => 'choosing',
             'players' => $this->caller->onlinePlayers(),
             'coin_players' => $this->caller->onlineCoinPlayers(),
-            'prefs' => Cache::get(static::PREFS_KEY . $this->User)
+            'prefs' => $this->caller->getPrefs(),//Cache::get(static::PREFS_KEY . $this->User)
         ];
 
         return $this->caller
@@ -161,22 +159,6 @@ class Queue
                         'gameWaitLimit' => $this->caller->gameWaitLimit
                     ]
                 );
-        }
-
-        // Блок поиска игры на монеты
-        if ($maxCoins = $this->waitCoinPlayer($this->User)) // Сразу помещает в спецочередь
-        {
-            if ($coinPlayer = $this->findCoinPlayer($maxCoins)) {
-                if (Cache::waitLock(static::SEMAPHORE_KEY)) {
-                    return $this->makeCoinGame($coinPlayer) ?: $this->stillWaitCoinPlayer();
-                }
-            }
-
-            if ($this->timeToWaitCoinPlayerOver($this->User)) {
-                return $this->storeToCommonQueue($this->User) ?: $this->stillWaitCoinPlayer();
-            }
-
-            return $this->stillWaitCoinPlayer();
         }
 
         // Блок поиска рейтингового игрока
@@ -256,40 +238,6 @@ class Queue
         return false;
     }
 
-    protected function waitCoinPlayer($User)
-    {
-        if (isset($this->POST['bid']) && !in_array($this->POST['bid'], MonetizationService::BIDS)/*($this->POST['bid'] == 0)*/) {
-            return false;
-        }
-
-        $bid = $this->POST['bid'] ?? 0;
-
-        if ($bid > 0) {
-            $userCommonId = PlayerModel::getPlayerID($User);
-            if (!$userCommonId || BalanceModel::getBalance($userCommonId) < $bid) {
-                return false;
-            }
-
-            if (isset($this->POST['ochki_num'])) {
-                $options = $this->POST;
-            } else {
-                $options = false;
-            }
-
-            $this->userTime = date('U');
-
-            if(self::addToQueue("erudit.coin{$this->lang}players_waiters", $User, $options, ['bid' => $bid])) {
-                return $bid;
-            }
-        } elseif ($waiterData = Cache::hget(static::QUEUES["erudit.coin{$this->lang}players_waiters"], $User)) {
-            $this->userTime = $waiterData['time'];
-
-            return $waiterData['bid'];
-        }
-
-        return false;
-    }
-
     protected function waitRatingPlayer($User)
     {
         if (isset($this->POST['from_rating']) && ($this->POST['from_rating'] == 0)) {
@@ -312,28 +260,6 @@ class Queue
             $this->userTime = $waiterData['time'];
 
             return $waiterData['from_rating'];
-        }
-
-        return false;
-    }
-
-    protected function findCoinPlayer(int $maxBid)
-    {
-        if (($playersCoinWaiting = Cache::hgetall(static::QUEUES["erudit.coin{$this->lang}players_waiters"]))) {
-            foreach ($playersCoinWaiting as $player => $data) {
-                if ($player != $this->User) {
-                    $playerInfo = unserialize($data);
-
-                    $playerBid = $playerInfo['bid'] ?? 0;
-                    if ($playerBid > 0) {
-                        return [
-                            'cookie' => $player,
-                            'options' => $data['options'] ?? false,
-                            'bid' => $playerBid <= $maxBid ? $playerBid : $maxBid
-                        ];
-                    }
-                }
-            }
         }
 
         return false;
@@ -439,11 +365,6 @@ class Queue
         }
     }
 
-    protected function makeCoinGame(array $coinPlayer)
-    {
-            return $this->makeGame('coin', 2, null, $coinPlayer['bid']);
-    }
-
     protected function makeRatingGame(array $ratingPlayer)
     {
         $waiterData = Cache::hget(static::QUEUES["erudit.rating_waiters"], $this->User);
@@ -476,17 +397,6 @@ class Queue
         }
     }
 
-    protected function timeToWaitCoinPlayerOver($User): bool
-    {
-        $waiterData = Cache::hget(static::QUEUES["erudit.coin{$this->lang}players_waiters"], $User);
-
-        if ((date('U') - ($waiterData['time'] ?? 0)) > $this->caller->ratingGameWaitLimit) {
-            return true;
-        }
-
-        return false;
-    }
-
     protected function timeToWaitRatingPlayerOver($User): bool
     {
         $waiterData = Cache::hget(static::QUEUES["erudit.rating_waiters"], $User);
@@ -506,19 +416,6 @@ class Queue
         }
 
         return false;
-    }
-
-    protected function stillWaitCoinPlayer()
-    {
-        return $this->caller->makeResponse(
-            [
-                'gameState' => Game::INIT_COIN_GAME_STATE,
-                'gameSubState' => 0,
-                'timeWaiting' => date('U') - $this->userTime,
-                'ratingGameWaitLimit' => $this->caller->ratingGameWaitLimit,
-                'comments' => '<h6>' . T::S('Searching for players with corresponding bet') . '</h6>'
-            ]
-        );
     }
 
     protected function stillWaitRatingPlayer()
@@ -550,7 +447,7 @@ class Queue
         return true;
     }
 
-    protected function makeGame($queue, $maxNumUsers = 2, $wishRating = null, $bid = false)
+    protected function makeGame($queue, $maxNumUsers = 2, $wishRating = null)
     { try {
         $newGameId = Cache::incr(static::GAMES_COUNTER);
 
@@ -605,11 +502,6 @@ class Queue
 
             $data = unserialize($data);
 
-            // Проверка ставки - в очереди на соин-игру у всех прописаны ставки
-            if ($bid && !($data['bid'] ?? 0)) {
-                continue;
-            }
-
             $prefs = Cache::get(static::PREFS_KEY . $player);
 
             //Прописываем юзерам - удаление из очереди и номер игры
@@ -636,8 +528,6 @@ class Queue
             }
         }
 
-        Cache::setex('game_users', 600, $game_users);
-
         if (count($game_users) < 2) {
             // игра не собралась - отменяем, помещаем игрока обратно в очередь 2
             Cache::del(static::GET_GAME_KEY . $this->User);
@@ -649,6 +539,21 @@ class Queue
         //Прописали Язык игры
         $this->caller->gameStatus['lngClass'] = ($this->lang == 'EN' ? static::getEngClass() : static::getRuClass());
         //Класс для работы с языком
+
+        // Определяем ставку в монетах как минимальную из ставок игроков
+        $bid = 0;
+        $noCoinGame = false;
+        foreach ($game_users as $num => $user) {
+            if(!isset($user['options']['bid'])) {
+                $noCoinGame = true;
+            } elseif($bid == 0 || $bid > $user['options']['bid']) {
+                $bid = $user['options']['bid'];
+            }
+        }
+
+        if($noCoinGame) {
+            $bid = 0;
+        }
 
         if ($bid) {
             DB::transactionStart(); // транзакция поверх транзакций баланса

@@ -1321,7 +1321,7 @@ label.file-label:active:before {
 	display: block;
 	flex: 1 1 auto;
 }
-.wallet-info-wrap > div:first-child /*.pill:before*/ {
+.wallet-info-wrap > div:first-child .pill:before {
 	content: '';
 	position: absolute;
 	display: block;
