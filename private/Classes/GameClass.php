@@ -2391,6 +2391,11 @@ try {
                 $arr = array_merge($arr, ['turnTime' => $this->gameStatus['turnTime']]);
             }
 
+            if(count($this->gameStatus['users']) === 2) {
+                $numOpponent = $this->numUser === 1 ? 0 : 1;
+                $arr['is_opponent_active'] = (!isset($this->gameStatus['users'][$numOpponent]['lastActiveTime']) || !$this->gameStatus['users'][$numOpponent]['isActive']) ? false : true;
+            }
+
             if ($arr['gameState'] == self::GAME_RESULTS_STATE && isset($this->gameStatus['invite'])) {
                 $this->processInvites($arr);
             }

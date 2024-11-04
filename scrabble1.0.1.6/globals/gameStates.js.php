@@ -993,6 +993,12 @@ function commonCallback(data) {
         return;
     }
 
+    if(noNetworkImgOpponent !== false && 'is_opponent_active' in data && !data.is_opponent_active) {
+        noNetworkImgOpponent.visible = true;
+    } else {
+        noNetworkImgOpponent.visible = false;
+    }
+
     gameOldState = gameState;
     gameOldSubState = gameSubState;
 
@@ -1339,6 +1345,15 @@ function userScores(data) {
 
                 if (('userNames' in data) && (k in data['userNames']) && (data['userNames'][k] === '')) {
                     players[playerBlockName].svgObject.setAlpha(INACTIVE_USER_ALPHA);
+                }
+
+                if(noNetworkImgOpponent.x == 200 && noNetworkImgOpponent.y == 200 && (+k < 2)) {
+                    let opponentBlock = players[playerBlockName].svgObject;
+                    noNetworkImgOpponent.setScale(opponentBlock.height / 232 / 4);
+                    noNetworkImgOpponent.x = opponentBlock.x + opponentBlock.width / 2 + noNetworkImgOpponent.displayWidth / 2;
+                    noNetworkImgOpponent.y = opponentBlock.y;
+                    noNetworkImgOpponent.setDepth(10000);
+                    noNetworkImgOpponent.visible = false;
                 }
             }
         }

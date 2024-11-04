@@ -126,7 +126,10 @@ var buttonStepY = 50 * 2;
 var requestSended = false;
 var requestTimestamp = (new Date()).getTime();
 const normalRequestTimeout = 500;
+
 var noNetworkImg = false;
+var noNetworkImgOpponent = false;
+
 var propKoef = 1;
 var buttonHeightKoef = 1;
 var fishkaScale = 1;
