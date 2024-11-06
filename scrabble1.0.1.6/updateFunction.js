@@ -67,10 +67,14 @@ function (time, delta) {
 
     if (gameState == MY_TURN_STATE || gameState == PRE_MY_TURN_STATE || gameState == OTHER_TURN_STATE) {
         let activeUserBlockName = (gameState == MY_TURN_STATE) ? 'youBlock' : ('player' + (+activeUser + 1) + 'Block');
+        let timerContainer = players.timerBlock.svgObject;
+
         if ((flor % 2) === 0) {
             buttonSetModeGlobal(players, activeUserBlockName, ALARM_MODE);
+            timerContainer.getByName(timerState.mode + '_' + 'dvoetoch').setVisible(true);
         } else {
             buttonSetModeGlobal(players, activeUserBlockName, OTJAT_MODE);
+            timerContainer.getByName(timerState.mode + '_' + 'dvoetoch').setVisible(false);
         }
     }
 
