@@ -1,9 +1,15 @@
 <?php
-$secretKey = 'eruditforever';
-$method = 'AES-128-CBC'; // todo move to .env somedays
-$iv = base64_decode('x/bazHpEqMpxpLfVWD9dhA==');
-$decrypted_message = openssl_decrypt('xwA5Ebr5JzLBDhWNqmD3gQ==', $method, $secretKey, 0, $iv);
-var_export($decrypted_message); exit;
+// получаем цену EURC/USDC
+$graphUrl = 'https://gateway.thegraph.com/api/0a9f8a61b450b619f7cce80098df8047/subgraphs/id/BHWNsedAHtmTCzXxCCDfhPmm6iN9rxUhoRHdHKyujic3';
+$opts = ['http' => ['method' => 'POST',
+    'content' => '{"query":"{\n  pool (id: \"0x1ca42c7219f0cb1b67927e26502320cb98f725bd\") {\n    id\n    token0{name}\n    token1{name}\n    token0Price\n    token1Price\n  }\n}"}'
+]];
+
+$context  = stream_context_create($opts);
+
+$result = file_get_contents($graphUrl, false, $context);
+
+print_r($result); exit;
 /*
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
