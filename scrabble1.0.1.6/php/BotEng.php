@@ -42,7 +42,7 @@ class BotEng
             if ($Bot = Cache::lpop(static::BOT_GAMES)) {
                 static::$botname = $Bot;
                 $_COOKIE[Cookie::COOKIE_NAME] = $Bot;
-print_r($_COOKIE);
+                print_r($_COOKIE);
                 $resp = ['gameState' => 1];
                 $zaprosNum = 3;
 
@@ -437,7 +437,7 @@ print_r($_COOKIE);
                     for ($k = 0; $k < $slovoNach; $k++) {
                         $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8');
 
-                        if($cells[$x - $k][$y][0] === false ) {
+                        if ($cells[$x - $k][$y][0] === false) {
                             $cells[$x - $k][$y][0] = true;
                             $cells[$x - $k][$y][1] = static::$langClass::getLetterCode($letter);
 
@@ -464,7 +464,7 @@ print_r($_COOKIE);
                     for ($k = $slovoNach + $lastLetterLen; $k < mb_strlen($row['slovo'], 'UTF-8'); $k++) {
                         $letter = mb_substr($row['slovo'], $k, 1, 'UTF-8');
 
-                        if($cells[$x + $k - $slovoNach + 1 + $delta][$y][0] === false ) {
+                        if ($cells[$x + $k - $slovoNach + 1 + $delta][$y][0] === false) {
                             $cells[$x + $k - $slovoNach + 1 + $delta][$y][0] = true;
                             $cells[$x + $k - $slovoNach + 1 + $delta][$y][1] = static::$langClass::getLetterCode($letter);
 
@@ -608,7 +608,7 @@ print_r($_COOKIE);
                     for ($k = $slovoNach + $lastLetterLen; $k < mb_strlen($row['slovo'], 'UTF-8'); $k++) {
                         $letter = mb_substr($row['slovo'], $k, 1, 'UTF-8');
 
-                        if($cells[$x][$y + $k - $slovoNach + 1][0] === false) {
+                        if ($cells[$x][$y + $k - $slovoNach + 1][0] === false) {
                             $cells[$x][$y + $k - $slovoNach + 1][0] = true;
                             $cells[$x][$y + $k - $slovoNach + 1][1] = static::$langClass::getLetterCode($letter);
 
@@ -727,7 +727,7 @@ print_r($_COOKIE);
                     for ($k = 0; $k < $slovoNach; $k++) {
                         $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8');
 
-                        if($cells[$xLastLetter - $k - 1][$y][0] === false) {
+                        if ($cells[$xLastLetter - $k - 1][$y][0] === false) {
                             $cells[$xLastLetter - $k - 1][$y][0] = true;
                             $cells[$xLastLetter - $k - 1][$y][1] = static::$langClass::getLetterCode($letter);
 
@@ -748,7 +748,7 @@ print_r($_COOKIE);
                     for ($k = 0; $k <= mb_strlen($row['slovo'], 'UTF-8') - $slovoNach - $lastLetterLen - 1; $k++) {
                         $letter = mb_substr($row['slovo'], $slovoNach + $lastLetterLen + $k, 1, 'UTF-8');
 
-                        if($cells[$x + $k][$y][0] === false) {
+                        if ($cells[$x + $k][$y][0] === false) {
                             $cells[$x + $k][$y][0] = true;
                             $cells[$x + $k][$y][1] = static::$langClass::getLetterCode($letter);
 
@@ -815,7 +815,7 @@ print_r($_COOKIE);
         $maxWordLen = $maxLen;
 
         // Не анализируем, если есть горизонтальные примыкающие буквы
-        if (($desk[$x + 1][$y][0] ??false) || ($desk[$x - 1][$y][0] ?? false)) {
+        if (($desk[$x + 1][$y][0] ?? false) || ($desk[$x - 1][$y][0] ?? false)) {
             return '';
         }
 
@@ -863,7 +863,6 @@ print_r($_COOKIE);
                             'UTF-8'
                         )]
                     ) && self::checkWordFishki($fishki, $row['slovo'], $lastLetter, $lettersZvezd)) {
-
                     // todo добавить проход слова сначала или с конца
 
                     $cells = $desk;
@@ -873,7 +872,7 @@ print_r($_COOKIE);
                     for ($k = 0; $k < $slovoNach; $k++) {
                         $letter = mb_substr($row['slovo'], $slovoNach - 1 - $k, 1, 'UTF-8');
 
-                        if($cells[$x][$yLastLetter - $k - 1][0] === false) {
+                        if ($cells[$x][$yLastLetter - $k - 1][0] === false) {
                             $cells[$x][$yLastLetter - $k - 1][0] = true;
                             $cells[$x][$yLastLetter - $k - 1][1] = static::$langClass::getLetterCode($letter);
 
@@ -895,7 +894,7 @@ print_r($_COOKIE);
                     for ($k = 0; $k <= mb_strlen($row['slovo'], 'UTF-8') - $slovoNach - $lastLetterLen - 1; $k++) {
                         $letter = mb_substr($row['slovo'], $slovoNach + $lastLetterLen + $k, 1, 'UTF-8');
 
-                        if($cells[$x][$y + $k][0] === false) {
+                        if ($cells[$x][$y + $k][0] === false) {
                             $cells[$x][$y + $k][0] = true;
                             $cells[$x][$y + $k][1] = static::$langClass::getLetterCode($letter);
 

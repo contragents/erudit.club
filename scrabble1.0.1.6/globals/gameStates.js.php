@@ -170,7 +170,7 @@ var gameStates = {
                             }
                             resultHtml += ratingRadio({
                                 title: data['coin_players'][bidValue] + ' <?= T::S('in game') ?>',
-                                text: `<?= T::S('{{sudoku_icon_15}}') ?> ${bidValue} (${data['coin_players'][bidValue]})`,
+                                text: `<?= T::S('{{sudoku_icon_15}}') ?> ${bidValue}`/*(${data['coin_players'][bidValue]})`*/,
                                 inputValue: bidValue,
                                 inputId: `bid_${bidValue}`,
                                 isChecked,
@@ -269,7 +269,7 @@ var gameStates = {
 
                 onlinePlayers += ratingRadio({
                     title: '<?= T::S('Choose your MAX bet') ?>',
-                    text: '<?= T::S('No coins') ?> (' +  (0 in data['players'] ? data['players'][0] : '0') + '&nbsp;<?= T::S('online')?>)',
+                    text: '<?= T::S('No coins') ?>'/* (' +  (0 in data['players'] ? data['players'][0] : '0') + '&nbsp;<?= T::S('online')?>)'*/,
                     inputValue: 0,
                     inputId: 'bid_0',
                     isChecked: false,

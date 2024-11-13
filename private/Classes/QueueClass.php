@@ -70,7 +70,7 @@ class Queue
             return true;
         }
 
-        if(Cache::get(static::USER_STATUS_PREFIX . $this->User)) {
+        if (Cache::get(static::USER_STATUS_PREFIX . $this->User)) {
             return true;
         }
 
@@ -110,6 +110,20 @@ class Queue
     {
         Cache::del(static::GET_GAME_KEY . $botCookie);
         //Удалили указатель на текущую игру для пользователя
+    }
+
+    private static function getBid(float $maxBid): int
+    {
+        $bidsArr = MonetizationService::BIDS;
+        arsort($bidsArr);
+
+        foreach($bidsArr as $bid) {
+            if($bid <= floor($maxBid)) {
+                return $bid;
+            }
+        }
+
+        return 0;
     }
 
     protected static function getRuClass(): string
@@ -253,7 +267,12 @@ class Queue
 
             $this->userTime = date('U');
 
-            if(self::addToQueue('erudit.rating_waiters', $User, $options, ['from_rating' => $this->POST['from_rating']])) {
+            if (self::addToQueue(
+                'erudit.rating_waiters',
+                $User,
+                $options,
+                ['from_rating' => $this->POST['from_rating']]
+            )) {
                 return $this->POST['from_rating'];
             }
         } elseif ($waiterData = Cache::hget(static::QUEUES["erudit.rating_waiters"], $User)) {
@@ -375,22 +394,26 @@ class Queue
             if (!(
                 self::cleanUp($ratingPlayer['cookie'])
                 &&
-                self::addToQueue("erudit.2{$this->lang}players_waiters", $ratingPlayer['cookie'], $playerData['options'])
-                )) {
+                self::addToQueue(
+                    "erudit.2{$this->lang}players_waiters",
+                    $ratingPlayer['cookie'],
+                    $playerData['options']
+                )
+            )) {
                 return false;
             }
         }
 
-        if(
-        self::cleanUp($this->User)
-        &&
-        self::addToQueue(
-            "erudit.2{$this->lang}players_waiters",
-            $this->User,
-            $waiterData['options'],
-            ['time' => $waiterData['time']]
-        )
-        ){
+        if (
+            self::cleanUp($this->User)
+            &&
+            self::addToQueue(
+                "erudit.2{$this->lang}players_waiters",
+                $this->User,
+                $waiterData['options'],
+                ['time' => $waiterData['time']]
+            )
+        ) {
             return $this->makeGame('2', 2, $ratingPlayer['rating']);
         } else {
             return false;
@@ -448,183 +471,193 @@ class Queue
     }
 
     protected function makeGame($queue, $maxNumUsers = 2, $wishRating = null)
-    { try {
-        $newGameId = Cache::incr(static::GAMES_COUNTER);
+    {
+        try {
+            $newGameId = Cache::incr(static::GAMES_COUNTER);
 
-        if ($newGameId == 1) {
-            $newGameId = GamesModel::getLastID() + 1;
-            Cache::set(static::GAMES_COUNTER, $newGameId);
-        }
-
-        $this->caller->currentGame = $newGameId;
-        Cache::setex(
-            static::CURRENT_GAME_KEY . $this->caller->currentGame,
-            $this->caller->cacheTimeout,
-            false
-        );
-
-        $this->caller->gameStatus['desk'] = false;
-        //Создали состояние доски
-
-        $game_users = [];
-        $this->caller->currentGameUsers = [];
-
-        $waitingPlayers = Cache::hgetall(static::QUEUES["erudit.{$queue}{$this->lang}players_waiters"]);
-        $prefs = Cache::get(static::PREFS_KEY . $this->User);
-
-        if (!isset($waitingPlayers[$this->User])) {
-            $options = isset($this->POST['ochki_num'])
-                ? $this->POST
-                : ($prefs ?: false);
-        } else {
-            $waitingPlayers[$this->User] = unserialize($waitingPlayers[$this->User]);
-
-            $options = isset($waitingPlayers[$this->User]['options']['ochki_num'])
-                ? $waitingPlayers[$this->User]['options']
-                : ($prefs ?: false);
-
-            unset($waitingPlayers[$this->User]);
-            reset($waitingPlayers);
-        }
-
-        // Прописываем текущему юзеру - добавление в игру,  номер игры, удаляем из очереди ждунов
-        $game_users[] = ['userCookie' => $this->User, 'options' => $options];
-
-        self::cleanUp($this->User);
-        Cache::setex(static::GET_GAME_KEY . $this->User, $this->caller->cacheTimeout, $this->caller->currentGame);
-
-        $this->caller->currentGameUsers[] = $this->User;
-
-        foreach ($waitingPlayers as $player => $data) {
-            if ($wishRating && PlayerModel::getRatingByCookie($player) != $wishRating) {
-                continue;
+            if ($newGameId == 1) {
+                $newGameId = GamesModel::getLastID() + 1;
+                Cache::set(static::GAMES_COUNTER, $newGameId);
             }
 
-            $data = unserialize($data);
-
-            $prefs = Cache::get(static::PREFS_KEY . $player);
-
-            //Прописываем юзерам - удаление из очереди и номер игры
-            if (!self::cleanUp($player)) {
-                continue;
-            }
-
+            $this->caller->currentGame = $newGameId;
             Cache::setex(
-                static::GET_GAME_KEY . $player,
+                static::CURRENT_GAME_KEY . $this->caller->currentGame,
                 $this->caller->cacheTimeout,
-                $this->caller->currentGame
+                false
             );
 
-            $options = isset($data['options']['ochki_num'])
-                ? $data['options']
-                : ($prefs ?: false);
-            $game_users[] = ['userCookie' => $player, 'options' => $options];
+            $this->caller->gameStatus['desk'] = false;
+            //Создали состояние доски
 
-            //Заполняем массив игроков
-            $this->caller->currentGameUsers[] = $player;
+            $game_users = [];
+            $this->caller->currentGameUsers = [];
 
-            if (count($game_users) >= $maxNumUsers) {
-                break;
+            $waitingPlayers = Cache::hgetall(static::QUEUES["erudit.{$queue}{$this->lang}players_waiters"]);
+            $prefs = Cache::get(static::PREFS_KEY . $this->User);
+
+            if (!isset($waitingPlayers[$this->User])) {
+                $options = isset($this->POST['ochki_num'])
+                    ? $this->POST
+                    : ($prefs ?: false);
+            } else {
+                $waitingPlayers[$this->User] = unserialize($waitingPlayers[$this->User]);
+
+                $options = isset($waitingPlayers[$this->User]['options']['ochki_num'])
+                    ? $waitingPlayers[$this->User]['options']
+                    : ($prefs ?: false);
+
+                unset($waitingPlayers[$this->User]);
+                reset($waitingPlayers);
             }
-        }
 
-        if (count($game_users) < 2) {
-            // игра не собралась - отменяем, помещаем игрока обратно в очередь 2
-            Cache::del(static::GET_GAME_KEY . $this->User);
+            // Прописываем текущему юзеру - добавление в игру,  номер игры, удаляем из очереди ждунов
+            $game_users[] = ['userCookie' => $this->User, 'options' => $options];
 
-            return $this->storeTo2Players($this->User, $game_users[0]['options'] ?? []) ?: $this->chooseGame();
-        }
+            self::cleanUp($this->User);
+            Cache::setex(static::GET_GAME_KEY . $this->User, $this->caller->cacheTimeout, $this->caller->currentGame);
 
-        $this->caller->gameStatus['lang'] = ($this->lang == 'EN' ? 'EN' : 'RU');
-        //Прописали Язык игры
-        $this->caller->gameStatus['lngClass'] = ($this->lang == 'EN' ? static::getEngClass() : static::getRuClass());
-        //Класс для работы с языком
+            $this->caller->currentGameUsers[] = $this->User;
 
-        // Определяем ставку в монетах как минимальную из ставок игроков
-        $bid = 0;
-        $noCoinGame = false;
-        foreach ($game_users as $num => $user) {
-            if(!isset($user['options']['bid'])) {
-                $noCoinGame = true;
-            } elseif($bid == 0 || $bid > $user['options']['bid']) {
-                $bid = $user['options']['bid'];
-            }
-        }
+            foreach ($waitingPlayers as $player => $data) {
+                if ($wishRating && PlayerModel::getRatingByCookie($player) != $wishRating) {
+                    continue;
+                }
 
-        if($noCoinGame) {
-            $bid = 0;
-        }
+                $data = unserialize($data);
 
-        if ($bid) {
-            DB::transactionStart(); // транзакция поверх транзакций баланса
-        }
+                $prefs = Cache::get(static::PREFS_KEY . $player);
 
-        foreach ($game_users as $num => $user) {
-            $this->caller->gameStatus['users'][$num] = [
-                'ID' => $user['userCookie'],
-                'common_id' => PlayerModel::getPlayerID($user['userCookie'], true),
-                'status' => Game::START_GAME_STATUS,
-                'isActive' => true,
-                'score' => 0,
-                'username' => T::S('Player') . ($num + 1),
-                'avatarUrl' => false,
-            ];
-            //Прописали игроков в состояние игры
+                //Прописываем юзерам - удаление из очереди и номер игры
+                if (!self::cleanUp($player)) {
+                    continue;
+                }
 
-            if ($bid) {
-                if (
-                    !BalanceModel::changeBalance(
-                        BalanceModel::SYSTEM_ID,
-                        $bid,
-                        $this->caller->gameStatus['users'][$num]['common_id'] . ' started game',
-                        BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::GAME_TYPE],
-                        $this->caller->currentGame
-                    )
-                    ||
-                    !BalanceModel::changeBalance(
-                        $this->caller->gameStatus['users'][$num]['common_id'],
-                        -1 * $bid,
-                        'Start game',
-                        BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::GAME_TYPE],
-                        $this->caller->currentGame
-                    )) {
-                    DB::transactionRollback();
-                    $bid = false;
+                Cache::setex(
+                    static::GET_GAME_KEY . $player,
+                    $this->caller->cacheTimeout,
+                    $this->caller->currentGame
+                );
+
+                $options = isset($data['options']['ochki_num'])
+                    ? $data['options']
+                    : ($prefs ?: false);
+                $game_users[] = ['userCookie' => $player, 'options' => $options];
+
+                //Заполняем массив игроков
+                $this->caller->currentGameUsers[] = $player;
+
+                if (count($game_users) >= $maxNumUsers) {
+                    break;
                 }
             }
 
-            if ($user['options'] !== false) {
-                $this->caller->gameStatus['users'][$num]['wishOchkiNum'] = $user['options']['ochki_num'];
-                $this->caller->gameStatus['users'][$num]['wishTurnTime'] = $user['options']['turn_time'];
-                //Заполнили пожелания игроков к времени хода и очкам для выигрыша
+            if (count($game_users) < 2) {
+                // игра не собралась - отменяем, помещаем игрока обратно в очередь 2
+                Cache::del(static::GET_GAME_KEY . $this->User);
+
+                return $this->storeTo2Players($this->User, $game_users[0]['options'] ?? []) ?: $this->chooseGame();
             }
 
-            $this->caller->gameStatus[$user['userCookie']] = $num;
-            // Заполнили массив нормеров игроков
-            $this->caller->updateUserStatus(Game::START_GAME_STATUS, $user['userCookie']);
-            // Назначили статусы всем игрокам
+            $this->caller->gameStatus['lang'] = ($this->lang == 'EN' ? 'EN' : 'RU');
+            //Прописали Язык игры
+            $this->caller->gameStatus['lngClass'] = ($this->lang == 'EN' ? static::getEngClass() : static::getRuClass(
+            ));
+            //Класс для работы с языком
+
+            // Определяем ставку в монетах как минимальную из ставок игроков
+            $bid = 0;
+            $noCoinGame = false;
+            foreach ($game_users as $num => $user) {
+                if (!isset($user['options']['bid'])) {
+                    $userBalance = BalanceModel::getBalance(PlayerModel::getPlayerID($user['userCookie'], true));
+
+                    if($userBalance > 0) {
+                        $user['options']['bid'] = self::getBid($userBalance / 20);
+                    }
+                }
+
+                if (!isset($user['options']['bid'])) {
+                    $noCoinGame = true;
+                } elseif ($bid == 0 || $bid > $user['options']['bid']) {
+                    $bid = $user['options']['bid'];
+                }
+            }
+
+            if ($noCoinGame) {
+                $bid = 0;
+            }
+
+            if ($bid) {
+                DB::transactionStart(); // транзакция поверх транзакций баланса
+            }
+
+            foreach ($game_users as $num => $user) {
+                $this->caller->gameStatus['users'][$num] = [
+                    'ID' => $user['userCookie'],
+                    'common_id' => PlayerModel::getPlayerID($user['userCookie'], true),
+                    'status' => Game::START_GAME_STATUS,
+                    'isActive' => true,
+                    'score' => 0,
+                    'username' => T::S('Player') . ($num + 1),
+                    'avatarUrl' => false,
+                ];
+                //Прописали игроков в состояние игры
+
+                if ($bid) {
+                    if (
+                        !BalanceModel::changeBalance(
+                            BalanceModel::SYSTEM_ID,
+                            $bid,
+                            $this->caller->gameStatus['users'][$num]['common_id'] . ' started game',
+                            BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::GAME_TYPE],
+                            $this->caller->currentGame
+                        )
+                        ||
+                        !BalanceModel::changeBalance(
+                            $this->caller->gameStatus['users'][$num]['common_id'],
+                            -1 * $bid,
+                            'Start game',
+                            BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::GAME_TYPE],
+                            $this->caller->currentGame
+                        )) {
+                        DB::transactionRollback();
+                        $bid = false;
+                    }
+                }
+
+                if ($user['options'] !== false) {
+                    $this->caller->gameStatus['users'][$num]['wishOchkiNum'] = $user['options']['ochki_num'];
+                    $this->caller->gameStatus['users'][$num]['wishTurnTime'] = $user['options']['turn_time'];
+                    //Заполнили пожелания игроков к времени хода и очкам для выигрыша
+                }
+
+                $this->caller->gameStatus[$user['userCookie']] = $num;
+                // Заполнили массив нормеров игроков
+                $this->caller->updateUserStatus(Game::START_GAME_STATUS, $user['userCookie']);
+                // Назначили статусы всем игрокам
+            }
+
+            $this->caller->gameStatus['bid'] = $bid;
+
+            if ($bid) {
+                DB::transactionCommit();
+                $this->caller->addToLog(T::S('Coins written off the balance sheet') . ": $bid");
+            }
+
+            // Сохраняем список игроков в игре
+            Cache::setex(
+                static::GAME_KEY . "{$this->caller->currentGame}_users",
+                $this->caller->cacheTimeout,
+                $this->caller->currentGameUsers
+            );
+
+            $res = $this->caller->gameStarted(true);
+
+            return $res;
+        } catch (Throwable $e) {
+            print $e->__toString();
         }
-
-        $this->caller->gameStatus['bid'] = $bid;
-
-        if ($bid) {
-            DB::transactionCommit();
-            $this->caller->addToLog(T::S('Coins written off the balance sheet') . ": $bid");
-        }
-
-        // Сохраняем список игроков в игре
-        Cache::setex(
-            static::GAME_KEY . "{$this->caller->currentGame}_users",
-            $this->caller->cacheTimeout,
-            $this->caller->currentGameUsers
-        );
-
-        $res = $this->caller->gameStarted(true);
-
-        return $res;
-    } catch(Throwable $e) {
-        print $e->__toString();
-    }
     }
 
     public function storePlayerToInviteQueue($User)
@@ -674,7 +707,7 @@ class Queue
         }
 
         if (!Cache::hget(static::QUEUES["erudit.2{$this->lang}players_waiters"], $User)) {
-            if(!self::addToQueue("erudit.2{$this->lang}players_waiters", $User, $options)) {
+            if (!self::addToQueue("erudit.2{$this->lang}players_waiters", $User, $options)) {
                 return false;
             }
         }

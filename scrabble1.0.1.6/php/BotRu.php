@@ -1,13 +1,13 @@
 <?php
 
-use Ru;
-
 class BotRu extends BotEng
 {
     public static $langClass = Ru::class;
     public static $lang = self::RU_LANG;
 
     const BOT_GAMES = 'erudit.bot_games';
+
+    const DIR = 'yandex1.0.1.1/php/';
 
     const LNG_ID = 1;
 
