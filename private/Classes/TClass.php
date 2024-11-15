@@ -54,6 +54,9 @@ class T
     }
 
     const PHRASES = [
+        'Congratulations to Player' => [
+            self::RU_LANG => 'Поздравляем игрока'
+        ],
         'Server sync lost' => [
             self::RU_LANG => 'Потеря синхронизации с сервером'
         ],

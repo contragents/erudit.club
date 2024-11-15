@@ -170,7 +170,7 @@ var gameStates = {
                             }
                             resultHtml += ratingRadio({
                                 title: data['coin_players'][bidValue] + ' <?= T::S('in game') ?>',
-                                text: `<?= T::S('{{sudoku_icon_15}}') ?> ${bidValue}`/*(${data['coin_players'][bidValue]})`*/,
+                                text: `<?= T::S('{{sudoku_icon_15}}') ?> ${bidValue}`,
                                 inputValue: bidValue,
                                 inputId: `bid_${bidValue}`,
                                 isChecked,
@@ -223,7 +223,8 @@ var gameStates = {
 												<div class="form-check">`;
                 onlinePlayers += ratingRadio({
                     title: title,
-                    text: '<?= T::S('Any') ?> (' +  (0 in data['players'] ? data['players'][0] : '0') + '&nbsp;<?= T::S('online')?>)',
+                    text: '<?= T::S('Any') ?> (' + (0 in data['players'] ? data['players'][0] : '0')
+                        + '&nbsp;<?= T::S('online')?>)',
                     inputValue: 0,
                     inputId: 'from_0',
                     isChecked: checked_0,
@@ -269,7 +270,7 @@ var gameStates = {
 
                 onlinePlayers += ratingRadio({
                     title: '<?= T::S('Choose your MAX bet') ?>',
-                    text: '<?= T::S('No coins') ?>'/* (' +  (0 in data['players'] ? data['players'][0] : '0') + '&nbsp;<?= T::S('online')?>)'*/,
+                    text: '<?= T::S('No coins') ?>',
                     inputValue: 0,
                     inputId: 'bid_0',
                     isChecked: false,
@@ -300,9 +301,13 @@ var gameStates = {
             } // end if 'players'
 
             let radioButtons =
-                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly"><?= T::S('Just two players') ?></label></div>';
+                `<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twoonly" name="players_count" value="2" checked> <label class="form-check-label" for="twoonly">
+                <?= T::S('Just two players') ?>
+                </label></div>`;
             radioButtons +=
-                '<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore"><?= T::S('Up to four players') ?></label></div>';
+                `<div style="display:none;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="twomore" name="players_count" value="4"> <label class="form-check-label" for="twomore">
+                <?= T::S('Up to four players') ?>
+                </label></div>`;
 
             let wish = '';
 
@@ -403,7 +408,7 @@ var gameStates = {
                         </div>
 			`;
 
-            window.modalData = { instruction };
+            window.modalData = {instruction};
 
             /* --------------------------------- END NEW -------------------------------- */
 
@@ -429,137 +434,171 @@ var gameStates = {
                 onEscape: false,
                 closeButton: false,
                 buttons: {
-                    cabinet: {
-                        label: '<?= T::S('Profile') ?>',
-                        className: 'btn-outline-success',
-                        callback: function () {
-                            setTimeout(function () {
-                                fetchGlobal(CABINET_SCRIPT, '', 12).then((dataCabinet) => {
-                                    if (dataCabinet == '') var responseText = '<?= T::S('Error') ?>';
-                                    else var responseArr = JSON.parse(dataCabinet['message']);
+                    ...(!!isPureSiteRoot() && {
+                        cabinet: {
+                            label: '<?= T::S('Оферта') ?>',
+                            className: 'btn-outline-success',
+                            callback: function () {
+                                async function getOfertaModal() {
+                                    return fetch('/oferta.html')
+                                        .then((response) => response.text());
+                                };
+                                console.log('!!!!!!!!!!!');
+                                getOfertaModal().then((html) => {
+                                    dialog = bootbox.alert({
+                                        title: '',
+                                        message: html,
+                                        locale: 'ru',
+                                        className: 'modal-settings modal-profile',
+                                        buttons: {
+                                            ok: {
+                                                label: '<?= T::S('Back') ?>',
+                                                className: 'btn-sm ml-auto mr-0',
+                                            },
+                                        },
+                                        callback: function () {
+                                            gameStates.chooseGame.action(data);
+                                        },
+                                    })
+                                });
+                            },
+                        }
+                    }),
+                    ...(!isPureSiteRoot() && {
+                        cabinet: {
+                            label: '<?= T::S('Profile') ?>',
+                            className: 'btn-outline-success',
+                            callback: function () {
+                                setTimeout(function () {
+                                    fetchGlobal(CABINET_SCRIPT, '', 12).then((dataCabinet) => {
+                                        if (dataCabinet == '') var responseText = '<?= T::S('Error') ?>';
+                                        else var responseArr = JSON.parse(dataCabinet['message']);
 
-                                    /* ------------------------------ PROFILE DATA ------------------------------ */
-                                    const profileData = {
-                                        name: responseArr.name ? responseArr.name : 'Nickname',
-                                        common_id: responseArr.common_id, // id игрока
-                                        imageUrl: responseArr.url, // url картинки
-                                        imageTitle: responseArr.img_title, // альт картинки
-                                        rating: responseArr.info.rating ? responseArr.info.rating : 0, // рейтинг
-                                        placement: responseArr.info.top, // место в рейтинге
-                                        balance: responseArr.info.SUDOKU_BALANCE, // баланс
-                                        ratingByCoins: responseArr.info.SUDOKU_TOP, // рейтинг по монетам
-                                        tgWallet: '', // telegram wallet
-                                        bonusAccrual: responseArr.info.rewards, // начисление бонусов
-                                        balanceSudoku: responseArr.info.SUDOKU_BALANCE, // баланс SUDOKU
-                                        referrals: responseArr.refs ? responseArr.refs : [],
-                                    };
+                                        /* ------------------------------ PROFILE DATA ------------------------------ */
+                                        const profileData = {
+                                            name: responseArr.name ? responseArr.name : 'Nickname',
+                                            common_id: responseArr.common_id, // id игрока
+                                            imageUrl: responseArr.url, // url картинки
+                                            imageTitle: responseArr.img_title, // альт картинки
+                                            rating: responseArr.info.rating ? responseArr.info.rating : 0, // рейтинг
+                                            placement: responseArr.info.top, // место в рейтинге
+                                            balance: responseArr.info.SUDOKU_BALANCE, // баланс
+                                            ratingByCoins: responseArr.info.SUDOKU_TOP, // рейтинг по монетам
+                                            tgWallet: '', // telegram wallet
+                                            bonusAccrual: responseArr.info.rewards, // начисление бонусов
+                                            balanceSudoku: responseArr.info.SUDOKU_BALANCE, // баланс SUDOKU
+                                            referrals: responseArr.refs ? responseArr.refs : [],
+                                        };
 
-                                    profileData.cookie = responseArr.form.filter(
-                                        (item) => item.inputName === 'cookie',
-                                    );
-                                    profileData.MAX_FILE_SIZE = responseArr.form.filter(
-                                        (item) => item.inputName === 'MAX_FILE_SIZE',
-                                    );
+                                        profileData.cookie = responseArr.form.filter(
+                                            (item) => item.inputName === 'cookie',
+                                        );
+                                        profileData.MAX_FILE_SIZE = responseArr.form.filter(
+                                            (item) => item.inputName === 'MAX_FILE_SIZE',
+                                        );
 
-                                    // делаем верстку из массива referrals
-                                    let referralList = '';
-                                    if ('referrals' in profileData && profileData.referrals.length > 0) {
-                                        referralList = profileData.referrals
-                                            .map(
-                                                (ref) => `
+                                        // делаем верстку из массива referrals
+                                        let referralList = '';
+                                        if ('referrals' in profileData && profileData.referrals.length > 0) {
+                                            referralList = profileData.referrals
+                                                .map(
+                                                    (ref) => `
 								<li class="box">
 									<span class="name d-block">${ref[0]}</span>
 									<div class="pill-wrap"><span class="pill-nopill">${ref[1]}</span></div>
 								</li>
 						`,
-                                            )
-                                            .join('');
+                                                )
+                                                .join('');
 
-                                        referralList = `
+                                            referralList = `
 								<ul class="referral-list">
 									${referralList}
 								</ul>
 						`;
-                                    }
+                                        }
 
-                                    function getProfileModal(profileData) {
-                                        return fetch('/profile-modal-tpl.html'+ '?ver=' + Math.floor(Date.now()))
-                                            .then((response) => response.text())
-                                            .then((template) => {
-                                                let message = template
-                                                    .replaceAll('{{Profile}}', '<?= T::S('Profile') ?>')
-                                                    .replaceAll('{{Wallet}}', '<?= T::S('Wallet') ?>')
-                                                    .replaceAll('{{Referrals}}', '<?= T::S('Referrals') ?>')
-                                                    .replaceAll('{{Player ID}}', '<?= T::S('Player ID') ?>')
-                                                    .replaceAll('{{Save}}', '<?= T::S('Save') ?>')
-                                                    .replaceAll('{{Input new nickname}}', '<?= T::S('Input new nickname') ?>')
-                                                    .replaceAll('{{Your rank}}', '<?= T::S('Your rank') ?>')
-                                                    .replaceAll('{{Ranking number}}', '<?= T::S('Ranking number') ?>')
-                                                    .replaceAll('{{Balance}}', '<?= T::S('Balance') ?>')
-                                                    .replaceAll('{{Rating by coins}}', '<?= T::S('Rating by coins') ?>')
-                                                    .replaceAll('{{Link}}', '<?= T::S('Link') ?>') // Привязать
-                                                    .replaceAll('{{Bonuses accrued}}', '<?= T::S('Bonuses accrued') ?>') // Начислено бонусов
-                                                    .replaceAll('{{SUDOKU Balance}}', '<?= T::S('SUDOKU Balance') ?>') // Баланс SUDOKU
-                                                    .replaceAll('{{Claim}}', '<?= T::S('Claim') ?>') // Забрать
-                                                    .replaceAll('{{Name}}', '<?= T::S('Name') ?>')
-                                                    .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
-                                                    .replaceAll('{{cookie}}', profileData.cookie)
-                                                    /* хз зачем
-                                                    .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE[0].value)
-                                                    .replaceAll('{{cookie}}', profileData.cookie[0].value)
-                                                    */
-                                                    .replaceAll('{{common_id}}', profileData.common_id)
-                                                    .replaceAll('{{name}}', profileData.name)
-                                                    .replaceAll('{{imageUrl}}', profileData.imageUrl)
-                                                    .replaceAll('{{imageTitle}}', profileData.imageTitle)
-                                                    .replaceAll('{{rating}}', profileData.rating)
-                                                    .replaceAll('{{placement}}', profileData.placement)
-                                                    .replaceAll('{{balance}}', profileData.balance)
-                                                    .replaceAll('{{ratingByCoins}}', profileData.ratingByCoins)
-                                                    .replaceAll('{{tgWallet}}', profileData.tgWallet)
-                                                    .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
-                                                    .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
-                                                    .replaceAll('{{balanceSudoku}}', profileData.balanceSudoku)
-                                                    .replaceAll('{{referralList}}', referralList);
+                                        function getProfileModal(profileData) {
+                                            return fetch('/profile-modal-tpl.html' + '?ver=' + Math.floor(Date.now()))
+                                                .then((response) => response.text())
+                                                .then((template) => {
+                                                    let message = template
+                                                        .replaceAll('{{Profile}}', '<?= T::S('Profile') ?>')
+                                                        .replaceAll('{{Wallet}}', '<?= T::S('Wallet') ?>')
+                                                        .replaceAll('{{Referrals}}', '<?= T::S('Referrals') ?>')
+                                                        .replaceAll('{{Player ID}}', '<?= T::S('Player ID') ?>')
+                                                        .replaceAll('{{Save}}', '<?= T::S('Save') ?>')
+                                                        .replaceAll('{{Input new nickname}}',
+                                                            '<?= T::S('Input new nickname') ?>')
+                                                        .replaceAll('{{Your rank}}', '<?= T::S('Your rank') ?>')
+                                                        .replaceAll('{{Ranking number}}',
+                                                            '<?= T::S('Ranking number') ?>')
+                                                        .replaceAll('{{Balance}}', '<?= T::S('Balance') ?>')
+                                                        .replaceAll('{{Rating by coins}}',
+                                                            '<?= T::S('Rating by coins') ?>')
+                                                        .replaceAll('{{Link}}', '<?= T::S('Link') ?>') // Привязать
+                                                        .replaceAll('{{Bonuses accrued}}',
+                                                            '<?= T::S('Bonuses accrued') ?>') // Начислено бонусов
+                                                        .replaceAll('{{SUDOKU Balance}}',
+                                                            '<?= T::S('SUDOKU Balance') ?>') // Баланс SUDOKU
+                                                        .replaceAll('{{Claim}}', '<?= T::S('Claim') ?>') // Забрать
+                                                        .replaceAll('{{Name}}', '<?= T::S('Name') ?>')
+                                                        .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
+                                                        .replaceAll('{{cookie}}', profileData.cookie)
+                                                        /* хз зачем
+                                                        .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE[0].value)
+                                                        .replaceAll('{{cookie}}', profileData.cookie[0].value)
+                                                        */
+                                                        .replaceAll('{{common_id}}', profileData.common_id)
+                                                        .replaceAll('{{name}}', profileData.name)
+                                                        .replaceAll('{{imageUrl}}', profileData.imageUrl)
+                                                        .replaceAll('{{imageTitle}}', profileData.imageTitle)
+                                                        .replaceAll('{{rating}}', profileData.rating)
+                                                        .replaceAll('{{placement}}', profileData.placement)
+                                                        .replaceAll('{{balance}}', profileData.balance)
+                                                        .replaceAll('{{ratingByCoins}}', profileData.ratingByCoins)
+                                                        .replaceAll('{{tgWallet}}', profileData.tgWallet)
+                                                        .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
+                                                        .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
+                                                        .replaceAll('{{balanceSudoku}}', profileData.balanceSudoku)
+                                                        .replaceAll('{{referralList}}', referralList);
 
-                                                return message;
-                                            })
-                                            .catch((error) =>
-                                                console.error('Ошибка загрузки profile-modal:', error),
-                                            );
-                                    }
-                                    /* ---------------------------- END PROFILE DATA ---------------------------- */
+                                                    return message;
+                                                })
+                                                .catch((error) =>
+                                                    console.error('Ошибка загрузки profile-modal:', error),
+                                                );
+                                        }
 
-                                    getProfileModal(profileData).then((html) => {
-                                        // document.getElementById('test-tpl').innerHTML = html;
+                                        /* ---------------------------- END PROFILE DATA ---------------------------- */
 
-                                        dialog = bootbox.alert({
-                                            title: '',
-                                            message: html,
-                                            locale: 'ru',
-                                            // size: 'large',
-                                            className: 'modal-settings modal-profile',
-                                            buttons: {
-                                                ok: {
-                                                    label: '<?= T::S('Back') ?>',
-                                                    className: 'btn-sm ml-auto mr-0',
+                                        getProfileModal(profileData).then((html) => {
+                                            dialog = bootbox.alert({
+                                                title: '',
+                                                message: html,
+                                                locale: 'ru',
+                                                className: 'modal-settings modal-profile',
+                                                buttons: {
+                                                    ok: {
+                                                        label: '<?= T::S('Back') ?>',
+                                                        className: 'btn-sm ml-auto mr-0',
+                                                    },
                                                 },
-                                            },
-                                            onShown: function (e) {
-                                                profileModal.onProfileModalLoaded();
-                                                // document.addEventListener("DOMContentLoaded", profileModal.onProfileModalLoaded);
-                                            },
-                                            callback: function () {
-                                                gameStates['chooseGame']['action'](data);
-                                            },
+                                                onShown: function (e) {
+                                                    profileModal.onProfileModalLoaded();
+                                                },
+                                                callback: function () {
+                                                    gameStates['chooseGame']['action'](data);
+                                                },
+                                            });
                                         });
-                                    });
 
-                                    return false;
-                                });
-                            }, 100);
-                        },
-                    },
+                                        return false;
+                                    });
+                                }, 100);
+                            },
+                        }
+                    }),
                     instruction: {
                         label: 'FAQ',
                         className: 'btn-outline-success d-none',
@@ -597,7 +636,7 @@ var gameStates = {
                     stats: {
                         label: '<?= T::S('Stats') ?>',
                         className: 'btn-outline-success',
-                        callback: function() {
+                        callback: function () {
                             activateFullScreenForMobiles();
                             getStatPageGlobal().then(data => {
                                 console.log(data);
@@ -633,7 +672,7 @@ var gameStates = {
                                         }
                                     })
                                     .off('shown.bs.modal')
-                                    .on('shown.bs.modal', function() {
+                                    .on('shown.bs.modal', function () {
                                         if (data.onLoad && typeof data.onLoad === 'function') {
                                             data.onLoad();
                                         }
@@ -843,6 +882,7 @@ var gameStates = {
                 message: data['comments'],
                 onEscape: false,
                 closeButton: false,
+                className: 'modal-settings modal-profile text-white',
                 buttons: {
                     invite: {
                         label: '<?= T::S('Offer a game') ?>',
@@ -863,6 +903,7 @@ var gameStates = {
                                             message: responseText,
                                             locale: 'ru',
                                             size: 'small',
+                                            className: 'modal-settings modal-profile text-white',
                                             callback: function () {
                                                 dialogResponse.modal('hide');
                                                 dataInvite['comments'] = data['comments'];
@@ -913,6 +954,7 @@ var gameStates = {
                 message: data['comments'],
                 onEscape: false,
                 closeButton: false,
+                className: 'modal-settings modal-profile text-white',
                 buttons: {
                     invite: {
                         label: '<?= T::S('Accept invitation') ?>',
@@ -934,6 +976,7 @@ var gameStates = {
                                             message: responseText,
                                             locale: 'ru',
                                             size: 'small',
+                                            className: 'modal-settings modal-profile text-white',
                                             callback: function () {
                                                 dialogResponse.modal('hide');
                                                 dataInvite['comments'] = data['comments'];
@@ -993,7 +1036,7 @@ function commonCallback(data) {
         return;
     }
 
-    if(noNetworkImgOpponent !== false && 'is_opponent_active' in data && !data.is_opponent_active) {
+    if (noNetworkImgOpponent !== false && 'is_opponent_active' in data && !data.is_opponent_active) {
         noNetworkImgOpponent.visible = true;
     } else {
         noNetworkImgOpponent.visible = false;
@@ -1005,7 +1048,7 @@ function commonCallback(data) {
     if ('gameState' in data && gameState != data['gameState']) {
         gameState = data['gameState'];
 
-        if('gameNumber' in data) {
+        if ('gameNumber' in data) {
             gameNumber = data['gameNumber'];
         }
     }
@@ -1069,6 +1112,7 @@ function commonCallback(data) {
                 dialog = bootbox.confirm({
                     message: ('comments' in data) ? data['comments'] : gameStates[gameState]['message'],
                     size: 'small',
+                    className: 'modal-settings modal-profile text-white',
                     buttons: {
                         confirm: {
                             label: 'Ok',
@@ -1108,7 +1152,12 @@ function commonCallback(data) {
                                 }
                             }
 
-                            let content = data['comments'] + igrokiWaiting + '<br /><?= T::S('Time elapsed:') ?> ' + (tWaiting++) + '<br /><?= T::S('Average waiting time:') ?> ' + (gWLimit) + '<?= T::S('s') ?>';
+                            let content = data['comments'] + igrokiWaiting
+                                + '<br /><?= T::S('Time elapsed:') ?> '
+                                + (tWaiting++)
+                                + '<br /><?= T::S('Average waiting time:') ?> '
+                                + (gWLimit)
+                                + '<?= T::S('s') ?>';
                             dialog.find('.bootbox-body').html(content);
                         }, 1000);
                     });
@@ -1146,9 +1195,8 @@ function commonCallback(data) {
                 } else {
                     gameStates['gameResults']['results'](data);
                 }
-            } else
-                if (!('noDialog' in gameStates[gameState])) {
-                    setTimeout(function () {
+            } else if (!('noDialog' in gameStates[gameState])) {
+                setTimeout(function () {
                         bootbox.hideAll();
                         var message = '';
                         var cancelLabel = '<?= T::S('Close in 5 seconds') ?>';
@@ -1175,6 +1223,7 @@ function commonCallback(data) {
                         dialogTurn = bootbox.confirm({
                             message: message,
                             size: 'medium',
+                            className: 'modal-settings modal-profile text-white',
                             buttons: {
                                 confirm: {
                                     label: 'OK',
@@ -1242,7 +1291,7 @@ function commonCallback(data) {
         gameBankString = data.bank_string;
         console.log(gameBid, gameBank, gameBankString);
 
-        buttons.logButton.svgObject.x = buttons.chatButton.svgObject.x - (buttons.checkButton.svgObject.width - buttons.logButton.svgObject.width)/2;
+        buttons.logButton.svgObject.x = buttons.chatButton.svgObject.x - (buttons.checkButton.svgObject.width - buttons.logButton.svgObject.width) / 2;
         buttons.playersButton.svgObject.x += (buttons.changeButton.svgObject.width - buttons.playersButton.svgObject.width) / 2
         buttons.chatButton.svgObject.x = buttons.logButton.svgObject.x + (buttons.playersButton.svgObject.x - buttons.logButton.svgObject.x) / 2;
 
@@ -1347,7 +1396,7 @@ function userScores(data) {
                     players[playerBlockName].svgObject.setAlpha(INACTIVE_USER_ALPHA);
                 }
 
-                if(noNetworkImgOpponent.x == 200 && noNetworkImgOpponent.y == 200 && (+k < 2)) {
+                if (noNetworkImgOpponent.x == 200 && noNetworkImgOpponent.y == 200 && (+k < 2)) {
                     let opponentBlock = players[playerBlockName].svgObject;
                     noNetworkImgOpponent.setScale(opponentBlock.height / 232 / 4);
                     noNetworkImgOpponent.x = opponentBlock.x + opponentBlock.width / 2 + noNetworkImgOpponent.displayWidth / 2;
@@ -1382,7 +1431,7 @@ function clickGlobal(id) {
 
         const ratingInputs = document.querySelectorAll("input[name='from_rating']");
         ratingInputs.forEach(item => {
-            if(item.id === 'from_0') {
+            if (item.id === 'from_0') {
                 item.checked = true;
             } else {
                 item.checked = false;
@@ -1400,7 +1449,7 @@ function clickGlobal(id) {
         const bidInputs = document.querySelectorAll("input[name='bid']");
 
         bidInputs.forEach(item => {
-            if(item.id === 'bid_0') {
+            if (item.id === 'bid_0') {
                 item.checked = true;
             } else {
                 item.checked = false;

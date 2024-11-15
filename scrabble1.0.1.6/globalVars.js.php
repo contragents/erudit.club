@@ -258,7 +258,7 @@ var pageActive = 'visible';
 var fullImgID = false;
 var fullImgWidth = 0;
 
-var useLocalStorage = localStorage.erudit_user_session_ID ? true : false;
+var useLocalStorage = !!localStorage.erudit_user_session_ID;
 
 var soundPlayed = false;
 var instruction = `<?= T::S('faq_rules') ?>`;
@@ -267,7 +267,7 @@ var instruction = `<?= T::S('faq_rules') ?>`;
 
 //<?php include('globals/tgGlobalFunction.js')?>
 //<?php include('globals/buttonSettingsGlobal.js')?>
-//<?php include('globals/gameStates.js.php')?>
+//<?php include('globals/gameStates_1.js.php')?>
 //<?php include('globals/letterPrices.js')?>
 //<?php include('globals/rusLetters.js')?>
 //<?php include('globals/wav.js')?>

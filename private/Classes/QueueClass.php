@@ -569,12 +569,14 @@ class Queue
             $bid = 0;
             $noCoinGame = false;
             foreach ($game_users as $num => $user) {
-                if (!isset($user['options']['bid'])) {
-                    $userBalance = BalanceModel::getBalance(PlayerModel::getPlayerID($user['userCookie'], true));
+                $userBalance = BalanceModel::getBalance(PlayerModel::getPlayerID($user['userCookie'], true));
 
+                if (!isset($user['options']['bid'])) {
                     if($userBalance > 0) {
                         $user['options']['bid'] = self::getBid($userBalance / 20);
                     }
+                } elseif ($user['options']['bid'] > $userBalance) {
+                    unset($user['options']['bid']);
                 }
 
                 if (!isset($user['options']['bid'])) {

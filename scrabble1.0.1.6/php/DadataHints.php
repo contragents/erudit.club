@@ -6,6 +6,7 @@ use \Cache;
 use AchievesModel;
 use Erudit\Game;
 use PlayerModel;
+use T;
 
 class Hints
 {
@@ -422,7 +423,7 @@ class Hints
     {
         return
             "
-<strong><span style=\"color:purple\">Поздравляем Игрока</span> {$recordData['PlayerName']}&nbsp;!!!</strong>&nbsp;
+<strong><span style=\"color: #00ff00; \">" . T::S('Congratulations to Player') . "</span> {$recordData['PlayerName']}&nbsp;!!!</strong>&nbsp;
 <img style=\"border-radius: 5px 5px 5px 5px; margin-left:20px;padding-top:0;\" alt=\"😰\" src=\"{$recordData['AvatarUrl']}\" height=\"75px\" max-width=\"100px\" />
 <br />
 Новое достижение - <strong>" . AchievesModel::PRIZE_TITLES[$recordData['type']] . "</strong> <br />"

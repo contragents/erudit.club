@@ -21,7 +21,8 @@ function submitButtonFunction() {
                         message: ('message' in data && data['message'] !== '')
                             ? (data['message'] + '<br /> <?= T::S('Try sending again') ?>')
                             : '<strong><?= T::S('Error connecting to server!') ?><br /> <?= T::S('Try sending again') ?></strong>',
-                        size: 'small'
+                        size: 'small',
+                        className: 'modal-settings modal-profile text-white',
                     });
                 } else {
                     gameState = 'afterSubmit';
@@ -60,7 +61,8 @@ function checkButtonFunction() {
                     var responseText = data;
                 dialog = bootbox.alert({
                     message: responseText,
-                    size: 'small'
+                    size: 'small',
+                    className: 'modal-settings modal-profile text-white',
                 });
 
                 buttons['checkButton']['svgObject'].setInteractive();
@@ -125,6 +127,7 @@ function newGameButtonFunction(ignoreDialog = false) {
                                         message: responseText,
                                         locale: 'ru',
                                         size: 'small',
+                                        className: 'modal-settings modal-profile text-white',
                                         callback: function () {
                                             dialogResponse.modal('hide');
                                             gameStates['gameResults']['results'](dataInvite);
@@ -248,14 +251,13 @@ function chatButtonFunction() {
     canOpenDialog = false;
     canCloseDialog = false;
     let msgSpan = '<span id="msg_span">';
-    let message = '<ul style="margin-left:-30px;margin-right:-5px;">' + msgSpan + '</span>';
+    let message = '<ul style="margin-left:-10px;margin-right:-5px;">' + msgSpan + '</span>';
     let i = 0;
     for (k in chatLog) {
         if (i >= 10) break;
         message = message + '<li>' + chatLog[k] + "</li>";
         i++;
     }
-
 
     let noMsgSpan = '<span id="no_msg_span">';
     if (i == 0) {
@@ -268,18 +270,18 @@ function chatButtonFunction() {
 
     let isSelectedPlaced = false;
     if (ochki_arr.length > 1) {
-        radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="chatall" name="chatTo" value="all" checked> <label class="form-check-label" for="chatall"><?= T::S('For everyone') ?></label></div>';
+        radioButtons += '<div style="font-size: 70%;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="chatall" name="chatTo" value="all" checked> <label class="form-check-label" for="chatall"><?= T::S('For everyone') ?></label></div>';
         isSelectedPlaced = true;
     }
 
     for (k in ochki_arr) {
         if (k != myUserNum) {
-            radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_' + (k == 0 ? '0' : k) + '" name="chatTo" value="' + (k == 0 ? '0' : k) + '" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_' + (k == 0 ? '0' : k) + '"><?= T::S('To Player') ?>' + (parseInt(k, 10) + 1) + '</label></div>';
+            radioButtons += '<div style="font-size: 70%;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_' + (k == 0 ? '0' : k) + '" name="chatTo" value="' + (k == 0 ? '0' : k) + '" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_' + (k == 0 ? '0' : k) + '"><?= T::S('To Player') ?>' + (parseInt(k, 10) + 1) + '</label></div>';
             isSelectedPlaced = true;
         }
     }
 
-    radioButtons += '<div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_words" name="chatTo" value="words" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_words"><?= T::S('Word matching') ?></label></div>';
+    radioButtons += '<div style="font-size: 70%;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_words" name="chatTo" value="words" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_words"><?= T::S('Word matching') ?></label></div>';
 
     let textInput = '<div class="input-group input-group-lg">  <div class="input-group-prepend"></div>  <input type="text" id="chattext" class="form-control" name="messageText"></div>';
 
@@ -290,7 +292,7 @@ function chatButtonFunction() {
             + (
                 !isYandexAppGlobal()
                     ? (
-                        '<h6><?= T::S('Player support and chat at') ?> <a target="_blank" title="<?= T::S('Join group') ?>" href="'
+                        '<h6>&nbsp;&nbsp;<?= T::S('Player support and chat at') ?> <a target="_blank" title="<?= T::S('Join group') ?>" href="'
                         + (gameWidth < gameHeight ? 'https://t.me/eruditclub' : 'https://web.telegram.org/#/im?p=@eruditclub')
                         + '">Telegram</a> </h6>'
                     )
@@ -300,6 +302,7 @@ function chatButtonFunction() {
         message: '<form onsubmit="return false" id="myChatForm">' + radioButtons + textInput + '</form>',
         locale: 'ru',
         size: 'large',
+        className: 'modal-settings modal-profile text-white',
         closeButton: false,
         buttons: {
             confirm: {
@@ -339,7 +342,8 @@ function chatButtonFunction() {
                                         } else {
                                             dialog2 = bootbox.alert({
                                                 message: responseText,
-                                                size: 'small'
+                                                size: 'small',
+                                                className: 'modal-settings modal-profile text-white',
                                             });
                                             setTimeout(
                                                 function () {
@@ -372,7 +376,7 @@ function chatButtonFunction() {
             },
             complain: {
                 label: '<?= T::S('Appeal') ?>',
-                className: 'ml-5 ' + (hasIncomingMessages ? 'btn-danger' : 'btn-light'),
+                className: hasIncomingMessages ? 'btn-danger' : 'btn-light',
                 callback: function () {
                     if (hasIncomingMessages) {
                         fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
@@ -383,7 +387,8 @@ function chatButtonFunction() {
                                     var responseText = data['message'];
                                 dialog2 = bootbox.alert({
                                     message: responseText,
-                                    size: 'small'
+                                    size: 'small',
+                                    className: 'modal-settings modal-profile text-white',
                                 });
                                 setTimeout(
                                     function () {
@@ -409,7 +414,7 @@ function logButtonFunction() {
     canOpenDialog = false;
     canCloseDialog = false;
 
-    let message = '<br /><ul style="margin-left:-30px;margin-right:-5px;">';
+    let message = '<br /><ul style="margin-left:-10px;margin-right:-5px;">';
     let i = 0;
     for (k in gameLog) {
         if (i >= 10) break;
@@ -425,6 +430,7 @@ function logButtonFunction() {
     notDialog = bootbox.dialog({
         message: message,
         size: 'small',
+        className: 'modal-settings modal-profile text-white',
         onEscape: function () {
             activateFullScreenForMobiles();
             canOpenDialog = true;

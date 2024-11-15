@@ -16,6 +16,10 @@ function isVerstkaTestGlobal() {
     return window.location.href.indexOf('verstka=1') > -1;
 }
 
+function isPureSiteRoot() {
+    return !(isVkAppGlobal() || isTgBot() || isAndroidAppGlobal() || isFbAppGlobal());
+}
+
 function isMobileDeviceGlobal() {
     const ua = navigator.userAgent;
     if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
@@ -24,7 +28,7 @@ function isMobileDeviceGlobal() {
         return true;//mobile
     }
 
-    return false;//desktop
+    return false;
 }
 
 function isTabletDeviceGlobal() {
@@ -36,8 +40,12 @@ function isTabletDeviceGlobal() {
     return false;
 }
 
+function isFbAppGlobal() {
+        return !!document.location.href.match('fbclid');
+}
+
 function isVkAppGlobal() {
-    if (document.referrer == 'https://vk.com/') {
+    if (document.referrer === 'https://vk.com/') {
         return true;
     }
 

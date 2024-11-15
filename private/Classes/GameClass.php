@@ -1585,7 +1585,7 @@ class Game
                         '(<strong>+15</strong>)',
                         [
                             'title' => T::S('For all pieces'),
-                            'style' => 'color: green;'
+                            'style' => 'color: #00ff00;'
                         ]
                     )) : ''),
                 $this->numUser
@@ -1911,14 +1911,14 @@ class Game
         return
             VH::strong(
                 $isWinner ? T::S('you_won') : T::S('you_lost'),
-                ['style' => 'color:' . ($isWinner ? 'green' : 'red') . ';']
+                ['style' => 'color:' . ($isWinner ? '#00ff00' : 'red') . ';']
             )
             . VH::br()
             . T::S('rating_changed')
             . "{$ratingsChanged['prev_rating']} -> "
             . VH::strong(
                 "{$ratingsChanged['new_rating']} (" . ($isWinner ? '+' : '') . "{$ratingsChanged['delta_rating']})",
-                ['style' => 'color:' . ($isWinner ? 'green' : 'red') . ';']
+                ['style' => 'color:' . ($isWinner ? '#00ff00' : 'red') . ';']
             )
             . ($this->gameStatus['bid'] ?? false
                     ? (
