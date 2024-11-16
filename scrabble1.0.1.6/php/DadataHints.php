@@ -252,6 +252,10 @@ class Hints
 
     public static function getHint($User, &$gameStatus, $rating = false)
     {
+        if (\Game::$gameName !== \Game::ERUDIT) {
+            return '';
+        }
+
         self::$gameState = $gameStatus;
         self::$User = $User;
 
@@ -333,9 +337,9 @@ class Hints
         }
 
         if(count($words) == 5) {
-            $words[] = 'Показаны только 5 слов в случайном порядке'
+            $words[] = T::S('Only 5 words are shown in random order')
                 . '<br>'
-                . 'Для доступа к полному списку подключитесь к нашему <a target="_blank" href="https://t.me/erudit_club_bot">Telegram-боту</a>';
+                . T::S('connect_bot');
         }
 
         $res = ['message' => implode('<br>', $words)];

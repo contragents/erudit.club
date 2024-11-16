@@ -54,6 +54,13 @@ class T
     }
 
     const PHRASES = [
+        'connect_bot' => [
+            self::EN_LANG => 'To access the full list, connect to our <a target="_blank" href="https://t.me/scrabble_online_bot">Telegram bot</a>',
+            self::RU_LANG => 'Для доступа к полному списку подключитесь к нашему <a target="_blank" href="https://t.me/erudit_club_bot">Telegram-боту</a>'
+        ],
+        'Only 5 words are shown in random order' => [
+            self::RU_LANG => 'Показаны только 5 слов в случайном порядке'
+        ],
         'Congratulations to Player' => [
             self::RU_LANG => 'Поздравляем игрока'
         ],
