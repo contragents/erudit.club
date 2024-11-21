@@ -17,7 +17,12 @@ class PayController extends BaseController
 
     public function successAction(): string
     {
-        return json_encode(self::$Request + ['method' => 'result'], JSON_UNESCAPED_UNICODE);
+        $res = Cache::get('yumoney');
+        Cache::setex('yumoney', 3600, json_encode(self::$Request + ['method' => 'success'], JSON_UNESCAPED_UNICODE));
+
+        return $res;
+
+        return json_encode(self::$Request + ['method' => 'success'], JSON_UNESCAPED_UNICODE);
     }
 
     public function failAction(): string

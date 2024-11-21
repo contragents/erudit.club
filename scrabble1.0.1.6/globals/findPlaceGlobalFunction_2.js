@@ -114,8 +114,10 @@ function containerFishkaPresent(i, j) {
 }
 
 function chooseLetterGlobal(gameObject) {
-    if (gameObject.getData('cellX') === false) return;
-    if (gameObject.getData('cellY') === false) return;
+    if (gameObject.getData('cellX') === false)
+        return;
+    if (gameObject.getData('cellY') === false)
+        return;
     disableButtons();
     chooseFishka = gameObject;
     var bukvy = '';
@@ -129,27 +131,50 @@ function chooseLetterGlobal(gameObject) {
         lastLetterCode = 59;
     }
 
-    for (let i = firstLetterCode; i <= lastLetterCode; i++) {
 
-        bukvy = genDivGlobal(i);
-        buttons1[i] = {
-            label: bukvy,
-            className: lang == 'EN' ? 'button1' : 'button1',
-            callback: function () {
-                switchFishkaGlobal(i + 1 + 999, gameObject);
-                chooseFishka = false;
 
-                return;
-            }
-        }
+
+    const letterClickHandler = (letterCode) => {
+        console.log(letterCode);
+        switchFishkaGlobal(letterCode + 1 + 999, gameObject);
+        chooseFishka = false;
+        dialog.modal('hide');
     }
+
+
+    let letterList = '';
+    for (let i = firstLetterCode; i <= lastLetterCode; i++) {
+        letterList += Letter(i);
+    }
+
+    letterList = `<div class="letter-list">${letterList}</div>`
+
+
+    let message = `<div class="box d-flex align-items-center p-1 mb-2">
+        <div class="box-heading text-center mx-auto fs-4">${ lang === 'RU' ? 'Выберите букву' : 'Choice a letter'}</div>
+    </div>
+    <div class="box letter-box">
+        ${letterList}
+    </div>
+    `;
+
+    const messageElement = document.createElement('div');
+    messageElement.innerHTML = message;
+    messageElement.querySelector('.letter').addEventListener('click', e => {
+        e.preventDefault();
+        console.log('click', e.target.closest('.letter').getAttribute('data-id'));
+        if (e && e.target && e.target.closest('.letter')) {
+            const letterId = +e.target.closest('.letter').getAttribute('data-id');
+            letterClickHandler(letterId);
+        }
+    });
 
     bootbox.hideAll();
 
     dialog = bootbox.dialog({
-        message: "Выберите букву",
+        message: messageElement,
+        className: 'modal-settings modal-choose-letter',
         size: 'large',
-        buttons: buttons1,
         closeButton: false
     });
 

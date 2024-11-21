@@ -4152,27 +4152,48 @@ function chooseLetterGlobal(gameObject) {
         lastLetterCode = 59;
     }
 
-    for (let i = firstLetterCode; i <= lastLetterCode; i++) {
 
-        bukvy = genDivGlobal(i);
-        buttons1[i] = {
-            label: bukvy,
-            className: lang == 'EN' ? 'button1' : 'button1',
-            callback: function() {
-                switchFishkaGlobal(i + 1 + 999, gameObject);
-                chooseFishka = false;
 
-                return;
-            }
-        }
+
+    const letterClickHandler = (letterCode) => {
+        switchFishkaGlobal(letterCode + 1 + 999, gameObject);
+        chooseFishka = false;
+        dialog.modal('hide');
     }
+
+
+    let letterList = '';
+    for (let i = firstLetterCode; i <= lastLetterCode; i++) {
+        letterList += Letter(i);
+    }
+
+    letterList = `<div class="letter-list">${letterList}</div>`
+
+
+    let message = `<div class="box d-flex align-items-center p-1 mb-2">
+        <div class="box-heading text-center mx-auto fs-4">${ lang === 'RU' ? 'Выберите букву' : 'Choice a letter'}</div>
+    </div>
+    <div class="box letter-box">
+        ${letterList}
+    </div>
+    `;
+
+    const messageElement = document.createElement('div');
+    messageElement.innerHTML = message;
+    messageElement.querySelector('.letter').addEventListener('click', e => {
+        e.preventDefault();
+        if (e && e.target && e.target.closest('.letter')) {        
+            const letterId = +e.target.closest('.letter').getAttribute('data-id');
+            letterClickHandler(letterId);
+        }
+    });
 
     bootbox.hideAll();
 
     dialog = bootbox.dialog({
-        message: "Выберите букву",
+        message: messageElement,
+        className: 'modal-settings modal-choose-letter',
         size: 'large',
-        buttons: buttons1,
         closeButton: false
     });
 
@@ -4458,23 +4479,45 @@ function newGameButtonFunction(ignoreDialog=false) {
         }
 
 }
-;function changeButtonFunction() {
+;
+
+function Letter(letterCode) {
+    const imgUrl = lang === 'RU' ? `img/fishki_sets/MaxS/${letterCode}.svg` : `img/fishki_sets/Girl/${letterCode}.svg`;
+    return `<div class="letter" style="background-image: url(${imgUrl})" data-id="${letterCode}">
+</div>`
+}
+
+function changeButtonFunction() {
     if (bootBoxIsOpenedGlobal())
         return;
 
     canOpenDialog = false;
     canCloseDialog = false;
 
-    let formHeader = '<form id="myForm" class="form-horizontal">';
-    let formFooter = '</div></form>';
-    var formInner = '<div class="form-group">';
-    var zvezdaStyle = '999" title="Зачем?';
-    for (let k in container)
-        formInner += '<div style="display:inline-block;"><input type="checkbox" style="opacity:80%; transform: scale(2);" id="fishka_' + k + '_' + container[k].getData('letter') + '" name="fishka_' + k + '_' + container[k].getData('letter') + '"' + (container[k].getData('letter') < 999 ? 'checked' : '') + '><label for="fishka_' + k + '_' + container[k].getData('letter') + '"><div style="margin-left:-12px;margin-right:13px;' + (container[k].getData('letter') > 33 && container[k].getData('letter') < 999 ? genDivGlobal(container[k].getData('letter'), true) : '') + '" class="letter_' + (container[k].getData('letter') < 999 ? container[k].getData('letter') : zvezdaStyle) + '" onclick="$(\'#fishka_' + k + '_' + container[k].getData('letter') + '\').trigger(\'click\');return false;"></div></label></div>';
+
+    let letterList = '';
+    for (let k in container) {
+        letterList += '<div><input type="checkbox" style="opacity:80%; transform: scale(2);" id="fishka_' + k + '_' + container[k].getData('letter') + '" name="fishka_' + k + '_' + container[k].getData('letter') + '"' + (container[k].getData('letter') < 999 ? 'checked' : '') + '><label for="fishka_' + k + '_' + container[k].getData('letter') + `">${Letter(container[k].getData('letter'))}</label></div>`;
+    }
+
+    letterList = `<div class="letter-list">${letterList}</div>`;
+
+
+    let message = `<div class="box d-flex align-items-center p-1 mb-2">
+        <div class="box-heading text-center mx-auto fs-4">${ lang === 'RU' ? 'Выберите фишки для замены' : 'Select chips to change'}</div>
+    </div>
+    <div class="box letter-box">
+        <form id="myForm">
+            ${letterList}
+        </form>
+    </div>
+    `;
+
 
     dialog = bootbox.confirm({
-        message: 'Выберите фишки для замены<br /><br />' + formHeader + formInner + formFooter,
-        locale: 'ru',
+        message: message,
+        locale: lang === 'RU' ? 'ru' : 'en',
+        className: 'modal-settings modal-change-letter',
         callback: function(result) {
             canOpenDialog = true;
             canCloseDialog = true;
@@ -4483,9 +4526,9 @@ function newGameButtonFunction(ignoreDialog=false) {
                 changeFishkiGlobal($(".bootbox-body #myForm").serialize());
         }
     });
-
 }
-;function chatButtonFunction() {
+
+function chatButtonFunction() {
     if (bootBoxIsOpenedGlobal())
         return;
 

@@ -140,6 +140,7 @@
                                 {{Check_price}}
                             </button>
                         </div>
+
                         <!--<div class="btn-wrap ml-auto">
                             <button type="button" class="btn btn-sm flex-shrink-0" id="check-price-button" onClick="RobokassaPaymentGlobal('check'); return false;">
                                 {{Check_price}}
@@ -147,6 +148,17 @@
                         </div>-->
                     </div>
                 </div>
+                <iframe srcdoc='<html><body>
+                <form method="POST" action="https://yoomoney.ru/quickpay/confirm">
+                    <input type="hidden" name="receiver" value="4100138808308"/>
+                    <input type="hidden" name="label" value="ili_payment"/>
+                    <input type="hidden" name="quickpay-form" value="button"/>
+                    <input type="hidden" name="sum" value="10" data-type="number"/>
+                    <label><input type="radio" name="paymentType" value="PC"/>ЮMoney</label>
+                    <label><input type="radio" name="paymentType" value="AC"/>Банковской картой</label>
+                    <input type="submit" value="Перевести"/>
+                </form>
+</body></html>'></iframe>
             </div>
 
 			<!-- end .tab-pane -->
