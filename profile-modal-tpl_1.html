@@ -1,0 +1,175 @@
+<!-- MY MODAL CONTENT -->
+<form id="superForm">
+	<input type="hidden" name="MAX_FILE_SIZE" value="{{MAX_FILE_SIZE}}">
+	<input type="hidden" name="cookie" value="{{cookie}}">
+	<!-- tabs -->
+	<div class="box box-top">
+		<div>
+			<ul class="tabs nav nav-tabs" role="tablist" id="profile-tabs">
+				<li class="nav-item">
+					<a class="nav-link active" id="main-info-tab" href="#main-info-tab-pane" role="tab"
+						aria-selected="true">{{Profile}}</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="wallet-tab" href="#wallet-tab-pane" role="tab"
+						aria-selected="false">{{Wallet}}</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="referrals-tab" href="#referrals-tab-pane" role="tab"
+						aria-selected="false">{{Referrals}}</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- end tabs -->
+
+	<div class="tab-content-wrap">
+		<div class="tab-content justify-content-start" id="profile-tabs-content">
+			<div class="tab-pane  active" id="main-info-tab-pane">
+
+				<div class="box box-bottom ">
+					<div class="d-flex">
+						<div id="playersAvatar" class="main-info-image-wrap">
+							<img class="main-info-image" src="{{imageUrl}}" alt="{{imageTitle}}">
+						</div>
+						<div class="d-flex flex-column flex-grow-1 flex-shrink-1 pl-2">
+							<p class="main-info-id flex-fill">{{Player ID}} <span>{{common_id}}</span></p>
+							<div class="flex-grow-0">
+								<label class="file-label">
+
+									<input class="form-control form-control-sm" id="player_avatar_file" name="url"
+										type="file" placeholder="">
+								</label>
+							</div>
+							<div class="d-flex flex-fill">
+								<button type="submit" class="btn btn-sm ml-auto"
+									onclick="savePlayerAvatar($('#player_avatar_file').val(),{{common_id}});return false;">
+                                    {{Save}}</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="box mb-0">
+					<span class="nickname d-block mb-1" id="playersNikname">{{name}}</span>
+					<div class="d-flex">
+						<div class="flex-eq"></div>
+						<div class="nickname-inpit-wrap">
+							<input id="player_name" type="text" name="name" class="form-control"
+								placeholder="{{Input new nickname}}" maxlength="16">
+						</div>
+						<div class="flex-eq d-flex">
+							<button type="submit" class="btn btn-sm ml-auto"
+								onclick="savePlayerName($('#player_name').val(),{{common_id}});return false;">
+                                {{Save}}
+							</button>
+						</div>
+					</div>
+					<div class="rating-list-wrap">
+						<ul class="rating-list d-flex flex-column">
+							<li class="d-flex"><span class="label">{{Your rank}}</span><span class="pill">{{rating}}</span>
+							</li>
+							<li class="d-flex"><span class="label">{{Ranking number}}</span><span
+									class="pill">{{placement}}</span></li>
+							<li class="account-balance d-flex position-relative"><span class="label">{{Balance}}</span><i
+									class="icon icon-coin"></i><span class="pill">{{balance}}</span>
+							</li>
+							<li class="d-flex"><span class="label">{{Rating by coins}}</span><span class="pill">{{ratingByCoins}}</span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- end .tab-pane #main-info-tab-pane -->
+
+			<div class="tab-pane" id="wallet-tab-pane">
+				<!--<div class="box pb-2 box-bottom">
+					<div class="d-flex">
+						<span class="d-block align-self-center">Telegram Wallet</span>
+						<div class="tg-input-wrap d-flex flex-nowrap flex-shrink-1">
+							<input type="text" class="form-control" id="tg-wallet" value="{{tgWallet}}" placeholder="">
+							<a href="#tg-wallet" class="btn-copy js-btn-copy"><i class="icon icon-copy"></i></a>
+						</div>
+
+
+						<div class="btn-wrap ml-auto">
+                            <a href="#" class="btn btn-sm flex-shrink-0">
+                                {{Link}}
+							</a>
+						</div>
+					</div>
+
+					<span class="d-block text-danger text-uppercase text-center mt-1">Under construction</span>
+				</div>-->
+                <div class="box pb-2 box-bottom"><!--<div class="box py-3"> для второго сверху дива-->
+					<div class="d-flex">
+						<div class="wallet-info-wrap">
+							<div class="d-flex">
+								<span class="label">{{Bonuses accrued}} </span>
+								<span class="pill">{{bonusAccrual}}</span>
+							</div>
+							<div class="d-flex">
+								<span class="label">{{SUDOKU Balance}}</span>
+								<span class="pill">{{balanceSudoku}}</span>
+							</div>
+						</div>
+						<div class="btn-wrap ml-auto">
+							<button type="button" class="btn btn-sm flex-shrink-0 ">
+                                {{Claim}}
+							</button>
+						</div>
+					</div>
+
+				</div>
+
+                <span style="color:#00ff00;text-decoration:none;" class="nickname d-block mb-1" id="buy-sudoku">{{Buy_SUDOKU}}</span>
+                <div class="box py-3">
+                    <div class="d-flex">
+                        <div class="wallet-info-wrap">
+                            <div class="d-flex form-group">
+                                <span class="label">{{SUDOKU_amount}} </span>
+                                <span class="pill"><input style="border:0; opacity: 0.8; color:#000000;" onchange="RobokassaPaymentGlobal('check'); return false;" type="number" step="10" min="10" max="1000" placeholder="{{enter_amount}}" id = "amount-to-buy"/></span>
+                            </div>
+                            <div class="d-flex">
+                                <span class="label">{{The_price}}</span>
+                                <span class="pill" id="calculated-price">{{calc_price}}</span>
+                            </div>
+                        </div>
+                        <div class="btn-wrap ml-auto">
+                            <button type="button" class="btn btn-sm flex-shrink-1" id="replenish-button"
+                                    onClick="RobokassaPaymentGlobal('pay'); return false;">
+                                {{Check_price}}
+                            </button>
+                        </div>
+                        <!--<div class="btn-wrap ml-auto">
+                            <button type="button" class="btn btn-sm flex-shrink-0" id="check-price-button" onClick="RobokassaPaymentGlobal('check'); return false;">
+                                {{Check_price}}
+                            </button>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+
+			<!-- end .tab-pane -->
+
+			<div class="referrals-tab-pane tab-pane" id="referrals-tab-pane">
+				<div class="box pb-2 box-bottom">
+					<div class="d-flex justify-content-between text-uppercase">
+						<span class="table-heading d-block">{{Name}}</span>
+						<span class="table-heading d-block ml-a bonuses-accrued">{{Bonuses accrued}}</span>
+					</div>
+
+					<!--<span class="d-block text-danger text-uppercase text-center mt-1">Under construction</span>-->
+				</div>
+
+				<!-- .referral-list -->
+				{{referralList}}
+				<!-- end .referral-list -->
+
+			</div>
+			<!-- end .tab-pane -->
+		</div>
+	</div>
+	<!-- end .tab-content-wrap -->
+	<!-- END MY MODAL CONTENT -->
+</form>
+<!-- END MY MODAL CONTENT -->

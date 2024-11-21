@@ -54,6 +54,37 @@ class T
     }
 
     const PHRASES = [
+        'Check_price' => [
+            self::EN_LANG => 'Check price',
+            self::RU_LANG => 'Узнать<br>цену'
+        ],
+        'Replenish' => [
+            self::RU_LANG => 'Пополнить'
+        ],
+        'SUDOKU_amount' => [
+            self::EN_LANG => 'Coin quantity',
+            self::RU_LANG => 'Количество монет'
+        ],
+        'enter_amount' => [
+            self::EN_LANG => 'amount',
+            self::RU_LANG => ''
+        ],
+        'Buy_SUDOKU' => [
+            self::EN_LANG => 'Buy SUDOKU coins',
+            self::RU_LANG => 'Купить монеты' . '{{sudoku_icon_15}}'
+        ],
+        'The_price' => [
+            self::EN_LANG => 'Price offer',
+            self::RU_LANG => 'Стоимость монет'
+        ],
+        'calc_price' => [
+            self::EN_LANG => 'price',
+            self::RU_LANG => 'стоимость'
+        ],
+        'Pay' => [
+            self::EN_LANG => 'Pay',
+            self::RU_LANG => 'Оплатить'
+        ],
         'connect_bot' => [
             self::EN_LANG => 'To access the full list, connect to our <a target="_blank" href="https://t.me/scrabble_online_bot">Telegram bot</a>',
             self::RU_LANG => 'Для доступа к полному списку подключитесь к нашему <a target="_blank" href="https://t.me/erudit_club_bot">Telegram-боту</a>'
@@ -927,7 +958,7 @@ class T
             self::EN_LANG => Faq::REWARDS[self::EN_LANG],
             self::RU_LANG => Faq::REWARDS[self::RU_LANG],
         ],
-        'Reward' =>  [
+        'Reward' => [
             self::RU_LANG => 'Награда'
         ],
         'faq_coins' => [

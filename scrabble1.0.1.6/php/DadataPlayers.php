@@ -27,50 +27,6 @@ class Players
 
     const MAX_UPLOAD_SIZE = 2 * 1024 * 1024;
 
-    public static function getTopPlayer($numTop = 1): array
-    {
-        $topQuery = ORM::select(
-                [
-                    'max( rating ) AS rating',
-                    'max( rating_changed_date ) AS updated_at',
-                    'common_id',
-                    'max( user_id ) AS user_id',
-                    'max( users.`name` ) AS name',
-                    'max( users.avatar_url ) AS avatar_url'
-                ],
-                '('
-                . ORM::select(['*'], PlayerModel::TABLE_NAME)
-                . ORM::where('common_id', '>', '0', true)
-                . ORM::orderBy('rating', false)
-                . ORM::limit($numTop * 10)
-                . ') AS p1 '
-            )
-            . ORM::leftJoin(PlayerModel::PLAYER_NAMES_TABLE_NAME)
-            . ORM::on('some_id', '=', 'p1.user_id', true)
-            . ORM::leftJoin(UserModel::TABLE_NAME)
-            . ORM::on(UserModel::TABLE_NAME.'.id', '=', 'p1.common_id', true)
-            . ORM::groupBy(['common_id'])
-            . ORM::orderBy('max( rating )', false)
-            . ORM::limit($numTop);
-        $res = DB::queryArray($topQuery);
-
-        return array_map(
-            function (array $playerInfo) {
-                return [
-                    'rating' => $playerInfo['rating'],
-                    'updated_at' => $playerInfo['updated_at'],
-                    'common_id' => $playerInfo['common_id'],
-                    'user_id' => $playerInfo['user_id'],
-                    'name' => $playerInfo['name'] ?: self::getPlayerName(
-                        ['ID' => 'someID', 'common_id' => $playerInfo['common_id'], 'userID' => $playerInfo['user_id']]
-                    ),
-                    'avatar_url' => $playerInfo['avatar_url'] ?: PlayerModel::getAvatarUrl($playerInfo['common_id'])
-                ];
-            },
-            $res
-        );
-    }
-
     public static function avatarUpload($files, $cookie): string
     {
         $status = 'error';

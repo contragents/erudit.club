@@ -26,6 +26,7 @@ const CODES = {
     'EN': [999, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]
 }
 
+const SUDOKU_PRICE = <?= MonetizationService::SUDOKU_PRICE ?>;
 const SUBMIT_SCRIPT = 'turn_submitter.php';
 const WORD_CHECKER_SCRIPT = 'word_checker.php';
 const STATUS_CHECKER_SCRIPT = 'status_checker.php';

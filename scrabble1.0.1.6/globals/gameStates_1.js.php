@@ -434,8 +434,8 @@ var gameStates = {
                 onEscape: false,
                 closeButton: false,
                 buttons: {
-                    ...(!!isPureSiteRoot() && {
-                        cabinet: {
+                    ...(!!isPureSiteRoot() && lang !== 'EN' && {
+                        oferta: {
                             label: '<?= T::S('Оферта') ?>',
                             className: 'btn-outline-success',
                             callback: function () {
@@ -464,7 +464,7 @@ var gameStates = {
                             },
                         }
                     }),
-                    ...(!isPureSiteRoot() && {
+                    ...(true /*!isPureSiteRoot()*/ && {
                         cabinet: {
                             label: '<?= T::S('Profile') ?>',
                             className: 'btn-outline-success',
@@ -519,7 +519,7 @@ var gameStates = {
                                         }
 
                                         function getProfileModal(profileData) {
-                                            return fetch('/profile-modal-tpl.html' + '?ver=' + Math.floor(Date.now()))
+                                            return fetch('/profile-modal-tpl_1.html' + '?ver=' + Math.floor(Date.now()))
                                                 .then((response) => response.text())
                                                 .then((template) => {
                                                     let message = template
@@ -561,7 +561,16 @@ var gameStates = {
                                                         .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
                                                         .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
                                                         .replaceAll('{{balanceSudoku}}', profileData.balanceSudoku)
-                                                        .replaceAll('{{referralList}}', referralList);
+                                                        .replaceAll('{{referralList}}', referralList)
+
+                                                        .replaceAll('{{Buy_SUDOKU}}', '<?= T::S('Buy_SUDOKU') ?>')
+                                                        .replaceAll('{{SUDOKU_amount}}', '<?= T::S('SUDOKU_amount') ?>')
+                                                        .replaceAll('{{enter_amount}}', '<?= T::S('enter_amount') ?>')
+                                                        .replaceAll('{{The_price}}', '<?= T::S('The_price') ?>')
+                                                        .replaceAll('{{calc_price}}', '<?= T::S('calc_price') ?>')
+                                                        .replaceAll('{{Check_price}}', '<?= T::S('Check_price') ?>')
+                                                        .replaceAll('{{Replenish}}', '<?= T::S('Replenish') ?>')
+                                                        ;
 
                                                     return message;
                                                 })
@@ -1459,4 +1468,44 @@ function clickGlobal(id) {
     }
 
     return true;
+}
+
+function RobokassaPaymentGlobal(actionType) {
+    let input = $('#amount-to-buy');
+    let amountToBuy = input.val();
+
+    if (actionType === 'check') {
+
+        let button = $('#replenish-button');
+        let calcPriceElement = $('#calculated-price');
+
+        if (!amountToBuy || amountToBuy < 0) {
+            amountToBuy = 0;
+            button.html('<?= T::S('Check_price') ?>');
+            calcPriceElement.html('<?= T::S('calc_price') ?>');
+        }
+
+        if(amountToBuy > 1000) {
+            amountToBuy = 1000;
+        }
+
+        amountToBuy = Math.ceil(amountToBuy / 10) * 10;
+        input.val(amountToBuy);
+
+
+        let price = amountToBuy * SUDOKU_PRICE; // 10 рублей за монету
+        if (amountToBuy > 0) {
+            calcPriceElement.html(price + ' &#8381;');
+            button.html('<?= T::S('Pay') ?>' + '<br>' + price + ' &#8381;');
+        } else {
+            button.html('<?= T::S('Check_price') ?>');
+        }
+
+        return;
+    }
+
+    if (actionType === 'pay' && amountToBuy > 0 && (amountToBuy % 10 === 0)) {
+        let price = amountToBuy * 10;
+        alert('Данная функция находится в процессе разработки');
+    }
 }

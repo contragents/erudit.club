@@ -183,11 +183,7 @@ class Hints
             'Оставьте Ваш отзыв о приложении - мы ценим мнение каждого игрока и постоянно улучшаем Игру - <strong><a href="https://play.google.com/store/apps/details?id=club.erudite.app">Оценить</a></strong>',
             'recordsHint',
             'recordsHint',
-            'top3Hint',
         ],
-        /*2400 => [
-            'top3Hint',
-        ],*/
     ];
 
     private static function checkCache($User, &$gameStatus, $hint)
@@ -345,55 +341,6 @@ class Hints
         $res = ['message' => implode('<br>', $words)];
 
         return $res;
-    }
-
-    private static function top3Hint()
-    {
-        return self::renderTopView(Players::getTopPlayer(3));
-    }
-
-    private static function renderTopView(array $topData)
-    {
-        $result = '<strong><span style="color:purple">Приветствуем Первую тройку игроков!</span></strong>
-                   <div class="col-row" style="text-align: center;">
-                   <table width="90%">';
-        foreach ($topData as $num => $playerData) {
-            $result .=
-                "<tr>
-                    <td>
-                        <img 
-                            style=\"cursor: pointer; margin-left: 0px; padding: 0; margin-top: 5px; z-index: 50;\" 
-                            title=\"Кликните для увеличения изображения\" 
-                            id=\"top_{$num}\" 
-                            onclick=\"showFullImage('top_{$num}', 500, 100);\" 
-                            src=\"/img/prizes/top_" . ($num + 1) . ".svg\" width=\"100px\" />
-                    </td>
-                    <td>
-                        <strong>{$playerData['name']} <br /> {$playerData['rating']}</strong>
-                    </td>
-                    <td>
-                        <img 
-                            style=\"border-radius: 10px 10px 10px 10px; margin-left: 10px; margin-top: 10px; padding-top:0;\" 
-                            alt=\"😰\" 
-                            src=\"{$playerData['avatar_url']}\" 
-                            height=\"75px\" 
-                            max-width=\"100px\" />
-                    </td>"
-                . (self::isMobileDevice()
-                    ? ''
-                    : (
-                        "<td style='padding-left: 5px;'>"
-                        . ($num === 0 ? 'Играл<br />' : '')
-                        . "<span style='white-space: nowrap;'>"
-                        . substr($playerData['updated_at'], 0, 10) . "</span>
-                        </td>"
-                    ))
-                . "</tr>";
-        }
-
-        $result .= "</table></div>";
-
-        return $result;
     }
 
     private static function recordsHint()

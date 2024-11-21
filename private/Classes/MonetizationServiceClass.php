@@ -38,4 +38,6 @@ class MonetizationService
         AchievesModel::WEEK_PERIOD => 2 / self::DIVIDER,
         AchievesModel::DAY_PERIOD => 1 / self::DIVIDER,
     ];
+
+    const SUDOKU_PRICE = 10;
 }

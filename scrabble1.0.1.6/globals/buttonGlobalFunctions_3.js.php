@@ -86,6 +86,7 @@ function newGameButtonFunction(ignoreDialog = false) {
             // title: 'Требуется подтверждение',
             message: '<?= T::S('You will lose if you quit the game! CONTINUE?') ?>',
             size: 'medium',
+            className: 'modal-settings modal-profile text-white',
             // onEscape: false,
             closeButton: true,
             buttons: {
