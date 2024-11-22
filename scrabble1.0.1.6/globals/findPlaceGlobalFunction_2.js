@@ -135,7 +135,6 @@ function chooseLetterGlobal(gameObject) {
 
 
     const letterClickHandler = (letterCode) => {
-        console.log(letterCode);
         switchFishkaGlobal(letterCode + 1 + 999, gameObject);
         chooseFishka = false;
         dialog.modal('hide');
@@ -160,14 +159,13 @@ function chooseLetterGlobal(gameObject) {
 
     const messageElement = document.createElement('div');
     messageElement.innerHTML = message;
-    messageElement.querySelector('.letter').addEventListener('click', e => {
+    messageElement.querySelectorAll('.letter').forEach(l => l.addEventListener('click', e => {
         e.preventDefault();
-        console.log('click', e.target.closest('.letter').getAttribute('data-id'));
         if (e && e.target && e.target.closest('.letter')) {
             const letterId = +e.target.closest('.letter').getAttribute('data-id');
             letterClickHandler(letterId);
         }
-    });
+    }));
 
     bootbox.hideAll();
 

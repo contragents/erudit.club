@@ -434,180 +434,182 @@ var gameStates = {
                 onEscape: false,
                 closeButton: false,
                 buttons: {
-                    ...(!!isPureSiteRoot() && lang !== 'EN' && {
-                        oferta: {
-                            label: '<?= T::S('Оферта') ?>',
-                            className: 'btn-outline-success',
-                            callback: function () {
-                                async function getOfertaModal() {
-                                    return fetch('/oferta.html')
-                                        .then((response) => response.text());
-                                };
-                                console.log('!!!!!!!!!!!');
-                                getOfertaModal().then((html) => {
-                                    dialog = bootbox.alert({
-                                        title: '',
-                                        message: html,
-                                        locale: 'ru',
-                                        className: 'modal-settings modal-profile',
-                                        buttons: {
-                                            ok: {
-                                                label: '<?= T::S('Back') ?>',
-                                                className: 'btn-sm ml-auto mr-0',
-                                            },
+                    ...(false && !!isPureSiteRoot() && lang !== 'EN' && {
+                    oferta: {
+                        label: '<?= T::S('Оферта') ?>',
+                        className: 'btn-outline-success',
+                        callback: function () {
+                            async function getOfertaModal() {
+                                return fetch('/oferta.html')
+                                    .then((response) => response.text());
+                            };
+                            console.log('!!!!!!!!!!!');
+                            getOfertaModal().then((html) => {
+                                dialog = bootbox.alert({
+                                    title: '',
+                                    message: html,
+                                    locale: 'ru',
+                                    className: 'modal-settings modal-profile',
+                                    buttons: {
+                                        ok: {
+                                            label: '<?= T::S('Back') ?>',
+                                            className: 'btn-sm ml-auto mr-0',
                                         },
-                                        callback: function () {
-                                            gameStates.chooseGame.action(data);
-                                        },
-                                    })
-                                });
-                            },
-                        }
-                    }),
-                    ...(true /*!isPureSiteRoot()*/ && {
-                        cabinet: {
-                            label: '<?= T::S('Profile') ?>',
-                            className: 'btn-outline-success',
-                            callback: function () {
-                                setTimeout(function () {
-                                    fetchGlobal(CABINET_SCRIPT, '', 12).then((dataCabinet) => {
-                                        if (dataCabinet == '') var responseText = '<?= T::S('Error') ?>';
-                                        else var responseArr = JSON.parse(dataCabinet['message']);
+                                    },
+                                    callback: function () {
+                                        gameStates.chooseGame.action(data);
+                                    },
+                                })
+                            });
+                        },
+                    }
+                    })
+                    ,
+                    //...(true /*!isPureSiteRoot()*/ && {
+                    cabinet: {
+                        label: '<?= T::S('Profile') ?>',
+                        className: 'btn-outline-success',
+                        callback: function () {
+                            setTimeout(function () {
+                                fetchGlobal(CABINET_SCRIPT, '', 12).then((dataCabinet) => {
+                                    if (dataCabinet == '') var responseText = '<?= T::S('Error') ?>';
+                                    else var responseArr = JSON.parse(dataCabinet['message']);
 
-                                        /* ------------------------------ PROFILE DATA ------------------------------ */
-                                        const profileData = {
-                                            name: responseArr.name ? responseArr.name : 'Nickname',
-                                            common_id: responseArr.common_id, // id игрока
-                                            imageUrl: responseArr.url, // url картинки
-                                            imageTitle: responseArr.img_title, // альт картинки
-                                            rating: responseArr.info.rating ? responseArr.info.rating : 0, // рейтинг
-                                            placement: responseArr.info.top, // место в рейтинге
-                                            balance: responseArr.info.SUDOKU_BALANCE, // баланс
-                                            ratingByCoins: responseArr.info.SUDOKU_TOP, // рейтинг по монетам
-                                            tgWallet: '', // telegram wallet
-                                            bonusAccrual: responseArr.info.rewards, // начисление бонусов
-                                            balanceSudoku: responseArr.info.SUDOKU_BALANCE, // баланс SUDOKU
-                                            referrals: responseArr.refs ? responseArr.refs : [],
-                                        };
+                                    /* ------------------------------ PROFILE DATA ------------------------------ */
+                                    const profileData = {
+                                        name: responseArr.name ? responseArr.name : 'Nickname',
+                                        common_id: responseArr.common_id, // id игрока
+                                        imageUrl: responseArr.url, // url картинки
+                                        imageTitle: responseArr.img_title, // альт картинки
+                                        rating: responseArr.info.rating ? responseArr.info.rating : 0, // рейтинг
+                                        placement: responseArr.info.top, // место в рейтинге
+                                        balance: responseArr.info.SUDOKU_BALANCE, // баланс
+                                        ratingByCoins: responseArr.info.SUDOKU_TOP, // рейтинг по монетам
+                                        tgWallet: '', // telegram wallet
+                                        bonusAccrual: responseArr.info.rewards, // начисление бонусов
+                                        balanceSudoku: responseArr.info.SUDOKU_BALANCE, // баланс SUDOKU
+                                        referrals: responseArr.refs ? responseArr.refs : [],
+                                    };
 
-                                        profileData.cookie = responseArr.form.filter(
-                                            (item) => item.inputName === 'cookie',
-                                        );
-                                        profileData.MAX_FILE_SIZE = responseArr.form.filter(
-                                            (item) => item.inputName === 'MAX_FILE_SIZE',
-                                        );
+                                    profileData.cookie = responseArr.form.filter(
+                                        (item) => item.inputName === 'cookie',
+                                    );
+                                    profileData.MAX_FILE_SIZE = responseArr.form.filter(
+                                        (item) => item.inputName === 'MAX_FILE_SIZE',
+                                    );
 
-                                        // делаем верстку из массива referrals
-                                        let referralList = '';
-                                        if ('referrals' in profileData && profileData.referrals.length > 0) {
-                                            referralList = profileData.referrals
-                                                .map(
-                                                    (ref) => `
+                                    // делаем верстку из массива referrals
+                                    let referralList = '';
+                                    if ('referrals' in profileData && profileData.referrals.length > 0) {
+                                        referralList = profileData.referrals
+                                            .map(
+                                                (ref) => `
 								<li class="box">
 									<span class="name d-block">${ref[0]}</span>
 									<div class="pill-wrap"><span class="pill-nopill">${ref[1]}</span></div>
 								</li>
 						`,
-                                                )
-                                                .join('');
+                                            )
+                                            .join('');
 
-                                            referralList = `
+                                        referralList = `
 								<ul class="referral-list">
 									${referralList}
 								</ul>
 						`;
-                                        }
+                                    }
 
-                                        function getProfileModal(profileData) {
-                                            return fetch('/profile-modal-tpl_1.html' + '?ver=' + Math.floor(Date.now()))
-                                                .then((response) => response.text())
-                                                .then((template) => {
-                                                    let message = template
-                                                        .replaceAll('{{Profile}}', '<?= T::S('Profile') ?>')
-                                                        .replaceAll('{{Wallet}}', '<?= T::S('Wallet') ?>')
-                                                        .replaceAll('{{Referrals}}', '<?= T::S('Referrals') ?>')
-                                                        .replaceAll('{{Player ID}}', '<?= T::S('Player ID') ?>')
-                                                        .replaceAll('{{Save}}', '<?= T::S('Save') ?>')
-                                                        .replaceAll('{{Input new nickname}}',
-                                                            '<?= T::S('Input new nickname') ?>')
-                                                        .replaceAll('{{Your rank}}', '<?= T::S('Your rank') ?>')
-                                                        .replaceAll('{{Ranking number}}',
-                                                            '<?= T::S('Ranking number') ?>')
-                                                        .replaceAll('{{Balance}}', '<?= T::S('Balance') ?>')
-                                                        .replaceAll('{{Rating by coins}}',
-                                                            '<?= T::S('Rating by coins') ?>')
-                                                        .replaceAll('{{Link}}', '<?= T::S('Link') ?>') // Привязать
-                                                        .replaceAll('{{Bonuses accrued}}',
-                                                            '<?= T::S('Bonuses accrued') ?>') // Начислено бонусов
-                                                        .replaceAll('{{SUDOKU Balance}}',
-                                                            '<?= T::S('SUDOKU Balance') ?>') // Баланс SUDOKU
-                                                        .replaceAll('{{Claim}}', '<?= T::S('Claim') ?>') // Забрать
-                                                        .replaceAll('{{Name}}', '<?= T::S('Name') ?>')
-                                                        .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
-                                                        .replaceAll('{{cookie}}', profileData.cookie)
-                                                        /* хз зачем
-                                                        .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE[0].value)
-                                                        .replaceAll('{{cookie}}', profileData.cookie[0].value)
-                                                        */
-                                                        .replaceAll('{{common_id}}', profileData.common_id)
-                                                        .replaceAll('{{name}}', profileData.name)
-                                                        .replaceAll('{{imageUrl}}', profileData.imageUrl)
-                                                        .replaceAll('{{imageTitle}}', profileData.imageTitle)
-                                                        .replaceAll('{{rating}}', profileData.rating)
-                                                        .replaceAll('{{placement}}', profileData.placement)
-                                                        .replaceAll('{{balance}}', profileData.balance)
-                                                        .replaceAll('{{ratingByCoins}}', profileData.ratingByCoins)
-                                                        .replaceAll('{{tgWallet}}', profileData.tgWallet)
-                                                        .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
-                                                        .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
-                                                        .replaceAll('{{balanceSudoku}}', profileData.balanceSudoku)
-                                                        .replaceAll('{{referralList}}', referralList)
+                                    function getProfileModal(profileData) {
+                                        return fetch('/profile-modal-tpl_1.html' + '?ver=' + Math.floor(Date.now()))
+                                            .then((response) => response.text())
+                                            .then((template) => {
+                                                let message = template
+                                                    .replaceAll('{{Profile}}', '<?= T::S('Profile') ?>')
+                                                    .replaceAll('{{Wallet}}', '<?= T::S('Wallet') ?>')
+                                                    .replaceAll('{{Referrals}}', '<?= T::S('Referrals') ?>')
+                                                    .replaceAll('{{Player ID}}', '<?= T::S('Player ID') ?>')
+                                                    .replaceAll('{{Save}}', '<?= T::S('Save') ?>')
+                                                    .replaceAll('{{Input new nickname}}',
+                                                        '<?= T::S('Input new nickname') ?>')
+                                                    .replaceAll('{{Your rank}}', '<?= T::S('Your rank') ?>')
+                                                    .replaceAll('{{Ranking number}}',
+                                                        '<?= T::S('Ranking number') ?>')
+                                                    .replaceAll('{{Balance}}', '<?= T::S('Balance') ?>')
+                                                    .replaceAll('{{Rating by coins}}',
+                                                        '<?= T::S('Rating by coins') ?>')
+                                                    .replaceAll('{{Link}}', '<?= T::S('Link') ?>') // Привязать
+                                                    .replaceAll('{{Bonuses accrued}}',
+                                                        '<?= T::S('Bonuses accrued') ?>') // Начислено бонусов
+                                                    .replaceAll('{{SUDOKU Balance}}',
+                                                        '<?= T::S('SUDOKU Balance') ?>') // Баланс SUDOKU
+                                                    .replaceAll('{{Claim}}', '<?= T::S('Claim') ?>') // Забрать
+                                                    .replaceAll('{{Name}}', '<?= T::S('Name') ?>')
+                                                    .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
+                                                    .replaceAll('{{cookie}}', profileData.cookie)
+                                                    /* хз зачем
+                                                    .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE[0].value)
+                                                    .replaceAll('{{cookie}}', profileData.cookie[0].value)
+                                                    */
+                                                    .replaceAll('{{common_id}}', profileData.common_id)
+                                                    .replaceAll('{{name}}', profileData.name)
+                                                    .replaceAll('{{imageUrl}}', profileData.imageUrl)
+                                                    .replaceAll('{{imageTitle}}', profileData.imageTitle)
+                                                    .replaceAll('{{rating}}', profileData.rating)
+                                                    .replaceAll('{{placement}}', profileData.placement)
+                                                    .replaceAll('{{balance}}', profileData.balance)
+                                                    .replaceAll('{{ratingByCoins}}', profileData.ratingByCoins)
+                                                    .replaceAll('{{tgWallet}}', profileData.tgWallet)
+                                                    .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
+                                                    .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
+                                                    .replaceAll('{{balanceSudoku}}', profileData.balanceSudoku)
+                                                    .replaceAll('{{referralList}}', referralList)
 
-                                                        .replaceAll('{{Buy_SUDOKU}}', '<?= T::S('Buy_SUDOKU') ?>')
-                                                        .replaceAll('{{SUDOKU_amount}}', '<?= T::S('SUDOKU_amount') ?>')
-                                                        .replaceAll('{{enter_amount}}', '<?= T::S('enter_amount') ?>')
-                                                        .replaceAll('{{The_price}}', '<?= T::S('The_price') ?>')
-                                                        .replaceAll('{{calc_price}}', '<?= T::S('calc_price') ?>')
-                                                        .replaceAll('{{Check_price}}', '<?= T::S('Check_price') ?>')
-                                                        .replaceAll('{{Replenish}}', '<?= T::S('Replenish') ?>')
-                                                        ;
+                                                    .replaceAll('{{Buy_SUDOKU}}', '<?= T::S('Buy_SUDOKU') ?>')
+                                                    .replaceAll('{{SUDOKU_amount}}', '<?= T::S('SUDOKU_amount') ?>')
+                                                    .replaceAll('{{enter_amount}}', '<?= T::S('enter_amount') ?>')
+                                                    .replaceAll('{{The_price}}', '<?= T::S('The_price') ?>')
+                                                    .replaceAll('{{calc_price}}', '<?= T::S('calc_price') ?>')
+                                                    .replaceAll('{{Check_price}}', '<?= T::S('Check_price') ?>')
+                                                    .replaceAll('{{Replenish}}', '<?= T::S('Replenish') ?>')
+                                                ;
 
-                                                    return message;
-                                                })
-                                                .catch((error) =>
-                                                    console.error('Ошибка загрузки profile-modal:', error),
-                                                );
-                                        }
+                                                return message;
+                                            })
+                                            .catch((error) =>
+                                                console.error('Ошибка загрузки profile-modal:', error),
+                                            );
+                                    }
 
-                                        /* ---------------------------- END PROFILE DATA ---------------------------- */
+                                    /* ---------------------------- END PROFILE DATA ---------------------------- */
 
-                                        getProfileModal(profileData).then((html) => {
-                                            dialog = bootbox.alert({
-                                                title: '',
-                                                message: html,
-                                                locale: 'ru',
-                                                className: 'modal-settings modal-profile',
-                                                buttons: {
-                                                    ok: {
-                                                        label: '<?= T::S('Back') ?>',
-                                                        className: 'btn-sm ml-auto mr-0',
-                                                    },
+                                    getProfileModal(profileData).then((html) => {
+                                        dialog = bootbox.alert({
+                                            title: '',
+                                            message: html,
+                                            locale: 'ru',
+                                            className: 'modal-settings modal-profile',
+                                            buttons: {
+                                                ok: {
+                                                    label: '<?= T::S('Back') ?>',
+                                                    className: 'btn-sm ml-auto mr-0',
                                                 },
-                                                onShown: function (e) {
-                                                    profileModal.onProfileModalLoaded();
-                                                },
-                                                callback: function () {
-                                                    gameStates['chooseGame']['action'](data);
-                                                },
-                                            });
+                                            },
+                                            onShown: function (e) {
+                                                profileModal.onProfileModalLoaded();
+                                            },
+                                            callback: function () {
+                                                gameStates['chooseGame']['action'](data);
+                                            },
                                         });
-
-                                        return false;
                                     });
-                                }, 100);
-                            },
-                        }
-                    }),
+
+                                    return false;
+                                });
+                            }, 100);
+                        },
+                    }
+                    //})
+                    ,
                     instruction: {
                         label: 'FAQ',
                         className: 'btn-outline-success d-none',
@@ -1506,6 +1508,29 @@ function RobokassaPaymentGlobal(actionType) {
 
     if (actionType === 'pay' && amountToBuy > 0 && (amountToBuy % 10 === 0)) {
         let price = amountToBuy * 10;
-        alert('Данная функция находится в процессе разработки');
+
+        let orderParams = {
+            receiver: '4100138808308',
+            label: commonId,
+            sum: price,
+        };
+        orderParams['quickpay-form'] = 'button';
+
+        // не работает. сделать отправку формы на сервере и возврат ссылки на оплату
+        fetch('https://yoomoney.ru/quickpay/confirm', {
+            method: "POST",
+            body: getFormData(orderParams),
+            redirect: 'manual',
+            mode: 'no-cors',
+        }).then((response) => {
+            alert(response.url);
+            console.log(response);
+        });
     }
+}
+
+function getFormData(object) {
+    const formData = new FormData();
+    Object.keys(object).forEach(key => formData.append(key, object[key]));
+    return formData;
 }
