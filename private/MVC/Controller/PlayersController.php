@@ -8,6 +8,7 @@ class PlayersController extends BaseController
     const SIGN_PARAM = 'sign';
     const REF_TG_ID_PARAM = 'ref_tg_id';
     const ADD_REF_PARAMS_ORDER = [self::COMMON_ID_PARAM, self::REF_TG_ID_PARAM];
+    const SECRET_PARAM = 'secret';
 
     const PARAM_VALUES = [
         self::HIDE_PARAM => [self::HIDE, self::SHOW],
@@ -17,12 +18,21 @@ class PlayersController extends BaseController
     const HIDE = 'hide';
     const SHOW = 'show';
 
-
     public function Run()
     {
         ini_set("display_errors", 1); error_reporting(E_ALL);
 
         return parent::Run();
+    }
+
+    public function mergeAction()
+    {
+        $commonId = PlayerModel::getPlayerID(self::$Request[self::TG_ID_PARAM]);
+        if (!$commonId) {
+            return ['result' => 'error', 'message' => 'Пользователь не найден'];
+        }
+
+        return (@(new Game())->mergeTheIDs(self::$Request[self::SECRET_PARAM], $commonId));
     }
 
     public function addRefAction(): string
@@ -31,7 +41,7 @@ class PlayersController extends BaseController
         $method = 'addRef';
 
         $sign = md5($salt . $method . implode('', array_map(fn($key) => $key . self::$Request[$key] ?? '', self::ADD_REF_PARAMS_ORDER)));
-        $res = ['status' => 'error'];
+        $res = ['result' => 'error'];
 
         if($sign !== self::$Request[self::SIGN_PARAM]) {
             return json_encode($res);
@@ -47,7 +57,7 @@ class PlayersController extends BaseController
         }
 
         if (BalanceModel::changeBalance(self::$Request[self::COMMON_ID_PARAM], MonetizationService::REWARD[AchievesModel::DAY_PERIOD], 'Referral bonus for ' . $ref->_name, BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::MOTIVATION_TYPE])) {
-            $res['status'] = 'success';
+            $res['result'] = 'success';
         }
 
         return json_encode($res);

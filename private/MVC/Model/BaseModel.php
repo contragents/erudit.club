@@ -99,6 +99,15 @@ class BaseModel
     }
 
     /**
+     * @param array $fieldsVals
+     * @return static|null
+     */
+    public static function new(array $fieldsVals = []): ?object
+    {
+        return self::arrayToObject($fieldsVals);
+    }
+
+    /**
      * @param array $row
      * @return static
      */
@@ -124,6 +133,29 @@ class BaseModel
             } catch (Throwable $e) {
                 continue;
             }
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param array $fields
+     * @param string $where
+     * @param string $other
+     * @return static[]
+     */
+    public static function selectO(array $fields = [], string $where = '', string $other = ''): array
+    {
+        $query = ORM::select($fields, static::TABLE_NAME)
+            . ' ' . $where
+            . ' ' . $other;
+
+        $rows = DB::queryArray($query) ?: [];
+
+        $res = [];
+
+        foreach($rows as $row) {
+            $res[] = self::arrayToObject($row);
         }
 
         return $res;
@@ -161,7 +193,12 @@ class BaseModel
         return $res;
     }
 
-    public static function getOneO(int $id, bool $createIfNotExists = false) {
+    /**
+     * @param int $id
+     * @param bool $createIfNotExists
+     * @return static|null
+     */
+    public static function getOneO(int $id, bool $createIfNotExists = false): ?object {
         $row = self::getOne($id);
 
         if (!empty($row)) {
@@ -171,7 +208,7 @@ class BaseModel
             $res->_id = $id;
         }
 
-        return $res;
+        return $res ?? null;
     }
 
     public static function select(array $fields = [], bool $skobki = false, string $where = '', string $as = ''): string

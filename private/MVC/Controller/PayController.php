@@ -4,8 +4,8 @@ class PayController extends BaseController
 {
     const COMMON_URL = 'mvc/pay/';
 
-    const CELL_BASE64 = 'te6ccgECEAEAAzQAART/APSkE/S88sgLAQIBYgIDAgLMBAUCA3pgDg8E9dkGOASS+B8ADoaYGAuNhJL4HwfSB9IBj9ABi465D9ABj9ABg51NoAAWmP6Z/2omh9AH0gamoYQAqpOF1xgUEIPe7L7yk4XXGBQQgWO1y5qThdcYEam5uR4AHHDRmoGuOC+XAkgf0gGCzkKAJ9ASxni2ZmZPaqcBqBYAJAYHCAkAk7PwUIgG4KhAJqgoB5CgCfQEsZ4sA54tmZJFkZYCJegB6AGWAZJB8gDg6ZGWBZQPl/+ToO8AMZGWCrGeLKAJ9AQnltYlmZmS4/YBAIY1NTY2UTTHBfLgSQL6QPoA1DAg0IBg1yH6ADBTcKCCKWNFeF2KAAC88tBPJRA0UELwCRSgUDPIUAT6AljPFszMye1UAcA2NzcB+gD6QPgoVBIGcFQgE1QUA8hQBPoCWM8WAc8WzMkiyMsBEvQA9ADLAMn5AHB0yMsCygfL/8nQUAbHBfLgSqEDRUXIUAT6AljPFszMye1UAfpAMCDXCwHDAJFb4w0KAf42XwOCCJiWgBWgFbzy4EsC+kDTADCVyCHPFsmRbeKCENFzVABwgBjIywVQBc8WJPoCFMtqE8sfFMs/I/pEMHC6jjP4KEQDcFQgE1QUA8hQBPoCWM8WAc8WzMkiyMsBEvQA9ADLAMn5AHB0yMsCygfL/8nQzxaWbCJwAcsB4vQACwL+jvpRJMcF8uBJ9AQwcMjLB4tkpFVFRPTozxbJgvC3anyhU8JGcWWDNbvQiUY1D/xiH6HFFucSMJXU/9XFgViDB/QXcMjLB4sTmM8WyYLw7oD9Lx4DSA4igjY1lu51LXuyf1B3a5UIagJ5GJZ1kj5Ygwf0F3DIywf0AMlDAOBfBQwNAD6CENUydttwgBDIywVQA88WIvoCEstqyx/LP8mAQvsAAArJgED7AAAayFAE+gJYzxbMzMntVAAIhA/y8AB9rbz2omh9AH0gamoYNhj8FAC4KhAJqgoB5CgCfQEsZ4sA54tmZJFkZYCJegB6AGWAZPyAODpkZYFlA+X/5OhAADmvFvaiaH0AfSBqahgZOCmAOmRlgWWD5f/k6CABwA==';
-    const DECODE_TMP_KEY = 'ton_cell_decode';
+    const SUMM_PARAM = 'summ';
+    const EPSILON = 0.01;
 
     public function Run()
     {
@@ -15,23 +15,141 @@ class PayController extends BaseController
         return parent::Run();
     }
 
+    /**
+     * Создает транзакцию на новый платеж, получает от yumoney ссылку на оплату, возвращает клиенту ссылку или ошибку
+     * @return array|string
+     */
+    public function payAction()
+    {
+        $badResult = ['result' => 'error', 'message' => T::S('Ошибка создания нового платежа')];
+        $summ = self::$Request[self::SUMM_PARAM];
+        $commonId = self::$Request[self::COMMON_ID_PARAM];
+
+        $transaction = PaymentModel::new(
+            [PaymentModel::SUMM_FIELD => $summ, PaymentModel::COMMON_ID_FIELD => $commonId]
+        );
+
+        if (!$transaction->save()) {
+            return $badResult;
+        }
+
+        $formData = [
+            'receiver' => '4100138808308',
+            'label' => $transaction->_id,
+            'sum' => $transaction->_summ,
+            'quickpay-form' => 'button',
+        ];
+
+        $response = self::makeRequest('https://yoomoney.ru/quickpay/confirm', [], $formData);
+
+        $redirectUrl = self::getLocation($response['headers'] ?? []);
+        if (!$redirectUrl) {
+            return $badResult;
+        }
+
+        return ['result' => 'success', 'location' => $redirectUrl, 'response' => $response];
+    }
+
+    private static function getLocation(array $headers): string
+    {
+        foreach ($headers as $header) {
+            if (stripos($header, 'location:') !== false) {
+                return substr($header, 10);
+            }
+        }
+
+        return '';
+    }
+
+    protected static function makeRequest(
+        string $url,
+        array $params = [],
+        array $post = []
+    ): array {
+        $opts = [
+            "http" => [
+                    "method" => (!empty($post)) ? "POST" : "GET",
+                    "header" => "Accept-language: en\r\n"
+                        . "Referer: {$_SERVER['HTTP_REFERER']}\r\n" // https://xn--d1aiwkc2d.club/ todo вынести в константу или переменную
+                        . ($post ? "Content-Type: application/x-www-form-urlencoded\r\n" : ''),
+                ]
+                + ((!empty($post)) ? ['content' => http_build_query($post)] : [])
+        ];
+
+        $context = stream_context_create($opts);
+
+        $res = file_get_contents(
+            $url
+            . ($params
+                ? ('?' . implode('&', array_map(fn($param, $value) => "$param=$value", array_keys($params), $params)))
+                : ''
+            ),
+            false,
+            $context
+        );
+
+        return ['result' => $res, 'headers' => $http_response_header];
+    }
+
     public function successAction(): string
     {
+        // Сохраняет в кеш запрос и возвращает предыдущий запрос
         $res = Cache::get('yumoney');
         Cache::setex('yumoney', 3600, json_encode(self::$Request + ['method' => 'success'], JSON_UNESCAPED_UNICODE));
 
+        if ($transactionId = (self::$Request['label'] ?? false)) {
+            $transaction = PaymentModel::getOneO($transactionId);
+            if ($transaction) {
+                // Транзакция найдена
+
+                /** @var float $summConfirmed */
+                $summConfirmed = self::$Request['amount'] ?? 0;
+
+                if (
+                    $transaction->_status === PaymentModel::INIT_STATUS
+                    && self::checkSum($transaction->_summ, $summConfirmed, 0.03)
+                ) {
+                    // Статус транзакции и сумма соответствуют
+                    if (BalanceModel::changeBalance(
+                        $transaction->_common_id,
+                        ceil($transaction->_summ / 10),
+                        T::S('Coins purchased'),
+                        BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::DEPOSIT_TYPE],
+                    )) {
+                        $transaction->_status = PaymentModel::COMPLETE_STATUS;
+                    } else {
+                        $transaction->_status = PaymentModel::FAIL_STATUS;
+                    }
+
+                    $transaction->save();
+                } else {
+                    $transaction->_status = PaymentModel::BAD_CONFIRM_STATUS;
+                    $transaction->save();
+                    $badConfirm = PaymentModel::new(
+                        [
+                            PaymentModel::STATUS_FIELD => PaymentModel::BAD_CONFIRM_STATUS,
+                            PaymentModel::REF_ID_FIELD => $transactionId,
+                            PaymentModel::COMMON_ID_FIELD => 0,
+                            PaymentModel::SUMM_FIELD => $summConfirmed,
+                        ]
+                    );
+                    $badConfirm->save();
+                }
+            }
+        }
+
+        Tg::botSendMessage(
+            json_encode(['request' => self::$Request, 'transaction' => $transaction, 'badConfirm' => $badConfirm ?? false], JSON_UNESCAPED_UNICODE),
+            null,
+            Game::$gameName
+        );
+
         return $res;
-
-        return json_encode(self::$Request + ['method' => 'success'], JSON_UNESCAPED_UNICODE);
     }
 
-    public function failAction(): string
-    {
-        return json_encode(self::$Request + ['method' => 'result'], JSON_UNESCAPED_UNICODE);
-    }
 
-    public function resultAction(): string
+    private static function checkSum(float $summ, float $summConfirmed, float $comsa = 0.03): bool
     {
-        return json_encode(self::$Request + ['method' => 'result'], JSON_UNESCAPED_UNICODE);
+        return abs(($summ - $summConfirmed) / $summ - $comsa) < self::EPSILON;
     }
 }

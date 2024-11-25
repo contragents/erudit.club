@@ -486,8 +486,10 @@ var gameStates = {
                                         balance: responseArr.info.SUDOKU_BALANCE, // баланс
                                         ratingByCoins: responseArr.info.SUDOKU_TOP, // рейтинг по монетам
                                         tgWallet: '', // telegram wallet
+                                        secret: responseArr.secret,
                                         bonusAccrual: responseArr.info.rewards, // начисление бонусов
                                         balanceSudoku: responseArr.info.SUDOKU_BALANCE, // баланс SUDOKU
+                                        transactionList: responseArr.transactions,
                                         referrals: responseArr.refs ? responseArr.refs : [],
                                     };
 
@@ -537,6 +539,11 @@ var gameStates = {
                                                     .replaceAll('{{Balance}}', '<?= T::S('Balance') ?>')
                                                     .replaceAll('{{Rating by coins}}',
                                                         '<?= T::S('Rating by coins') ?>')
+                                                    .replaceAll('{{Secret key}}',
+                                                        '<?= T::S('Secret key') ?>')
+                                                    .replaceAll('{{secret}}', profileData.secret)
+                                                    .replaceAll('{{secret_prompt}}',
+                                                        '<?= T::S('secret_prompt') ?>')
                                                     .replaceAll('{{Link}}', '<?= T::S('Link') ?>') // Привязать
                                                     .replaceAll('{{Bonuses accrued}}',
                                                         '<?= T::S('Bonuses accrued') ?>') // Начислено бонусов
@@ -571,6 +578,9 @@ var gameStates = {
                                                     .replaceAll('{{calc_price}}', '<?= T::S('calc_price') ?>')
                                                     .replaceAll('{{Check_price}}', '<?= T::S('Check_price') ?>')
                                                     .replaceAll('{{Replenish}}', '<?= T::S('Replenish') ?>')
+                                                    .replaceAll('{{Support in Telegram}}', '<?= T::S('Support in Telegram') ?>')
+                                                    .replaceAll('{{Last transactions}}', '<?= T::S('Last transactions') ?>')
+                                                    .replaceAll('{{transaction_list}}', profileData.transactionList)
                                                 ;
 
                                                 return message;
@@ -1510,22 +1520,25 @@ function RobokassaPaymentGlobal(actionType) {
         let price = amountToBuy * 10;
 
         let orderParams = {
-            receiver: '4100138808308',
-            label: commonId,
-            sum: price,
+            common_id: commonId,
+            summ: price,
         };
         orderParams['quickpay-form'] = 'button';
 
         // не работает. сделать отправку формы на сервере и возврат ссылки на оплату
-        fetch('https://yoomoney.ru/quickpay/confirm', {
+        fetch('/mvc/pay/pay', {
             method: "POST",
             body: getFormData(orderParams),
-            redirect: 'manual',
-            mode: 'no-cors',
-        }).then((response) => {
-            alert(response.url);
-            console.log(response);
-        });
+        }).then(response => response.json())
+            .then(result => {
+                console.log('Success:', result);
+                if ('location' in result) {
+                    location.href = result.location;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 }
 

@@ -75,8 +75,12 @@
 									class="icon icon-coin"></i><span class="pill">{{balance}}</span>
 							</li>
 							<li class="d-flex"><span class="label">{{Rating by coins}}</span><span class="pill">{{ratingByCoins}}</span></li>
-						</ul>
+                            <li class="d-flex"><span class="label">{{Secret key}}</span><span class="no-pill">{{secret}}</span></li>
+                        </ul>
 					</div>
+                    <span style="margin:auto; display:table;">
+                        {{secret_prompt}}
+                    </span>
 				</div>
 			</div>
 			<!-- end .tab-pane #main-info-tab-pane -->
@@ -147,7 +151,13 @@
                             </button>
                         </div>-->
                     </div>
+                    <a style="color:#00ff00;text-decoration:none;" href="https://t.me/eruditclub" target="_blank">{{Support in Telegram}}</a>
+                    <br><br><br>
+                    {{Last transactions}}:
+                    <div id="transactions">{{transaction_list}}</div>
                 </div>
+
+
                 <!--<iframe srcdoc='<html><body>
                 <form method="POST" action="https://yoomoney.ru/quickpay/confirm">
                     <input type="hidden" name="receiver" value="4100138808308"/>

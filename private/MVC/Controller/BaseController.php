@@ -10,6 +10,7 @@ class BaseController
     const MAIN_PARAM = 'id';
 
     const COMMON_ID_PARAM = 'common_id';
+    const TG_ID_PARAM = 'tg_id';
 
     const VIEW_PATH = __DIR__ . '/../View/';
 

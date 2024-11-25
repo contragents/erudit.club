@@ -54,6 +54,32 @@ class T
     }
 
     const PHRASES = [
+        'secret_prompt' => [
+            self::EN_LANG => '&#42;Save this key for further account restoration in <a href="https://t.me/scrabble_online_bot">Telegram</a>',
+            self::RU_LANG => '&#42;Сохраните ключ для восстановления аккаунта в <a href="https://t.me/erudit_club_bot">Telegram</a>'
+        ],
+        PaymentModel::INIT_STATUS => [
+            self::EN_LANG => 'Started',
+            self::RU_LANG => 'Начата'
+        ],
+        PaymentModel::BAD_CONFIRM_STATUS => [
+            self::EN_LANG => 'Bad confirmation',
+            self::RU_LANG => 'Ошибка подтверждения'
+        ],
+        PaymentModel::COMPLETE_STATUS => [
+            self::EN_LANG => 'Completed',
+            self::RU_LANG => 'Исполнена'
+        ],
+        PaymentModel::FAIL_STATUS => [
+            self::EN_LANG => 'Failed',
+            self::RU_LANG => 'Ошибка'
+        ],
+        'Last transactions' => [
+            self::RU_LANG => 'Последние операции'
+        ],
+        'Support in Telegram' => [
+            self::RU_LANG => 'Техподдержка в Telegram'
+        ],
         'Check_price' => [
             self::EN_LANG => 'Check price',
             self::RU_LANG => 'Узнать<br>цену'
@@ -275,6 +301,10 @@ class T
         ],
         'Rating by coins' => [
             self::RU_LANG => 'Рейтинг по монетам'
+        ],
+        'Secret key' => [
+            self::EN_LANG => 'Secret key&#42;',
+            self::RU_LANG => 'Ключ&#42; восстановления'
         ],
         'Link' => [
             self::RU_LANG => 'Привязать'
@@ -813,6 +843,12 @@ class T
         ],
         'Date' => [
             self::RU_LANG => 'Дата'
+        ],
+        'Price' => [
+            self::RU_LANG => 'Сумма'
+        ],
+        'Status' => [
+            self::RU_LANG => 'Статус'
         ],
         'Type' => [
             self::RU_LANG => 'Тип'

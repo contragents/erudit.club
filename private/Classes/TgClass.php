@@ -4,8 +4,33 @@ class Tg
 {
     public const TG_USER_INFO_ = 'tg_user_info_';
     public const TG_USER_CACHE_TTL = 7 * 24 * 60 * 60;
+
+    private const BOT_URL = 'https://xn--d1aiwkc2d.club/bot/send?';
+    private const GAME_PARAM = 'game';
+    private const TEXT_PARAM = 'text';
+    private const TG_ID_PARAM = 'tg_id';
+
     public static ?array $tgUser = null;
     public static ?int $commonId = null;
+
+    public static function botSendMessage(string $textHtml, ?int $tgId = null, string $gameName = Game::ERUDIT): bool
+    {
+        $params = [
+                self::TEXT_PARAM => urlencode($textHtml),
+                self::GAME_PARAM => $gameName,
+            ]
+            + ($tgId
+                ? [self::TG_ID_PARAM => $tgId]
+                : []);
+        $result = @file_get_contents(
+            self::BOT_URL
+            . implode('&',array_map(fn($param, $value) => "$param=$value", array_keys($params), $params))
+        );
+
+        $result = json_decode($result, true) ?? [];
+
+        return ($result['status'] ?? false) === 'success';
+    }
 
     public static function authorize(): bool
     {
@@ -28,8 +53,7 @@ class Tg
 
                 return true;
             }
-        }
-        // looking hash+tg_id in cache
+        } // looking hash+tg_id in cache
         elseif (
             !empty($_REQUEST['tg_hash'])
             && !empty($_REQUEST['tg_id'])

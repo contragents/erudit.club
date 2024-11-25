@@ -143,7 +143,7 @@ class Game
         self::$commonID = $this->commonId;
 
         // Если не удалось дождаться лока по текущему игроку, то посылаем ошибку и выходим
-        if(!Cache::waitLock($this->User, true)) {
+        if (!Cache::waitLock($this->User, true)) {
             BadRequest::sendBadRequest(
                 ['err_msg' => 'lock error'],
                 $this->isBot()
@@ -240,49 +240,50 @@ class Game
     public function onlineCoinPlayers()
     {
         //if (!($coinPlayers = Cache::get(static::NUM_COINS_PLAYERS_KEY)) || self::$gameName === self::SCRABBLE) {
-            if (empty(self::$players)) {
-                $this->getPlayers();
+        if (empty(self::$players)) {
+            $this->getPlayers();
+        }
+
+        $coinPlayers = array_combine(MonetizationService::BIDS, array_fill(0, count(MonetizationService::BIDS), 0));
+        $thisPlayerBalance = BalanceModel::getBalance($this->commonId);
+
+        // Чистим массив ставок от ставок больше баланса игрока
+        foreach ($coinPlayers as $bid => $num) {
+            if ($thisPlayerBalance < $bid) {
+                unset($coinPlayers[$bid]);
             }
 
-            $coinPlayers = array_combine(MonetizationService::BIDS, array_fill(0, count(MonetizationService::BIDS), 0));
-            $thisPlayerBalance = BalanceModel::getBalance($this->commonId);
+            // ...а также от мелких ставок
+            if ($bid < ($thisPlayerBalance / 20)) {
+                unset($coinPlayers[$bid]);
+            }
+        }
 
-            // Чистим массив ставок от ставок больше баланса игрока
+        foreach (self::$players as $num => $player) {
+            $currentPlayerBalance = BalanceModel::getBalance($player['common_id']);
+
+            // Отмечаем в массиве игроков на монеты число игроков с таким количеством монет
             foreach ($coinPlayers as $bid => $num) {
-                if ($thisPlayerBalance < $bid) {
-                 unset($coinPlayers[$bid]);
-                }
-
-                // ...а также от мелких ставок
-                if($bid < ($thisPlayerBalance / 20)) {
-                    unset($coinPlayers[$bid]);
+                if ($currentPlayerBalance >= $bid) {
+                    $coinPlayers[$bid]++;
                 }
             }
+        }
 
-            foreach (self::$players as $num => $player) {
-                $currentPlayerBalance = BalanceModel::getBalance($player['common_id']);
+        $coinPlayers['thisUserBalance'] = $thisPlayerBalance;
 
-                // Отмечаем в массиве игроков на монеты число игроков с таким количеством монет
-                foreach($coinPlayers as $bid => $num) {
-                    if($currentPlayerBalance >= $bid) {
-                        $coinPlayers[$bid]++;
-                    }
-                }
-            }
-
-            $coinPlayers['thisUserBalance'] = $thisPlayerBalance;
-
-            Cache::setex(
-                static::NUM_COINS_PLAYERS_KEY,
-                $this->ratingsCacheTimeout,
-                $coinPlayers
-            );
+        Cache::setex(
+            static::NUM_COINS_PLAYERS_KEY,
+            $this->ratingsCacheTimeout,
+            $coinPlayers
+        );
         //}
 
         return $coinPlayers;
     }
 
-    protected function getPlayers() {
+    protected function getPlayers()
+    {
         $lastGame = Cache::get($this->Queue::GAMES_COUNTER);
 
         for ($i = $lastGame; $i > ($lastGame - 50); $i--) {
@@ -308,7 +309,9 @@ class Game
 
     public function onlinePlayers()
     {
-        if (!($rangedOnlinePlayers = Cache::get(static::NUM_RATING_PLAYERS_KEY)) || self::$gameName === self::SCRABBLE) {
+        if (!($rangedOnlinePlayers = Cache::get(
+                static::NUM_RATING_PLAYERS_KEY
+            )) || self::$gameName === self::SCRABBLE) {
             if (empty(self::$players)) {
                 $this->getPlayers();
             }
@@ -335,14 +338,14 @@ class Game
                 $currentPlayerBalance = BalanceModel::getBalance($player['common_id']);
 
                 // Отмечаем в массиве игроков на монеты число игроков с таким количеством монет
-                foreach($coinPlayers as $bid => $num) {
-                    if($thisPlayerBalance < $bid) {
+                foreach ($coinPlayers as $bid => $num) {
+                    if ($thisPlayerBalance < $bid) {
                         unset($coinPlayers[$bid]);
 
                         continue;
                     }
 
-                    if($currentPlayerBalance >= $bid) {
+                    if ($currentPlayerBalance >= $bid) {
                         $coinPlayers[$bid]++;
                     }
                 }
@@ -437,7 +440,7 @@ class Game
     {
         if ($clearCache) {
             static::$playersInGames = [];
-        } elseif(isset(static::$playersInGames[$cookie])) {
+        } elseif (isset(static::$playersInGames[$cookie])) {
             return static::$playersInGames[$cookie];
         }
 
@@ -484,7 +487,10 @@ class Game
         $this->addToLog(T::S('Closed game window'), $this->numUser);
 
         return $this->makeResponse(
-            ['gameState' => self::ADD_TO_CHAT_STATE, 'message' => T::S('You closed the game window and became inactive!') . $this->numUser]
+            [
+                'gameState' => self::ADD_TO_CHAT_STATE,
+                'message' => T::S('You closed the game window and became inactive!') . $this->numUser
+            ]
         );
     }
 
@@ -587,11 +593,13 @@ class Game
     {
         // Если в игре останутся игроки, то ничего не делать
         if ($this->activeGameUsers() > 2) {
-            return $this->makeResponse(['gameState' => $this->getUserStatus(), 'message' => T::S('Request denied. Game is still ongoing')]);
+            return $this->makeResponse(
+                ['gameState' => $this->getUserStatus(), 'message' => T::S('Request denied. Game is still ongoing')]
+            );
         }
 
         // Если игрок решил сдаться и отправить вызов на реванш
-        if(in_array($this->getUserStatus(), self::IN_GAME_STATUSES)) {
+        if (in_array($this->getUserStatus(), self::IN_GAME_STATUSES)) {
             $this->storeGameResults($this->lost3TurnsWinner($this->numUser, true));
         }
 
@@ -609,7 +617,9 @@ class Game
 
         $inviteStatus = ['inviteStatus' => $this->gameStatus['invite']];
 
-        return $this->makeResponse(array_merge(['gameState' => self::GAME_RESULTS_STATE, 'message' => $message], $inviteStatus));
+        return $this->makeResponse(
+            array_merge(['gameState' => self::GAME_RESULTS_STATE, 'message' => $message], $inviteStatus)
+        );
     }
 
     public function playerCabinetInfo()
@@ -627,16 +637,47 @@ class Game
 
         $message['refs'] = [];
         if ($refs) {
-            foreach($refs as $ref) {
-                $message['refs'][] = [$ref->_name, MonetizationService::REWARD[AchievesModel::DAY_PERIOD] . '&nbsp;' . T::S('{{sudoku_icon_20}}')];
+            foreach ($refs as $ref) {
+                $message['refs'][] = [
+                    $ref->_name,
+                    MonetizationService::REWARD[AchievesModel::DAY_PERIOD] . '&nbsp;' . T::S('{{sudoku_icon_20}}')
+                ];
             }
-        } /*else {
-            $message['refs'] = [
-                ['Peter Pervyy', MonetizationService::REWARD[AchievesModel::DAY_PERIOD]],
-                ['Nickolay Vtoroy', MonetizationService::REWARD[AchievesModel::DAY_PERIOD]],
-                ['Aleksey Tretiy', MonetizationService::REWARD[AchievesModel::DAY_PERIOD]]
-            ];
-        }*/
+        }
+
+        $transactions = PaymentModel::selectO(
+            ['*'],
+            ORM::where(PaymentModel::COMMON_ID_FIELD, '=', $this->commonId, true)
+            //. ORM::andWhere(PaymentModel::STATUS_FIELD, '!=', PaymentModel::INIT_STATUS)
+            ,
+            ORM::orderBy(PaymentModel::UPDATED_AT_FIELD, false)
+            . ORM::limit(10)
+        );
+
+        $message['transactions'] = VH::tagOpen(
+            'table',
+            '',
+            ['class' => 'table']
+        );
+
+        $message['transactions'] .= VH::thead(
+            VH::tr(
+                VH::th(T::S('Date'), ['scope' => 'col'])
+                . VH::th(T::S('Price'), ['scope' => 'col'])
+                . VH::th(T::S('Status'), ['scope' => 'col']),
+                ['class' => 'text-light']
+            )
+        );
+
+        foreach ($transactions as $transaction) {
+            $message['transactions'] .= VH::tr(
+                VH::td($transaction->_updated_at)
+                . VH::td($transaction->_summ)
+                . VH::td(T::S($transaction->_status)),
+                ['class' => 'text-light']
+            );
+        }
+        $message['transactions'] .= VH::tagClose('table');
 
         $message['common_id'] = $this->commonId;
 
@@ -649,6 +690,7 @@ class Game
         } else {
             $message['img_title'] = T::S('Avatar by provided link');
         }
+
         $message['name'] = $userData['name'] ?? '';
 
         $message['text'] = '';
@@ -691,6 +733,8 @@ class Game
                 'placeholder' => 'https://'
             ];
 
+        $message['secret'] = $this->genKeyForCommonID($this->commonId);
+
         /*
         $message['form'][] = [
             'prompt' => 'Ключ учетной записи',
@@ -726,19 +770,23 @@ class Game
         return $encrypted_message;
     }
 
-    public function mergeTheIDs($encryptedMessage, $commonID)
+    public function mergeTheIDs($encryptedMessage, $commonID, $secretKey = '')
     {
-        $secretKey = Config::$envConfig['SALT'];
+        $secretKey = $secretKey ?: Config::$envConfig['SALT'];
         $method = 'AES-128-CBC';
         $iv = base64_decode(Config::$envConfig['IV'] . '==');
         $decrypted_message = openssl_decrypt($encryptedMessage, $method, $secretKey, 0, $iv);
 
         if (!is_numeric($decrypted_message)) {
+            if($secretKey !== Config::$envConfig['OLD_SALT']) {
+                return $this->mergeTheIDs($encryptedMessage, $commonID, Config::$envConfig['OLD_SALT']);
+            }
+
             return json_encode(
                 [
                     'result' => 'error_decryption' . ' ' . $decrypted_message,
                     'message' => T::S('Key transcription error')
-                ]
+                ], JSON_UNESCAPED_UNICODE
             );
         }
 
@@ -756,7 +804,7 @@ class Game
                 [
                     'result' => 'error_query_oldID',
                     'message' => T::S("Player's ID NOT found by key")
-                ]
+                ], JSON_UNESCAPED_UNICODE
             );
         }
 
@@ -775,14 +823,14 @@ class Game
                 [
                     'result' => 'save',
                     'message' => T::S('Accounts linked')
-                ]
+                ], JSON_UNESCAPED_UNICODE
             );
         } else {
             return json_encode(
                 [
                     'result' => 'error_update ' . $oldCommonID . '->' . $commonID,
                     'message' => T::S('Accounts are already linked')
-                ]
+                ], JSON_UNESCAPED_UNICODE
             );
         }
     }
@@ -829,7 +877,8 @@ class Game
             $records = Prizes::playerCurrentRecords($user['ID']);
             $recordsShown = 0;
             foreach ($records as $record) {
-                $recImgs .= VH::img([
+                $recImgs .= VH::img(
+                    [
                         'style' => 'cursor: pointer;
                             margin-left: ' . ($recordsShown ? -20 : 0) . 'px; padding: 0;
                             margin-top: -10px;
@@ -839,7 +888,8 @@ class Game
                         'onclick' => "showFullImage('{$record['type']}', 500, 100);",
                         'src' => "{$record['link']}",
                         'width' => '100px',
-                ]);
+                    ]
+                );
 
                 $recordsShown++;
                 if ($recordsShown >= 3) {
@@ -899,10 +949,10 @@ class Game
             $isSendSuccess = true;
         } else {
             $respMessage = '<span style="align-content: center;"><strong><span style="color:red;">'
-            . T::S('Report declined!')
-                .'</span><br /><br /> '
-            . T::S('Only one complaint per each player per day can be sent. Total 24 hours complaints limit is')
-            . ComplainModel::COMPLAINS_PER_DAY . '</strong></span>';
+                . T::S('Report declined!')
+                . '</span><br /><br /> '
+                . T::S('Only one complaint per each player per day can be sent. Total 24 hours complaints limit is')
+                . ComplainModel::COMPLAINS_PER_DAY . '</strong></span>';
         }
 
         if ($isSendSuccess) {
@@ -1002,7 +1052,9 @@ class Game
             } elseif ($needConfirm) {
                 return $this->makeResponse(
                     [
-                        'message' => '<strong>' . T::S('Message NOT sent - BAN from Player') . ((int)$toNumUser + 1) . '</strong>',
+                        'message' => '<strong>' . T::S(
+                                'Message NOT sent - BAN from Player'
+                            ) . ((int)$toNumUser + 1) . '</strong>',
                         'gameState' => self::ADD_TO_CHAT_STATE
                     ]
                 );
@@ -1052,7 +1104,6 @@ class Game
     }
 
 
-
     protected function statusComments_startGame()
     {
         Stats::saveStats();
@@ -1065,12 +1116,12 @@ class Game
             . T::S('Get')
             . ' <strong>'
             . $this->gameStatus['winScore'] . '</strong> '
-        . T::S('score points')
+            . T::S('score points')
             . '<br />' . $this->gameStatus['users'][$this->gameStatus['activeUser']]['username']
             . T::S(' is making a turn.')
             . '<br />'
             . T::S('Your current rank')
-            .' - <strong>' . $rating . '</strong>'
+            . ' - <strong>' . $rating . '</strong>'
             . $this->coinsPrompt();
     }
 
@@ -1121,7 +1172,9 @@ class Game
 
             $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $rating ?: self::NEW_PLAYER;
 
-            return T::S('Your turn!') . '<br />'. T::S('Game goal:') . '<strong> ' . $this->gameStatus['winScore'] . '</strong> '
+            return T::S('Your turn!') . '<br />' . T::S(
+                    'Game goal:'
+                ) . '<strong> ' . $this->gameStatus['winScore'] . '</strong> '
                 . T::S('score points')
                 . '<br />' . T::S('Your current rank') . ' - <strong>' . $rating . '</strong>'
                 . $this->coinsPrompt();
@@ -1161,8 +1214,10 @@ class Game
                 . ' - <strong>' . $rating . '</strong>'
                 . $this->coinsPrompt();
         } else {
-            return $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' '.T::S(' is making a turn.')
-                .'<br />' . T::S('Your turn is next - get ready!')
+            return $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ' . T::S(
+                    ' is making a turn.'
+                )
+                . '<br />' . T::S('Your turn is next - get ready!')
                 . Hints::getHint(
                     $this->User,
                     $this->gameStatus,
@@ -1290,7 +1345,7 @@ class Game
         foreach ($this->gameStatus['users'] as &$user) {
             $user['result_ratings'] = $resultRatings[$user['common_id']];
 
-            if(RatingHistoryModel::getNumGamesPlayed($user['common_id']) % 100 == 0) {
+            if (RatingHistoryModel::getNumGamesPlayed($user['common_id']) % 100 == 0) {
                 // Начисляем бонус за каждые 100 игр
                 BalanceModel::changeBalance(
                     $user['common_id'],
@@ -1300,7 +1355,6 @@ class Game
                 );
             }
         }
-
     }
 
     protected function getUserStatus($user = false): string
@@ -1347,7 +1401,12 @@ class Game
         /**
          * @method Ru|Eng submit()
          */
-        $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus['users'][$this->numUser]['fishki'], $this->gameStatus['wordsAccepted']);
+        $new_fishki = $this->gameStatus['lngClass']::submit(
+            $cells,
+            $desk,
+            $this->gameStatus['users'][$this->numUser]['fishki'],
+            $this->gameStatus['wordsAccepted']
+        );
         $summa = 0;
 
         if (is_array($new_fishki) && !empty($new_fishki)) {
@@ -1443,7 +1502,12 @@ class Game
             /**
              * @method Ru|Eng submit()
              */
-            $new_fishki = $this->gameStatus['lngClass']::submit($cells, $desk, $this->gameStatus['users'][$this->numUser]['fishki'], $this->gameStatus['wordsAccepted']);
+            $new_fishki = $this->gameStatus['lngClass']::submit(
+                $cells,
+                $desk,
+                $this->gameStatus['users'][$this->numUser]['fishki'],
+                $this->gameStatus['wordsAccepted']
+            );
         } catch (\Throwable $e) {
             BadRequest::logBadRequest(
                 [
@@ -1558,7 +1622,7 @@ class Game
                     $arr = Prizes::checkDayWordPriceRecord($word, $price, $this->User);
                     foreach ($arr as $period => $value) {
                         $this->addToLog(
-                            T::S('set word cost record for') ." $period - <strong>$word - $price</strong>",
+                            T::S('set word cost record for') . " $period - <strong>$word - $price</strong>",
                             $this->numUser
                         );
                     }
@@ -1597,10 +1661,15 @@ class Game
                     $this->numUser
                 );
 
-                $arr = Prizes::checkDayGamePriceRecord($this->gameStatus['users'][$this->numUser]['score'], $this->User);
+                $arr = Prizes::checkDayGamePriceRecord(
+                    $this->gameStatus['users'][$this->numUser]['score'],
+                    $this->User
+                );
                 foreach ($arr as $period => $value) {
                     $this->addToLog(
-                        T::S('set record for gotten points in the game for') . " $period - <strong>{$this->gameStatus['users'][$this->numUser]['score']}</strong>",
+                        T::S(
+                            'set record for gotten points in the game for'
+                        ) . " $period - <strong>{$this->gameStatus['users'][$this->numUser]['score']}</strong>",
                         $this->numUser
                     );
                 }
@@ -1728,7 +1797,8 @@ class Game
             ->doSomethingWithThisStuff($_GET['lang'] ?? '');
     }
 
-    public function getPrefs(): array {
+    public function getPrefs(): array
+    {
         $prefs = Cache::get($this->Queue::PREFS_KEY . $this->User) ?: [];
         $balance = BalanceModel::getBalance($this->commonId);
 
@@ -1737,7 +1807,7 @@ class Game
 
             if ($prefsBid < ($balance / 20)) {
                 foreach (MonetizationService::BIDS as $bid) {
-                    if($bid >= ($balance / 20)) {
+                    if ($bid >= ($balance / 20)) {
                         $prefs['bid'] = $bid;
 
                         break;
@@ -1747,8 +1817,8 @@ class Game
                 $bids = MonetizationService::BIDS;
                 sort($bids);
 
-                foreach ( $bids as $bid) {
-                    if($bid < $balance) {
+                foreach ($bids as $bid) {
+                    if ($bid < $balance) {
                         $prefs['bid'] = $bid;
 
                         break;
@@ -1828,8 +1898,6 @@ class Game
         $desk = Cache::get(static::CURRENT_GAME_KEY . $this->currentGame);
 
         if ($this->getUserStatus() == self::GAME_RESULTS_STATE) {
-
-
             $result = $this->gameStatus['results'];
             if (isset($result['winner'])) {
                 $ratingsChanged = $this->gameStatus['users'][$this->numUser]['result_ratings'];
@@ -1922,11 +1990,11 @@ class Game
             )
             . ($this->gameStatus['bid'] ?? false
                     ? (
-                    VH::br()
-                    . T::S('The bank of') . ' '
-                    . VH::strong(
-                        number_format($this->gameStatus['bid'] * count($this->gameStatus['users']), 0, '.', ',')
-                    )
+                        VH::br()
+                        . T::S('The bank of') . ' '
+                        . VH::strong(
+                            number_format($this->gameStatus['bid'] * count($this->gameStatus['users']), 0, '.', ',')
+                        )
                         . T::S('{{sudoku_icon_15}}') . ' '
                         . ($isWinner ? T::S('goes to you') : T::S('is taken by the opponent'))
                     )
@@ -1957,7 +2025,9 @@ class Game
                 );
             } else {
                 $this->addToLog(
-                    T::S("is left without any pieces! You won with score ") . $this->gameStatus['users'][$userWinner]['score'],
+                    T::S(
+                        "is left without any pieces! You won with score "
+                    ) . $this->gameStatus['users'][$userWinner]['score'],
                     $num
                 );
             }
@@ -2071,7 +2141,6 @@ class Game
          */
 
         $this->Queue::cleanUp($this->User);
-
 
 
         if ($this->currentGame && (in_array($_REQUEST['gameState'] ?? '', self::INIT_STATES))) {
@@ -2189,27 +2258,35 @@ class Game
 
 
                 $this->gameStatus['users'][$num]['common_id'] = PlayerModel::getPlayerID($user['ID'], true);
-                if (!($this->gameStatus['users'][$num]['rating'] = CommonIdRatingModel::getRating($this->gameStatus['users'][$num]['common_id'], self::$gameName))) {
-                    $userRating = CommonIdRatingModel::getRating($this->gameStatus['users'][$num]['common_id'], self::$gameName);
+                if (!($this->gameStatus['users'][$num]['rating'] = CommonIdRatingModel::getRating(
+                    $this->gameStatus['users'][$num]['common_id'],
+                    self::$gameName
+                ))) {
+                    $userRating = CommonIdRatingModel::getRating(
+                        $this->gameStatus['users'][$num]['common_id'],
+                        self::$gameName
+                    );
                     $this->gameStatus['users'][$num]['rating'] = $userRating ?: self::NEW_PLAYER;
                 }
                 //Прописали рейтинг и common_id игрока в статусе игры - только для games_statistic.php
             }
-try {
-    $this->addToLog(
-        T::S('New game has started!')
-        . ' <br />'
-        . T::S('Get')
-        . ' <strong>' . $this->gameStatus['winScore']
-        . '</strong> '
-        . T::S('score points')
-    . ($this->gameStatus['bid']
-        ? ('<br>' . T::S('Number of coins on the line') . ':<br>' . T::S('{{sudoku_icon_15}}') . ($this->gameStatus['bid'] * count($this->gameStatus['users'])))
-        : '')
-    );
-} catch(Throwable $e) {
+            try {
+                $this->addToLog(
+                    T::S('New game has started!')
+                    . ' <br />'
+                    . T::S('Get')
+                    . ' <strong>' . $this->gameStatus['winScore']
+                    . '</strong> '
+                    . T::S('score points')
+                    . ($this->gameStatus['bid']
+                        ? ('<br>' . T::S('Number of coins on the line') . ':<br>' . T::S(
+                                '{{sudoku_icon_15}}'
+                            ) . ($this->gameStatus['bid'] * count($this->gameStatus['users'])))
+                        : '')
+                );
+            } catch (Throwable $e) {
                 print $e->__toString();
-}
+            }
         }
 
         return $this->makeResponse(
@@ -2313,7 +2390,9 @@ try {
             if (isset($this->gameStatus['activeUser'])) {
                 $userNames_arr[$this->numUser] = $this->gameStatus['users'][$this->numUser]['username'];
                 $score_arr[$this->numUser] = $this->gameStatus['users'][$this->numUser]['score'];
-                $score = T::S("Your score") . $this->gameStatus['users'][$this->numUser]['score'] . '/' . $this->gameStatus['winScore'];
+                $score = T::S(
+                        "Your score"
+                    ) . $this->gameStatus['users'][$this->numUser]['score'] . '/' . $this->gameStatus['winScore'];
                 for ($i = 1; $i < count($this->gameStatus['users']); $i++) {
                     $nextUserNum = ($this->numUser + $i) % count($this->gameStatus['users']);
                     $score_arr[$nextUserNum] = $this->gameStatus['users'][$nextUserNum]['score'];
@@ -2338,7 +2417,7 @@ try {
                 //Добавили в респонс очки игроков
             }
 
-            if(isset($this->gameStatus['bid'])) {
+            if (isset($this->gameStatus['bid'])) {
                 $bid = $this->gameStatus['bid'] ?: 0;
                 $bank = $bid * count($this->gameStatus['users']);
                 $arr = array_merge(
@@ -2391,7 +2470,7 @@ try {
                 $arr = array_merge($arr, ['turnTime' => $this->gameStatus['turnTime']]);
             }
 
-            if(count($this->gameStatus['users']) === 2) {
+            if (count($this->gameStatus['users']) === 2) {
                 $numOpponent = $this->numUser === 1 ? 0 : 1;
                 $arr['is_opponent_active'] = (!isset($this->gameStatus['users'][$numOpponent]['lastActiveTime']) || !$this->gameStatus['users'][$numOpponent]['isActive']) ? false : true;
             }
