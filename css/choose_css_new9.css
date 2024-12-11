@@ -1860,7 +1860,7 @@ label.file-label:active:before {
 }
 
 .bronze_card {
-	background: url('../images/bronze.png') center center no-repeat;
+	background: url('../images/bronze-background.jpg') center center no-repeat;
 	background-size: cover;
 }
 

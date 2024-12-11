@@ -1,8 +1,5 @@
 <?php
 
-use Dadata\Players;
-//use Erudit\Game;
-
 class AchievesModel extends BaseModel
 {
     const TABLE_NAME = 'achieves';
@@ -270,7 +267,7 @@ class AchievesModel extends BaseModel
             )
             .ORM::orderBy(self::GAME_ID_FIELD, false)
             .ORM::limit($limit, ($page - 1) * $limit);
-Cache::hset('games_stats_xxx', $commonId, $query);
+
         $res = DB::queryArray($query);
 
         $gameStats = [];

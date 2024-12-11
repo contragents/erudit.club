@@ -456,12 +456,12 @@ function placeFishki(fishki) {
 }
 
 //<?php include('globals/getFishkaGlobalFunction.js')?>
-//<?php include('globals/ajaxGetGlobalFunction.js')?>
+//<?php include('globals/ajaxGetGlobalFunction_1.js')?>
 //<?php include('globals/parseDeskGlobalFunction.js')?>
 //<?php include('globals/initCellsGlobalFunction.js')?>
 //<?php include('globals/findPlaceGlobalFunction.js')?>
 //<?php include('globals/changeFishkiGlobalFunction.js')?>
-//<?php include('globals/bootBoxIsOpenedGlobalFunction.js')?>
+//<?php include('globals/bootBoxIsOpenedGlobalFunction_1.js')?>
 //<?php include('globals/openWindowGlobalFunction.js')?>
 //<?php include('globals/buttonGlobalFunctions.js')?>
 //<?php include('globals/gagetTypeFunctions.js')?>

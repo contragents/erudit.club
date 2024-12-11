@@ -24,7 +24,7 @@ class RefModel extends BaseModel
 
     public static function addRef(int $commonId, int $refTgId, string $name = ''): bool
     {
-        $ref = self::newO(
+        $ref = self::new(
             [
                 self::COMMON_ID_FIELD => $commonId,
                 self::REF_TG_ID_FIELD => $refTgId,

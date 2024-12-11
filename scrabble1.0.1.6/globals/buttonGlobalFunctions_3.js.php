@@ -219,7 +219,7 @@ function changeButtonFunction() {
     let message = `<div class="box d-flex align-items-center p-1 mb-2">
         <div class="box-heading text-center mx-auto fs-4">${ lang === 'RU' ? 'Выберите фишки для замены' : 'Select chips to change'}</div>
     </div>
-    <div class="box letter-box">
+    <div style="background: hsla(227, 56%, 21%, 0.1);" class="box letter-box">
         <form id="myForm">
             ${letterList}
         </form>

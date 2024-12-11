@@ -77,15 +77,9 @@ class RatingService
                         ELSE ((games_played/100*inactive_percent" . ($player['isActive'] ? '' : '+1') . ")/(games_played+1)*100) 
                         END
                         , rating_changed_date = CURRENT_TIMESTAMP()
-                        , user_id = " .
-                ($player['userID']
-                    ? $player['userID']
-                    : Game::hash_str_2_int($player['found_cookie'])) .
-                " WHERE 
-                cookie = '{$player['cookie']}'
-                OR
-                cookie = '{$player['found_cookie']}'" .
-                ($player['userID']
+                        WHERE 
+                cookie = '{$player['cookie']}'"
+                . ($player['userID']
                     ? " OR user_id = {$player['userID']} "
                     : ''
                 ) .
@@ -295,12 +289,10 @@ class RatingService
     protected static function deleteRatingsFromCache($player)
     {
         Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['cookie']);
-        Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['found_cookie']);
         Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['common_id']);
 
         if (isset($player['userID']) && $player['userID'] > 0) {
             Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['cookie'] . $player['userID']);
-            Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['found_cookie'] . $player['userID']);
         }
     }
 }

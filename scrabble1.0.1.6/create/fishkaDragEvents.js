@@ -63,13 +63,5 @@ this.input.on('dragend', function (pointer, gameObject) {
         checkZvezdaGlobal(gameObject);
     }
 
-    /*if (gameObject.x > stepX && gameObject.y < ground.height + topHeight && gameObject.y > topHeight) {
-        let cellX = Math.round((gameObject.x - stepX - correctionX) / yacheikaWidth) - 1;
-        let cellY = Math.round((gameObject.y - stepY - correctionY) / yacheikaWidth) - 1;
-        findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
-    } else {
-        checkZvezdaGlobal(gameObject);
-    }*/
-
     gameObject.depth = 1;
 });

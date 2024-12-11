@@ -658,7 +658,7 @@ class BaseModel
         if (DB::queryInsert($updateQuery)) {
             return true;
         } else {
-            Cache::rpush(Game::STATS_FAILED, ['query' => $updateQuery]);
+            //Cache::rpush(Game::STATS_FAILED, ['query' => $updateQuery]);
 
             return false;
         }

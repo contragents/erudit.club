@@ -1,4 +1,6 @@
 /*<?php
+ini_set("display_errors", 1);
+    error_reporting(E_ALL);
 preg_match('/((release|yandex|dev)(\d\.\d\.\d\.\d))/',__DIR__,$matches);
 $dir=$matches[1];
 //Определяем каталог версии разработки

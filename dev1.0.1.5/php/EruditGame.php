@@ -211,7 +211,7 @@ class Game extends \Game
 
         $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings[0]['rating'] ?? 'new_player';
 
-        return 'Новая игра начата! <br />Набери как можно больше очков' . '<br />' . $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
+        return 'Новая игра начата! <br />Набери как можно больше очков' . '<br />' . $this->gameStatus['users'][$this->gameStatus['activeUser']]['username'] . ' ходит' . '<br />Ваш текущий рейтинг - <strong>' . ($ratings[0]['rating'] ?? 1700) . '</strong>';
     }
 
     protected function statusComments_otherTurn()
@@ -245,7 +245,7 @@ class Game extends \Game
 
             $this->gameStatus['users'][$this->gameStatus[$this->User]]['rating'] = $ratings[0]['rating'] ?? 'new_player';
 
-            return 'Ваш ход! <br />Игра до последней фишки' . '<br />Ваш текущий рейтинг - <strong>' . $ratings[0]['rating'] . '</strong>';
+            return 'Ваш ход! <br />Игра до последней фишки' . '<br />Ваш текущий рейтинг - <strong>' . ($ratings[0]['rating'] ?? 1700) . '</strong>';
         } else {
             return $this->gameStatus['users'][$this->numUser]['username'] . ', Ваш ход!'
                 . Hints::getHint(
