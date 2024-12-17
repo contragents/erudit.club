@@ -235,7 +235,7 @@ class Hints
 
         switch ($value) {
             case 'share':
-                return self::shareHint();
+                return '';//self::shareHint();
             case 'support':
                 return self::supportHint();
             case 'video':
@@ -303,6 +303,10 @@ class Hints
 
     private static function supportHint()
     {
+        if(self::isYandexApp()) {
+            return '';
+        }
+
         $result = 'Получить <strong>поддержку</strong> и оставить <strong>сообщение об ошибках</strong> Вы можете в нашей '
             . self::link(
                 self::isMobileDevice()
@@ -415,6 +419,8 @@ class Hints
 
     private static function shareHint()
     {
+        return '';
+
         $result = 'Поделитесь Игрой в любимых соцсетях - &nbsp;';
         if (self::isMobileDevice()) {
             return $result
@@ -446,17 +452,7 @@ class Hints
     public
     static function videoHint()
     {
-        self::$VIDEOS = self::$EXT_ASSETS['videos'];
-        $videoID = self::$VIDEOS[rand(0, count(self::$VIDEOS) - 1)];
-        return
-            "Наш очередной видеоролик 🤩
-            <iframe 
-                width=\"100%\" 
-                src=\"https://www.youtube.com/embed/$videoID\" 
-                frameborder=\"0\" 
-                allow=\"accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture\">
-            </iframe>"
-            . "<a target=\"_blank\" href=\"https://youtu.be/$videoID\">Открыть</a> в новой вкладке";
+        return '';
     }
 
     public
@@ -511,9 +507,9 @@ class Hints
     }
 
     public
-    static function isYandexApp()
+    static function isYandexApp(): bool
     {
-        if (isset($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'], 'games.s3.yandex') !== false)) {
+        if (isset($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'], 'yandex') !== false)) {
             return true;
         }
 

@@ -267,7 +267,7 @@ var instruction = `<?= T::S('faq_rules') ?>`;
 //<?php /*if (T::$lang === T::EN_LANG) include('globals/instruction_eng.js'); else include('globals/instruction.js'); */?>
 
 //<?php include('globals/tgGlobalFunction.js')?>
-//<?php include('globals/buttonSettingsGlobal.js')?>
+//<?php include('globals/buttonSettingsGlobal_1.js.php')?>
 //<?php include('globals/gameStates_1.js.php')?>
 //<?php include('globals/letterPrices.js')?>
 //<?php include('globals/rusLetters.js')?>

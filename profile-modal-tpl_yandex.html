@@ -14,10 +14,10 @@
 					<a class="nav-link" id="wallet-tab" href="#wallet-tab-pane" role="tab"
 						aria-selected="false">{{Wallet}}</a>
 				</li>
-				<li class="nav-item">
+				<!--<li class="nav-item">
 					<a class="nav-link" id="referrals-tab" href="#referrals-tab-pane" role="tab"
 						aria-selected="false">{{Referrals}}</a>
-				</li>
+				</li>-->
 			</ul>
 		</div>
 	</div>
@@ -75,10 +75,10 @@
 									class="icon icon-coin"></i><span class="pill">{{balance}}</span>
 							</li>
 							<li class="d-flex"><span class="label">{{Rating by coins}}</span><span class="pill">{{ratingByCoins}}</span></li>
-                            <li class="d-flex"><span class="label">{{Secret key}}</span><span class="no-pill">{{secret}}</span></li>
+                            <!--<li class="d-flex"><span class="label">{{Secret key}}</span><span class="no-pill">{{secret}}</span></li>-->
                         </ul>
 					</div>
-                    <span style="margin:auto; display:table;">
+                    <!--<span style="margin:auto; display:table;">
                         {{secret_prompt}}
                     </span>-->
 				</div>
@@ -86,45 +86,27 @@
 			<!-- end .tab-pane #main-info-tab-pane -->
 
 			<div class="tab-pane" id="wallet-tab-pane">
-				<!--<div class="box pb-2 box-bottom">
-					<div class="d-flex">
-						<span class="d-block align-self-center">Telegram Wallet</span>
-						<div class="tg-input-wrap d-flex flex-nowrap flex-shrink-1">
-							<input type="text" class="form-control" id="tg-wallet" value="{{tgWallet}}" placeholder="">
-							<a href="#tg-wallet" class="btn-copy js-btn-copy"><i class="icon icon-copy"></i></a>
-						</div>
-
-
-						<div class="btn-wrap ml-auto">
-                            <a href="#" class="btn btn-sm flex-shrink-0">
-                                {{Link}}
-							</a>
-						</div>
-					</div>
-
-					<span class="d-block text-danger text-uppercase text-center mt-1">Under construction</span>
-				</div>-->
                 <div class="box pb-2 box-bottom"><!--<div class="box py-3"> для второго сверху дива-->
 					<div class="d-flex">
 						<div class="wallet-info-wrap">
-                            <div class="d-flex">
-                                <span class="label">{{Bonuses accrued}} </span>
-                                <span class="pill" id="bonusAccrual">{{bonusAccrual}}</span>
-                            </div>
-                            <div class="d-flex">
-                                <span class="label">{{SUDOKU Balance}}</span>
-                                <span class="pill" id="balanceSudoku">{{balanceSudoku}}</span>
-                            </div>
+							<div class="d-flex">
+								<span class="label">{{Bonuses accrued}} </span>
+								<span class="pill" id="bonusAccrual">{{bonusAccrual}}</span>
+							</div>
+							<div class="d-flex">
+								<span class="label">{{SUDOKU Balance}}</span>
+								<span class="pill" id="balanceSudoku">{{balanceSudoku}}</span>
+							</div>
 						</div>
 						<div class="btn-wrap ml-auto">
-							<button type="button" onclick="claimIncome(); return false;" class="btn btn-sm flex-shrink-0">
+							<button type="button" onclick="claimIncome(); return false;" class="btn btn-sm flex-shrink-0 ">
                                 {{Claim}}
 							</button>
 						</div>
 					</div>
 
 				</div>
-
+<!--
                 <span style="color:#00ff00;text-decoration:none;" class="nickname d-block mb-1" id="buy-sudoku">{{Buy_SUDOKU}}</span>
                 <div class="box py-3">
                     <div class="d-flex">
@@ -144,18 +126,13 @@
                                 {{Check_price}}
                             </button>
                         </div>
-
-                        <!--<div class="btn-wrap ml-auto">
-                            <button type="button" class="btn btn-sm flex-shrink-0" id="check-price-button" onClick="RobokassaPaymentGlobal('check'); return false;">
-                                {{Check_price}}
-                            </button>
-                        </div>-->
                     </div>
                     <a style="color:#00ff00;text-decoration:none;" href="https://t.me/eruditclub" target="_blank">{{Support in Telegram}}</a>
                     <br><br><br>
                     {{Last transactions}}:
                     <div id="transactions">{{transaction_list}}</div>
                 </div>
+-->
             </div>
 
 			<!-- end .tab-pane -->

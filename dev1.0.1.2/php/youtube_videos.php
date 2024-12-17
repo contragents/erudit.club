@@ -20,53 +20,7 @@ return [
         'VDsZxvRZvts',
     ],
     'wordsEn' => [
-        'Учим <strong>Английские</strong> короткие слова с буквой <strong>Z</strong>:<br /><br />  
-            <strong>
-            zen zip zoo<br />
-            buzz czar daze fizz gaze haze jazz lazy maze
-            nazi quiz size zeal zest zinc zone
-            </strong>',
-
-        'Учим <strong>Английские</strong> короткие слова с буквой <strong>Q</strong>:<br /><br /> 
-            <strong>
-            hq iq qc <br />
-            faq <br />
-            quay quid quip quit quiz <br />
-            equal pique quack quail quake qualm quart 
-            queen query quest queue quiet quilt quirk 
-            quota quote squad squat squid
-            </strong>
-            <br /><br /> 
-            Слово может являться аббревиатурой',
-
-        'Учим <strong>Английские</strong> короткие слова с буквой <strong>J</strong>:<br /><br /> 
-            <strong>
-            dj jp <br />
-            jab jam jar jaw jet jew jig job jog joy jug <br />
-            hajj jack jade jail jazz jeep jeer jerk jest jibe jinx join joke jolt jpeg judo july jump june junk jury
-            </strong>
-            <br /><br /> 
-            Слово может являться аббревиатурой',
-
-        'Учим Английские <strong>аббревиатуры</strong>:<br /><br /> 
-            <strong>
-            ad cd fa fm hq iq jp ma mp pt qc tb tv uk wc<br />
-            bbc bse ceo diy dna efl elt gmt iou ipa itv
-            mba mep mpv msc mtv pda pin pow ufo usa vat
-            www xml<br />
-            call corp gcse mrsa nato sars sgml
-            tefl<br />
-            tesol
-            </strong>',
-
-        'Учим Английские слова <strong>из 2-х букв</strong>:<br /><br /> 
-            <strong>
-            ba cv dj do er ex gi go gp if it iv lp mr ms ox pc pe pr
-            </strong>
-            <br /><br /> 
-            Слово может являться аббревиатурой, не обозначенной в словаре',
-
-    ],
+        ],
     'wordsRu' => [
         'Учим короткие слова с буквой <strong>Ц</strong>:<br /> 
             <strong>

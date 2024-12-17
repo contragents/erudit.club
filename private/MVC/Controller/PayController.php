@@ -5,6 +5,8 @@ class PayController extends BaseController
     const COMMON_URL = 'mvc/pay/';
 
     const SUMM_PARAM = 'summ';
+    const COMMON_ID_HASH_PARAM = 'common_id_hash';
+
     const EPSILON = 0.01;
 
     public function Run()
@@ -13,6 +15,28 @@ class PayController extends BaseController
         error_reporting(E_ALL);
 
         return parent::Run();
+    }
+
+    public function claimAction(): array
+    {
+        if (!self::checkCommonIdHash(
+            self::$Request[self::COMMON_ID_PARAM],
+            self::$Request[self::COMMON_ID_HASH_PARAM]
+        )) {
+            return ['result' => 'error', 'message' => T::S('Access denied')];
+        }
+
+        $incomeToClaim = IncomeModel::getIncome(self::$Request[self::COMMON_ID_PARAM]);
+        if (!($incomeToClaim > 0)) {
+            return ['result' => 'error', 'message' => T::S('Nothing to claim')];
+        }
+
+        $res = ['result' => 'error', 'message' => T::S('Error changing settings. Try again later')];
+        DB::transactionStart();
+
+        if(!BalanceModel::changeBalance(self::$Request[self::COMMON_ID_PARAM], $incomeToClaim, 'income claim', BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::CLAIM_INCOME_TYPE])) {
+// todo доделать сдесь
+        }
     }
 
     /**
@@ -139,7 +163,10 @@ class PayController extends BaseController
         }
 
         Tg::botSendMessage(
-            json_encode(['request' => self::$Request, 'transaction' => $transaction, 'badConfirm' => $badConfirm ?? false], JSON_UNESCAPED_UNICODE),
+            json_encode(
+                ['request' => self::$Request, 'transaction' => $transaction, 'badConfirm' => $badConfirm ?? false],
+                JSON_UNESCAPED_UNICODE
+            ),
             null,
             Game::$gameName
         );
@@ -151,5 +178,19 @@ class PayController extends BaseController
     private static function checkSum(float $summ, float $summConfirmed, float $comsa = 0.03): bool
     {
         return abs(($summ - $summConfirmed) / $summ - $comsa) < self::EPSILON;
+    }
+
+    public static function checkCommonIdHash(int $commonId, string $commonIdHash): bool
+    {
+        $salt = Config::$envConfig['SALT'];
+
+        return $commonIdHash === md5($commonId . $salt);
+    }
+
+    public static function getCommonIdHash(int $commonId): string
+    {
+        $salt = Config::$envConfig['SALT'];
+
+        return md5($commonId . $salt);
     }
 }

@@ -111,6 +111,12 @@ class T
             self::EN_LANG => 'Pay',
             self::RU_LANG => 'Оплатить'
         ],
+        'Access denied' => [
+            self::RU_LANG => 'Доступ запрещен'
+        ],
+        'Nothing to claim' => [
+            self::RU_LANG => 'Забирать пока нечего'
+        ],
         'connect_bot' => [
             self::EN_LANG => 'To access the full list, connect to our <a target="_blank" href="https://t.me/scrabble_online_bot">Telegram bot</a>',
             self::RU_LANG => 'Для доступа к полному списку подключитесь к нашему <a target="_blank" href="https://t.me/erudit_club_bot">Telegram-боту</a>'
@@ -316,8 +322,8 @@ class T
             self::RU_LANG => 'Баланс SUDOKU'
         ],
         'Claim' => [
-            self::EN_LANG => 'Claim <br>(soon)',
-            self::RU_LANG => 'Забрать<br>(скоро)'
+            self::EN_LANG => 'Claim',
+            self::RU_LANG => 'Забрать'
         ],
         'Name' => [
             self::RU_LANG => 'Имя'

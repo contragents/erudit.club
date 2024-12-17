@@ -589,7 +589,7 @@ var gameStates = {
 
                         },
                     },
-                    ...(!isTgBot() && {
+                    ...(!isTgBot() && !isYandexAppGlobal() && {
                         telegram: {
                             // label: isVerstkaTestGlobal() ? 'Играть в TG' : 'Перейти на Telegram',
                             label: 'Играть в',
@@ -606,7 +606,7 @@ var gameStates = {
                             },
                         },
                     }),
-                    ...(isTgBot() && {
+                    ...(isTgBot() && !isYandexAppGlobal() && {
                         invite: {
                             label: 'Пригласить друга',
                             className: 'btn-danger',

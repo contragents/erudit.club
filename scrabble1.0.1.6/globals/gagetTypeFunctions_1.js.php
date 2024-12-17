@@ -57,6 +57,12 @@ function isVkAppGlobal() {
 }
 
 function isYandexAppGlobal() {
+    console.log(commonId);
+
+    if(commonId == 183834 || commonId == 26907) {
+        return true;
+    }
+
     if (document.location.href.match('yandex')) {
         return true;
     }

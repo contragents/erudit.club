@@ -2358,12 +2358,12 @@ class Game
                 $this->User,
                 true
             );
-        $salt = Config::$envConfig['SALT'];
+
         $arr = array_merge(
             $arr,
             [
                 'common_id' => $commonId,
-                'common_id_hash' => md5($commonId . $salt),
+                'common_id_hash' => PayController::getCommonIdHash($commonId),
             ]
         );
 

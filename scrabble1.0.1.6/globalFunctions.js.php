@@ -1,5 +1,6 @@
 //
 function activateFullScreenForMobiles() {
+    if(commonId == 183834 || commonId == 26907) return;
     if (gameWidth < gameHeight) {
         if (!isIOSDevice()) {
             document.body.requestFullscreen();
@@ -625,6 +626,6 @@ function getSVGBlockGlobal(X, Y, buttonName, _this, scalable, hasDigits = false)
 //<?php include('globals/changeFishkiGlobalFunction.js')?>
 //<?php include('globals/bootBoxIsOpenedGlobalFunction.js')?>
 //<?php include('globals/openWindowGlobalFunction.js')?>
-//<?php include('globals/buttonGlobalFunctions_3.js.php')?>
-//<?php include('globals/gagetTypeFunctions.js')?>
+//<?php include('globals/buttonGlobalFunctions_4.js.php')?>
+//<?php include('globals/gagetTypeFunctions_1.js.php')?>
 //<?php include('globals/verstkaFunctions.js.php')?>

@@ -434,37 +434,6 @@ var gameStates = {
                 onEscape: false,
                 closeButton: false,
                 buttons: {
-                    ...(false && !!isPureSiteRoot() && lang !== 'EN' && {
-                    oferta: {
-                        label: '<?= T::S('Оферта') ?>',
-                        className: 'btn-outline-success',
-                        callback: function () {
-                            async function getOfertaModal() {
-                                return fetch('/oferta.html')
-                                    .then((response) => response.text());
-                            };
-                            console.log('!!!!!!!!!!!');
-                            getOfertaModal().then((html) => {
-                                dialog = bootbox.alert({
-                                    title: '',
-                                    message: html,
-                                    locale: 'ru',
-                                    className: 'modal-settings modal-profile',
-                                    buttons: {
-                                        ok: {
-                                            label: '<?= T::S('Back') ?>',
-                                            className: 'btn-sm ml-auto mr-0',
-                                        },
-                                    },
-                                    callback: function () {
-                                        gameStates.chooseGame.action(data);
-                                    },
-                                })
-                            });
-                        },
-                    }
-                    })
-                    ,
                     //...(true /*!isPureSiteRoot()*/ && {
                     cabinet: {
                         label: '<?= T::S('Profile') ?>',
@@ -522,7 +491,7 @@ var gameStates = {
                                     }
 
                                     function getProfileModal(profileData) {
-                                        return fetch('/profile-modal-tpl_1.html' + '?ver=' + Math.floor(Date.now()))
+                                        return fetch((!isYandexAppGlobal() ? '/profile-modal-tpl_1.html' : '/profile-modal-tpl_yandex.html') + '?ver=' + Math.floor(Date.now()))
                                             .then((response) => response.text())
                                             .then((template) => {
                                                 let message = template
@@ -710,7 +679,7 @@ var gameStates = {
 
                         },
                     },
-                    ...(!isTgBot() && {
+                    ...(!isTgBot()  && !isYandexAppGlobal() && {
                         telegram: {
                             label: '<?= T::S('Play on') ?>',
                             className: 'btn-tg',
@@ -722,7 +691,7 @@ var gameStates = {
                             },
                         },
                     }),
-                    ...(isTgBot() && {
+                    ...(isTgBot() && !isYandexAppGlobal() && {
                         invite: {
                             label: '<?= T::S('Invite a friend') ?>',
                             className: 'btn-danger',
@@ -1080,10 +1049,10 @@ function commonCallback(data) {
 
     if (gameState == 'myTurn') {
         if (pageActive == 'hidden') {
-            snd.play();
+            if(!isYandexAppGlobal()) {snd.play();}
             soundPlayed = true;
         } else if (!soundPlayed) {
-            snd.play();
+            if(!isYandexAppGlobal()) {snd.play();}
             soundPlayed = true;
         }
     }
@@ -1525,7 +1494,6 @@ function RobokassaPaymentGlobal(actionType) {
         };
         orderParams['quickpay-form'] = 'button';
 
-        // не работает. сделать отправку формы на сервере и возврат ссылки на оплату
         fetch('/mvc/pay/pay', {
             method: "POST",
             body: getFormData(orderParams),

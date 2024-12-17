@@ -17,6 +17,7 @@ class BalanceHistoryModel extends BaseModel
     const WITHDRAW_TYPE = 'withdraw';
     const MOTIVATION_TYPE = 'motivation';
     const GREETING_DEPOSIT_TYPE = 'greeting';
+    const CLAIM_INCOME_TYPE = 'claim';
 
     const TYPE_IDS = [
         self::GAME_TYPE => 0,
@@ -24,8 +25,10 @@ class BalanceHistoryModel extends BaseModel
         self::DEPOSIT_TYPE => 2,
         self::WITHDRAW_TYPE => 3,
         self::MOTIVATION_TYPE => 4,
-        self::GREETING_DEPOSIT_TYPE => 5
+        self::GREETING_DEPOSIT_TYPE => 5,
+        self::CLAIM_INCOME_TYPE => 6,
     ];
+
 
 
     public static function addTransaction(

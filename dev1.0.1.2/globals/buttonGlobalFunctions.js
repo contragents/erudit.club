@@ -544,3 +544,26 @@ function playersButtonFunction() {
         buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
     }, 3000);
 }
+
+function claimIncome() {
+    if(commonId && commonIdHash)
+    {
+
+    }
+        balanceSudoku;
+    bonusAccrual;
+
+    fetch('/mvc/pay/pay', {
+        method: "POST",
+        body: getFormData(orderParams),
+    }).then(response => response.json())
+        .then(result => {
+            console.log('Success:', result);
+            if ('location' in result) {
+                location.href = result.location;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
