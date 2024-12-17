@@ -223,7 +223,7 @@ var soundPlayed = false;
 //<?php if (strtoupper(($lang ?? '')) == 'EN') include('globals/instruction_eng.js'); else include('globals/instruction.js'); ?>
 
 //<?php include('globals/buttonSettingsGlobal_1.js')?>
-//<?php include('globals/gameStates_1.js.php')?>
-//<?php include('globals/letterPrices.js')?>
+//<?php include('globals/gameStates.js')?>
+//<?php include('globals/letterPrices_1.js')?>
 //<?php include('globals/rusLetters.js')?>
 //<?php include('globals/wav.js')?>

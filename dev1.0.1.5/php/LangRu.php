@@ -2,8 +2,6 @@
 
 namespace Lang;
 
-use DB;
-
 class Ru
 {
     public static $multi = [
