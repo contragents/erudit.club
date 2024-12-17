@@ -455,7 +455,7 @@ function placeFishki(fishki) {
     }
 }
 
-//<?php include('globals/getFishkaGlobalFunction.js')?>
+//<?php include('globals/getFishkaGlobalFunction_1.js')?>
 //<?php include('globals/ajaxGetGlobalFunction_1.js')?>
 //<?php include('globals/parseDeskGlobalFunction.js')?>
 //<?php include('globals/initCellsGlobalFunction.js')?>

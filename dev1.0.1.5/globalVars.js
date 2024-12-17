@@ -224,6 +224,6 @@ var soundPlayed = false;
 
 //<?php include('globals/buttonSettingsGlobal_1.js')?>
 //<?php include('globals/gameStates.js')?>
-//<?php include('globals/letterPrices.js')?>
+//<?php include('globals/letterPrices_1.js')?>
 //<?php include('globals/rusLetters.js')?>
 //<?php include('globals/wav.js')?>

@@ -661,6 +661,7 @@ class Game extends \Game
     public function gameStarted($statusUpdateNeeded = false) // private version
     {
         if ($statusUpdateNeeded) {
+            $this->gameStatus['lngClass'] = Ru::class;
             $firstTurnUser = rand(0, count($this->currentGameUsers) - 1);
             $this->gameStatus['gameNumber'] = $this->currentGame;
             $this->gameStatus['users'][$firstTurnUser]['status'] = self::MY_TURN_STATUS;
