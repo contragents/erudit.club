@@ -491,7 +491,7 @@ var gameStates = {
                                     }
 
                                     function getProfileModal(profileData) {
-                                        return fetch((!isYandexAppGlobal() ? '/profile-modal-tpl_1.html' : '/profile-modal-tpl_yandex.html') + '?ver=' + Math.floor(Date.now()))
+                                        return fetch((!isYandexAppGlobal() ? '/profile-modal-tpl_1.html' : '/profile-modal-tpl_yandex.html') + '?ver=' + Date.now())
                                             .then((response) => response.text())
                                             .then((template) => {
                                                 let message = template

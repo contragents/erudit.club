@@ -54,6 +54,9 @@ class T
     }
 
     const PHRASES = [
+        'Success' => [
+            self::RU_LANG => 'Успешно'
+        ],
         'secret_prompt' => [
             self::EN_LANG => '&#42;Save this key for further account restoration in <a href="https://t.me/scrabble_online_bot">Telegram</a>',
             self::RU_LANG => '&#42;Сохраните ключ для восстановления аккаунта в <a href="https://t.me/erudit_club_bot">Telegram</a>'

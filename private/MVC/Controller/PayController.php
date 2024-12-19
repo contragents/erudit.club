@@ -34,9 +34,24 @@ class PayController extends BaseController
         $res = ['result' => 'error', 'message' => T::S('Error changing settings. Try again later')];
         DB::transactionStart();
 
-        if(!BalanceModel::changeBalance(self::$Request[self::COMMON_ID_PARAM], $incomeToClaim, 'income claim', BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::CLAIM_INCOME_TYPE])) {
-// todo доделать сдесь
+        if(!BalanceModel::changeBalance(self::$Request[self::COMMON_ID_PARAM], $incomeToClaim, 'income claiming', BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::CLAIM_INCOME_TYPE])) {
+            return $res;
         }
+
+        if(!IncomeModel::changeIncome(self::$Request[self::COMMON_ID_PARAM], -1 * $incomeToClaim, 'income claiming', BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::CLAIM_INCOME_TYPE])) {
+            return $res;
+        }
+
+        DB::transactionCommit();
+
+        $newSudokuBalance = BalanceModel::getBalance(self::$Request[self::COMMON_ID_PARAM]);
+        return [
+            'result' => 'success',
+            'message' => T::S('success'),
+            'SUDOKU_BALANCE' => $newSudokuBalance,
+            'SUDOKU_TOP' => BalanceModel::getTopByBalance($newSudokuBalance),
+            'rewards' => IncomeModel::getIncome(self::$Request[self::COMMON_ID_PARAM])
+        ];
     }
 
     /**

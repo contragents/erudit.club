@@ -552,3 +552,35 @@ function playersButtonFunction() {
         buttons['playersButton']['svgObject'].bringToTop(buttons['playersButton']['svgObject'].getByName('playersButton' + OTJAT_MODE));
     }, 3000);
 }
+
+function claimIncome() {
+    if(!commonId || !commonIdHash)
+    {
+        return;
+    }
+
+    fetch('/mvc/pay/claim', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `common_id=${commonId}&common_id_hash=${commonIdHash}`,
+    }).then(response => response.json())
+        .then(result => {
+            console.log('Success:', result);
+            if ('result' in result && result.result === 'success') {
+                let balanceSudokuSelector = $('#balanceSudoku');
+                let mainBalanceSudokuSelector = $('#main_balance');
+                let bonusAccrualSelector = $('#bonusAccrual');
+                let ratingByCoinsSelectior = $('#ratingByCoins');
+
+                balanceSudokuSelector.html(result.SUDOKU_BALANCE);
+                mainBalanceSudokuSelector.html(result.SUDOKU_BALANCE);
+                bonusAccrualSelector.html(result.rewards);
+                ratingByCoinsSelectior.html(result.SUDOKU_TOP);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
