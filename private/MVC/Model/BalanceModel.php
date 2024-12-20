@@ -63,6 +63,11 @@ class BalanceModel extends BaseModel
         );
     }
 
+    public static function getBalanceFormatted(int $commonId): string
+    {
+        return number_format(self::getBalance($commonId), 0, '.', ',');
+    }
+
     private static function createBalance(int $commonId): bool
     {
         return (bool)self::add([self::COMMON_ID_FIELD => $commonId]);

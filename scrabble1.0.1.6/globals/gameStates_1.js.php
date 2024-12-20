@@ -89,6 +89,11 @@ var gameStates = {
                 prefs:{from_rating: 2100}
             };*/
 
+            tWaiting = 0;
+            isUserBlockActive = false;
+            winScore = false;
+            gameBid = false;
+
             let under1800 = '<?= T::S('Only for players rated 1800+') ?>';
             let noRatingPlayers = '<?= T::S('Not enough 1900+ rated players online') ?>';
             let haveRatingPlayers = '<?= T::S('Select the minimum opponent rating') ?>';
@@ -1014,6 +1019,7 @@ var gameOldState = '';
 
 function commonCallback(data) {
     if (('gameState' in data) && !(data['gameState'] in gameStates)) {
+        console.log('HERE!');
         return;
     }
 
@@ -1127,15 +1133,15 @@ function commonCallback(data) {
 
 
                             if ('timeWaiting' in data) {
-                                if (!tWaiting) {
-                                    tWaiting = data['timeWaiting'];
+                                if (!tWaiting || data.timeWaiting > 0) {
+                                    tWaiting = data.timeWaiting;
                                 }
                                 if (!gWLimit) {
-                                    gWLimit = data['gameWaitLimit'];
+                                    gWLimit = data.gameWaitLimit;
                                 }
                             } else {
                                 if (!gWLimit) {
-                                    gWLimit = data['gameWaitLimit'];
+                                    gWLimit = data.gameWaitLimit;
                                 }
                                 if (!tWaiting) {
                                     tWaiting = 0
@@ -1281,11 +1287,23 @@ function commonCallback(data) {
         gameBankString = data.bank_string;
         console.log(gameBid, gameBank, gameBankString);
 
-        buttons.logButton.svgObject.x = buttons.chatButton.svgObject.x - (buttons.checkButton.svgObject.width - buttons.logButton.svgObject.width) / 2;
-        buttons.playersButton.svgObject.x += (buttons.changeButton.svgObject.width - buttons.playersButton.svgObject.width) / 2
-        buttons.chatButton.svgObject.x = buttons.logButton.svgObject.x + (buttons.playersButton.svgObject.x - buttons.logButton.svgObject.x) / 2;
+        if (players.bankBlock.svgObject === false) {
+            buttons.logButton.svgObject.x = buttons.chatButton.svgObject.x - (buttons.checkButton.svgObject.width - buttons.logButton.svgObject.width) / 2;
+            buttons.playersButton.svgObject.x += (buttons.changeButton.svgObject.width - buttons.playersButton.svgObject.width) / 2
+            buttons.chatButton.svgObject.x = buttons.logButton.svgObject.x + (buttons.playersButton.svgObject.x - buttons.logButton.svgObject.x) / 2;
+        } else {
+            while(players.bankBlock.svgObject.length) {
+                players.bankBlock.svgObject.pop().setVisible(false).destroy();
+            }
+        }
 
-        preloaderObject.load.svg('bankBlockOtjat', `/img/otjat/${players.bankBlock.filename}${gameBankString}.svg`,
+        players.bankBlock.svgObject = [];
+
+        let resourceName = 'bankBlock_' + gameBankString + '_' + Date.now();
+
+        preloaderObject.load.reset();
+
+        preloaderObject.load.svg(resourceName + OTJAT_MODE, `/img/otjat/${players.bankBlock.filename}${gameBankString}.svg`,
             {
                 ...('width' in players.bankBlock && {
                     'width': players.bankBlock.width,
@@ -1299,7 +1317,12 @@ function commonCallback(data) {
 
         preloaderObject.load.on('complete', function () {
             playerBlockModes = [OTJAT_MODE];
-            players.bankBlock.svgObject = getSVGBlockGlobal(players.bankBlock.x, players.bankBlock.y, 'bankBlock', faserObject, players.bankBlock.scalable, false);
+
+            while(players.bankBlock.svgObject.length) {
+                players.bankBlock.svgObject.pop().setVisible(false).destroy();
+            }
+            players.bankBlock.svgObject.push(getSVGBlockGlobal(players.bankBlock.x, players.bankBlock.y, resourceName, faserObject, players.bankBlock.scalable, false));
+
             playerBlockModes = [OTJAT_MODE, ALARM_MODE];
         });
     }
@@ -1326,9 +1349,9 @@ function commonCallback(data) {
     }
 
     if ('winScore' in data) {
-        if (!winScore) {
+        // почемуто с if не работает... if (!winScore) {
             buttonSetModeGlobal(players, 'goalBlock', data.winScore == 200 ? OTJAT_MODE : ALARM_MODE);
-        }
+        //}
 
         winScore = data.winScore;
     }
@@ -1346,7 +1369,7 @@ function commonCallback(data) {
 function userScores(data) {
     if ("score_arr" in data) {
         for (let k in data['score_arr']) {
-            if (k == data['yourUserNum']) {
+            if (k == data.yourUserNum) {
                 let youBlock = players.youBlock.svgObject;
 
                 if (!isUserBlockActive) {
@@ -1374,6 +1397,10 @@ function userScores(data) {
                 buttonSetModeGlobal(players, 'youBlock', gameState === MY_TURN_STATE ? ALARM_MODE : OTJAT_MODE);
             } else {
                 let playerBlockName = 'player' + (+k + 1) + 'Block';
+
+                if (!players[playerBlockName].svgObject.visible) {
+                    players[playerBlockName].svgObject.setVisible(true);
+                }
 
                 displayScoreGlobal(data['score_arr'][k], playerBlockName, false);
                 buttonSetModeGlobal(players, playerBlockName, k == data['activeUser'] ? ALARM_MODE : OTJAT_MODE);

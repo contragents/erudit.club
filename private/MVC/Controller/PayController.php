@@ -44,12 +44,12 @@ class PayController extends BaseController
 
         DB::transactionCommit();
 
-        $newSudokuBalance = BalanceModel::getBalance(self::$Request[self::COMMON_ID_PARAM]);
+        $newSudokuBalance = BalanceModel::getBalanceFormatted(self::$Request[self::COMMON_ID_PARAM]);
         return [
             'result' => 'success',
             'message' => T::S('success'),
-            'SUDOKU_BALANCE' => $newSudokuBalance,
-            'SUDOKU_TOP' => BalanceModel::getTopByBalance($newSudokuBalance),
+            Game::SUDOKU_BALANCE => $newSudokuBalance,
+            'SUDOKU_TOP' => BalanceModel::getTopByBalance(BalanceModel::getBalance(self::$Request[self::COMMON_ID_PARAM])),
             'rewards' => IncomeModel::getIncome(self::$Request[self::COMMON_ID_PARAM])
         ];
     }

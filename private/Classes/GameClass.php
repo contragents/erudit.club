@@ -20,6 +20,8 @@ class Game
 
     public const GAME_LANG = [T::EN_LANG => self::SCRABBLE, T::RU_LANG => self::ERUDIT];
     const MIN_TOP_RATING = 1700;
+    const SUDOKU_BALANCE = 'SUDOKU_BALANCE';
+    const CHOOSE_GAME_STATUS = 'chooseGame';
 
     public static string $gameName = self::SCRABBLE;
     protected static array $playersInGames = [];
@@ -629,8 +631,8 @@ class Game
         $message['info'] = [];
         $message['info']['rating'] = CommonIdRatingModel::getRating($this->commonId, self::$gameName);
         $message['info']['top'] = CommonIdRatingModel::getTopByRating($message['info']['rating'], self::$gameName);
-        $message['info']['SUDOKU_BALANCE'] = BalanceModel::getBalance($this->commonId);
-        $message['info']['SUDOKU_TOP'] = BalanceModel::getTopByBalance($message['info']['SUDOKU_BALANCE']);
+        $message['info'][self::SUDOKU_BALANCE] = BalanceModel::getBalanceFormatted($this->commonId);
+        $message['info']['SUDOKU_TOP'] = BalanceModel::getTopByBalance(BalanceModel::getBalance($this->commonId));
         $message['info']['rewards'] = IncomeModel::getIncome($this->commonId);
 
         $refs = RefModel::getCustomO(RefModel::COMMON_ID_FIELD, '=', $this->commonId, true);
@@ -1843,38 +1845,8 @@ class Game
                 return $this->initGame();
             }
 
-            /*$prefs = Cache::get($this->Queue::PREFS_KEY . $this->User) ?: [];
-            $balance = BalanceModel::getBalance($this->commonId);
-
-            if ($balance > 0) {
-                $prefsBid = $prefs['bid'] ?? 0;
-
-                if ($prefsBid < ($balance / 20)) {
-                    foreach (MonetizationService::BIDS as $bid) {
-                        if($bid >= ($balance / 20)) {
-                            $prefs['bid'] = $bid;
-
-                            break;
-                        }
-                    }
-                } elseif ($prefsBid > $balance) {
-                    $bids = MonetizationService::BIDS;
-                    sort($bids);
-
-                    foreach ( $bids as $bid) {
-                        if($bid < $balance) {
-                            $prefs['bid'] = $bid;
-
-                            break;
-                        }
-                    }
-                }
-            } else {
-                $prefs['bid'] = 0;
-            }*/
-
             $chooseGameParams = [
-                'gameState' => 'chooseGame',
+                'gameState' => self::CHOOSE_GAME_STATUS,
                 'gameSubState' => 'choosing',
                 'players' => $this->onlinePlayers(),
                 'coin_players' => $this->onlineCoinPlayers(),
@@ -2157,7 +2129,7 @@ class Game
             $this->addToLog(T::S('left game'), $this->numUser);
         }
 
-        return $this->makeResponse(['gameState' => 'chooseGame', 'gameSubState' => 'choosing']);
+        return (new $this->Queue($this->User, $this, $_POST))->chooseGame();
     }
 
     protected function makeWishWinscore(): int
@@ -2417,7 +2389,7 @@ class Game
                 //Добавили в респонс очки игроков
             }
 
-            if (isset($this->gameStatus['bid'])) {
+            if (isset($this->gameStatus['bid']) && $arr['gameState'] !== self::CHOOSE_GAME_STATUS) {
                 $bid = $this->gameStatus['bid'] ?: 0;
                 $bank = $bid * count($this->gameStatus['users']);
                 $arr = array_merge(
@@ -2468,6 +2440,10 @@ class Game
 
             if ($arr['gameState'] == self::MY_TURN_STATUS) {
                 $arr = array_merge($arr, ['turnTime' => $this->gameStatus['turnTime']]);
+            }
+
+            if(!isset($arr['desk']) && in_array($arr['gameState'], [self::MY_TURN_STATUS, self::PRE_MY_TURN_STATUS, self::OTHER_TURN_STATUS, self::START_GAME_STATUS])) {
+                $arr['desk'] = $this->gameStatus['lngClass']::init_desk();
             }
 
             if (count($this->gameStatus['users']) === 2) {

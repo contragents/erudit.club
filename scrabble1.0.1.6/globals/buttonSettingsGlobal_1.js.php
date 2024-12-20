@@ -291,7 +291,7 @@ var players = {
         y: botXY.y + botHeight * 0.75 * (1 + 0.1),
         width: buttonWidth,
         object: false,
-        svgObject: false,
+        svgObject: false, // array of 1 object - needs to properly destroy
         preload: false,
         pointerupFunction: function () {
             console.log(gameBid);

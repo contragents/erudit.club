@@ -104,7 +104,15 @@ function newGameButtonFunction(ignoreDialog = false) {
                         requestToServerEnabled = true;
                         fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState)
                             .then((data) => {
-                                document.location.reload(true);
+                                commonCallback(data);
+                                //document.location.reload(true);
+
+                                // CLUB-421..
+                                /*fetchGlobal(STATUS_CHECKER_SCRIPT)
+                                    .then((data) => {
+                                        commonCallback(data);
+                                        // CLUB-421 gameStates['chooseGame']['action'](data)
+                                    });*/
                             });
 
                         buttons['newGameButton']['svgObject'].setInteractive();
@@ -157,7 +165,15 @@ function newGameButtonFunction(ignoreDialog = false) {
 
         fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState)
             .then((data) => {
-                document.location.reload(true);
+                commonCallback(data);
+                //document.location.reload(true);
+
+                // CLUB-421...
+                /*fetchGlobal(STATUS_CHECKER_SCRIPT)
+                    .then((data) => {
+                        commonCallback(data);
+                        // CLUB-421 gameStates['chooseGame']['action'](data)
+                    });*/
             });
     }
 };

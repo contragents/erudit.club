@@ -50,6 +50,8 @@ class Queue
 
         $this->lang = self::LANGS[$this->POST['lang'] ?? ''];
 
+        $this->userTime = date('U'); // Потом перезапишется, если игрок уже в подборе
+
         if (isset($this->POST['ochki_num'])) {
             Cache::setex(
                 static::PREFS_KEY . $this->User,
@@ -112,18 +114,24 @@ class Queue
         //Удалили указатель на текущую игру для пользователя
     }
 
-    private static function getBid(float $maxBid): int
+    private static function getBid(int $maxBid): ?int
     {
         $bidsArr = MonetizationService::BIDS;
         arsort($bidsArr);
 
-        foreach($bidsArr as $bid) {
-            if($bid <= floor($maxBid)) {
+        foreach ($bidsArr as $bid) {
+            if ($bid <= floor($maxBid / 20)) {
                 return $bid;
             }
         }
 
-        return 0;
+        foreach ($bidsArr as $bid) {
+            if ($bid <= $maxBid) {
+                return $bid;
+            }
+        }
+
+        return null;
     }
 
     protected static function getRuClass(): string
@@ -136,18 +144,31 @@ class Queue
         return Eng::class;
     }
 
-    protected function chooseGame(): string
+    public function chooseGame(): string
     {
         $chooseGameParams = [
-            'gameState' => 'chooseGame',
+            'gameState' => $this->caller::CHOOSE_GAME_STATUS,
             'gameSubState' => 'choosing',
             'players' => $this->caller->onlinePlayers(),
             'coin_players' => $this->caller->onlineCoinPlayers(),
-            'prefs' => $this->caller->getPrefs(),//Cache::get(static::PREFS_KEY . $this->User)
+            'prefs' => $this->caller->getPrefs(),
         ];
 
         return $this->caller
             ->makeResponse($chooseGameParams);
+    }
+
+    protected function initGameResponse(string $queue)
+    {
+        return $this->caller
+            ->makeResponse(
+                [
+                    'gameState' => Game::INIT_GAME_STATE,
+                    'gameSubState' => Cache::hlen(static::QUEUES["erudit.{$queue}{$this->lang}players_waiters"]),
+                    'gameWaitLimit' => $this->caller->gameWaitLimit,
+                    'timeWaiting' => date('U') - ($this->userTime),
+                ]
+            );
     }
 
     public function doSomethingWithThisStuff(string $lang = '')
@@ -165,14 +186,16 @@ class Queue
                 }
             }
 
-            return $this->caller
+            return $this->initGameResponse('invite');
+            /*return $this->caller
                 ->makeResponse(
                     [
                         'gameState' => Game::INIT_GAME_STATE,
                         'gameSubState' => Cache::hlen(static::QUEUES["erudit.invite{$this->lang}players_waiters"]),
-                        'gameWaitLimit' => $this->caller->gameWaitLimit
+                        'gameWaitLimit' => $this->caller->gameWaitLimit,
+                        'timeWaiting' => date('U') - ($this->userTime ?? date('U')),
                     ]
-                );
+                );*/
         }
 
         // Блок поиска рейтингового игрока
@@ -240,6 +263,8 @@ class Queue
         $playerInfo = Cache::hget(static::QUEUES["erudit.invite{$this->lang}players_waiters"], $this->User);
 
         if ($playerInfo) {
+            $this->userTime = $playerInfo['time'];
+
             if (isset($playerInfo['time']) && (date('U') - $playerInfo['time']) > static::MAX_INVITE_WAIT_TIME) {
                 self::cleanUp($this->User);
 
@@ -571,9 +596,11 @@ class Queue
             foreach ($game_users as $num => $user) {
                 $userBalance = BalanceModel::getBalance(PlayerModel::getPlayerID($user['userCookie'], true));
 
+                // todo иногда ставка делает баланс игрока отрицательным. Нужно не давать балансу уходить в минус
+
                 if (!isset($user['options']['bid'])) {
-                    if($userBalance > 0) {
-                        $user['options']['bid'] = self::getBid($userBalance / 20);
+                    if ($userBalance > 0) {
+                        $user['options']['bid'] = self::getBid($userBalance);
                     }
                 } elseif ($user['options']['bid'] > $userBalance) {
                     unset($user['options']['bid']);
@@ -581,7 +608,7 @@ class Queue
 
                 if (!isset($user['options']['bid'])) {
                     $noCoinGame = true;
-                } elseif ($bid == 0 || $bid > $user['options']['bid']) {
+                } elseif ($bid == 0 || $bid > $user['options']['bid'] || $bid > $userBalance) {
                     $bid = $user['options']['bid'];
                 }
             }
@@ -674,6 +701,8 @@ class Queue
             self::addToQueue("erudit.invite{$this->lang}players_waiters", $User, $options);
         }
 
+        return $this->initGameResponse('invite');
+        /*
         return $this->caller->makeResponse(
             [
                 'gameState' => Game::INIT_GAME_STATE,
@@ -681,15 +710,21 @@ class Queue
                 'gameWaitLimit' => $this->caller->gameWaitLimit
             ]
         );
+        */
     }
 
     protected function players2Waiting($User)
     {
         if ($cnt = Cache::hlen(static::QUEUES["erudit.2{$this->lang}players_waiters"])) {
-            if (!Cache::hget(static::QUEUES["erudit.2{$this->lang}players_waiters"], $User)) {
-                return true;
-            } else {
+            if (($user = Cache::hget(static::QUEUES["erudit.2{$this->lang}players_waiters"], $User))) {
+                $this->userTime = $user['time'] ?? date('U');
+
+                //Нашли текущего игрока в очереди, но есть ли в очереди еще хотябы один игрок?
                 if ($cnt > 1) {
+                    return true;
+                }
+            } else {
+                if ($cnt >= 1) {
                     return true;
                 }
             }
@@ -714,13 +749,15 @@ class Queue
             }
         }
 
+        return $this->initGameResponse('2');
+        /*
         return $this->caller->makeResponse(
             [
                 'gameState' => Game::INIT_GAME_STATE,
                 'gameSubState' => Cache::hlen(static::QUEUES["erudit.2{$this->lang}players_waiters"]),
                 'gameWaitLimit' => $this->caller->gameWaitLimit
             ]
-        );
+        );*/
     }
 
     protected function addToQueue(string $queue, string $user, $options, array $params = []): bool
