@@ -84,15 +84,19 @@ var gameStates = {
         message: '',
         noDialog: true,
         action: function (data) {
-            /*data = {
-                players: {0: 30, 1900: 25, 2000:20, 2100:15, thisUserRating: 2400},
-                prefs:{from_rating: 2100}
-            };*/
-
             tWaiting = 0;
             isUserBlockActive = false;
             winScore = false;
             gameBid = false;
+
+            playerScores = {
+                youBlock: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+                player1Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+                player2Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+                player3Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+                player4Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
+            };
+            initScoresGlobal();
 
             let under1800 = '<?= T::S('Only for players rated 1800+') ?>';
             let noRatingPlayers = '<?= T::S('Not enough 1900+ rated players online') ?>';

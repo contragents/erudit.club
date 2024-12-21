@@ -12,7 +12,7 @@ var modes = [OTJAT_MODE, ALARM_MODE, 'Inactive', 'Navedenie', 'Najatie'];
 
 var buttons = {
     newGameButton: {
-        filename: 'new_game2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'new_game2' + (lang === 'RU' ? '_ru' : ''),
         x: topXY.x + lotokX + buttonWidth / 2 - lotokCellStep / 2 + 5,
         y: (topXY.y + topHeight) / 2,
         caption: 'New#Game',
@@ -82,7 +82,7 @@ var buttons = {
         },
     }),
     submitButton: {
-        filename: 'otpravit2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'otpravit2' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
         y: botXY.y + botHeight * 0.125,
         caption: 'send',
@@ -94,7 +94,7 @@ var buttons = {
         }
     },
     resetButton: {
-        filename: 'steret2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'steret2' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
         y: botXY.y + botHeight * (0.25 + 0.125),
         caption: 'clear',
@@ -107,7 +107,7 @@ var buttons = {
         }
     },
     changeButton: {
-        filename: 'pomenyat2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'pomenyat2' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth - buttonWidth / 2 - buttonStepX,
         y: botXY.y + botHeight * (0.5 + 0.125),
         caption: 'change',
@@ -131,7 +131,7 @@ var buttons = {
         }
     },
     checkButton: {
-        filename: 'proveryt2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'proveryt2' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + knopkiWidth / 2,
         y: botXY.y + botHeight * 0.125,
         caption: 'check',
@@ -233,7 +233,7 @@ var modesColors = {
 
 var players = {
     youBlock: {
-        filename: 'you' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'you' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * 0.1,
         width: buttonWidth,
@@ -242,7 +242,7 @@ var players = {
         numbers: true,
     },
     player1Block: {
-        filename: 'player1' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'player1' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * 0.1,
         width: buttonWidth,
@@ -251,7 +251,7 @@ var players = {
         numbers: true,
     },
     player2Block: {
-        filename: 'player2' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'player2' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * (0.2 + 0.1),
         width: buttonWidth,
@@ -260,7 +260,7 @@ var players = {
         numbers: true,
     },
     player3Block: {
-        filename: 'player3' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'player3' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * (0.4 + 0.1),
         width: buttonWidth,
@@ -269,7 +269,7 @@ var players = {
         numbers: true,
     },
     player4Block: {
-        filename: 'player4' +  (lang === 'RU' ? '_ru' : ''),
+        filename: 'player4' + (lang === 'RU' ? '_ru' : ''),
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * 0.75 * (0.6 + 0.1),
         width: buttonWidth,
@@ -316,8 +316,21 @@ var players = {
     },
 };
 
-function displayScoreGlobal(score, blockName, isActive = false)
-{
+function initScoresGlobal() {
+    for (let blockName in playerScores) {
+        let container = players[blockName].svgObject;
+
+        for (let number = 0; number <= 9; number++) {
+            for (let mode in playerBlockModes) {
+                for (let digitPos = 1; digitPos <= 3; digitPos++) {
+                    container.getByName(playerBlockModes[mode] + '_' + number + '_' + digitPos).setVisible(false);
+                }
+            }
+        }
+    }
+}
+
+function displayScoreGlobal(score, blockName, isActive = false) {
     let mode = isActive ? ALARM_MODE : OTJAT_MODE;
 
     let container = players[blockName].svgObject;
@@ -327,15 +340,15 @@ function displayScoreGlobal(score, blockName, isActive = false)
     let secondDigit = ((score - thirdDigit) % 100) / 10;
     let firstDigit = (score - secondDigit * 10 - thirdDigit) / 100;
 
-    if(thirdDigit !== playerScores[blockName].digit3 || mode !== playerScores[blockName].mode) {
+    if (thirdDigit !== playerScores[blockName].digit3 || mode !== playerScores[blockName].mode) {
         container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit3 + '_' + '3').setVisible(false);
     }
 
-    if(secondDigit !== playerScores[blockName].digit2 || mode !== playerScores[blockName].mode) {
+    if (secondDigit !== playerScores[blockName].digit2 || mode !== playerScores[blockName].mode) {
         container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit2 + '_' + '2').setVisible(false);
     }
 
-    if(firstDigit !== playerScores[blockName].digit1 || mode !== playerScores[blockName].mode) {
+    if (firstDigit !== playerScores[blockName].digit1 || mode !== playerScores[blockName].mode) {
         container.getByName(playerScores[blockName].mode + '_' + playerScores[blockName].digit1 + '_' + '1').setVisible(false);
     }
 
@@ -356,8 +369,7 @@ function displayScoreGlobal(score, blockName, isActive = false)
     }
 }
 
-function displayTimeGlobal(time, forceShowAll = false)
-{
+function displayTimeGlobal(time, forceShowAll = false) {
     let mode = (time < 20) ? ALARM_MODE : OTJAT_MODE;
     let disabledMode = (!(time < 20)) ? ALARM_MODE : OTJAT_MODE;
 
@@ -376,17 +388,17 @@ function displayTimeGlobal(time, forceShowAll = false)
         container.getByName(disabledMode + '_' + 'dvoetoch').setVisible(false);
     }
 
-    if(thirdDigit !== timerState.digit3 || mode !== timerState.mode || forceShowAll) {
+    if (thirdDigit !== timerState.digit3 || mode !== timerState.mode || forceShowAll) {
         container.getByName(timerState.mode + '_' + timerState.digit3 + '_' + '3').setVisible(false);
         container.getByName(mode + '_' + thirdDigit + '_3').setVisible(true);
     }
 
-    if(secondDigit !== timerState.digit2 || mode !== timerState.mode || forceShowAll) {
+    if (secondDigit !== timerState.digit2 || mode !== timerState.mode || forceShowAll) {
         container.getByName(timerState.mode + '_' + timerState.digit2 + '_' + '2').setVisible(false);
         container.getByName(mode + '_' + secondDigit + '_2').setVisible(true);
     }
 
-    if(firstDigit !== timerState.digit1 || mode !== timerState.mode || forceShowAll) {
+    if (firstDigit !== timerState.digit1 || mode !== timerState.mode || forceShowAll) {
         container.getByName(timerState.mode + '_' + timerState.digit1 + '_' + '1').setVisible(false);
         container.getByName(mode + '_' + firstDigit + '_1').setVisible(true);
     }
@@ -397,8 +409,7 @@ function displayTimeGlobal(time, forceShowAll = false)
     timerState.digit1 = firstDigit;
 }
 
-function buttonSetModeGlobal(objectSet, objectName, mode)
-{
+function buttonSetModeGlobal(objectSet, objectName, mode) {
     let svgObject = objectSet[objectName].svgObject;
     svgObject.bringToTop(svgObject.getByName(objectName + mode));
 

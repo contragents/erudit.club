@@ -70,7 +70,12 @@ const INACTIVE_USER_ALPHA = 0.2;
 var activeUser = false;
 var commonId = false;
 var commonIdHash = false;
+
+// vars initializing in chooseGame state
+var tWaiting = false;
 var isUserBlockActive = false;
+var winScore = false;
+var gameBid = false;
 var playerScores = {
     youBlock: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
     player1Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
@@ -78,6 +83,7 @@ var playerScores = {
     player3Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
     player4Block: {mode: OTJAT_MODE, digit3: 0, digit2: 0, digit1: 0},
 }
+// vars initializing in chooseGame state END
 
 var timerState = {
     mode: OTJAT_MODE,
@@ -109,7 +115,6 @@ const standardHorizontalWidth = 960 * 2;
 const standardHorizontalHeight = standardVerticalWidth;
 
 var gameNumber = false;
-var gameBid = false;
 var gameBank = false;
 var gameBankString = '';
 var faserObject = false;
@@ -229,7 +234,6 @@ var submitButton = false;
 var dialog = false;
 var dialogResponse = false;
 
-var winScore = false;
 var ochki = false;
 var ochki_arr = false;
 var myUserNum = false;
@@ -252,7 +256,6 @@ var vremiaFontSizeDefault = 24 * 2;
 var vremiaFontSizeDelta = 8;
 var vremiaFontSize = vremiaFontSizeDefault;
 
-var tWaiting = false;
 var gWLimit = false;
 
 var pageActive = 'visible';
