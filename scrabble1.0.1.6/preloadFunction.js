@@ -6,8 +6,6 @@ function () {
     progressBox.fillStyle(0x222222, 0.3);
     progressBox.fillRect(gameWidth / 2 - 320 / 2, gameHeight / 2 - 50 / 5, 320, 50);
 
-    var showCaution = false;
-
     var textWidth = this.cameras.main.width;
     var textHeight = this.cameras.main.height;
     var loadingText = this.make.text({
@@ -31,10 +29,8 @@ function () {
         progressBar.destroy();
         progressBox.destroy();
         loadingText.destroy();
-        if (showCaution) {
-            androidText1.destroy();
-            androidText2.destroy();
-        }
+
+        document.body.style.backgroundImage = "";
     });
 
     preloaderObject = this;

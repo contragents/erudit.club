@@ -1860,7 +1860,7 @@ label.file-label:active:before {
 }
 
 .bronze_card {
-	background: url('../images/bronze.png') center center no-repeat;
+	background: url('../images/bronze-background.jpg') center center no-repeat;
 	background-size: cover;
 }
 
@@ -2540,7 +2540,94 @@ label.file-label:active:before {
     width: 80%;
 }
 
-.text-white {
+.text-white { 
     color: #ffffff;
     font-size: 120%;
+}
+
+/* -------------------------------------------------- */
+/* -------------------------------------------------- */
+/* -------------------------------------------------- */
+.modal-settings.modal-choose-letter .modal-content,
+.modal-settings.modal-change-letter .modal-content {
+	border-radius: 18px;
+}
+.modal-settings.modal-choose-letter .modal-body,
+.modal-settings.modal-change-letter .modal-body  {
+	padding: 8px;
+}
+.modal-settings.modal-choose-letter .box-heading,
+.modal-settings.modal-change-letter .box-heading {
+	font-size: 22px;
+	font-weight: 500;
+}
+.letter-box {
+	padding: 8px;
+	margin: 0;
+}
+.letter-list {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 auto;
+	justify-content: flex-start;
+}
+.letter-list > * {
+	margin: 2px;
+	width: calc(100%/7 - 4px);
+	aspect-ratio: 1;
+}
+.letter-list .letter {
+	display: block;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: 50%, 50%;
+	border-radius: 21%;
+	cursor: pointer;
+	overflow: hidden;
+	aspect-ratio: 1;
+}
+.letter-list .letter:hover {
+	box-shadow: 0px 0px 0px 1px #fff;
+}
+.letter-list input[type="checkbox"] {
+	display: none;
+}
+.letter-list label {
+	position: relative;
+	width: unset;
+	margin: 0;
+	border: none;
+}
+.letter-list label::before {
+	content: '';
+	display: block;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	translate: -30% 50%;
+	width: 47%;
+	aspect-ratio: 1;
+	background-image: url(/img/unchecked.png);
+	background-size: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: 1;
+	opacity: 0.6;
+}
+.letter-list input:checked + label::before {
+	background-image: url(/img/checked.png);
+}
+.modal-settings.modal-change-letter .letter-list label:hover::before {
+	opacity: 1;
+}
+.modal-settings.modal-change-letter .letter-list .letter:hover {
+	box-shadow: none;
+}
+.modal-settings.modal-change-letter .modal-footer {
+    --box-margin-bottom: 8px;
+    --box-margin-x: 8px;
+    --box-padding-y: 8px;
+    --box-padding-x: 12px;
+	margin-top: 10px;
+	justify-content: flex-end;
 }

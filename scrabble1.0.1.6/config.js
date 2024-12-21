@@ -3,7 +3,8 @@ var config = {
     type: Phaser.AUTO,
     width: gameWidth,
     height: gameHeight,
-    backgroundColor: 0xdddddd,
+    transparent: true,
+    //backgroundColor: 0xdddddd,
     parent: 'phaser-example',
     scene: UIScene,
     scale: {
