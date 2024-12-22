@@ -1,5 +1,7 @@
 <?php
 
+use BaseController as BC;
+
 class AchievesModel extends BaseModel
 {
     const TABLE_NAME = 'achieves';
@@ -77,36 +79,37 @@ class AchievesModel extends BaseModel
         'games_played-week' => 'Сыграно ПАРТИЙ - Рекорд Недели!',
         'games_played-day' => 'Сыграно ПАРТИЙ - Рекорд Дня!',
     ];
+
     public const PRIZE_LINKS = [
         'top-year' => 'img/prizes/top_1.svg',
         'top-month' => 'img/prizes/top_2.svg',
         'top-week' => 'img/prizes/top_3.svg',
         'top-day' => 'img/prizes/top_10.svg',
 
-        'game_price-year' => 'img/prizes/yearly/ochki_za_igru_year.svg',
-        'game_price-month' => 'img/prizes/monthly/ochki_za_igru_month.svg',
-        'game_price-week' => 'img/prizes/weekly/ochki_za_igru_week.svg',
-        'game_price-day' => 'img/prizes/daily/ochki_za_igru_day.svg',
+        'game_price-year' => BC::BASE_URL . 'img/prizes/yearly/ochki_za_igru_year.svg',
+        'game_price-month' => BC::BASE_URL . 'img/prizes/monthly/ochki_za_igru_month.svg',
+        'game_price-week' => BC::BASE_URL . 'img/prizes/weekly/ochki_za_igru_week.svg',
+        'game_price-day' => BC::BASE_URL . 'img/prizes/daily/ochki_za_igru_day.svg',
 
-        'turn_price-year' => 'img/prizes/yearly/ochki_za_hod_year.svg',
-        'turn_price-month' => 'img/prizes/monthly/ochki_za_hod_month.svg',
-        'turn_price-week' => 'img/prizes/weekly/ochki_za_hod_week.svg',
-        'turn_price-day' => 'img/prizes/daily/ochki_za_hod_day.svg',
+        'turn_price-year' => BC::BASE_URL . 'img/prizes/yearly/ochki_za_hod_year.svg',
+        'turn_price-month' => BC::BASE_URL . 'img/prizes/monthly/ochki_za_hod_month.svg',
+        'turn_price-week' => BC::BASE_URL . 'img/prizes/weekly/ochki_za_hod_week.svg',
+        'turn_price-day' => BC::BASE_URL . 'img/prizes/daily/ochki_za_hod_day.svg',
 
-        'word_price-year' => 'img/prizes/yearly/ochki_za_slovo_year.svg',
-        'word_price-month' => 'img/prizes/monthly/ochki_za_slovo_month.svg',
-        'word_price-week' => 'img/prizes/weekly/ochki_za_slovo_week.svg',
-        'word_price-day' => 'img/prizes/daily/ochki_za_slovo_day.svg',
+        'word_price-year' => BC::BASE_URL . 'img/prizes/yearly/ochki_za_slovo_year.svg',
+        'word_price-month' => BC::BASE_URL . 'img/prizes/monthly/ochki_za_slovo_month.svg',
+        'word_price-week' => BC::BASE_URL . 'img/prizes/weekly/ochki_za_slovo_week.svg',
+        'word_price-day' => BC::BASE_URL . 'img/prizes/daily/ochki_za_slovo_day.svg',
 
-        'word_len-year' => 'img/prizes/yearly/dlinnoe_slovo_year.svg',
-        'word_len-month' => 'img/prizes/monthly/dlinnoe_slovo_month.svg',
-        'word_len-week' => 'img/prizes/weekly/dlinnoe_slovo_week.svg',
-        'word_len-day' => 'img/prizes/daily/dlinnoe_slovo_day.svg',
+        'word_len-year' => BC::BASE_URL . 'img/prizes/yearly/dlinnoe_slovo_year.svg',
+        'word_len-month' => BC::BASE_URL . 'img/prizes/monthly/dlinnoe_slovo_month.svg',
+        'word_len-week' => BC::BASE_URL . 'img/prizes/weekly/dlinnoe_slovo_week.svg',
+        'word_len-day' => BC::BASE_URL . 'img/prizes/daily/dlinnoe_slovo_day.svg',
 
-        'games_played-year' => 'img/prizes/yearly/sygrano_partiy_year.svg',
-        'games_played-month' => 'img/prizes/monthly/sygrano_partiy_month.svg',
-        'games_played-week' => 'img/prizes/weekly/sygrano_partiy_week.svg',
-        'games_played-day' => 'img/prizes/daily/sygrano_partiy_day.svg',
+        'games_played-year' => BC::BASE_URL . 'img/prizes/yearly/sygrano_partiy_year.svg',
+        'games_played-month' => BC::BASE_URL . 'img/prizes/monthly/sygrano_partiy_month.svg',
+        'games_played-week' => BC::BASE_URL . 'img/prizes/weekly/sygrano_partiy_week.svg',
+        'games_played-day' => BC::BASE_URL . 'img/prizes/daily/sygrano_partiy_day.svg',
     ];
 
     const GAMES_STATS_TABLE = 'games_stats';

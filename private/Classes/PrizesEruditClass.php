@@ -84,7 +84,7 @@ class PrizesErudit
                 [
                     'link' => AchievesModel::PRIZE_LINKS[$type],
                     'type' => $type,
-                    'common_id' => PlayerModel::getPlayerID($record['cookie']) //getCommonIDByCookie($record['cookie'])
+                    'common_id' => PlayerModel::getPlayerID($record['cookie'])
                 ]
             );
 

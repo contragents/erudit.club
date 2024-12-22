@@ -56,10 +56,8 @@ this.input.on('dragend', function (pointer, gameObject) {
             cellY = 14
         }
 
-        console.log('x', gameObject.x, 'y', gameObject.y, 'cellX', cellX, 'cellY', cellY);
         findPlaceGlobal(gameObject, gameObject.x, gameObject.y, cellX, cellY);
     } else {
-        console.log('x', gameObject.x, 'y', gameObject.y, 'stepX', stepX, 'stepY', stepY);
         checkZvezdaGlobal(gameObject);
     }
 

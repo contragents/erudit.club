@@ -17,29 +17,70 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="083cf621-0e75-4976-a3cb-6b5812dcdbdc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/tgGlobalFunction.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/tg.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scrabble1.0.1.6/ysdk_4.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/globalVars.js.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev1.0.1.2/preloadFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/dev1.0.1.2/preloadFunction.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img/field_source_nd_17.svg" beforeDir="false" afterPath="$PROJECT_DIR$/img/field_source_nd_17.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/private/Classes/TClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/Classes/TClass.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globalFunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globalFunctions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/private/Classes/FaqClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/Classes/FaqClass.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/private/Classes/MacrosClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/Classes/MacrosClass.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/private/Classes/PrizesEruditClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/Classes/PrizesEruditClass.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/private/MVC/Controller/BaseController.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/MVC/Controller/BaseController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/private/MVC/Controller/PlayersController.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/MVC/Controller/PlayersController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/private/MVC/Controller/StatsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/MVC/Controller/StatsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/private/MVC/Model/AchievesModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/MVC/Model/AchievesModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/private/MVC/View/StatsAchievesView.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/MVC/View/StatsAchievesView.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/private/MVC/View/Tpl/main_header.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/MVC/View/Tpl/main_header.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/dadata.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/style.min.bak.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/style.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/alferova.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/arrow.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/calligraphy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/check.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/love.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/mono_cards.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/mono_classic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/mono_million.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/scale.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/slide1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/slide1.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/slide2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/slide2.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/slide3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/slide3.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/sumerki15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img/sumerki2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/app.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/dadata.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/hamster.js" beforeDir="false" afterPath="$PROJECT_DIR$/hamster.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/telegram-web-app.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/t-web-app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/create/fishkaDragEvents.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/create/fishkaDragEvents.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globalFunctions.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globalFunctions.js.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globalVars.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globalVars.js.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/ajaxGetGlobalFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/ajaxGetGlobalFunction.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonSettingsGlobal.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonSettingsGlobal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gameStates.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gameStates.js.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/ajaxGetGlobalFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/ajaxGetGlobalFunction_4.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonGlobalFunctions_4.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonGlobalFunctions_4.js.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/findPlaceGlobalFunction_2.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/findPlaceGlobalFunction_2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gagetTypeFunctions_1.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gagetTypeFunctions_1.js.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gameStates_1.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gameStates_1.js.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/getFishkaGlobalFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/getFishkaGlobalFunction_3.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/instruction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/instruction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/instruction_eng.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/instruction_eng.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/openWindowGlobalFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/openWindowGlobalFunction_4.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/verstkaFunctions.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/verstkaFunctions_4.js.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/preloadFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/preloadFunction.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/updateFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/updateFunction.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/ysdk.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/ysdk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataHints.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataHints.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTableRow.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/tpl/ratingsTableRow.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/preloadFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/preloadFunction_4.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/ysdk.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scramble.html" beforeDir="false" afterPath="$PROJECT_DIR$/scramble.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tpl/main_header.php" beforeDir="false" afterPath="$PROJECT_DIR$/tpl/main_header.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yandex.html" beforeDir="false" afterPath="$PROJECT_DIR$/yandex.html" afterDir="false" />
     </list>
     <list id="493eaa45-d165-4bb4-bddd-131381b96e0a" name="ignore" comment="">
       <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/erudit.club.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/erudit.club.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/noop.php" beforeDir="false" afterPath="$PROJECT_DIR$/noop.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yandex_204db8b54d13840c.html" beforeDir="false" afterPath="$PROJECT_DIR$/yandex_204db8b54d13840c.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -54,13 +95,14 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="CLUB-353" />
+        <entry key="$PROJECT_DIR$" value="staging" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -79,27 +121,133 @@
     <file path="$PROJECT_DIR$/.idea/workspace.xml">
       <ranges>
         <range start1="13" end1="14" start2="13" end2="14" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="19" end1="106" start2="19" end2="21" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="107" end1="109" start2="22" end2="23" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="110" end1="142" start2="24" end2="36" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="143" end1="147" start2="37" end2="37" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="162" end1="162" start2="52" end2="59" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="184" end1="207" start2="81" end2="102" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="220" end1="222" start2="115" end2="117" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="228" end1="235" start2="123" end2="123" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="238" end1="238" start2="126" end2="133" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="553" end1="659" start2="448" end2="466" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="898" end1="899" start2="705" end2="811" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="925" end1="926" start2="837" end2="838" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="939" end1="954" start2="851" end2="851" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="964" end1="965" start2="861" end2="877" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="967" end1="967" start2="879" end2="883" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="971" end1="972" start2="887" end2="888" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="974" end1="975" start2="890" end2="891" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="979" end1="980" start2="895" end2="908" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="982" end1="984" start2="910" end2="912" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="986" end1="988" start2="914" end2="916" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="990" end1="991" start2="918" end2="919" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="19" end1="21" start2="19" end2="20" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="22" end1="28" start2="21" end2="58" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="29" end1="32" start2="59" end2="69" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="33" end1="36" start2="70" end2="74" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="37" end1="37" start2="75" end2="77" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="42" end1="42" start2="82" end2="83" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="56" end1="56" start2="97" end2="98" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="62" end1="63" start2="104" end2="105" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="81" end1="102" start2="123" end2="250" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="113" end1="113" start2="261" end2="262" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="115" end1="117" start2="264" end2="266" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="124" end1="124" start2="273" end2="277" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="127" end1="129" start2="280" end2="281" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="130" end1="132" start2="282" end2="285" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="465" end1="466" start2="618" end2="664" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="467" end1="471" start2="665" end2="669" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="472" end1="473" start2="670" end2="671" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="474" end1="478" start2="672" end2="676" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="479" end1="480" start2="677" end2="678" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="481" end1="485" start2="679" end2="683" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="486" end1="487" start2="684" end2="685" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="488" end1="492" start2="686" end2="690" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="493" end1="494" start2="691" end2="692" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="495" end1="499" start2="693" end2="697" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="500" end1="501" start2="698" end2="699" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="502" end1="506" start2="700" end2="704" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="507" end1="508" start2="705" end2="706" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="509" end1="513" start2="707" end2="711" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="514" end1="515" start2="712" end2="713" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="516" end1="520" start2="714" end2="718" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="521" end1="522" start2="719" end2="720" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="523" end1="527" start2="721" end2="725" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="528" end1="529" start2="726" end2="727" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="530" end1="534" start2="728" end2="732" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="535" end1="536" start2="733" end2="734" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="537" end1="541" start2="735" end2="739" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="542" end1="543" start2="740" end2="741" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="544" end1="548" start2="742" end2="746" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="549" end1="550" start2="747" end2="748" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="551" end1="555" start2="749" end2="753" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="556" end1="557" start2="754" end2="755" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="558" end1="562" start2="756" end2="760" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="563" end1="564" start2="761" end2="762" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="565" end1="569" start2="763" end2="767" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="570" end1="571" start2="768" end2="769" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="572" end1="576" start2="770" end2="774" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="577" end1="578" start2="775" end2="776" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="579" end1="583" start2="777" end2="781" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="584" end1="585" start2="782" end2="783" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="586" end1="590" start2="784" end2="788" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="591" end1="592" start2="789" end2="790" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="593" end1="597" start2="791" end2="795" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="598" end1="599" start2="796" end2="797" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="600" end1="604" start2="798" end2="802" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="605" end1="606" start2="803" end2="804" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="607" end1="611" start2="805" end2="809" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="612" end1="613" start2="810" end2="811" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="614" end1="618" start2="812" end2="816" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="619" end1="620" start2="817" end2="818" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="621" end1="625" start2="819" end2="823" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="626" end1="627" start2="824" end2="825" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="628" end1="632" start2="826" end2="830" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="633" end1="634" start2="831" end2="832" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="635" end1="639" start2="833" end2="837" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="640" end1="641" start2="838" end2="839" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="642" end1="646" start2="840" end2="844" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="647" end1="648" start2="845" end2="846" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="649" end1="653" start2="847" end2="851" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="654" end1="655" start2="852" end2="853" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="656" end1="660" start2="854" end2="858" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="661" end1="662" start2="859" end2="860" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="663" end1="667" start2="861" end2="865" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="668" end1="669" start2="866" end2="867" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="670" end1="674" start2="868" end2="872" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="675" end1="676" start2="873" end2="874" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="677" end1="681" start2="875" end2="879" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="682" end1="683" start2="880" end2="881" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="684" end1="688" start2="882" end2="886" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="689" end1="690" start2="887" end2="888" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="691" end1="695" start2="889" end2="893" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="696" end1="697" start2="894" end2="895" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="698" end1="702" start2="896" end2="900" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="703" end1="704" start2="901" end2="902" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="705" end1="709" start2="903" end2="907" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="710" end1="711" start2="908" end2="909" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="712" end1="716" start2="910" end2="914" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="717" end1="718" start2="915" end2="916" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="719" end1="723" start2="917" end2="921" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="724" end1="725" start2="922" end2="923" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="726" end1="730" start2="924" end2="928" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="731" end1="732" start2="929" end2="930" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="733" end1="737" start2="931" end2="935" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="738" end1="739" start2="936" end2="937" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="740" end1="744" start2="938" end2="942" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="745" end1="746" start2="943" end2="944" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="747" end1="751" start2="945" end2="949" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="752" end1="753" start2="950" end2="951" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="754" end1="758" start2="952" end2="956" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="759" end1="760" start2="957" end2="958" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="761" end1="765" start2="959" end2="963" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="766" end1="767" start2="964" end2="965" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="768" end1="772" start2="966" end2="970" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="773" end1="774" start2="971" end2="972" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="775" end1="779" start2="973" end2="977" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="780" end1="781" start2="978" end2="979" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="782" end1="786" start2="980" end2="984" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="787" end1="788" start2="985" end2="986" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="789" end1="793" start2="987" end2="991" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="794" end1="795" start2="992" end2="993" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="796" end1="800" start2="994" end2="998" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="801" end1="802" start2="999" end2="1000" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="803" end1="807" start2="1001" end2="1005" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="808" end1="809" start2="1006" end2="1007" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="810" end1="811" start2="1008" end2="1009" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="837" end1="838" start2="1035" end2="1036" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="851" end1="877" start2="1049" end2="1075" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="879" end1="880" start2="1077" end2="1090" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="882" end1="884" start2="1092" end2="1094" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="886" end1="888" start2="1096" end2="1098" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="890" end1="892" start2="1100" end2="1103" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="894" end1="896" start2="1105" end2="1107" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="898" end1="900" start2="1109" end2="1111" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="902" end1="904" start2="1113" end2="1115" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="906" end1="908" start2="1117" end2="1119" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="910" end1="912" start2="1121" end2="1123" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="914" end1="916" start2="1125" end2="1127" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="918" end1="919" start2="1129" end2="1157" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
       </ranges>
     </file>
   </component>
@@ -111,10 +259,11 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JSON&#10;JavaScript&#10;TEXT&#10;HTML" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/private/MVC/Controller" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JSON&#10;TEXT&#10;JavaScript&#10;HTML" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="php.override.implement.member.chooser.php.doc" value="COPY_ALWAYS" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
@@ -122,14 +271,18 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\static\" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\img\otjat" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\css" />
       <recent name="C:\Users\ili\PhpstormProjects\erudit.club\dev1.0.1.2\php" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\private\MVC\Controller" />
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\private\Classes" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club" />
       <recent name="C:\Users\ili\PhpstormProjects\erudit.club\css" />
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\dev1.0.1.2" />
-      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\private" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\images" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\private\MVC\Model" />
+      <recent name="C:\Users\ili\PhpstormProjects\erudit.club\public\js" />
     </key>
   </component>
   <component name="RestClientSettings">
@@ -463,352 +616,397 @@
       <workItem from="1723933910579" duration="3326000" />
       <workItem from="1723978304009" duration="2590000" />
       <workItem from="1724059951040" duration="11755000" />
-      <workItem from="1724092622328" duration="2818000" />
+      <workItem from="1724092622328" duration="3146000" />
+      <workItem from="1724169387679" duration="10932000" />
+      <workItem from="1724273758825" duration="188245000" />
+      <workItem from="1726651827850" duration="27552000" />
+      <workItem from="1726912971406" duration="837000" />
+      <workItem from="1726914044952" duration="42536000" />
+      <workItem from="1727167980323" duration="10782000" />
+      <workItem from="1727205338090" duration="2940000" />
+      <workItem from="1727253885930" duration="3578000" />
+      <workItem from="1727278206033" duration="4753000" />
+      <workItem from="1727373904686" duration="11777000" />
+      <workItem from="1727521464252" duration="24994000" />
+      <workItem from="1727650109870" duration="593000" />
+      <workItem from="1727727655646" duration="9166000" />
+      <workItem from="1727816490317" duration="6423000" />
+      <workItem from="1727823093270" duration="55000" />
+      <workItem from="1727823171845" duration="256000" />
+      <workItem from="1728051873030" duration="510000" />
+      <workItem from="1728052676199" duration="68000" />
+      <workItem from="1728052757402" duration="85441000" />
+      <workItem from="1729156625526" duration="48889000" />
+      <workItem from="1729513636890" duration="1264000" />
+      <workItem from="1729586875646" duration="29309000" />
+      <workItem from="1729798356205" duration="67427000" />
+      <workItem from="1730461723741" duration="32338000" />
+      <workItem from="1730968834841" duration="4937000" />
+      <workItem from="1731491452789" duration="8502000" />
+      <workItem from="1731506197666" duration="15599000" />
+      <workItem from="1731680289183" duration="15386000" />
+      <workItem from="1732124208543" duration="18469000" />
+      <workItem from="1732226341121" duration="2181000" />
+      <workItem from="1732228685132" duration="805000" />
+      <workItem from="1732271603349" duration="43579000" />
+      <workItem from="1732699279575" duration="2113000" />
+      <workItem from="1732708273140" duration="3540000" />
+      <workItem from="1732782966562" duration="612000" />
+      <workItem from="1732870440971" duration="16000" />
+      <workItem from="1732881159361" duration="2199000" />
+      <workItem from="1733050331703" duration="13566000" />
+      <workItem from="1733305662383" duration="2064000" />
+      <workItem from="1733392873430" duration="1054000" />
+      <workItem from="1733402749683" duration="34722000" />
+      <workItem from="1734435190251" duration="4422000" />
+      <workItem from="1734512367619" duration="7074000" />
+      <workItem from="1734621334813" duration="735000" />
+      <workItem from="1734626288266" duration="46091000" />
     </task>
-    <task id="LOCAL-00084" summary="CLUB-295">
-      <created>1706524141171</created>
-      <option name="number" value="00084" />
-      <option name="presentableId" value="LOCAL-00084" />
+    <task id="LOCAL-00189" summary="CLUB-404 in progress 3 сделал некликабельными верхние кнопки на игровом поле">
+      <created>1728990504145</created>
+      <option name="number" value="00189" />
+      <option name="presentableId" value="LOCAL-00189" />
       <option name="project" value="LOCAL" />
-      <updated>1706524141171</updated>
+      <updated>1728990504145</updated>
     </task>
-    <task id="LOCAL-00085" summary="CLUB-295 2">
-      <created>1706524164618</created>
-      <option name="number" value="00085" />
-      <option name="presentableId" value="LOCAL-00085" />
+    <task id="LOCAL-00190" summary="CLUB-404 in progress 4 fixed stats">
+      <created>1728992116056</created>
+      <option name="number" value="00190" />
+      <option name="presentableId" value="LOCAL-00190" />
       <option name="project" value="LOCAL" />
-      <updated>1706524164618</updated>
+      <updated>1728992116057</updated>
     </task>
-    <task id="LOCAL-00086" summary="CLUB-295">
-      <created>1706536681244</created>
-      <option name="number" value="00086" />
-      <option name="presentableId" value="LOCAL-00086" />
+    <task id="LOCAL-00191" summary="CLUB-404 in progress 5 Profile choose file button fix">
+      <created>1729069659322</created>
+      <option name="number" value="00191" />
+      <option name="presentableId" value="LOCAL-00191" />
       <option name="project" value="LOCAL" />
-      <updated>1706536681244</updated>
+      <updated>1729069659322</updated>
     </task>
-    <task id="LOCAL-00087" summary="CLUB-294">
-      <created>1706728963990</created>
-      <option name="number" value="00087" />
-      <option name="presentableId" value="LOCAL-00087" />
+    <task id="LOCAL-00192" summary="CLUB-404 RU coin mode faq">
+      <created>1729164004534</created>
+      <option name="number" value="00192" />
+      <option name="presentableId" value="LOCAL-00192" />
       <option name="project" value="LOCAL" />
-      <updated>1706728963990</updated>
+      <updated>1729164004534</updated>
     </task>
-    <task id="LOCAL-00088" summary="CLUB-295 strong">
-      <created>1706729108498</created>
-      <option name="number" value="00088" />
-      <option name="presentableId" value="LOCAL-00088" />
+    <task id="LOCAL-00193" summary="CLUB-404 RU rating faq">
+      <created>1729252445121</created>
+      <option name="number" value="00193" />
+      <option name="presentableId" value="LOCAL-00193" />
       <option name="project" value="LOCAL" />
-      <updated>1706729108498</updated>
+      <updated>1729252445121</updated>
     </task>
-    <task id="LOCAL-00089" summary="CLUB-296">
-      <created>1706732983573</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
+    <task id="LOCAL-00194" summary="CLUB-397 model object, data for front">
+      <created>1729347860022</created>
+      <option name="number" value="00194" />
+      <option name="presentableId" value="LOCAL-00194" />
       <option name="project" value="LOCAL" />
-      <updated>1706732983574</updated>
+      <updated>1729347860022</updated>
     </task>
-    <task id="LOCAL-00090" summary="CLUB-301">
-      <created>1706952696639</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
+    <task id="LOCAL-00195" summary="CLUB-397 update 1">
+      <created>1729415218287</created>
+      <option name="number" value="00195" />
+      <option name="presentableId" value="LOCAL-00195" />
       <option name="project" value="LOCAL" />
-      <updated>1706952696641</updated>
+      <updated>1729415218287</updated>
     </task>
-    <task id="LOCAL-00091" summary="CLUB-299">
-      <created>1706953182766</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
+    <task id="LOCAL-00196" summary="CLUB-397 update 2">
+      <created>1729419125837</created>
+      <option name="number" value="00196" />
+      <option name="presentableId" value="LOCAL-00196" />
       <option name="project" value="LOCAL" />
-      <updated>1706953182766</updated>
+      <updated>1729419125837</updated>
     </task>
-    <task id="LOCAL-00092" summary="CLUB-302">
-      <created>1708800132246</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
+    <task id="LOCAL-00197" summary="CLUB-397 Доделать переводы&#10;         Починить бота - нужен автолоад">
+      <created>1729586938294</created>
+      <option name="number" value="00197" />
+      <option name="presentableId" value="LOCAL-00197" />
       <option name="project" value="LOCAL" />
-      <updated>1708800132246</updated>
+      <updated>1729586938294</updated>
     </task>
-    <task id="LOCAL-00093" summary="CLUB-303 чтото сделал">
-      <created>1708807112411</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
+    <task id="LOCAL-00198" summary="CLUB-405 done">
+      <created>1729594112267</created>
+      <option name="number" value="00198" />
+      <option name="presentableId" value="LOCAL-00198" />
       <option name="project" value="LOCAL" />
-      <updated>1708807112411</updated>
+      <updated>1729594112267</updated>
     </task>
-    <task id="LOCAL-00094" summary="CLUB-304">
-      <created>1708974376678</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
+    <task id="LOCAL-00199" summary="CLUB-397 добавил много переводов">
+      <created>1729676434129</created>
+      <option name="number" value="00199" />
+      <option name="presentableId" value="LOCAL-00199" />
       <option name="project" value="LOCAL" />
-      <updated>1708974376678</updated>
+      <updated>1729676434129</updated>
     </task>
-    <task id="LOCAL-00095" summary="CLUB-305">
-      <created>1709142097372</created>
-      <option name="number" value="00095" />
-      <option name="presentableId" value="LOCAL-00095" />
+    <task id="LOCAL-00200" summary="CLUB-406">
+      <created>1729682787906</created>
+      <option name="number" value="00200" />
+      <option name="presentableId" value="LOCAL-00200" />
       <option name="project" value="LOCAL" />
-      <updated>1709142097373</updated>
+      <updated>1729682787906</updated>
     </task>
-    <task id="LOCAL-00096" summary="CLUB-310">
-      <created>1709143222388</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
+    <task id="LOCAL-00201" summary="staging fix translate">
+      <created>1729712150010</created>
+      <option name="number" value="00201" />
+      <option name="presentableId" value="LOCAL-00201" />
       <option name="project" value="LOCAL" />
-      <updated>1709143222388</updated>
+      <updated>1729712150010</updated>
     </task>
-    <task id="LOCAL-00097" summary="CLUB-308 + CLUB-309">
-      <created>1709150908112</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
+    <task id="LOCAL-00202" summary="CLUB-397 achieves fixed">
+      <created>1729715939158</created>
+      <option name="number" value="00202" />
+      <option name="presentableId" value="LOCAL-00202" />
       <option name="project" value="LOCAL" />
-      <updated>1709150908112</updated>
+      <updated>1729715939158</updated>
     </task>
-    <task id="LOCAL-00098" summary="CLUB-313">
-      <created>1709291607566</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
+    <task id="LOCAL-00203" summary="staging submit turn refactoring">
+      <created>1729771652249</created>
+      <option name="number" value="00203" />
+      <option name="presentableId" value="LOCAL-00203" />
       <option name="project" value="LOCAL" />
-      <updated>1709291607566</updated>
+      <updated>1729771652249</updated>
     </task>
-    <task id="LOCAL-00099" summary="CLUB-311 check achieves table for new records after 2024-03-01 11:22:38">
-      <created>1709293398303</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
+    <task id="LOCAL-00204" summary="CLUB-397 merging 1">
+      <created>1729771999435</created>
+      <option name="number" value="00204" />
+      <option name="presentableId" value="LOCAL-00204" />
       <option name="project" value="LOCAL" />
-      <updated>1709293398303</updated>
+      <updated>1729771999435</updated>
     </task>
-    <task id="LOCAL-00100" summary="CLUB-312 cron run - check top rating refresh">
-      <created>1709497353078</created>
-      <option name="number" value="00100" />
-      <option name="presentableId" value="LOCAL-00100" />
+    <task id="LOCAL-00205" summary="CLUB-397 merging 2">
+      <created>1729772258504</created>
+      <option name="number" value="00205" />
+      <option name="presentableId" value="LOCAL-00205" />
       <option name="project" value="LOCAL" />
-      <updated>1709497353078</updated>
+      <updated>1729772258504</updated>
     </task>
-    <task id="LOCAL-00101" summary="CLUB-315 готово">
-      <created>1709832049592</created>
-      <option name="number" value="00101" />
-      <option name="presentableId" value="LOCAL-00101" />
+    <task id="LOCAL-00206" summary="CLUB-397 before fixes">
+      <created>1729848958028</created>
+      <option name="number" value="00206" />
+      <option name="presentableId" value="LOCAL-00206" />
       <option name="project" value="LOCAL" />
-      <updated>1709832049592</updated>
+      <updated>1729848958029</updated>
     </task>
-    <task id="LOCAL-00102" summary="CLUB-318 готово">
-      <created>1709905262592</created>
-      <option name="number" value="00102" />
-      <option name="presentableId" value="LOCAL-00102" />
+    <task id="LOCAL-00207" summary="CLUB-397 fixes fixes">
+      <created>1729859883687</created>
+      <option name="number" value="00207" />
+      <option name="presentableId" value="LOCAL-00207" />
       <option name="project" value="LOCAL" />
-      <updated>1709905262592</updated>
+      <updated>1729859883687</updated>
     </task>
-    <task id="LOCAL-00103" summary="CLUB-306 to test">
-      <created>1709931972646</created>
-      <option name="number" value="00103" />
-      <option name="presentableId" value="LOCAL-00103" />
+    <task id="LOCAL-00208" summary="CLUB-397 fixes 2">
+      <created>1729862470674</created>
+      <option name="number" value="00208" />
+      <option name="presentableId" value="LOCAL-00208" />
       <option name="project" value="LOCAL" />
-      <updated>1709931972646</updated>
+      <updated>1729862470674</updated>
     </task>
-    <task id="LOCAL-00104" summary="staging delete console.log">
-      <created>1709983784001</created>
-      <option name="number" value="00104" />
-      <option name="presentableId" value="LOCAL-00104" />
+    <task id="LOCAL-00209" summary="CLUB-397 fixes 3">
+      <created>1729862580076</created>
+      <option name="number" value="00209" />
+      <option name="presentableId" value="LOCAL-00209" />
       <option name="project" value="LOCAL" />
-      <updated>1709983784001</updated>
+      <updated>1729862580076</updated>
     </task>
-    <task id="LOCAL-00105" summary="CLUB-329 for testing">
-      <created>1711530398318</created>
-      <option name="number" value="00105" />
-      <option name="presentableId" value="LOCAL-00105" />
+    <task id="LOCAL-00210" summary="CLUB-407 in progress">
+      <created>1730194550021</created>
+      <option name="number" value="00210" />
+      <option name="presentableId" value="LOCAL-00210" />
       <option name="project" value="LOCAL" />
-      <updated>1711530398318</updated>
+      <updated>1730194550021</updated>
     </task>
-    <task id="LOCAL-00106" summary="CLUB-345">
-      <created>1712499308153</created>
-      <option name="number" value="00106" />
-      <option name="presentableId" value="LOCAL-00106" />
+    <task id="LOCAL-00211" summary="CLUB-407 to prod">
+      <created>1730202125370</created>
+      <option name="number" value="00211" />
+      <option name="presentableId" value="LOCAL-00211" />
       <option name="project" value="LOCAL" />
-      <updated>1712499308153</updated>
+      <updated>1730202125370</updated>
     </task>
-    <task id="LOCAL-00107" summary="CLUB-346 testing">
-      <created>1713514148687</created>
-      <option name="number" value="00107" />
-      <option name="presentableId" value="LOCAL-00107" />
+    <task id="LOCAL-00212" summary="CLUB-409 done">
+      <created>1730209980159</created>
+      <option name="number" value="00212" />
+      <option name="presentableId" value="LOCAL-00212" />
       <option name="project" value="LOCAL" />
-      <updated>1713514148687</updated>
+      <updated>1730209980160</updated>
     </task>
-    <task id="LOCAL-00108" summary="CLUB-334 done">
-      <created>1713648739984</created>
-      <option name="number" value="00108" />
-      <option name="presentableId" value="LOCAL-00108" />
+    <task id="LOCAL-00213" summary="CLUB-4013 testing">
+      <created>1730221112987</created>
+      <option name="number" value="00213" />
+      <option name="presentableId" value="LOCAL-00213" />
       <option name="project" value="LOCAL" />
-      <updated>1713648739984</updated>
+      <updated>1730221112988</updated>
     </task>
-    <task id="LOCAL-00109" summary="CLUB-347">
-      <created>1713961182836</created>
-      <option name="number" value="00109" />
-      <option name="presentableId" value="LOCAL-00109" />
+    <task id="LOCAL-00214" summary="CLUB-4013 fixing">
+      <created>1730276529480</created>
+      <option name="number" value="00214" />
+      <option name="presentableId" value="LOCAL-00214" />
       <option name="project" value="LOCAL" />
-      <updated>1713961182836</updated>
+      <updated>1730276529480</updated>
     </task>
-    <task id="LOCAL-00110" summary="staging small fix">
-      <created>1714397435928</created>
-      <option name="number" value="00110" />
-      <option name="presentableId" value="LOCAL-00110" />
+    <task id="LOCAL-00215" summary="CLUB-415 to prod">
+      <created>1730540291888</created>
+      <option name="number" value="00215" />
+      <option name="presentableId" value="LOCAL-00215" />
       <option name="project" value="LOCAL" />
-      <updated>1714397435929</updated>
+      <updated>1730540291888</updated>
     </task>
-    <task id="LOCAL-00111" summary="CLUB-348 prod">
-      <created>1714419201328</created>
-      <option name="number" value="00111" />
-      <option name="presentableId" value="LOCAL-00111" />
+    <task id="LOCAL-00216" summary="staging CLUB-415 verstka fix">
+      <created>1730541975675</created>
+      <option name="number" value="00216" />
+      <option name="presentableId" value="LOCAL-00216" />
       <option name="project" value="LOCAL" />
-      <updated>1714419201328</updated>
+      <updated>1730541975675</updated>
     </task>
-    <task id="LOCAL-00112" summary="staging update">
-      <created>1718078510224</created>
-      <option name="number" value="00112" />
-      <option name="presentableId" value="LOCAL-00112" />
+    <task id="LOCAL-00217" summary="CLUB-414 prod">
+      <created>1730711289468</created>
+      <option name="number" value="00217" />
+      <option name="presentableId" value="LOCAL-00217" />
       <option name="project" value="LOCAL" />
-      <updated>1718078510224</updated>
+      <updated>1730711289468</updated>
     </task>
-    <task id="LOCAL-00113" summary="CLUB-350 done">
-      <created>1718080678044</created>
-      <option name="number" value="00113" />
-      <option name="presentableId" value="LOCAL-00113" />
+    <task id="LOCAL-00218" summary="CLUB-385 prod">
+      <created>1730716505133</created>
+      <option name="number" value="00218" />
+      <option name="presentableId" value="LOCAL-00218" />
       <option name="project" value="LOCAL" />
-      <updated>1718080678044</updated>
+      <updated>1730716505133</updated>
     </task>
-    <task id="LOCAL-00114" summary="staging noop coinmarketcap api test">
-      <created>1719861999730</created>
-      <option name="number" value="00114" />
-      <option name="presentableId" value="LOCAL-00114" />
+    <task id="LOCAL-00219" summary="staging тест получения цены EURC/USDC pancake">
+      <created>1730886407919</created>
+      <option name="number" value="00219" />
+      <option name="presentableId" value="LOCAL-00219" />
       <option name="project" value="LOCAL" />
-      <updated>1719861999731</updated>
+      <updated>1730886407919</updated>
     </task>
-    <task id="LOCAL-00115" summary="CLUB-252 in progres + mvc href fix">
-      <created>1719918994181</created>
-      <option name="number" value="00115" />
-      <option name="presentableId" value="LOCAL-00115" />
+    <task id="LOCAL-00220" summary="CLUB-416 done">
+      <created>1730894901349</created>
+      <option name="number" value="00220" />
+      <option name="presentableId" value="LOCAL-00220" />
       <option name="project" value="LOCAL" />
-      <updated>1719918994181</updated>
+      <updated>1730894901349</updated>
     </task>
-    <task id="LOCAL-00116" summary="CLUB-353 in progres 2">
-      <created>1720020322317</created>
-      <option name="number" value="00116" />
-      <option name="presentableId" value="LOCAL-00116" />
+    <task id="LOCAL-00221" summary="staging robokassa oferta added">
+      <created>1731064500907</created>
+      <option name="number" value="00221" />
+      <option name="presentableId" value="LOCAL-00221" />
       <option name="project" value="LOCAL" />
-      <updated>1720020322317</updated>
+      <updated>1731064500907</updated>
     </task>
-    <task id="LOCAL-00117" summary="CLUB-353-in-progress with new buttons chat2">
-      <created>1721218185030</created>
-      <option name="number" value="00117" />
-      <option name="presentableId" value="LOCAL-00117" />
+    <task id="LOCAL-00222" summary="CLUB-412 done">
+      <created>1731501801604</created>
+      <option name="number" value="00222" />
+      <option name="presentableId" value="LOCAL-00222" />
       <option name="project" value="LOCAL" />
-      <updated>1721218185031</updated>
+      <updated>1731501801605</updated>
     </task>
-    <task id="LOCAL-00118" summary="CLUB-353-in-progress with new buttons chat2 2">
-      <created>1721220936861</created>
-      <option name="number" value="00118" />
-      <option name="presentableId" value="LOCAL-00118" />
+    <task id="LOCAL-00223" summary="CLUB-417 диалоги под верстку">
+      <created>1731714958559</created>
+      <option name="number" value="00223" />
+      <option name="presentableId" value="LOCAL-00223" />
       <option name="project" value="LOCAL" />
-      <updated>1721220936861</updated>
+      <updated>1731714958559</updated>
     </task>
-    <task id="LOCAL-00119" summary="CLUB-353-in-progress with new buttons avatar upload 3">
-      <created>1721393489831</created>
-      <option name="number" value="00119" />
-      <option name="presentableId" value="LOCAL-00119" />
+    <task id="LOCAL-00224" summary="CLUB-417 hints 1">
+      <created>1731792653148</created>
+      <option name="number" value="00224" />
+      <option name="presentableId" value="LOCAL-00224" />
       <option name="project" value="LOCAL" />
-      <updated>1721393489831</updated>
+      <updated>1731792653148</updated>
     </task>
-    <task id="LOCAL-00120" summary="CLUB-535-in-progress avatar refresh">
-      <created>1721642677761</created>
-      <option name="number" value="00120" />
-      <option name="presentableId" value="LOCAL-00120" />
+    <task id="LOCAL-00225" summary="CLUB-417 in progress">
+      <created>1732183080637</created>
+      <option name="number" value="00225" />
+      <option name="presentableId" value="LOCAL-00225" />
       <option name="project" value="LOCAL" />
-      <updated>1721642677762</updated>
+      <updated>1732183080637</updated>
     </task>
-    <task id="LOCAL-00121" summary="CLUB-353-in-progress invite button">
-      <created>1722012295711</created>
-      <option name="number" value="00121" />
-      <option name="presentableId" value="LOCAL-00121" />
+    <task id="LOCAL-00226" summary="CLUB-418 in progress">
+      <created>1732184722944</created>
+      <option name="number" value="00226" />
+      <option name="presentableId" value="LOCAL-00226" />
       <option name="project" value="LOCAL" />
-      <updated>1722012295711</updated>
+      <updated>1732184722944</updated>
     </task>
-    <task id="LOCAL-00122" summary="CLUB-353-in-progress kill domain where its possible">
-      <created>1722163887780</created>
-      <option name="number" value="00122" />
-      <option name="presentableId" value="LOCAL-00122" />
+    <task id="LOCAL-00227" summary="CLUB-418 in progress 2">
+      <created>1732199845914</created>
+      <option name="number" value="00227" />
+      <option name="presentableId" value="LOCAL-00227" />
       <option name="project" value="LOCAL" />
-      <updated>1722163887780</updated>
+      <updated>1732199845914</updated>
     </task>
-    <task id="LOCAL-00123" summary="CLUB-353-in-progress hamsters">
-      <created>1722163969581</created>
-      <option name="number" value="00123" />
-      <option name="presentableId" value="LOCAL-00123" />
+    <task id="LOCAL-00228" summary="CLUB-418 done">
+      <created>1732273276782</created>
+      <option name="number" value="00228" />
+      <option name="presentableId" value="LOCAL-00228" />
       <option name="project" value="LOCAL" />
-      <updated>1722163969581</updated>
+      <updated>1732273276783</updated>
     </task>
-    <task id="LOCAL-00124" summary="СДГИ-353-in-progress очкии гроков">
-      <created>1722710164685</created>
-      <option name="number" value="00124" />
-      <option name="presentableId" value="LOCAL-00124" />
+    <task id="LOCAL-00229" summary="CLUB-417 done">
+      <created>1732557039520</created>
+      <option name="number" value="00229" />
+      <option name="presentableId" value="LOCAL-00229" />
       <option name="project" value="LOCAL" />
-      <updated>1722710164685</updated>
+      <updated>1732557039520</updated>
     </task>
-    <task id="LOCAL-00125" summary="СДГИ-353-in-progress очкии гроков 2">
-      <created>1722721996353</created>
-      <option name="number" value="00125" />
-      <option name="presentableId" value="LOCAL-00125" />
+    <task id="LOCAL-00230" summary="CLUB-420 done">
+      <created>1732569383129</created>
+      <option name="number" value="00230" />
+      <option name="presentableId" value="LOCAL-00230" />
       <option name="project" value="LOCAL" />
-      <updated>1722721996353</updated>
+      <updated>1732569383129</updated>
     </task>
-    <task id="LOCAL-00126" summary="СДГИ-353-in-progress очкии гроков to server">
-      <created>1722767797788</created>
-      <option name="number" value="00126" />
-      <option name="presentableId" value="LOCAL-00126" />
+    <task id="LOCAL-00231" summary="staging small fixes">
+      <created>1733933172114</created>
+      <option name="number" value="00231" />
+      <option name="presentableId" value="LOCAL-00231" />
       <option name="project" value="LOCAL" />
-      <updated>1722767797788</updated>
+      <updated>1733933172115</updated>
     </task>
-    <task id="LOCAL-00127" summary="CLUB-353 in progress">
-      <created>1722858526401</created>
-      <option name="number" value="00127" />
-      <option name="presentableId" value="LOCAL-00127" />
+    <task id="LOCAL-00232" summary="CLUB-421 in progress">
+      <created>1734435987613</created>
+      <option name="number" value="00232" />
+      <option name="presentableId" value="LOCAL-00232" />
       <option name="project" value="LOCAL" />
-      <updated>1722858526401</updated>
+      <updated>1734435987613</updated>
     </task>
-    <task id="LOCAL-00128" summary="CLUB-353 scrabble fishki">
-      <created>1723590349850</created>
-      <option name="number" value="00128" />
-      <option name="presentableId" value="LOCAL-00128" />
+    <task id="LOCAL-00233" summary="staging private erudit fixes">
+      <created>1734440128794</created>
+      <option name="number" value="00233" />
+      <option name="presentableId" value="LOCAL-00233" />
       <option name="project" value="LOCAL" />
-      <updated>1723590349850</updated>
+      <updated>1734440128794</updated>
     </task>
-    <task id="LOCAL-00129" summary="CLUB-353 scrabble timer">
-      <created>1723641056477</created>
-      <option name="number" value="00129" />
-      <option name="presentableId" value="LOCAL-00129" />
+    <task id="LOCAL-00234" summary="CLUB-421 dev1.0.1.2 deleted">
+      <created>1734606266685</created>
+      <option name="number" value="00234" />
+      <option name="presentableId" value="LOCAL-00234" />
       <option name="project" value="LOCAL" />
-      <updated>1723641056477</updated>
+      <updated>1734606266686</updated>
     </task>
-    <task id="LOCAL-00130" summary="CLUB-353 player score update">
-      <created>1724021166961</created>
-      <option name="number" value="00130" />
-      <option name="presentableId" value="LOCAL-00130" />
+    <task id="LOCAL-00235" summary="CLUB-421 fixes">
+      <created>1734704376566</created>
+      <option name="number" value="00235" />
+      <option name="presentableId" value="LOCAL-00235" />
       <option name="project" value="LOCAL" />
-      <updated>1724021166962</updated>
+      <updated>1734704376567</updated>
     </task>
-    <task id="LOCAL-00131" summary="CLUB-353 timer update">
-      <created>1724022219360</created>
-      <option name="number" value="00131" />
-      <option name="presentableId" value="LOCAL-00131" />
+    <task id="LOCAL-00236" summary="CLUB-421 fixes 00">
+      <created>1734794456163</created>
+      <option name="number" value="00236" />
+      <option name="presentableId" value="LOCAL-00236" />
       <option name="project" value="LOCAL" />
-      <updated>1724022219360</updated>
+      <updated>1734794456163</updated>
     </task>
-    <task id="LOCAL-00132" summary="CLUB-353 before design merging">
-      <created>1724075897381</created>
-      <option name="number" value="00132" />
-      <option name="presentableId" value="LOCAL-00132" />
+    <task id="LOCAL-00237" summary="CLUB-421 fixes background">
+      <created>1734807832720</created>
+      <option name="number" value="00237" />
+      <option name="presentableId" value="LOCAL-00237" />
       <option name="project" value="LOCAL" />
-      <updated>1724075897382</updated>
+      <updated>1734807832720</updated>
     </task>
-    <option name="localTasksCounter" value="133" />
+    <option name="localTasksCounter" value="238" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -835,7 +1033,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="CLUB-353-in-progress" />
+                        <option value="CLUB-418" />
                       </list>
                     </value>
                   </entry>
@@ -849,73 +1047,113 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="CLUB-334 done" />
-    <MESSAGE value="CLUB-347" />
-    <MESSAGE value="staging small fix" />
-    <MESSAGE value="CLUB-348 prod" />
-    <MESSAGE value="staging update" />
-    <MESSAGE value="CLUB-350 done" />
-    <MESSAGE value="staging noop coinmarketcap api test" />
-    <MESSAGE value="CLUB-252 in progres + mvc href fix" />
-    <MESSAGE value="CLUB-353 in progres 2" />
-    <MESSAGE value="CLUB-353-in-progress with new buttons chat2" />
-    <MESSAGE value="CLUB-353-in-progress with new buttons chat2 2" />
-    <MESSAGE value="CLUB-353-in-progress with new buttons avatar upload 3" />
-    <MESSAGE value="CLUB-535-in-progress avatar refresh" />
-    <MESSAGE value="CLUB-353-in-progress invite button" />
-    <MESSAGE value="CLUB-353-in-progress kill domain where its possible" />
-    <MESSAGE value="CLUB-353-in-progress hamsters" />
-    <MESSAGE value="СДГИ-353-in-progress очкии гроков" />
-    <MESSAGE value="СДГИ-353-in-progress очкии гроков 2" />
-    <MESSAGE value="СДГИ-353-in-progress очкии гроков to server" />
-    <MESSAGE value="CLUB-353 in progress" />
-    <MESSAGE value="CLUB-353 scrabble fishki" />
-    <MESSAGE value="CLUB-353 scrabble timer" />
-    <MESSAGE value="CLUB-353 player score update" />
-    <MESSAGE value="CLUB-353 timer update" />
-    <MESSAGE value="CLUB-353 before design merging" />
-    <option name="LAST_COMMIT_MESSAGE" value="CLUB-353 before design merging" />
+    <MESSAGE value="CLUB-4013 testing" />
+    <MESSAGE value="CLUB-4013 fixing" />
+    <MESSAGE value="CLUB-415 to prod" />
+    <MESSAGE value="staging CLUB-415 verstka fix" />
+    <MESSAGE value="CLUB-414 prod" />
+    <MESSAGE value="CLUB-385 prod" />
+    <MESSAGE value="staging тест получения цены EURC/USDC pancake" />
+    <MESSAGE value="CLUB-416 done" />
+    <MESSAGE value="staging robokassa oferta added" />
+    <MESSAGE value="CLUB-412 done" />
+    <MESSAGE value="CLUB-417 диалоги под верстку" />
+    <MESSAGE value="CLUB-417 hints 1" />
+    <MESSAGE value="CLUB-417 in progress" />
+    <MESSAGE value="CLUB-418 in progress" />
+    <MESSAGE value="CLUB-418 in progress 2" />
+    <MESSAGE value="CLUB-418 done" />
+    <MESSAGE value="CLUB-417 done" />
+    <MESSAGE value="CLUB-420 done" />
+    <MESSAGE value="staging small fixes" />
+    <MESSAGE value="CLUB-421 in progress" />
+    <MESSAGE value="staging private erudit fixes" />
+    <MESSAGE value="CLUB-421 dev1.0.1.2 deleted" />
+    <MESSAGE value="CLUB-421 fixes" />
+    <MESSAGE value="CLUB-421 fixes 00" />
+    <MESSAGE value="CLUB-421 fixes background" />
+    <option name="LAST_COMMIT_MESSAGE" value="CLUB-421 fixes background" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="138" y="66" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1722010619951">
+    <state x="520" y="226" key="#Images" timestamp="1730071443271">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="138" y="66" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.834@0.0.1536.834" timestamp="1722010619951" />
-    <state x="499" y="172" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1720533343939">
+    <state x="520" y="226" key="#Images/0.0.1536.834@0.0.1536.834" timestamp="1730071443271" />
+    <state x="574" y="99" key="#com.intellij.ide.util.MemberChooser" timestamp="1729253820646">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="499" y="172" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1536.834@0.0.1536.834" timestamp="1720533343939" />
-    <state x="93" y="93" width="1350" height="649" key="DiffContextDialog" timestamp="1724078056743">
+    <state x="574" y="99" key="#com.intellij.ide.util.MemberChooser/0.0.1536.834@0.0.1536.834" timestamp="1729253820646" />
+    <state x="499" y="164" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1726923202920">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="93" y="93" width="1350" height="649" key="DiffContextDialog/0.0.1536.834@0.0.1536.834" timestamp="1724078056743" />
-    <state x="549" y="172" key="FileChooserDialogImpl" timestamp="1721145674841">
+    <state x="499" y="164" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.834@0.0.1536.834" timestamp="1726923202920" />
+    <state x="499" y="172" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1730470468194">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="549" y="172" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1721145674841" />
-    <state x="513" y="140" key="NewPhpClassDialog" timestamp="1722009465749">
+    <state x="499" y="172" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1536.834@0.0.1536.834" timestamp="1730470468194" />
+    <state x="543" y="166" key="#com.jetbrains.php.refactoring.move.member.PhpMoveMemberDialog#" timestamp="1734874571053">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="513" y="140" key="NewPhpClassDialog/0.0.1536.834@0.0.1536.834" timestamp="1722009465749" />
-    <state x="604" y="340" key="NewPhpFileDialog" timestamp="1721300856836">
+    <state x="543" y="166" key="#com.jetbrains.php.refactoring.move.member.PhpMoveMemberDialog#/0.0.1536.834@0.0.1536.834" timestamp="1734874571053" />
+    <state x="93" y="93" width="1350" height="649" maximized="true" key="DiffContextDialog" timestamp="1734876389184">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="604" y="340" key="NewPhpFileDialog/0.0.1536.834@0.0.1536.834" timestamp="1721300856836" />
-    <state x="520" y="119" key="RollbackChangesDialog" timestamp="1722710301751">
+    <state x="93" y="93" width="1350" height="649" maximized="true" key="DiffContextDialog/0.0.1536.834@0.0.1536.834" timestamp="1734876389184" />
+    <state x="93" y="93" maximized="true" key="DiffContextDialog/1920.0.1536.834/0.0.1536.834@0.0.1536.834" timestamp="1734514477484" />
+    <state x="549" y="158" key="FileChooserDialogImpl" timestamp="1734861951655">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="520" y="119" key="RollbackChangesDialog/0.0.1536.834@0.0.1536.834" timestamp="1722710301751" />
-    <state x="361" y="149" key="Vcs.Push.Dialog.v2" timestamp="1722858549136">
+    <state x="549" y="158" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1734861951655" />
+    <state x="147" y="65" key="MergeDialog" timestamp="1734440269998">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="361" y="149" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1722858549136" />
-    <state x="551" y="136" width="818" height="596" key="find.popup" timestamp="1724094556507">
+    <state x="147" y="65" key="MergeDialog/1920.0.1536.834/0.0.1536.834@0.0.1536.834" timestamp="1734440269998" />
+    <state x="407" y="178" key="MultipleFileMergeDialog" timestamp="1734440270005">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="551" y="136" width="818" height="596" key="find.popup/0.0.1536.834@0.0.1536.834" timestamp="1724094556507" />
-    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup" timestamp="1721736015373">
+    <state x="407" y="178" key="MultipleFileMergeDialog/1920.0.1536.834/0.0.1536.834@0.0.1536.834" timestamp="1734440270005" />
+    <state x="513" y="140" key="NewPhpClassDialog" timestamp="1728218969705">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup/0.0.1536.834@0.0.1536.834" timestamp="1721736015373" />
+    <state x="513" y="140" key="NewPhpClassDialog/0.0.1536.834@0.0.1536.834" timestamp="1728218969705" />
+    <state x="520" y="119" key="RollbackChangesDialog" timestamp="1734812803976">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="520" y="119" key="RollbackChangesDialog/0.0.1536.834@0.0.1536.834" timestamp="1734812803976" />
+    <state x="93" y="93" width="1350" height="648" key="VCS.FileHistoryDialog" timestamp="1732442015100">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="93" y="93" width="1350" height="648" key="VCS.FileHistoryDialog/0.0.1536.834@0.0.1536.834" timestamp="1732442015100" />
+    <state x="361" y="149" key="Vcs.Push.Dialog.v2" timestamp="1734807879421">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="361" y="149" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1734807879421" />
+    <state x="361" y="149" key="Vcs.Push.Dialog.v2/1920.0.1536.834/0.0.1536.834@0.0.1536.834" timestamp="1734436005919" />
+    <state x="615" y="280" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1726923445232">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="615" y="280" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.834@0.0.1536.834" timestamp="1726923445232" />
+    <state x="389" y="54" width="818" height="624" key="find.popup" timestamp="1734875381176">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="389" y="54" width="818" height="624" key="find.popup/0.0.1536.834@0.0.1536.834" timestamp="1734875381176" />
+    <state x="389" y="54" width="818" height="624" key="find.popup/1920.0.1536.834/0.0.1536.834@0.0.1536.834" timestamp="1734515760836" />
+    <state x="550" y="130" key="git4idea.branch.GitSmartOperationDialog" timestamp="1734440170027">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="550" y="130" key="git4idea.branch.GitSmartOperationDialog/0.0.1536.834@0.0.1536.834" timestamp="1730711555102" />
+    <state x="550" y="130" key="git4idea.branch.GitSmartOperationDialog/1920.0.1536.834/0.0.1536.834@0.0.1536.834" timestamp="1734440170027" />
+    <state x="486" y="188" key="refactoring.ChangeSignatureDialog" timestamp="1727523330998">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="486" y="188" key="refactoring.ChangeSignatureDialog/0.0.1536.834@0.0.1536.834" timestamp="1727523330998" />
+    <state x="425" y="189" key="run.anything.popup" timestamp="1729426367274">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="425" y="189" key="run.anything.popup/0.0.1536.834@0.0.1536.834" timestamp="1729426367274" />
+    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup" timestamp="1730640694839">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup/0.0.1536.834@0.0.1536.834" timestamp="1730640694839" />
   </component>
 </project>

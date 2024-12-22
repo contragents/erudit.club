@@ -19,21 +19,21 @@ class Faq
                                 <h2 id="nav3">Vocabulary</h2>
                                 <p>All words in the Cambridge English-Russian Dictionary (https://dictionary.cambridge.org/ru/ ), including the <a href="#" onclick="$('#abbr').css({ display: 'block' });return false;" style="cursor: pointer;" title="ad AGM AIDS ATM BA BBC BSc BSE CCTV CD CEO CFC Corp dab DIY DNA DVD EFL ELT er ESL FA FAQ FM GCSE GDP GMO GMT GNP GP GPS HIV HQ ICT IOU IPA IQ ISP it ITV IVF JP JPEG LAN LCD LPG MA MBA MEP MP MPV MRI MRSA Ms MSc MTV NATO OAP PC PDA PE pin POW PR pt QC ram RSI SARS SASE SATNAV SGML SIDS SMS SPF SUV TB TEFL TESOL TV UFO UK USA VAT VCR VDU VIP WC WMD www XML">most common abbreviations</a>, may be used.<span id="abbr" style="display:none;">ad AGM AIDS ATM BA BBC BSc BSE CCTV CD CEO CFC Corp dab DIY DNA DVD EFL ELT er ESL FA FAQ FM GCSE GDP GMO GMT GNP GP GPS HIV HQ ICT IOU IPA IQ ISP it ITV IVF JP JPEG LAN LCD LPG MA MBA MEP MP MPV MRI MRSA Ms MSc MTV NATO OAP PC PDA PE pin POW PR pt QC ram RSI SARS SASE SATNAV SGML SIDS SMS SPF SUV TB TEFL TESOL TV UFO UK USA VAT VCR VDU VIP WC WMD www XML</span></p>
                                 <p>Only proper nouns in the singular (or in the plural if the word has no singular form) may be used.</p>
-                                <p>To see what words players have made in previous turns, as well as their meaning and “cost”, click on the button <img src="/img/otjat/log2.svg" height="64"/></p>
+                                <p>To see what words players have made in previous turns, as well as their meaning and “cost”, click on the button <img src="img/otjat/log2.svg" height="64"/></p>
                             </div>
                             <div class="fon-right">
                                 <h2 id="nav4">Game play</h2>
                                 <p>At the beginning of the game, each person is given 7 chips with printed letters on them. Several words can be placed in one turn. Each new word must be adjacent (have a common letter or letters) to the previously laid out words. Words are read only horizontally from left to right and vertically from top to bottom.</p>
                                 <p>The first lined&nbsp;word&nbsp;must go through the center cell.</p>
                                 <p>
-                                You can send your combination by pressing the button <br /><img src="/img/otjat/otpravit2.svg" width="80%"/>
+                                You can send your combination by pressing the button <br /><img src="img/otjat/otpravit2.svg" width="80%"/>
                                 <br />
-                                If it is not your move at the moment, the button will become inactive <br /><img src="/img/inactive/otpravit2.svg" width="80%"/>
+                                If it is not your move at the moment, the button will become inactive <br /><img src="img/inactive/otpravit2.svg" width="80%"/>
                                 <br />
                                 If the SEND button starts blinking red - your turn time is running out. Hurry up and send your combination!
                                 </p>
                                 <p>If a player doesn't want to or can't lay out any words - he has the right to change any number of his letters, skipping a turn.
-                                <br /><img src="/img/otjat/pomenyat2.svg" width="80%"/>
+                                <br /><img src="img/otjat/pomenyat2.svg" width="80%"/>
                                 </p>
                                 <p>Any sequence of letters horizontally and vertically must be a word. In other words, the game does not allow random letter combinations on the field that do not represent words that meet the above criteria.</p>
                                 <p>After each turn you need to add new letters up to 7.</p>
@@ -223,21 +223,21 @@ EN,
                                 <h2 id="nav3">Словарь</h2>
                                 <p>Разрешается использовать все&nbsp;слова, приведенные в стандартном словаре языка за исключением&nbsp;слов, пишущихся с прописных букв, сокращений, и слов, которые пишутся через апостроф или дефис.</p>
                                 <p>Разрешено использовать только нарицательные имена существительные в именительном падеже и единственном числе (либо во множественном при отсутствии у слова формы единственного числа, ЛИБО, если слово во множественном числе содержится в одном из словарей Игры - см. значение слова в меню ЛОГ).</p>
-                                <p>Чтобы посмотреть, какие слова составили игроки в предыдущих ходах, а также узнать их значение и &laquo;стоимость&raquo;, кликните на кнопку <img src="/img/otjat/log2.svg" height="64"/></p>
+                                <p>Чтобы посмотреть, какие слова составили игроки в предыдущих ходах, а также узнать их значение и &laquo;стоимость&raquo;, кликните на кнопку <img src="img/otjat/log2.svg" height="64"/></p>
                             </div>
                             <div class="fon-right">
                                 <h2 id="nav4">Ход игры</h2>
                                 <p>В начале игры каждому дается по 7 фишек. За один ход можно выложить несколько&nbsp;слов. Каждое новое&nbsp;слово&nbsp;должно соприкасаться (иметь общую букву или буквы) с ранее выложенными&nbsp;словами.&nbsp;Слова&nbsp;читаются только по горизонтали слева направо и по вертикали сверху вниз.</p>
                                 <p>Первое выложенное&nbsp;слово&nbsp;должно проходить через центральную клетку.</p>
                                 <p>
-                                Отправить свою комбинацию можно, нажав кнопку <br /><img src="/img/otjat/otpravit2_ru.svg" width="80%"/>
+                                Отправить свою комбинацию можно, нажав кнопку <br /><img src="img/otjat/otpravit2_ru.svg" width="80%"/>
                                 <br />
-                                Если в данный момент ход не Ваш - кнопка станет неактивной <br /><img src="/img/inactive/otpravit2_ru.svg" width="80%"/>
+                                Если в данный момент ход не Ваш - кнопка станет неактивной <br /><img src="img/inactive/otpravit2_ru.svg" width="80%"/>
                                 <br />
                                 Если кнопка ОТПРАВИТЬ начала мигать красным - время Вашего хода заканчивается. Скорее отправляйте свою комбинацию!
                                 </p>
                                 <p>Если игрок не хочет или не может выложить ни одного слова, - он имеет право поменять любое количество своих букв, пропустив при этом ход.
-                                <br /><img src="/img/otjat/pomenyat2_ru.svg" width="80%"/>
+                                <br /><img src="img/otjat/pomenyat2_ru.svg" width="80%"/>
                                 </p>
                                 <p>Любая последовательность букв по горизонтали и вертикали должна являться&nbsp;словом. Т.е. в игре не допускается появление на поле случайных буквосочетаний, не представляющих собою&nbsp;слов, соответствующих вышеприведенным критериям.</p>
                                 <p>После каждого хода необходимо добрать новых букв до 7.</p>

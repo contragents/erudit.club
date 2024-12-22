@@ -243,7 +243,6 @@ var gameStates = {
                 const ratings = Object.keys(data.players).filter(
                     (item) => !isNaN(Number(item)) && data.players[item] > 0
                 );
-                // console.log(Object.keys(data.players), ratings);
 
                 ratings.shift();
                 onlinePlayers += getRatingList(
@@ -255,7 +254,6 @@ var gameStates = {
                 onlinePlayers += `	<div class="form-check">`;
 
                 if (ratings.slice(ratings.length / 2).length > 0) {
-                    // console.log(ratings.slice(ratings.length / 2));
                     onlinePlayers += getRatingList(
                         ratings.slice(ratings.length / 2),
                         data
@@ -500,7 +498,7 @@ var gameStates = {
                                     }
 
                                     function getProfileModal(profileData) {
-                                        return fetch((!isYandexAppGlobal() ? '/profile-modal-tpl_1.html' : '/profile-modal-tpl_yandex.html') + '?ver=' + Date.now())
+                                        return fetch(BASE_URL + (!isYandexAppGlobal() ? 'profile-modal-tpl_1.html' : 'profile-modal-tpl_yandex.html') + '?ver=' + Date.now())
                                             .then((response) => response.text())
                                             .then((template) => {
                                                 let message = template
@@ -638,7 +636,6 @@ var gameStates = {
                         callback: function () {
                             activateFullScreenForMobiles();
                             getStatPageGlobal().then(data => {
-                                console.log(data);
                                 dialog = bootbox
                                     .dialog({
                                         message: data.message,
@@ -1023,7 +1020,6 @@ var gameOldState = '';
 
 function commonCallback(data) {
     if (('gameState' in data) && !(data['gameState'] in gameStates)) {
-        console.log('HERE!');
         return;
     }
 
@@ -1289,7 +1285,6 @@ function commonCallback(data) {
         gameBid = data.bid;
         gameBank = data.bank;
         gameBankString = data.bank_string;
-        console.log(gameBid, gameBank, gameBankString);
 
         if (players.bankBlock.svgObject === false) {
             buttons.logButton.svgObject.x = buttons.chatButton.svgObject.x - (buttons.checkButton.svgObject.width - buttons.logButton.svgObject.width) / 2;
@@ -1307,7 +1302,7 @@ function commonCallback(data) {
 
         preloaderObject.load.reset();
 
-        preloaderObject.load.svg(resourceName + OTJAT_MODE, `/img/otjat/${players.bankBlock.filename}${gameBankString}.svg`,
+        preloaderObject.load.svg(resourceName + OTJAT_MODE, `img/otjat/${players.bankBlock.filename}${gameBankString}.svg`,
             {
                 ...('width' in players.bankBlock && {
                     'width': players.bankBlock.width,
@@ -1440,10 +1435,6 @@ function userScores(data) {
 function clickGlobal(id) {
     return true;
 
-    console.log('clicked', id);
-    // div_bid_0 - bid ids
-    // div_from_0 - rating ids
-
     if (id.indexOf('bid') > 0) {
         bid = id.substring(8);
         if (+bid === 0) {
@@ -1457,7 +1448,6 @@ function clickGlobal(id) {
             } else {
                 item.checked = false;
             }
-            console.log(item.id, item.checked);
         });
     }
 
@@ -1475,7 +1465,6 @@ function clickGlobal(id) {
             } else {
                 item.checked = false;
             }
-            console.log(item.id, item.checked);
         });
     }
 
@@ -1525,12 +1514,8 @@ function RobokassaPaymentGlobal(actionType) {
         };
         orderParams['quickpay-form'] = 'button';
 
-        fetch('/mvc/pay/pay', {
-            method: "POST",
-            body: getFormData(orderParams),
-        }).then(response => response.json())
+        fetchGlobalMVC('mvc/pay/pay', '', getFormData(orderParams))
             .then(result => {
-                console.log('Success:', result);
                 if ('location' in result) {
                     location.href = result.location;
                 }

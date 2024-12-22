@@ -23,7 +23,7 @@ class StatsAchievesView extends BaseView
                     'img',
                     '',
                     [
-                        'src' => '/' . $link,
+                        'src' => $link,
                         'width' => self::SMALL_ZHETON_WIDTH,
                         'onClick' => ViewHelper::onClick(
                             'refreshId',

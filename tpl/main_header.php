@@ -26,10 +26,10 @@
 
             <div class="logo" style="display:inline-block;">
                 <a href="/" title="Играть!" target="_blank">
-                    <img src="/img/ER_LOGO_1024v4.png" width="128px"/>
+                    <img src="img/ER_LOGO_1024v4.png" width="128px"/>
                 </a>
                 <a href="/scramble.html" title="Играть в английскую версию!" target="_blank">
-                    <img src="/img/bid-win.jfif" width="128px"/>
+                    <img src="img/bid-win.jfif" width="128px"/>
                 </a>
             </div>
             <div class="logo" style="display:inline-block;">

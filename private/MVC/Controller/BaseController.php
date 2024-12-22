@@ -2,6 +2,7 @@
 
 class BaseController
 {
+    public const BASE_URL = 'https://xn--d1aiwkc2d.club/';
     public static $Request;
     public $Action;
 
@@ -16,6 +17,8 @@ class BaseController
 
     public function __construct($action, array $request)
     {
+        self::cors();
+
         static::$Request = $request;
 
         $this->Action = $action . 'Action';
@@ -93,5 +96,13 @@ class BaseController
         }
 
         return '';
+    }
+
+    private static function cors()
+    {
+        if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] != '') {
+            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+            header('Access-Control-Allow-Credentials: true');
+        }
     }
 }

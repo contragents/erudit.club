@@ -68,7 +68,7 @@ class StatsController extends BaseController
         $res = '';
 
         foreach(AchievesModel::PRIZE_LINKS as $link) {
-            $res .= ViewHelper::img(['src' => '/' . $link]);
+            $res .= ViewHelper::img(['src' => $link]);
         }
 
         return $res;
@@ -164,7 +164,7 @@ class StatsController extends BaseController
                 'img',
                 '',
                 [
-                    'src' => '/' . (AchievesModel::PRIZE_LINKS[$row[AchievesModel::EVENT_TYPE_FIELD]] ?? ''),
+                    'src' => (AchievesModel::PRIZE_LINKS[$row[AchievesModel::EVENT_TYPE_FIELD]] ?? ''),
                     'width' => '100%',
                     'alt' => 'Пусто'
                 ]

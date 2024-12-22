@@ -403,10 +403,14 @@ function StatsPage({ json, BASE_URL }) {
                 }
 
                 if (url) {
-                    // console.log(`${BASE_URL}/${url}`);
-
-                    return fetch(`${BASE_URL}/${url}`, {
-                        headers: { 'Content-Type': 'application/json' },
+                    return fetch(`${BASE_URL}${url}`, {
+                        method: 'GET',
+                        mode: 'cors',
+                        cache: 'no-cache',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
                     })
                         .then((response) => {
                             if (!response.ok) {
@@ -438,7 +442,7 @@ function StatsPage({ json, BASE_URL }) {
     })();
 
     function getStatsModal(json) {
-        return fetch('/stats-modal-tpl.html')
+        return fetch(BASE_URL + 'stats-modal-tpl.html')
             .then((response) => response.text())
             .then((template) => {
                 // Заменяем маркеры в шаблоне реальными данными
@@ -644,7 +648,7 @@ function onImagesLoaded(container, event) {
 }
 
 function getInstructions(lang) {
-    const url = 'https://эрудит.club/mvc/faq/getAll?lang=' + lang + version();
+    const url = BASE_URL + 'mvc/faq/getAll?lang=' + lang + version();
 
     return fetch(url)
         .then(response => {
@@ -657,7 +661,7 @@ function getInstructions(lang) {
 }
 
 function getFAQModal() {
-    return fetch('/faq-modal-tpl_' + lang + '.html')
+    return fetch(BASE_URL + 'faq-modal-tpl_' + lang + '.html')
         .then(response => response.text())
         .then(template => {
 
@@ -972,7 +976,8 @@ function PlayersPage(json) {
             const userId = btn.getAttribute('data-user-id');
             const newVisibility = isHidden ? 'show' : 'hide';
 
-            const url = `/mvc/players/hideBalance/?common_id=${userId}&hide=${newVisibility}`;
+            // todo use fetchGlobalMVC everywhere
+            const url = BASE_URL + `mvc/players/hideBalance/?common_id=${userId}&hide=${newVisibility}`;
 
             fetch(url).then((response) => {
                     if (!response.ok) {

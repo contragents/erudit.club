@@ -9,6 +9,10 @@ function activateFullScreenForMobiles() {
 }
 
 document.addEventListener("fullscreenchange", function() {
+    if (isYandexAppGlobal()) {
+        return;
+    }
+
     if (!document.fullscreenElement) {
         bootbox.confirm({
             size: 'small',
@@ -76,8 +80,8 @@ function genDivGlobal(i, isChange = false) {
     };
     let koef = 44 / 76;
     let imgWidth = Math.round(1187 * koef);
-    let styleBeg = 'display: inline-block; background: url(/img/letters_english.png); background-color:grey;background-position:-';
-    let divTpl = '<div onmouseover="this.style.backgroundColor=\'green\';" onmouseout="this.style.backgroundColor=\'grey\';" style="display: inline-block; background: url(/img/letters_english.png); background-color:grey;background-position:-';
+    let styleBeg = 'display: inline-block; background: url(img/letters_english.png); background-color:grey;background-position:-';
+    let divTpl = '<div onmouseover="this.style.backgroundColor=\'green\';" onmouseout="this.style.backgroundColor=\'grey\';" style="display: inline-block; background: url(img/letters_english.png); background-color:grey;background-position:-';
     let styleEnd = ' background-size: ' + imgWidth + 'px;'
         + ' width: 44px;'
         + ' height: 54px;'
@@ -224,11 +228,6 @@ function copyKeyForID(key, commonID = '') {
     document.execCommand("copy");
 }
 
-function copyDonateKey() {
-    $('#donate_id').select();
-    document.execCommand("copy");
-}
-
 function deleteBan(commonID) {
     fetchGlobalMVC(DELETE_BAN_URL + commonID, '', 'commonID=' + commonID)
         .then((resp) => {
@@ -274,7 +273,7 @@ function savePlayerAvatar(url, commonIdParam) {
 
     let URL = useLocalStorage
         ? (
-            '/<?=$dir?>/php/yowser/index.php'
+            BASE_URL + '<?=$dir?>/php/yowser/index.php'
             + '?cooki='
             + localStorage.erudit_user_session_ID
             + '&script='
@@ -283,7 +282,7 @@ function savePlayerAvatar(url, commonIdParam) {
             + commonParams()
         )
         : (
-            '/<?=$dir?>/php/'
+            BASE_URL + '<?=$dir?>/php/'
             + AVATAR_UPLOAD_SCRIPT
             + '?'
             + commonParams()
@@ -341,12 +340,15 @@ async function getStatPageGlobal(userId = commonId) {
 
     if (userId) {
         try {
-            const response = await fetch('/' + urlPart, {
+            const response = await fetch(BASE_URL + urlPart, {
                 method: 'GET',
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json',
+                    //'Content-Type': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                cache: 'no-cache',
             });
 
             // Проверяем успешность запроса
@@ -359,7 +361,7 @@ async function getStatPageGlobal(userId = commonId) {
 
             const s = StatsPage({
                 json: returndata,
-                BASE_URL: ''
+                BASE_URL: BASE_URL
             });
             const message = await s.buildHtml();
 
@@ -618,14 +620,14 @@ function getSVGBlockGlobal(X, Y, buttonName, _this, scalable, hasDigits = false)
     return container;
 }
 
-//<?php include('globals/getFishkaGlobalFunction.js')?>
-//<?php include('globals/ajaxGetGlobalFunction.js')?>
+//<?php include('globals/getFishkaGlobalFunction_3.js')?>
+//<?php include('globals/ajaxGetGlobalFunction_4.js')?>
 //<?php include('globals/parseDeskGlobalFunction.js')?>
 //<?php include('globals/initCellsGlobalFunction.js')?>
 //<?php include('globals/findPlaceGlobalFunction_2.js')?>
 //<?php include('globals/changeFishkiGlobalFunction.js')?>
 //<?php include('globals/bootBoxIsOpenedGlobalFunction.js')?>
-//<?php include('globals/openWindowGlobalFunction.js')?>
+//<?php include('globals/openWindowGlobalFunction_4.js')?>
 //<?php include('globals/buttonGlobalFunctions_4.js.php')?>
 //<?php include('globals/gagetTypeFunctions_1.js.php')?>
-//<?php include('globals/verstkaFunctions.js.php')?>
+//<?php include('globals/verstkaFunctions_4.js.php')?>

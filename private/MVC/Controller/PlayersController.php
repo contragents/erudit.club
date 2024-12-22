@@ -151,7 +151,7 @@ class PlayersController extends BaseController
                     );
 
                     if ($res[$numUser]['rating_position'] <= 10) {
-                        $res[$numUser]['top_bage_url'] = '/img/prizes/top_'
+                        $res[$numUser]['top_bage_url'] = 'img/prizes/top_'
                             . ($res[$numUser]['rating_position'] <= 3 ? $res[$numUser]['rating_position'] : '10')
                             . '.svg';
                     }

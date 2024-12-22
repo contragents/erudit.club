@@ -13,7 +13,7 @@ const errorServerMessage = '<?= T::S('Server connecting error. Please try again'
 
 var preloaderObject = false;
 
-const GROUND_FILE = '<?= T::PHRASES['ground_file'][T::$lang] ?>';
+const GROUND_FILE = '<?= T::S('ground_file') ?>';
 const DEFAULT_FISHKA_SET = 'default';
 const MAXS_FISHKA_SET = 'MaxS';
 const GIRL_FISHKA_SET = 'Girl';
@@ -27,6 +27,7 @@ const CODES = {
 }
 
 const SUDOKU_PRICE = <?= MonetizationService::SUDOKU_PRICE ?>;
+const BASE_URL = '<?= BaseController::BASE_URL ?>';
 const SUBMIT_SCRIPT = 'turn_submitter.php';
 const WORD_CHECKER_SCRIPT = 'word_checker.php';
 const STATUS_CHECKER_SCRIPT = 'status_checker.php';

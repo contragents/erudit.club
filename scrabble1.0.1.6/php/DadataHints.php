@@ -19,20 +19,12 @@ class Hints
     const HINT_DAILY_SHOW = 2;
     const HINT_CACHE_TTL = 12 * 60 * 60;
     const HINT_USER_CACHE_KEY = "erudit.hint_";
-    const LAMP_IMG_URL = "/img/idea.png";
+    const LAMP_IMG_URL = "img/idea.png";
     const YANDEX_RATING_URL = "https://yandex.ru/ugcpub/object-digest?app_id=yandex-games&otype=Soft&object=%2Fontoid%2Fygs126941&show_rating=1&view=games";
 
     const TG_GROUP_LINK = [
         'mobile' => 'https://t.me/eruditclub',
         'desktop' => 'https://web.telegram.org/#/im?p=@eruditclub'
-    ];
-
-    const SHARE_SOCIAL_LINKS = [
-        'Одноклассники' => ['/img/share/ok_share.png' => 'https://connect.ok.ru/offer?url=https%3A%2F%2Fyandex.ru%2Fgames%2Fapp%2F126941%3Futm_source%3Dgame_popup_menu&title=%D0%AD%D1%80%D1%83%D0%B4%D0%B8%D1%82%20%D0%9E%D0%BD%D0%BB%D0%B0%D0%B9%D0%BD%20%E2%80%94%20%D0%AF%D0%BD%D0%B4%D0%B5%D0%BA%D1%81.%D0%98%D0%B3%D1%80%D1%8B&utm_source=share2'],
-        'ВКонтакте' => ['/img/share/vk_share.png' => 'https://vk.com/share.php?url=https%3A%2F%2Fyandex.ru%2Fgames%2Fapp%2F126941%3Futm_source%3Dgame_popup_menu&title=%D0%AD%D1%80%D1%83%D0%B4%D0%B8%D1%82%20%D0%9E%D0%BD%D0%BB%D0%B0%D0%B9%D0%BD%20%E2%80%94%20%D0%AF%D0%BD%D0%B4%D0%B5%D0%BA%D1%81.%D0%98%D0%B3%D1%80%D1%8B&utm_source=share2'],
-        'Telegram' => ['/img/share/tg_share.png' => 'https://t.me/share/url?url=https%3A%2F%2Fyandex.ru%2Fgames%2Fapp%2F126941%3Futm_source%3Dgame_popup_menu&text=%D0%AD%D1%80%D1%83%D0%B4%D0%B8%D1%82%20%D0%9E%D0%BD%D0%BB%D0%B0%D0%B9%D0%BD%20%E2%80%94%20%D0%AF%D0%BD%D0%B4%D0%B5%D0%BA%D1%81.%D0%98%D0%B3%D1%80%D1%8B&utm_source=share2'],
-        'Facebook' => ['/img/share/fb_share.png' => 'https://www.facebook.com/sharer.php?src=sp&u=https%3A%2F%2Fyandex.ru%2Fgames%2Fapp%2F126941%3Futm_source%3Dgame_popup_menu&title=%D0%AD%D1%80%D1%83%D0%B4%D0%B8%D1%82%20%D0%9E%D0%BD%D0%BB%D0%B0%D0%B9%D0%BD%20%E2%80%94%20%D0%AF%D0%BD%D0%B4%D0%B5%D0%BA%D1%81.%D0%98%D0%B3%D1%80%D1%8B&utm_source=share2'],
-        'Twitter' => ['/img/share/tw_share.png' => 'https://twitter.com/intent/tweet?text=%D0%AD%D1%80%D1%83%D0%B4%D0%B8%D1%82%20%D0%9E%D0%BD%D0%BB%D0%B0%D0%B9%D0%BD%20%E2%80%94%20%D0%AF%D0%BD%D0%B4%D0%B5%D0%BA%D1%81.%D0%98%D0%B3%D1%80%D1%8B&url=https%3A%2F%2Fyandex.ru%2Fgames%2Fapp%2F126941%3Futm_source%3Dgame_popup_menu&utm_source=share2'],
     ];
 
     public static $VIDEOS;
@@ -76,7 +68,7 @@ class Hints
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные',
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные',
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
-            'Появляющийся значок <img height="24px" src="/img/no-network-logo.png" /> означает, что Вы находитесь в зоне <strong>слабого приема Интернета</strong>. Сервер отвечает с задержкой',
+            'Появляющийся значок <img height="24px" src="img/no-network-logo.png" /> означает, что Вы находитесь в зоне <strong>слабого приема Интернета</strong>. Сервер отвечает с задержкой',
             'При выборе игры <strong>на Английском инструкция изменится</strong> - ознакомьтесь с ней в процессе игры',
             'При выборе игры <strong>на Английском</strong> подбор по рейтингу ВРЕМЕННО не учитывается',
             'В режиме <strong>Английского</strong> все <strong>рейтинги</strong> и <strong>достижения</strong> учитываются как обычно',
@@ -402,7 +394,7 @@ class Hints
 				title=\"Кликните для увеличения изображения\" 
 				id=\"{$recordData['type']}\" 
 				onclick=\"showFullImage('{$recordData['type']}', 500, 100);\" 
-				src=\"/{$recordData['link']}\" width=\"100px\" /> <br />
+				src=\"{$recordData['link']}\" width=\"100px\" /> <br />
 Дата установления достижения: <strong>" . date("d.m.Y H:i", $recordData['record_date']) . "</strong>";
     }
 
@@ -420,33 +412,6 @@ class Hints
     private static function shareHint()
     {
         return '';
-
-        $result = 'Поделитесь Игрой в любимых соцсетях - &nbsp;';
-        if (self::isMobileDevice()) {
-            return $result
-                . " <span 
-                        style=\"
-                             background-color: #cccccc;
-                             padding-left: 5px; 
-                             padding-top: 8px; 
-                             padding-right: 6px; 
-                             padding-bottom: 12px; 
-                             border-radius: 5px 5px 5px; 
-                             border: 1px solid black;\" 
-                        onclick=\"mobileShare();\">"
-                . self::SVG_IMAGES['share']
-                . "</span>";
-        }
-
-        foreach (self::SHARE_SOCIAL_LINKS as $socSet => $info) {
-            foreach ($info as $imgLink => $link) {
-                $result .= "<a href=\"$link\" target=\"_blank\" style=\"cursor: pointer;\">
-<img src='$imgLink' height='20px' />
-</a> &nbsp;";
-            }
-        }
-
-        return $result;
     }
 
     public
