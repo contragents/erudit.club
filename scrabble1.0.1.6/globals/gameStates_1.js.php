@@ -5,10 +5,21 @@ var gameStates = {
         refresh: 1,
         action: function (data) {
             useLocalStorage = true;
-            if (!('<?= Cookie::COOKIE_NAME ?>' in localStorage)) {
-                localStorage.erudit_user_session_ID = data['cookie'];
+            if(localStorage != 'undefined') {
+                if (!('<?= Cookie::COOKIE_NAME ?>' in localStorage)) {
+                    localStorage['<?= Cookie::COOKIE_NAME ?>'] = data['cookie'];
+                    if (localStorage['<?= Cookie::COOKIE_NAME ?>'] === data['cookie']) {
+                        cookieStored = localStorage['<?= Cookie::COOKIE_NAME ?>'];
+                    } else {
+                        setLocalStorageValue('<?= Cookie::COOKIE_NAME ?>', data['cookie']);
+                    }
+                }
+            } else {
+                setLocalStorageValue('<?= Cookie::COOKIE_NAME ?>', data['cookie']);
             }
+
             queryNumber = 1;
+            gameState = 'noGame';
         }
     },
     cookieTest: {
@@ -18,7 +29,7 @@ var gameStates = {
             fetchGlobal(COOKIE_CHECKER_SCRIPT, '', '12=12')
                 .then((data) => {
                     if ('gameState' in data) {
-                        if (data.gameState == 'register') {
+                        if (data.gameState === 'useLocalStorage') {
                             gameStates.register.action(data);
                         } else {
                             //queryNumber = 1;
@@ -84,6 +95,7 @@ var gameStates = {
         message: '',
         noDialog: true,
         action: function (data) {
+            showStickyBannerYandex();
             tWaiting = 0;
             isUserBlockActive = false;
             winScore = false;
@@ -614,7 +626,10 @@ var gameStates = {
                         label: '<?= T::S('Start') ?>',
                         className: 'btn-primary',
                         callback: function () {
+                            hideStickyBannerYandex();
+
                             activateFullScreenForMobiles();
+
                             gameState = 'noGame';
                             fetchGlobal(
                                 INIT_GAME_SCRIPT,

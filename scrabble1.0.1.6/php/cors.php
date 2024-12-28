@@ -7,6 +7,6 @@ if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] != '') {
 
 if (!isset($_COOKIE[Cookie::COOKIE_NAME])) {
     $_COOKIE = Cookie::setGetCook();
-    print json_encode(['gameState' => 'cookieTest', 'cookie' => $_COOKIE[Cookie::COOKIE_NAME] ?? '']);
+    print json_encode(['gameState' => $_REQUEST['gameState'] === 'cookieTest' ? 'useLocalStorage' : 'cookieTest', 'cookie' => $_COOKIE[Cookie::COOKIE_NAME] ?? '']);
     exit();
 }

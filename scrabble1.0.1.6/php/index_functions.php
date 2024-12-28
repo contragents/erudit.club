@@ -19,10 +19,20 @@ const SCRIPTS = [
     'set_player_avatar_url' => 'setAvatarUrl',
     'merge_the_ids' => 'mergeTheIds',
     'set_inactive' => 'setInactive',
-    'word' => 'word'
+    'word' => 'word',
+    'test' => 'test',
 ];
 
 const CATCH_REFERER_KEY = 'erudit.catched_referer';
+
+function test() {
+    try {
+        $res = (new Erudit\Game())->checkGameStatus();
+        print $res;
+    } catch(Throwable $e) {
+        print $e->__toString();
+    }
+}
 
 function initGame()
 {

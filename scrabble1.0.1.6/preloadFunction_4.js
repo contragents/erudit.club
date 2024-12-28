@@ -30,7 +30,7 @@ function () {
         progressBox.destroy();
         loadingText.destroy();
 
-        document.body.style.backgroundImage = "";
+        // document.body.style.backgroundImage = "";
     });
 
     preloaderObject = this;
@@ -44,7 +44,7 @@ function () {
     this.load.atlas('megaset', 'img/letters.png', 'img/letters.json');
     this.load.atlas('digits', 'img/letters.png', 'img/nums.json');
     this.load.atlas('megaset_english', 'img/letters_english.png', 'img/letters_english.json');
-    this.load.svg('back', 'img/back2.svg', {'height': 1980, 'width': 1080});
+    //this.load.svg('back', 'img/back2.svg', {'height': 1980, 'width': 1080});
 
     for (let k in buttons) {
         if ('modes' in buttons[k])

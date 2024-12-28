@@ -1613,8 +1613,8 @@ RU
         T::EN_LANG => <<<EN
 Coin <strong>SUDOKU</strong> {{sudoku_icon}} is an in-game currency for a network of games - <strong>Erudite, Scrabble, Sudoku</strong> (coming soon)<br><br>
 One account for all games, one currency, one wallet<br><br>
-In the crypto world, the coin is also called SUDOKU. Soon it will be possible to withdraw any number of SUDOKU coins from your in-game wallet to an external wallet in the TON (Telegram) network
-<br><br>
+{{yandex_exclude}}{{In the crypto world, the coin is also called SUDOKU. Soon it will be possible to withdraw any number of SUDOKU coins from your in-game wallet to an external wallet in the TON (Telegram) network
+<br><br>}}
 In the meantime, we try to win as many coins as possible in the game by selecting the “Coins” mode<br><br>
 
 This mode also takes into account and accrues player rankings.<br>
@@ -1628,7 +1628,7 @@ For example, you have specified your bet size as 5 coins, and among those starti
 <br>
 Then the bet for both you and such a player will be 1 coin - the lesser of both options.
 <br><br>
-In case there is someone willing to fight for 10 coins, your bet - 5 will be selected and the game will start with a bank of 10 coins - 5+5
+In case there is someone willing to fight for 10 coins, your bet - 5 will be selected and the game will start with a bank of 10 coins = 5+5
 <br><br>
 In a two-person game, the winner gets the entire pot - his bet and his opponent's bet
 <br><br>
@@ -1700,8 +1700,8 @@ EN
         T::RU_LANG => <<<RU
 Монета <strong>SUDOKU</strong> {{sudoku_icon}} - это внутриигровая валюта для сети игр - <strong>Эрудит, Scrabble, Sudoku</strong> (скоро)<br><br>
 Один аккаунт на все игры, одна валюта, один кошелек<br><br>
-<!--В крипто-мире монета также называется SUDOKU. Скоро станет возможным вывести любое количество монет SUDOKU со своего игрового кошелька на внешний кошелек сети TON (Телеграм)
-<br><br>-->
+{{yandex_exclude}}{{В крипто-мире монета также называется SUDOKU. Скоро станет возможным вывести любое количество монет SUDOKU со своего игрового кошелька на внешний кошелек сети TON (Телеграм)
+<br><br>}}
 А пока мы стараемся выиграть как можно больше монет в игре, выбирая режим "На монеты"<br><br>
 
 Данный режим также учитывает и начисляет рейтинг игроков.<br>
@@ -1715,7 +1715,7 @@ EN
 <br>
 Тогда ставка и для вас и для такого игрока составит 1 монету - меньшее из обоих вариантов.
 <br><br>
-В случае, если есть желающий сразиться на 10 монет, будет выбрана ваша ставка - 5, и начнется игра с банком в 10 монет - 5+5
+В случае, если есть желающий сразиться на 10 монет, будет выбрана ваша ставка - 5, и начнется игра с банком в 10 монет = 5+5
 <br><br>
 При игре на двоих выигравший получает весь банк - свою ставку и ставку противника
 <br><br>
@@ -1740,7 +1740,7 @@ EN
 </li>
 <li>
 За каждого друга, пришедшего в игру по вашей реферальной ссылке, вы получите {{stone_reward}} монет. 
-Также, установив рекорд (за день, неделю, месяц, год) по числу приглашенных, вам будет начисляться награда. <!--Чтобы пригласить пользователя, вам нужно зайти в игру через Телеграм.-->
+Также, установив рекорд (за день, неделю, месяц, год) по числу приглашенных, вам будет начисляться награда. {{yandex_exclude}}{{Чтобы пригласить пользователя, вам нужно зайти в игру через Телеграм.}}
 </li>
 <li>
 За достижения в игре (очки за игру, очки за ход, очки за слово, количество партий, количество приглашенных, место в рейтинге от №1 до №10) начисляются монеты
@@ -1748,11 +1748,11 @@ EN
 <li>
 За каждые 100 игр начисляется {{stone_reward}} монет SUDOKU
 </li>
-<!--<li>
+{{yandex_exclude}}{{<li>
 Купить монеты за рубли переводом
 </li>
 <li>Купить монеты за криптовалюту (скоро)
-</li>-->
+</li>}}
 </ol>
 
 <br>
@@ -1763,9 +1763,9 @@ EN
 <li>
 Играть в наши игры, увеличивая ставки, добавляя азарт и интерес в любимое времяпрепровождение
 </li>
-<li>
+{{yandex_exclude}}{{<li>
 Продать монеты за рубли или за криптовалюту (скоро) и получить свою награду в реальном денежном выражении
-</li>
+</li>}}
 <li>
 Сделать подарок другому игроку, отправив последнему любое количество монет со своего кошелька (скоро)
 </li>     

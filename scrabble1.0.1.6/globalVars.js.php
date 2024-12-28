@@ -115,6 +115,9 @@ const standardVerticalHeight = 800 * 2;
 const standardHorizontalWidth = 960 * 2;
 const standardHorizontalHeight = standardVerticalWidth;
 
+// const standardHorizontalWidth = 960 * 2;
+// const standardHorizontalHeight = standardHorizontalWidth / (16 / 9);
+
 var gameNumber = false;
 var gameBank = false;
 var gameBankString = '';
@@ -263,7 +266,17 @@ var pageActive = 'visible';
 var fullImgID = false;
 var fullImgWidth = 0;
 
-var useLocalStorage = !!localStorage.erudit_user_session_ID;
+const FALL_BACK_COOKIE = '<?= COOKIE::getPersonalCookie() ?>';
+var cookieStored = false;
+var useLocalStorage = false;
+if(localStorage != 'undefined') {
+    useLocalStorage = !!localStorage.<?= Cookie::COOKIE_NAME ?>;
+    if (useLocalStorage) {
+        cookieStored = localStorage.<?= Cookie::COOKIE_NAME ?>;
+    }
+}
+var useYandexStorage = false;
+
 
 var soundPlayed = false;
 var instruction = `<?= T::S('faq_rules') ?>`;

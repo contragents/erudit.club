@@ -319,7 +319,7 @@ class Hints
     public static function getWordHint(string $word): array
     {
         try {
-            $words = json_decode(file_get_contents(self::getBotWordRequestURL() . $word), true);
+            $words = json_decode(file_get_contents(self::getBotWordRequestURL() . $word . '&game=' . Game::$gameName), true);
         } catch(\Throwable $e) {
             $words = ['Ошибка сервера'];
         }
@@ -474,11 +474,7 @@ class Hints
     public
     static function isYandexApp(): bool
     {
-        if (isset($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'], 'yandex') !== false)) {
-            return true;
-        }
-
-        return false;
+        return \BaseController::isYandexApp();
     }
 
     public

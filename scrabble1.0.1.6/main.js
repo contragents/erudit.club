@@ -36,11 +36,9 @@ var UIScene = new Phaser.Class({
 
 var game = new Phaser.Game(config);
 
-document.body.style.backgroundColor = "#2C3C6C";
-document.body.style.backgroundImage = "url('img/back2.svg')";
-//document.body.style.backgroundSize = 'cover';
-document.body.style.backgroundSize = '100% 100%';
-//document.body.style.backgroundPositionX = 'center';
-//document.body.style.backgroundPositionY = '0';
+document.body.style.backgroundImage = screenOrient === HOR ? ("url('" + BASE_URL + "img/back_gorizont_2.svg')") : "url('img/back2.svg')";
+document.body.style.backgroundSize = 'cover';
+document.body.style.backgroundPosition = 'center';
+document.body.style.backgroundOrigin = 'border-box';
 
 //<?php include('ysdk_4.js')?>

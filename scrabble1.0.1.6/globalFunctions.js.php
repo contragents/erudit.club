@@ -1,10 +1,15 @@
 //
 function activateFullScreenForMobiles() {
-    if(commonId == 183834 || commonId == 26907) return;
+    if(isYandexAppGlobal()) {
+        return;
+    }
+
+    if (isIOSDevice()) {
+        return;
+    }
+
     if (gameWidth < gameHeight) {
-        if (!isIOSDevice()) {
-            document.body.requestFullscreen();
-        }
+        document.body.requestFullscreen();
     }
 }
 
@@ -275,7 +280,7 @@ function savePlayerAvatar(url, commonIdParam) {
         ? (
             BASE_URL + '<?=$dir?>/php/yowser/index.php'
             + '?cooki='
-            + localStorage.erudit_user_session_ID
+            + cookieStored
             + '&script='
             + AVATAR_UPLOAD_SCRIPT
             + '&'

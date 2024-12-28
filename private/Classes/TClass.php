@@ -122,7 +122,7 @@ class T
         ],
         'connect_bot' => [
             self::EN_LANG => 'To access the full list, connect to our <a target="_blank" href="https://t.me/scrabble_online_bot">Telegram bot</a>',
-            self::RU_LANG => 'Для доступа к полному списку подключитесь к нашему <a target="_blank" href="https://t.me/erudit_club_bot">Telegram-боту</a>'
+            self::RU_LANG => '{{yandex_exclude}}{{Для доступа к полному списку подключитесь к нашему <a target="_blank" href="https://t.me/erudit_club_bot">Telegram-боту</a>}}'
         ],
         'Only 5 words are shown in random order' => [
             self::RU_LANG => 'Показаны только 5 слов в случайном порядке'

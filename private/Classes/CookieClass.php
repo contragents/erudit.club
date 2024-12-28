@@ -89,4 +89,14 @@ class Cookie
             return [];
         }
     }
+
+    public static function getPersonalCookie(): string
+    {
+        return md5($_SERVER['REMOTE_ADDR']
+                   . $_SERVER['REMOTE_HOST']
+                   . $_SERVER['HTTP_ACCEPT']
+                  . $_SERVER['HTTP_ACCEPT_CHARSET']
+        );
+    }
+
 }

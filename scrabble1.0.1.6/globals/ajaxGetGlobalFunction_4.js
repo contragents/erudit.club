@@ -112,6 +112,11 @@ async function fetchGlobalNominal(script, param_name, param_data) {
 
     if (!response.ok) {
         console.log(`An error has occured: ${response.status}`);
+
+        if (isYandexAppGlobal()) {
+            getLocalStorageValue('<?= Cookie::COOKIE_NAME ?>')
+        }
+
         return {message: errorServerMessage, status: "error"};
     }
 
@@ -121,7 +126,7 @@ async function fetchGlobalNominal(script, param_name, param_data) {
 async function fetchGlobalYowser(script, param_name, param_data) {
     const response = await fetch(BASE_URL + '<?=$dir?>/php/yowser/index.php'
         + '?cooki='
-        + localStorage.erudit_user_session_ID
+        + (cookieStored ? cookieStored : FALL_BACK_COOKIE)
         + '&script='
         + script
         + '&'
@@ -130,7 +135,7 @@ async function fetchGlobalYowser(script, param_name, param_data) {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
-            credentials: 'include',
+            //credentials: 'include',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },

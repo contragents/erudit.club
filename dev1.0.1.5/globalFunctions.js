@@ -267,7 +267,7 @@ function savePlayerAvatar(url, commonID) {
         ? (
             '/<?=$dir?>/php/yowser/index.php'
             + '?cooki='
-            + localStorage.erudit_user_session_ID
+            + (useYandexStorage ? cookieForYandexStorage : localStorage.erudit_user_session_ID['<?= Cookie::COOKIE_NAME ?>'])
             + '&script='
             + AVATAR_UPLOAD_SCRIPT
             + '&queryNumber='
