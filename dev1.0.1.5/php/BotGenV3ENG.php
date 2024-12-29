@@ -13,7 +13,7 @@ class BotGenV3ENG
     const WAITERS_2_PLAYERS_QUEUE = 'erudit.private.2ENplayers_waiters';
     const WAITERS_4_PLAYERS_QUEUE = 'erudit.private.4ENplayers_waiters';
     const BOT_LIST = 'erudit.private.bot_v3_list';
-    const BOT_TPL = 'botV3#';
+    const BOT_TPL = Game::BOT_TPL;
 
     public function __construct()
     {

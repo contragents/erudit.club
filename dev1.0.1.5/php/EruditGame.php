@@ -712,5 +712,16 @@ class Game extends \Game
             ]
         );
     }
+
+    protected function logSlov($words)
+    {
+        $res = '<br />';
+        foreach ($words as $word => $price) {
+            $res .= " <a href=\"#\" onclick=\"event.preventDefault(); openWindowGlobal('" . urlencode($word)
+                . "').then((data1) => { var openWindow = window.open('about:blank', 'Слово', 'location=no');setTimeout(function () {openWindow.document.body.innerHTML = data1;} , 1000) });\">$word</a>-$price&nbsp;";
+        }
+
+        return $res;
+    }
 }
 

@@ -40,7 +40,7 @@ if (isYandexAppGlobal()) {
 function setLocalStorageValue(key, value) {
     useLocalStorage = true;
 
-    if (isYandexAppGlobal() && window.ysdk != 'undefined') {
+    if (isYandexAppGlobal() && !!window.ysdk) {
         window.ysdk.getStorage()
             .then(safeStorage => Object.defineProperty(window, 'localStorage',
                 {get: () => safeStorage}))
@@ -57,7 +57,7 @@ function setLocalStorageValue(key, value) {
 }
 
 function getLocalStorageValue(key) {
-    if (isYandexAppGlobal() && window.ysdk != 'undefined') {
+    if (isYandexAppGlobal() && !!window.ysdk) {
         window.ysdk.getStorage()
             .then(safeStorage => Object.defineProperty(window, 'localStorage',
                 {get: () => safeStorage}))
@@ -73,7 +73,7 @@ function getLocalStorageValue(key) {
 }
 
 function showStickyBannerYandex() {
-    if (isYandexAppGlobal() && window.ysdk != 'undefined') {
+    if (isYandexAppGlobal() && !!window.ysdk) {
         window.ysdk.adv.getBannerAdvStatus().then(({stickyAdvIsShowing, reason}) => {
             if (stickyAdvIsShowing) {
                 // Реклама показывается
@@ -89,7 +89,7 @@ function showStickyBannerYandex() {
 }
 
 function hideStickyBannerYandex() {
-    if (isYandexAppGlobal() && window.ysdk != 'undefined') {
+    if (isYandexAppGlobal() && !!window.ysdk) {
         window.ysdk.adv.getBannerAdvStatus().then(({stickyAdvIsShowing, reason}) => {
             if (stickyAdvIsShowing) {
                 // Реклама показывается

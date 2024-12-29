@@ -283,11 +283,11 @@ class PlayerModel extends BaseModel
     static function getPlayerName(
         array $user = ['ID' => 'cookie', 'common_id' => 15, 'userID' => 'user_ID']
     ) {
-        if (strpos($user['ID'], 'bot') !== false) {
+        if (strpos($user['ID'], Game::BOT_TPL) !== false) {
             $config = include(__DIR__ . '/../../../configs/conf.php');
 
             return T::translit(
-                $config['botNames'][str_replace('botV3#', '', $user['ID'])] ?? 'John Doe',
+                $config['botNames'][str_replace(Game::BOT_TPL, '', $user['ID'])] ?? 'John Doe',
                 T::$lang === T::EN_LANG
             );
         }

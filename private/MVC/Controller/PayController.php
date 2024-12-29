@@ -50,7 +50,7 @@ class PayController extends BaseController
             'message' => T::S('success'),
             Game::SUDOKU_BALANCE => $newSudokuBalance,
             'SUDOKU_TOP' => BalanceModel::getTopByBalance(BalanceModel::getBalance(self::$Request[self::COMMON_ID_PARAM])),
-            'rewards' => IncomeModel::getIncome(self::$Request[self::COMMON_ID_PARAM])
+            'rewards' => IncomeModel::getIncome(self::$Request[self::COMMON_ID_PARAM]) ?: '0.00'
         ];
     }
 

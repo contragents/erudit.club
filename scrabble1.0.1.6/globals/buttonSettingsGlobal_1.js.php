@@ -23,7 +23,8 @@ var buttons = {
         }
     },
     instructButton: {
-        filename: 'instrukt2',
+        filename: 'instrukt2' + ((isYandexAppGlobal() && lang === 'RU') ? '_ru' : ''),
+        modes: [OTJAT_MODE, 'Navedenie', 'Najatie'],
         x: topXY.x + lotokX + buttonWidth / 2 - lotokCellStep / 2 + 5 + buttonWidth,
         y: (topXY.y + topHeight) / 2,
         caption: 'инструкция',
@@ -156,7 +157,8 @@ var buttons = {
         },
     },
     logButton: {
-        filename: 'log2',
+        filename: 'log2' + ((isYandexAppGlobal() && lang === 'RU') ? '_ru' : ''),
+        modes: [OTJAT_MODE, 'Inactive', 'Navedenie', 'Najatie'],
         x: botXY.x + buttonStepX + buttonWidth / 2,
         y: botXY.y + botHeight * (0.75 + 0.125),
         caption: 'log',

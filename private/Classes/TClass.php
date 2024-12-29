@@ -54,6 +54,9 @@ class T
     }
 
     const PHRASES = [
+        'Слово не найдено.' => [
+            self::EN_LANG => 'Word not found'
+        ],
         'Success' => [
             self::RU_LANG => 'Успешно'
         ],

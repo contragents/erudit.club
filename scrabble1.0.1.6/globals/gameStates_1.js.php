@@ -421,7 +421,7 @@ var gameStates = {
 
                                 <span><?= T::S('CHOOSE GAME OPTIONS') ?></span>
 
-                                <div class="ml-auto"><a href="#" id="btn-faq" class="btn">FAQ</a>
+                                <div class="ml-auto"><a href="#" id="btn-faq" class="btn">${isYandexAppGlobal() ? 'ЧАВО' : 'FAQ'}</a>
                                 </div>
                             </div>
                         </div>
@@ -453,7 +453,6 @@ var gameStates = {
                 onEscape: false,
                 closeButton: false,
                 buttons: {
-                    //...(true /*!isPureSiteRoot()*/ && {
                     cabinet: {
                         label: '<?= T::S('Profile') ?>',
                         className: 'btn-outline-success',
@@ -534,7 +533,7 @@ var gameStates = {
                                                         '<?= T::S('secret_prompt') ?>')
                                                     .replaceAll('{{Link}}', '<?= T::S('Link') ?>') // Привязать
                                                     .replaceAll('{{Bonuses accrued}}',
-                                                        '<?= T::S('Bonuses accrued') ?>') // Начислено бонусов
+                                                        '<?= T::S('Bonuses accrued') ?>')
                                                     .replaceAll('{{SUDOKU Balance}}',
                                                         '<?= T::S('SUDOKU Balance') ?>') // Баланс SUDOKU
                                                     .replaceAll('{{Claim}}', '<?= T::S('Claim') ?>') // Забрать
@@ -554,7 +553,6 @@ var gameStates = {
                                                     .replaceAll('{{balance}}', profileData.balance)
                                                     .replaceAll('{{ratingByCoins}}', profileData.ratingByCoins)
                                                     .replaceAll('{{tgWallet}}', profileData.tgWallet)
-                                                    .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
                                                     .replaceAll('{{bonusAccrual}}', profileData.bonusAccrual)
                                                     .replaceAll('{{balanceSudoku}}', profileData.balanceSudoku)
                                                     .replaceAll('{{referralList}}', referralList)
@@ -609,7 +607,7 @@ var gameStates = {
                     //})
                     ,
                     instruction: {
-                        label: 'FAQ',
+                        label: isYandexAppGlobal() ? 'ЧАВО' : 'FAQ',
                         className: 'btn-outline-success d-none',
                         callback: function () {
                             dialog = bootbox
@@ -722,6 +720,36 @@ var gameStates = {
                                 return false;
                             },
                         },
+                    }),
+                    ...(isYandexAppGlobal() && {
+                        oferta: {
+                            label: '<?= T::S('Оферта') ?>',
+                            className: 'btn-outline-success',
+                            callback: function () {
+                                async function getOfertaModal() {
+                                    return fetch(BASE_URL + 'oferta.html')
+                                        .then((response) => response.text());
+                                };
+                                console.log('!!!!!!!!!!!');
+                                getOfertaModal().then((html) => {
+                                    dialog = bootbox.alert({
+                                        title: '',
+                                        message: html,
+                                        locale: 'ru',
+                                        className: 'modal-settings modal-profile',
+                                        buttons: {
+                                            ok: {
+                                                label: '<?= T::S('Back') ?>',
+                                                className: 'btn-sm ml-auto mr-0',
+                                            },
+                                        },
+                                        callback: function () {
+                                            gameStates.chooseGame.action(data);
+                                        },
+                                    })
+                                });
+                            },
+                        }
                     }),
                 },
             });
@@ -1317,7 +1345,11 @@ function commonCallback(data) {
 
         preloaderObject.load.reset();
 
-        preloaderObject.load.svg(resourceName + OTJAT_MODE, `img/otjat/${players.bankBlock.filename}${gameBankString}.svg`,
+        let ruModifier = (gameBank < 1000 && isYandexAppGlobal() && lang === 'RU')
+            ? '_ru'
+            : '';
+
+        preloaderObject.load.svg(resourceName + OTJAT_MODE, `img/otjat/${players.bankBlock.filename}${gameBankString}${ruModifier}.svg`,
             {
                 ...('width' in players.bankBlock && {
                     'width': players.bankBlock.width,

@@ -159,7 +159,7 @@ content_perevod COLLATE utf8_general_ci
 FROM 
 gufo_me 
 WHERE 
-slovo = '" . urldecode($_GET['word']) . "'
+slovo = '" . urldecode($_REQUEST['word']) . "'
 UNION
 SELECT
 comment COLLATE utf8_general_ci as content,
@@ -167,7 +167,7 @@ substring(comment,1,0) COLLATE utf8_general_ci as content_perevod
 FROM
 dict_cambrige
 WHERE 
-slovo = '" . urldecode($_GET['word']) . "'
+slovo = '" . urldecode($_REQUEST['word']) . "'
 UNION
 SELECT
 comment COLLATE utf8_general_ci as content,
@@ -175,16 +175,16 @@ substring(comment,1,0) COLLATE utf8_general_ci as content_perevod
 FROM
 dict
 WHERE 
-slovo = '" . urldecode($_GET['word']) . "';";
+slovo = '" . urldecode($_REQUEST['word']) . "';";
 
     $res = DB::queryArray($CONTENT_SELECT);
     if (!is_array($res) || empty($res)) {
-        $content .= "Слово не найдено.";
+        $content .= T::S("Слово не найдено.");
         $result = false;
     } else {
         $row = current($res);
         if (!is_array($row) || empty($row)) {
-            $content .= "Слово не найдено.";
+            $content .= T::S("Слово не найдено.");
             $result = false;
         }
 
@@ -202,8 +202,8 @@ slovo = '" . urldecode($_GET['word']) . "';";
     }
 
     $row['content'] = str_ireplace(
-        $_GET['word'] . ' noun',
-        '<h2>' . strtoupper($_GET['word']) . ' noun</h2>',
+        $_REQUEST['word'] . ' noun',
+        '<h2>' . strtoupper($_REQUEST['word']) . ' noun</h2>',
         $row['content']
     );
 
@@ -215,8 +215,8 @@ slovo = '" . urldecode($_GET['word']) . "';";
 
     $content = preg_replace('/googletag\.cmd\.push\(.{0,400}\}\);/','', $content);
 
-    if (($_GET['ingame'] ?? '') !== 'yes' && !isAndroidApp()) {
-        $title = "Игра Эрудит.CLUB :: Словарь | " . $_GET['word'];
+    if (($_REQUEST['ingame'] ?? '') !== 'yes' && !isAndroidApp()) {
+        $title = "Игра Эрудит.CLUB :: Словарь | " . $_REQUEST['word'];
         $description = strip_tags($content);
         $description = mb_substr($description, 0, 500);
         $description = str_replace('"', "'", $description);
@@ -228,13 +228,15 @@ slovo = '" . urldecode($_GET['word']) . "';";
         $description = str_replace('  ', " ", $description);
         $description = str_replace('  ', " ", $description);
         $canonical = isset($_GET['voc'])
-            ? ('<link rel="canonical" href="https://эрудит.club/dict/' . urlencode($_GET['word']) . '" />')
+            ? ('<link rel="canonical" href="https://эрудит.club/dict/' . urlencode($_REQUEST['word']) . '" />')
             : '';
         include(__DIR__ . '/../../private/MVC/View/Tpl/main_header.php');
-        print "<h1>{$_GET['word']}</h1>";
+        print "<h1>{$_REQUEST['word']}</h1>";
     }
 
-    print $content;
+    print ($_REQUEST['ingame'] ?? '') === 'yes'
+    ? json_encode(['result' => $content])
+    : $content;
 
     return $result;
 }

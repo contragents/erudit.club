@@ -29,6 +29,8 @@ class Game
 
     public static ?int $commonID = null;
 
+    const BOT_TPL = 'botV3#';
+
     protected $Queue = Queue::class;
     const GAMES_KEY = 'erudit.games_';
     public static $configStatic;
@@ -296,7 +298,7 @@ class Game
                             continue;
                         }
 
-                        if (strstr($user['ID'], 'botV3#') === false) {
+                        if (strstr($user['ID'], self::BOT_TPL) === false) {
                             self::$players[$user['ID']] = [
                                 'cookie' => $user['ID'],
                                 'userID' => (isset($user['userID']) ? $user['userID'] : false),
@@ -633,7 +635,7 @@ class Game
         $message['info']['top'] = CommonIdRatingModel::getTopByRating($message['info']['rating'], self::$gameName);
         $message['info'][self::SUDOKU_BALANCE] = BalanceModel::getBalanceFormatted($this->commonId);
         $message['info']['SUDOKU_TOP'] = BalanceModel::getTopByBalance(BalanceModel::getBalance($this->commonId));
-        $message['info']['rewards'] = IncomeModel::getIncome($this->commonId);
+        $message['info']['rewards'] = IncomeModel::getIncome($this->commonId) ?: '0.00';
 
         $refs = RefModel::getCustomO(RefModel::COMMON_ID_FIELD, '=', $this->commonId, true);
 
@@ -693,11 +695,11 @@ class Game
             $message['img_title'] = T::S('Avatar by provided link');
         }
 
-        $message['name'] = $userData['name'] ?? '';
+        $message['name'] = $userData['name'] ?? PlayerModel::getPlayerName(['ID' => $this->User, 'common_id' => $this->commonId]);
 
         $message['text'] = '';
         $message['form'][] = [
-            'prompt' => "Никнейм (id: {$message['common_id']})",
+            'prompt' => "Никнейм (id: {$this->commonId})",
             'inputName' => 'name',
             'inputId' => 'player_name',
             'onclick' => 'savePlayerName',
@@ -1331,7 +1333,7 @@ class Game
 
             if (
                 !empty($user['ID'])
-                && strstr($user['ID'], 'botV3#') === false
+                && strstr($user['ID'], self::BOT_TPL) === false
                 && !empty($this->gameStatus['users'][$num]['last_request_num'])
                 && $this->gameStatus['users'][$num]['last_request_num'] > 10
             ) {
@@ -1761,8 +1763,7 @@ class Game
     {
         $res = '<br />';
         foreach ($words as $word => $price) {
-            $res .= " <a href=\"#\" onclick=\"event.preventDefault(); openWindowGlobal('" . urlencode($word)
-                . "').then((data1) => { var openWindow = window.open('about:blank', 'Слово', 'location=no');setTimeout(function () {openWindow.document.body.innerHTML = data1;} , 1000) });\">$word</a>-$price&nbsp;";
+            $res .= " <a href=\"#\" onclick=\"event.preventDefault(); openWindowGlobal('" . urlencode($word) . "');\">$word</a>-$price&nbsp;";
         }
 
         return $res;
@@ -2536,7 +2537,7 @@ class Game
 
     protected function isBot(): bool
     {
-        return !(strstr($this->User, 'botV3#') === false);
+        return !(strstr($this->User, self::BOT_TPL) === false);
     }
 
     protected function getBotFishkiToChange(): array
