@@ -108,7 +108,7 @@ function () {
 
     faserObject = this;
 
-    ochki = this.add.text(lotokX - lotokCellStep / 2 + 5,
+    /*ochki = this.add.text(lotokX - lotokCellStep / 2 + 5,
         buttons['newGameButton']['svgObject'].y + buttons['newGameButton']['svgObject'].height - 15,
         'Ваши очки:0',
         {
@@ -121,4 +121,7 @@ function () {
             color: 'black',
             font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
         }).setVisible(false); // todo delete vremia
+        */
+
+    reportGameIsReadyYandex();
 }

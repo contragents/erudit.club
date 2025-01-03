@@ -445,6 +445,8 @@ var gameStates = {
 
             bootbox.hideAll();
 
+            reportGameStopYandex();
+
             dialog = bootbox.dialog({
                 title: gameStates['chooseGame']['message'],
                 message: gameform,
@@ -625,6 +627,7 @@ var gameStates = {
                         className: 'btn-primary',
                         callback: function () {
                             hideStickyBannerYandex();
+                            reportGameStartYandex();
 
                             activateFullScreenForMobiles();
 
@@ -727,7 +730,7 @@ var gameStates = {
                             className: 'btn-outline-success',
                             callback: function () {
                                 async function getOfertaModal() {
-                                    return fetch(BASE_URL + 'oferta.html')
+                                    return fetch(BASE_URL + 'oferta.html' + version(true))
                                         .then((response) => response.text());
                                 };
                                 console.log('!!!!!!!!!!!');

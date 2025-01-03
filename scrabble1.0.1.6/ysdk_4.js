@@ -1,47 +1,29 @@
 //
-var yaPlayer = null;
+var yaPlayer = false;
 var uniqID = false;
+var ysdk = false;
 
-if (isYandexAppGlobal()) {
-    var tryCount = 5;
-    var timerId = null;
+if (isYandexAppGlobal() && typeof YaGames != 'undefined') {
+    YaGames
+        .init()
+        .then(_ysdk => {
+            ysdk = _ysdk;
 
-    yaPlayer = null;
-    if (typeof YaGames != 'undefined')
-        YaGames
-            .init({
-                adv: {
-                    onAdvClose: wasShown => {
-                        console.info('adv closed!');
-                    }
-                },
-                screen: {
-                    orientation: {
-                        value: (gameHeight > gameWidth ? 'portrait' : 'landscape')
-                    }
-                }
-            })
-            .then(ysdk => {
-                window.ysdk = ysdk;
-
-                window.ysdk.getPlayer({scopes: false})
-                    .then(_player => {
-                        yaPlayer = _player;
-                        uniqID = yaPlayer.getUniqueID();
-                    }).catch(err => {
-                    console.log('USER_NOT_AUTHORIZED');
-                });
-                /*if(!cookieStored) {
-                    getLocalStorageValue('<?= Cookie::COOKIE_NAME ?>');
-                }*/
+            ysdk.getPlayer({scopes: false})
+                .then(_player => {
+                    yaPlayer = _player;
+                    uniqID = yaPlayer.getUniqueID();
+                }).catch(err => {
+                console.log('USER_NOT_AUTHORIZED');
             });
+        });
 }
 
 function setLocalStorageValue(key, value) {
     useLocalStorage = true;
 
-    if (isYandexAppGlobal() && !!window.ysdk) {
-        window.ysdk.getStorage()
+    if (isYandexAppGlobal() && !!ysdk) {
+        ysdk.getStorage()
             .then(safeStorage => Object.defineProperty(window, 'localStorage',
                 {get: () => safeStorage}))
             .then(() => {
@@ -57,8 +39,8 @@ function setLocalStorageValue(key, value) {
 }
 
 function getLocalStorageValue(key) {
-    if (isYandexAppGlobal() && !!window.ysdk) {
-        window.ysdk.getStorage()
+    if (isYandexAppGlobal() && !!ysdk) {
+        ysdk.getStorage()
             .then(safeStorage => Object.defineProperty(window, 'localStorage',
                 {get: () => safeStorage}))
             .then(() => {
@@ -73,8 +55,8 @@ function getLocalStorageValue(key) {
 }
 
 function showStickyBannerYandex() {
-    if (isYandexAppGlobal() && !!window.ysdk) {
-        window.ysdk.adv.getBannerAdvStatus().then(({stickyAdvIsShowing, reason}) => {
+    if (isYandexAppGlobal() && !!ysdk) {
+        ysdk.adv.getBannerAdvStatus().then(({stickyAdvIsShowing, reason}) => {
             if (stickyAdvIsShowing) {
                 // Реклама показывается
             } else if (reason) {
@@ -82,18 +64,18 @@ function showStickyBannerYandex() {
                 console.log(reason)
             } else {
                 // Реклама не показывается.
-                window.ysdk.adv.showBannerAdv()
+                ysdk.adv.showBannerAdv()
             }
         })
     }
 }
 
 function hideStickyBannerYandex() {
-    if (isYandexAppGlobal() && !!window.ysdk) {
-        window.ysdk.adv.getBannerAdvStatus().then(({stickyAdvIsShowing, reason}) => {
+    if (isYandexAppGlobal() && !!ysdk) {
+        ysdk.adv.getBannerAdvStatus().then(({stickyAdvIsShowing, reason}) => {
             if (stickyAdvIsShowing) {
                 // Реклама показывается
-                window.ysdk.adv.hideBannerAdv();
+                ysdk.adv.hideBannerAdv();
             } else if (reason) {
                 // Реклама не показывается.
                 console.log(reason)
@@ -101,5 +83,33 @@ function hideStickyBannerYandex() {
                 // Реклама не показывается
             }
         })
+    }
+}
+
+function reportGameIsReadyYandex() {
+    if (isYandexAppGlobal() && !!ysdk) {
+        ysdk.features.LoadingAPI?.ready();
+    }
+}
+
+function reportGameStartYandex() {
+    if (isYandexAppGlobal() && !!ysdk) {
+        ysdk.features.GameplayAPI?.start();
+    }
+}
+
+function reportGameStopYandex() {
+    if (isYandexAppGlobal() && !!ysdk) {
+        ysdk.features.GameplayAPI?.stop();
+    }
+}
+
+function reportVisibilityChangeYandex() {
+    if (isYandexAppGlobal() && !!ysdk) {
+        if(document.visibilityState === 'hidden') {
+            ysdk.features.GameplayAPI?.stop();
+        } else {
+            ysdk.features.GameplayAPI?.start();
+        }
     }
 }

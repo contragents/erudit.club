@@ -41,4 +41,6 @@ document.body.style.backgroundSize = 'cover';
 document.body.style.backgroundPosition = 'center';
 document.body.style.backgroundOrigin = 'border-box';
 
+document.addEventListener('contextmenu', event => event.preventDefault());
+
 //<?php include('ysdk_4.js')?>
