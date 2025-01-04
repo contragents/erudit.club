@@ -39,8 +39,6 @@ class Hints
     const EXCEPTIONS = [
         'Android' => [//Подсказки, зависящие от приложения Андроид
             'share' => 'isAndroidApp',
-            'В приложении для Android в случае <strong>проблем с перемещением фишек</strong> разверните Игру на <strong>весь экран</strong> - кнопка 
-            <img src="img/otjat/razdv.svg" height="24px"/>' => 'IsNotAndroidApp',
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные' => 'IsNotAndroidApp',
             'Оставьте Ваш отзыв о приложении - мы ценим мнение каждого игрока и постоянно улучшаем Игру - <strong><a href="https://play.google.com/store/apps/details?id=club.erudite.app">Оценить</a></strong>' => 'IsNotAndroidApp',
             'video' => 'isAndroidApp',
@@ -77,8 +75,6 @@ class Hints
             'support',
             'video',
             'Сохраните КЛЮЧ от учетной записи - доступен в ЛИЧНОМ КАБИНЕТЕ',
-            'В приложении для Android в случае <strong>проблем с перемещением фишек</strong> разверните Игру на <strong>весь экран</strong> - кнопка 
-            <img src="img/otjat/razdv.svg" height="24px"/>',
             'Ссылка на наш <a target="_blank" href="https://www.youtube.com/channel/UCipptDPm5oRX_VCo5TaTHaQ">Youtube-канал</a> - откроется в новом окне',
             'wordsRuHint',
             'wordsEnHint',

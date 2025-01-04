@@ -13,9 +13,13 @@ if (isYandexAppGlobal() && typeof YaGames != 'undefined') {
                 .then(_player => {
                     yaPlayer = _player;
                     uniqID = yaPlayer.getUniqueID();
+                    console.log('USER ID:', uniqID);
                 }).catch(err => {
                 console.log('USER_NOT_AUTHORIZED');
             });
+
+            ysdk.on('game_api_pause', pauseCallback);
+            ysdk.on('game_api_resume', resumeCallback);
         });
 }
 
@@ -106,10 +110,24 @@ function reportGameStopYandex() {
 
 function reportVisibilityChangeYandex() {
     if (isYandexAppGlobal() && !!ysdk) {
-        if(document.visibilityState === 'hidden') {
+        if(pageActive === 'hidden') {
             ysdk.features.GameplayAPI?.stop();
         } else {
             ysdk.features.GameplayAPI?.start();
         }
     }
 }
+
+const pauseCallback = () => {
+    pageActive = 'hidden';
+    onVisibilityChange();
+    console.log('GAME PAUSED');
+};
+
+
+
+const resumeCallback = () => {
+    pageActive = 'visible';
+    onVisibilityChange();
+    console.log('GAME RESUMED');
+};

@@ -15,7 +15,9 @@ include_once 'cors.php';
 require_once 'index_functions.php';
 
 if (function_exists(SCRIPTS[$scriptName])) {
-    Tg::authorize();
+    if(!Tg::authorize()) {
+        Yandex::authorize();
+    }
 
     $func = SCRIPTS[$scriptName];
     return $func();

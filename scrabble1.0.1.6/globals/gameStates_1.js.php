@@ -72,7 +72,7 @@ var gameStates = {
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
 
             gameStates['myTurn']['from_noGame'](data);
-            gameStates['gameResults']['action'](data);
+            gameStates.gameResults.action(data);
         },
         from_initGame: function () {
             while (fixedContainer.length)
@@ -538,6 +538,8 @@ var gameStates = {
                                                         '<?= T::S('Bonuses accrued') ?>')
                                                     .replaceAll('{{SUDOKU Balance}}',
                                                         '<?= T::S('SUDOKU Balance') ?>') // Баланс SUDOKU
+                                                    .replaceAll('{{COIN Balance}}',
+                                                        '<?= T::S('COIN Balance') ?>')
                                                     .replaceAll('{{Claim}}', '<?= T::S('Claim') ?>') // Забрать
                                                     .replaceAll('{{Name}}', '<?= T::S('Name') ?>')
                                                     .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
@@ -900,6 +902,8 @@ var gameStates = {
         },
         refresh: 10,
         action: function (data) {
+            reportGameStartYandex();
+
             if ("desk" in data && data.desk.length > 0) {
                 parseDeskGlobal(data['desk']);
             }

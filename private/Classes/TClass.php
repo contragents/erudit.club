@@ -327,6 +327,9 @@ class T
         'SUDOKU Balance' => [
             self::RU_LANG => 'Баланс SUDOKU'
         ],
+        'COIN Balance' => [
+            self::RU_LANG => 'Баланс монет'
+        ],
         'Claim' => [
             self::EN_LANG => 'Claim',
             self::RU_LANG => 'Забрать'

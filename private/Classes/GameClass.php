@@ -143,7 +143,8 @@ class Game
         $this->User = $this->validateCookie($_COOKIE[Cookie::COOKIE_NAME]);
 
         $this->commonId = Tg::$commonId // авторизован через Телеграм или...
-            ?? PlayerModel::getPlayerID($this->User, true);
+            ?? (Yandex::$commonId // авторизован через Яндекс или...
+                ?? PlayerModel::getPlayerID($this->User, true));
         self::$commonID = $this->commonId;
 
         // Если не удалось дождаться лока по текущему игроку, то посылаем ошибку и выходим
@@ -426,6 +427,12 @@ class Game
         if (Tg::authorize()) {
             if (Tg::$tgUser) {
                 return Tg::$tgUser['user']['id'];
+            }
+        }
+
+        if (Yandex::authorize()) {
+            if (Yandex::$yandexUser) {
+                return Yandex::$yandexUser;
             }
         }
 

@@ -82,11 +82,6 @@ function () {
         currentWidth += stepXTopButtons + buttons[tbK]['svgObject'].displayWidth;
     }
 
-    /*
-    buttons['razdvButton']['svgObject'].disableInteractive();
-    buttons['razdvButton']['svgObject'].visible = false;
-    */
-
     if (buttons['submitButton']['svgObject'] !== false) {
         buttons['submitButton']['svgObject'].disableInteractive();
         buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
@@ -107,21 +102,6 @@ function () {
 //    <?php include('create/getSVGButtonFunction.js')?>
 
     faserObject = this;
-
-    /*ochki = this.add.text(lotokX - lotokCellStep / 2 + 5,
-        buttons['newGameButton']['svgObject'].y + buttons['newGameButton']['svgObject'].height - 15,
-        'Ваши очки:0',
-        {
-            color: 'black',
-            font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
-        }).setVisible(false); // todo delete ochki
-
-    vremia = this.add.text(ochki.x, ochki.y + ochki.height + 15, 'Время на ход 2:00',
-        {
-            color: 'black',
-            font: 'bold ' + vremiaFontSize + 'px' + ' Courier',
-        }).setVisible(false); // todo delete vremia
-        */
 
     reportGameIsReadyYandex();
 }

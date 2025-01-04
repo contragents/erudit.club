@@ -154,23 +154,27 @@ window.onbeforeunload = function () {
 };
 
 document.addEventListener("visibilitychange", function () {
-    reportVisibilityChangeYandex();
-
     pageActive = document.visibilityState;
+
+    onVisibilityChange();
+});
+
+function onVisibilityChange() {
+    reportVisibilityChangeYandex();
 
     if (gameState == 'myTurn'
         || gameState == 'preMyTurn'
         || gameState == 'otherTurn'
         || gameState == 'initGame'
         || gameState == 'initRatingGame') {
-        if (pageActive == 'hidden') {
+        if (pageActive === 'hidden') {
             fetchGlobal(STATUS_CHECKER_SCRIPT)
                 .then((data) => {
                     commonCallback(data);
                 });
         }
     }
-});
+}
 
 function showFullImage(idImg, width, oldWidth = 198) {
     if ($('#' + idImg).width() < width) {
