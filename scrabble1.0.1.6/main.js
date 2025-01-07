@@ -41,6 +41,12 @@ document.body.style.backgroundSize = 'cover';
 document.body.style.backgroundPosition = 'center';
 document.body.style.backgroundOrigin = 'border-box';
 
+//CLUB-421
 document.addEventListener('contextmenu', event => event.preventDefault());
+document.addEventListener('dragstart', event => {
+    if (event.target.tagName === 'IMG') event.preventDefault();
+});
+
+
 
 //<?php include('ysdk_4.js')?>

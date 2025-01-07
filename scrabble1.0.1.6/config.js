@@ -13,5 +13,11 @@ var config = {
         autoCenter: Phaser.Scale.CENTER_BOTH,
         width: gameWidth,
         height: gameHeight
-    }
+    },
+    loader:{
+        //enableParallel: true,
+        //maxParallelDownloads: isYandexAppGlobal() ? 4 : 32,
+        maxRetries: 10, // from 3.85 version - using in Yandex version
+        // imageLoadType: 'XHR',    // 'HTMLImageElement'
+    },
 };

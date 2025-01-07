@@ -2632,10 +2632,18 @@ label.file-label:active:before {
 	justify-content: flex-end;
 }
 
+
+/* CLUB-421 */
 body {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
+    -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    -webkit-tap-highlight-color:transparent; // for removing the highlight
+}
+
+img {
+    pointer-events: none;
 }

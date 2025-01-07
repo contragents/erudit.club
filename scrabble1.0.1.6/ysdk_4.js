@@ -130,4 +130,6 @@ const resumeCallback = () => {
     pageActive = 'visible';
     onVisibilityChange();
     console.log('GAME RESUMED');
+
+    hideStickyBannerYandex();
 };

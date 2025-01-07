@@ -346,7 +346,7 @@ var gameStates = {
             let radioOchki = `
                             <div class="box">
                                 <div class="box-title-wrap">
-                                    <span><?= T::S('Game goal') ?></span>
+                                    <span><?= T::S('Game goal') ?> ${isYandexAppGlobal() ? '<?= T::S('game_goal_descr') ?>' : ''}</span>
                                 </div>
                                 <div class="label-row">
                                     <div class="form-check form-check-inline">
@@ -391,7 +391,7 @@ var gameStates = {
             let wishTime = `
 				            <div class="box pb-1">
                                 <div class="box-title-wrap mb-0">
-                                    <span><?= T::S('Turn time') ?></span>
+                                    <span><?= T::S('Turn time') ?> ${isYandexAppGlobal() ? '<?= T::S('turn_time_descr') ?>' : ''}</span>
                                 </div>
 
                                 <div class="label-row">
@@ -519,6 +519,7 @@ var gameStates = {
                                                     .replaceAll('{{Wallet}}', '<?= T::S('Wallet') ?>')
                                                     .replaceAll('{{Referrals}}', '<?= T::S('Referrals') ?>')
                                                     .replaceAll('{{Player ID}}', '<?= T::S('Player ID') ?>')
+                                                    .replaceAll("{{Player's ID}}", "<?= T::S("Player's ID") ?>")
                                                     .replaceAll('{{Save}}', '<?= T::S('Save') ?>')
                                                     .replaceAll('{{Input new nickname}}',
                                                         '<?= T::S('Input new nickname') ?>')

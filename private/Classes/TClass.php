@@ -124,7 +124,7 @@ class T
             self::RU_LANG => 'Забирать пока нечего'
         ],
         'connect_bot' => [
-            self::EN_LANG => 'To access the full list, connect to our <a target="_blank" href="https://t.me/scrabble_online_bot">Telegram bot</a>',
+            self::EN_LANG => '{{yandex_exclude}}{{To access the full list, connect to our <a target="_blank" href="https://t.me/scrabble_online_bot">Telegram bot</a>}}',
             self::RU_LANG => '{{yandex_exclude}}{{Для доступа к полному списку подключитесь к нашему <a target="_blank" href="https://t.me/erudit_club_bot">Telegram-боту</a>}}'
         ],
         'Only 5 words are shown in random order' => [
@@ -282,6 +282,9 @@ class T
         'Player ID' => [
             self::RU_LANG => 'ID Игрока'
         ],
+        "Player's ID" => [
+            self::RU_LANG => 'Номер игрока'
+        ],
         // complaints
         'Player is unbanned' => [
             self::RU_LANG => 'Игрок разблокирован'
@@ -359,6 +362,9 @@ class T
         ],
         'Request rejected' => [
             self::RU_LANG => 'Запрос отклонен'
+        ],
+        'Enter the query: a-z, * - any letters, ? - ONE any letter' => [
+            self::RU_LANG => 'Введите запрос: а-я, * - любые буквы, ? - ОДНА любая буква. Например, мам?, съе*'
         ],
         'No messages yet' => [
             self::RU_LANG => 'Сообщений пока нет'
@@ -555,6 +561,14 @@ class T
         'Game goal' => [
             self::RU_LANG => 'Игра до'
         ],
+        'game_goal_descr' => [
+            self::EN_LANG => '(will be applied when possible)',
+            self::RU_LANG => '(учитывается голосованием игроков)'
+        ],
+        'turn_time_descr' => [
+            self::EN_LANG => '(averaged out)',
+            self::RU_LANG => '(выбирается среднее)'
+        ],
         'Rating of opponents' => [
             self::RU_LANG => 'Рейтинг соперников'
         ],
@@ -603,6 +617,9 @@ class T
         ],
         'Join group' => [
             self::RU_LANG => 'Вступить в группу'
+        ],
+        'Word selection' => [
+            self::RU_LANG => 'Подбор слов'
         ],
         'Send an in-game message' => [
             self::RU_LANG => 'Отправьте сообщение в игре'
@@ -852,9 +869,6 @@ class T
         ],
         "Turn time" => [
             self::RU_LANG => "Время на ход"
-        ],
-        "Player's ID" => [
-            self::RU_LANG => 'ID игрока'
         ],
         'Date' => [
             self::RU_LANG => 'Дата'

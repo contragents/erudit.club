@@ -219,17 +219,13 @@ function mergeTheIDs(oldKey, commonID) {
 
 function showCabinetActionResult(response) {
     if ('message' in response) {
-        let background = (response['result'].indexOf('error') + 1)
-            ? '#f99'
-            : '#9f9';
         cabinetAlert = bootbox.alert({
             message: response['message'],
+            className: 'modal-settings modal-profile text-white',
             locale: 'ru',
             size: 'small',
             closeButton: false,
             centerVertical: true
-        }).find('.modal-content').css({
-            'background-color': background
         });
     }
 }

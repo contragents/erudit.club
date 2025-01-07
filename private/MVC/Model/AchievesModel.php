@@ -30,7 +30,7 @@ class AchievesModel extends BaseModel
     ];
 
     const ATTRIBUTE_LABELS = [
-        self::COMMON_ID_FIELD => "Player's ID",
+        self::COMMON_ID_FIELD => "Player ID",
         self::DATE_ACHIEVED_FIELD => 'Date',
         self::EVENT_TYPE_FIELD => 'Type',
         self::EVENT_PERIOD_FIELD => 'Period',

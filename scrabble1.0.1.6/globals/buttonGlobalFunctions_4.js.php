@@ -274,7 +274,9 @@ function chatButtonFunction() {
 
     let noMsgSpan = '<span id="no_msg_span">';
     if (i == 0) {
-        message += noMsgSpan + '<?= T::S('No messages yet') ?>' + '</span>';
+        message += noMsgSpan
+            + (isYandexAppGlobal() ? '<?= T::S('Enter the query: a-z, * - any letters, ? - ONE any letter') ?>' : '<?= T::S('No messages yet') ?>')
+            + '</span>';
     } else {
         message += noMsgSpan + '</span>';
     }
@@ -282,19 +284,27 @@ function chatButtonFunction() {
     let radioButtons = message + '';
 
     let isSelectedPlaced = false;
-    if (ochki_arr.length > 1) {
-        radioButtons += '<div style="font-size: 70%;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="chatall" name="chatTo" value="all" checked> <label class="form-check-label" for="chatall"><?= T::S('For everyone') ?></label></div>';
-        isSelectedPlaced = true;
-    }
-
-    for (k in ochki_arr) {
-        if (k != myUserNum) {
-            radioButtons += '<div style="font-size: 70%;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_' + (k == 0 ? '0' : k) + '" name="chatTo" value="' + (k == 0 ? '0' : k) + '" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_' + (k == 0 ? '0' : k) + '"><?= T::S('To Player') ?>' + (parseInt(k, 10) + 1) + '</label></div>';
+    if(!isYandexAppGlobal()) {
+        if (ochki_arr.length > 1) {
+            radioButtons += '<div style="font-size: 70%;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="chatall" name="chatTo" value="all" checked> <label class="form-check-label" for="chatall"><?= T::S(
+                'For everyone'
+            ) ?></label></div>';
             isSelectedPlaced = true;
         }
-    }
 
-    radioButtons += '<div style="font-size: 70%;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_words" name="chatTo" value="words" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_words"><?= T::S('Word matching') ?></label></div>';
+        for (k in ochki_arr) {
+            if (k != myUserNum) {
+                radioButtons += '<div style="font-size: 70%;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_' + (k == 0 ? '0' : k) + '" name="chatTo" value="' + (k == 0 ? '0' : k) + '" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_' + (k == 0 ? '0' : k) + '"><?= T::S(
+                    'To Player'
+                ) ?>' + (parseInt(k, 10) + 1) + '</label></div>';
+                isSelectedPlaced = true;
+            }
+        }
+
+        radioButtons += '<div style="font-size: 70%;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_words" name="chatTo" value="words" ' + (isSelectedPlaced ? '' : ' checked ') + '> <label class="form-check-label" for="to_words"><?= T::S('Word matching') ?></label></div>';
+    } else {
+        radioButtons += '<div style="display: none; font-size: 70%;" class="form-check form-check-inline"><input class="form-check-input" type="radio" id="to_words" name="chatTo" value="words" checked> <label class="form-check-label" for="to_words"><?= T::S('Word matching') ?></label></div>';
+    }
 
     let textInput = '<div class="input-group input-group-lg">  <div class="input-group-prepend"></div>  <input type="text" id="chattext" class="form-control" name="messageText"></div>';
 
@@ -311,7 +321,8 @@ function chatButtonFunction() {
                     )
                     : ''
             )
-            + '<h5><?= T::S('Send an in-game message') ?>',
+            + '<h5>&nbsp;'
+            + (isYandexAppGlobal() ? '<?= T::S('Word selection') ?>' : '<?= T::S('Send an in-game message') ?>'),
         message: '<form onsubmit="return false" id="myChatForm">' + radioButtons + textInput + '</form>',
         locale: 'ru',
         size: 'large',
@@ -387,34 +398,36 @@ function chatButtonFunction() {
                     return true;
                 }
             },
-            complain: {
-                label: '<?= T::S('Appeal') ?>',
-                className: hasIncomingMessages ? 'btn-danger' : 'btn-light',
-                callback: function () {
-                    if (hasIncomingMessages) {
-                        fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
-                            .then((data) => {
-                                if (data == '')
-                                    var responseText = '<?= T::S('Error') ?>';
-                                else
-                                    var responseText = data['message'];
-                                dialog2 = bootbox.alert({
-                                    message: responseText,
-                                    size: 'small',
-                                    className: 'modal-settings modal-profile text-white',
+            ...(!isYandexAppGlobal() && {
+                complain: {
+                    label: '<?= T::S('Appeal') ?>',
+                    className: hasIncomingMessages ? 'btn-danger' : 'btn-light',
+                    callback: function () {
+                        if (hasIncomingMessages) {
+                            fetchGlobal(COMPLAIN_SCRIPT, '', $(".bootbox-body #myChatForm").serialize())
+                                .then((data) => {
+                                    if (data == '')
+                                        var responseText = '<?= T::S('Error') ?>';
+                                    else
+                                        var responseText = data['message'];
+                                    dialog2 = bootbox.alert({
+                                        message: responseText,
+                                        size: 'small',
+                                        className: 'modal-settings modal-profile text-white',
+                                    });
+                                    setTimeout(
+                                        function () {
+                                            dialog2.find(".bootbox-close-button").trigger("click");
+                                        }
+                                        , 5000
+                                    );
                                 });
-                                setTimeout(
-                                    function () {
-                                        dialog2.find(".bootbox-close-button").trigger("click");
-                                    }
-                                    , 5000
-                                );
-                            });
-                    }
+                        }
 
-                    return false;
+                        return false;
+                    }
                 }
-            }
+            }),
         }
     });
 }
