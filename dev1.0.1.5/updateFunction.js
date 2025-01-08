@@ -1,10 +1,11 @@
 //
 function (time, delta) {
 
-    if (requestSended && ((new Date()).getTime() - requestTimestamp > normalRequestTimeout)) {
+    dateGetTime = (new Date()).getTime();
+    if (isUserBlockActive && requestSended && (dateGetTime - requestTimestamp > normalRequestTimeout)) {
         noNetworkImg.visible = true;
-        noNetworkImg.alpha = ((new Date()).getTime() - requestTimestamp) < (normalRequestTimeout * 2)
-            ? ((new Date()).getTime() - requestTimestamp - normalRequestTimeout) / 1000
+        noNetworkImg.alpha = (dateGetTime - requestTimestamp) < (normalRequestTimeout * 2)
+            ? (dateGetTime - requestTimestamp - normalRequestTimeout) / 1000
             : 1;
     } else {
         noNetworkImg.visible = false;
@@ -33,6 +34,7 @@ function (time, delta) {
         }
         newCells.splice(15, 1);
     }
+
     var flor = Math.floor(time / 1000);
     //if ( (Math.random() > (1-(1/gameStates[gameState]['refresh']/60))) || (queryNumber == 1) ) {
     if (

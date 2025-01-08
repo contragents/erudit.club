@@ -98,6 +98,7 @@ var gameStates = {
             showStickyBannerYandex();
             tWaiting = 0;
             isUserBlockActive = false;
+            isOpponentBlockActive = false;
             winScore = false;
             gameBid = false;
 
@@ -1451,24 +1452,26 @@ function userScores(data) {
                 buttonSetModeGlobal(players, 'youBlock', gameState === MY_TURN_STATE ? ALARM_MODE : OTJAT_MODE);
             } else {
                 let playerBlockName = 'player' + (+k + 1) + 'Block';
+                let opponentBlock = players[playerBlockName].svgObject;
 
-                if (!players[playerBlockName].svgObject.visible) {
-                    players[playerBlockName].svgObject.setVisible(true);
+                if (!opponentBlock.visible) {
+                    opponentBlock.setVisible(true);
                 }
 
                 displayScoreGlobal(data['score_arr'][k], playerBlockName, false);
                 buttonSetModeGlobal(players, playerBlockName, k == data['activeUser'] ? ALARM_MODE : OTJAT_MODE);
 
-                if (players[playerBlockName].svgObject.alpha < 1) {
-                    players[playerBlockName].svgObject.setAlpha(1);
+                if (opponentBlock.alpha < 1) {
+                    opponentBlock.setAlpha(1);
                 }
 
                 if (('userNames' in data) && (k in data['userNames']) && (data['userNames'][k] === '')) {
-                    players[playerBlockName].svgObject.setAlpha(INACTIVE_USER_ALPHA);
+                    opponentBlock.setAlpha(INACTIVE_USER_ALPHA);
                 }
 
-                if (noNetworkImgOpponent.x == 200 && noNetworkImgOpponent.y == 200 && (+k < 2)) {
-                    let opponentBlock = players[playerBlockName].svgObject;
+                if (!isOpponentBlockActive && (+k < 2)) {
+                    isOpponentBlockActive = true;
+
                     noNetworkImgOpponent.setScale(opponentBlock.height / 232 / 4);
                     noNetworkImgOpponent.x = opponentBlock.x + opponentBlock.width / 2 + noNetworkImgOpponent.displayWidth / 2;
                     noNetworkImgOpponent.y = opponentBlock.y;

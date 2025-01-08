@@ -20,4 +20,12 @@ var config = {
         maxRetries: 10, // from 3.85 version - using in Yandex version
         // imageLoadType: 'XHR',    // 'HTMLImageElement'
     },
+    physics: {
+        fps: {
+            max: 30,
+            min: 24,
+            target: 30,
+            //forceSetTimeOut: true,
+        }
+    },
 };

@@ -76,6 +76,7 @@ var commonIdHash = false;
 // vars initializing in chooseGame state
 var tWaiting = false;
 var isUserBlockActive = false;
+var isOpponentBlockActive = false;
 var winScore = false;
 var gameBid = false;
 var playerScores = {
