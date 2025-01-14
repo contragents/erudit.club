@@ -6,7 +6,7 @@ if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] != '') {
 }
 
 if (!isset($_COOKIE['erudit_user_session_ID'])) {
-    $_COOKIE = Cookie::setGetCook();
-    print json_encode(['gameState' => 'cookieTest', 'cookie' => $_COOKIE[Cookie::COOKIE_NAME] ?? '']);
+    $_COOKIE = CookieErudit::setGetCook();
+    print json_encode(['gameState' => 'cookieTest', 'cookie' => $_COOKIE[CookieErudit::COOKIE_NAME] ?? '']);
     exit();
 }

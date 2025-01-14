@@ -78,7 +78,7 @@ class Cookie
         if (self::createCookie(
             self::COOKIE_NAME,
             $cook,
-            Cookie::TTL,
+            CookieErudit::TTL,
             '/',
             '',
             true,

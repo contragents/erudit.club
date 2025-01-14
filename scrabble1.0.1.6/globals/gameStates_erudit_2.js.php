@@ -6,16 +6,16 @@ var gameStates = {
         action: function (data) {
             useLocalStorage = true;
             if(localStorage != 'undefined') {
-                if (!('<?= Cookie::COOKIE_NAME ?>' in localStorage)) {
-                    localStorage['<?= Cookie::COOKIE_NAME ?>'] = data['cookie'];
-                    if (localStorage['<?= Cookie::COOKIE_NAME ?>'] === data['cookie']) {
-                        cookieStored = localStorage['<?= Cookie::COOKIE_NAME ?>'];
+                if (!('<?= CookieErudit::COOKIE_NAME ?>' in localStorage)) {
+                    localStorage['<?= CookieErudit::COOKIE_NAME ?>'] = data['cookie'];
+                    if (localStorage['<?= CookieErudit::COOKIE_NAME ?>'] === data['cookie']) {
+                        cookieStored = localStorage['<?= CookieErudit::COOKIE_NAME ?>'];
                     } else {
-                        setLocalStorageValue('<?= Cookie::COOKIE_NAME ?>', data['cookie']);
+                        setLocalStorageValue('<?= CookieErudit::COOKIE_NAME ?>', data['cookie']);
                     }
                 }
             } else {
-                setLocalStorageValue('<?= Cookie::COOKIE_NAME ?>', data['cookie']);
+                setLocalStorageValue('<?= CookieErudit::COOKIE_NAME ?>', data['cookie']);
             }
 
             queryNumber = 1;
@@ -544,12 +544,12 @@ var gameStates = {
                                                         '<?= T::S('COIN Balance') ?>')
                                                     .replaceAll('{{Claim}}', '<?= T::S('Claim') ?>') // Забрать
                                                     .replaceAll('{{Name}}', '<?= T::S('Name') ?>')
-                                                    .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
-                                                    .replaceAll('{{cookie}}', profileData.cookie)
-                                                    /* хз зачем
+                                                    /*.replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
+                                                    .replaceAll('{{cookie}}', profileData.cookie)*/
+
                                                     .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE[0].value)
                                                     .replaceAll('{{cookie}}', profileData.cookie[0].value)
-                                                    */
+
                                                     .replaceAll('{{common_id}}', profileData.common_id)
                                                     .replaceAll('{{name}}', profileData.name)
                                                     .replaceAll('{{imageUrl}}', profileData.imageUrl)
@@ -1572,8 +1572,12 @@ function RobokassaPaymentGlobal(actionType) {
         };
         orderParams['quickpay-form'] = 'button';
 
-        fetchGlobalMVC('mvc/pay/pay', '', getFormData(orderParams))
+        fetch('/mvc/pay/pay', {
+            method: "POST",
+            body: getFormData(orderParams),
+        }).then(response => response.json())
             .then(result => {
+                console.log('Success:', result);
                 if ('location' in result) {
                     location.href = result.location;
                 }

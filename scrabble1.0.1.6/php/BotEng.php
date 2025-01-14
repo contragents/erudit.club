@@ -41,7 +41,7 @@ class BotEng
         while ((date('U') - $start_script_time) < $script_work_time) {
             if ($Bot = Cache::lpop(static::BOT_GAMES)) {
                 static::$botname = $Bot;
-                $_COOKIE[Cookie::COOKIE_NAME] = $Bot;
+                $_COOKIE[CookieErudit::COOKIE_NAME] = $Bot;
                 print_r($_COOKIE);
                 $resp = ['gameState' => 1];
                 $zaprosNum = 3;
@@ -151,7 +151,7 @@ class BotEng
             "http" => [
                     "method" => (!empty($post)) ? "POST" : "GET",
                     "header" => "Accept-language: en\r\n"
-                        . "Cookie: " . Cookie::COOKIE_NAME . "=$cookie\r\n"
+                        . "Cookie: " . CookieErudit::COOKIE_NAME . "=$cookie\r\n"
                         . ($post ? "Content-Type: application/x-www-form-urlencoded\r\n" : ''),
                 ]
                 + ((!empty($post)) ? ['content' => http_build_query($post)] : [])
@@ -176,7 +176,7 @@ class BotEng
     {
         $resp = self::makeRequest(
             static::CHANGE_FISHKI_SCRIPT,
-            $_COOKIE[Cookie::COOKIE_NAME],
+            $_COOKIE[CookieErudit::COOKIE_NAME],
             ['lang' => static::$lang]
         );
 
@@ -205,7 +205,7 @@ class BotEng
 
                 $resp = self::makeRequest(
                     static::SUBMIT_SCRIPT,
-                    $_COOKIE[Cookie::COOKIE_NAME],
+                    $_COOKIE[CookieErudit::COOKIE_NAME],
                     ['lang' => static::$lang],
                     ['cells' => json_encode($desk)]
                 );

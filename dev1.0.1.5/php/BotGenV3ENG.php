@@ -61,7 +61,7 @@ class BotGenV3ENG
     private function startGame($botName)
     {
         //Не будем анализировать ответы!)) - просто новая игра
-        $_COOKIE[Cookie::COOKIE_NAME] = $botName;
+        $_COOKIE[CookieErudit::COOKIE_NAME] = $botName;
         $_GET['lang'] = static::LANG;
         ob_start();
         $resp = include __DIR__ . '/status_checker.php';

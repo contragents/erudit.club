@@ -140,7 +140,7 @@ class Game
         $this->activityTimeout = $this->config['activityTimeout'];
         $this->chisloFishek = $this->config['chisloFishek'];
 
-        $this->User = $this->validateCookie($_COOKIE[Cookie::COOKIE_NAME]);
+        $this->User = $this->validateCookie($_COOKIE[CookieErudit::COOKIE_NAME]);
 
         $this->commonId = Tg::$commonId // авторизован через Телеграм или...
             ?? (Yandex::$commonId // авторизован через Яндекс или...
@@ -440,7 +440,7 @@ class Game
             return $incomingCookie;
         } elseif (!isset($_SERVER['HTTP_COOKIE'])) {
             return ($sintCookie = (md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'])));
-        } elseif (stristr($_SERVER['HTTP_COOKIE'], Cookie::COOKIE_NAME) === false) {
+        } elseif (stristr($_SERVER['HTTP_COOKIE'], CookieErudit::COOKIE_NAME) === false) {
             return ($sintCookie = (md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'])));
         }
 

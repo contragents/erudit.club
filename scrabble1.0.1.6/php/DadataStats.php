@@ -3,7 +3,7 @@
 namespace Dadata;
 
 use \Cache;
-use Cookie;
+use CookieErudit;
 
 class Stats
 {
@@ -46,12 +46,12 @@ class Stats
 
     public static function saveStats()
     {
-        if (strpos($_COOKIE[Cookie::COOKIE_NAME], 'bot') !== false) {
+        if (strpos($_COOKIE[CookieErudit::COOKIE_NAME], 'bot') !== false) {
             return;
         }
 
         // Учитываем статистику только 1 раз для куки (1 раз за игру)
-        if (self::incStat(self::COOKIE_KEY . $_COOKIE[Cookie::COOKIE_NAME], self::TTLS['cookie']) > 1) {
+        if (self::incStat(self::COOKIE_KEY . $_COOKIE[CookieErudit::COOKIE_NAME], self::TTLS['cookie']) > 1) {
             return;
         }
 

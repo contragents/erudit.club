@@ -9,8 +9,8 @@ $cookie = $_GET['cooki'];
 
 
 if ($cookie) {
-    $_SERVER['HTTP_COOKIE'] = Cookie::COOKIE_NAME . "=$cookie";
-    $_COOKIE = [Cookie::COOKIE_NAME => $cookie];
+    $_SERVER['HTTP_COOKIE'] = CookieErudit::COOKIE_NAME . "=$cookie";
+    $_COOKIE = [CookieErudit::COOKIE_NAME => $cookie];
 }
 
 include_once '../cors.php';

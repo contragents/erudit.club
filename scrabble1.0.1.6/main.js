@@ -28,7 +28,7 @@ var UIScene = new Phaser.Class({
     //<?php include('updateFunction.js')?>
 });
 
-//<?php include('globalVars.js.php')?>
+//<?php include('globalVars_erudit_2.js.php')?>
 
 //<?php include('config.js')?>
 
@@ -46,7 +46,5 @@ document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('dragstart', event => {
     if (event.target.tagName === 'IMG') event.preventDefault();
 });
-
-
 
 //<?php include('ysdk_4.js')?>

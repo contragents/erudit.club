@@ -2,7 +2,7 @@
 function (time, delta) {
 
     dateGetTime = (new Date()).getTime();
-    if (isUserBlockActive && requestSended && (dateGetTime - requestTimestamp > normalRequestTimeout)) {
+    if (requestSended && (dateGetTime - requestTimestamp > normalRequestTimeout)) {
         noNetworkImg.visible = true;
         noNetworkImg.alpha = (dateGetTime - requestTimestamp) < (normalRequestTimeout * 2)
             ? (dateGetTime - requestTimestamp - normalRequestTimeout) / 1000

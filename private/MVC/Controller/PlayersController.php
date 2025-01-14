@@ -72,7 +72,7 @@ class PlayersController extends BaseController
 
         $commonId = self::$Request[self::COMMON_ID_PARAM] ?? false;
 
-        if($commonId && PlayerModel::validateCommonIdByCookie($commonId, $_COOKIE[Cookie::COOKIE_NAME] ?? 'aaabbbccc')) {
+        if($commonId && PlayerModel::validateCommonIdByCookie($commonId, $_COOKIE[CookieErudit::COOKIE_NAME] ?? 'aaabbbccc')) {
             if (in_array($hide, self::PARAM_VALUES[self::HIDE_PARAM])) {
                 $user = UserModel::getOneO($commonId, true);
 

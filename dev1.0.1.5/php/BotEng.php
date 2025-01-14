@@ -28,7 +28,7 @@ class BotEng
         $botTimes = [];
         while ((date('U') - $start_script_time) < $script_work_time) {
             if ($Bot = Cache::lpop(static::BOT_GAMES)) {
-                $_COOKIE[Cookie::COOKIE_NAME] = $Bot;
+                $_COOKIE[CookieErudit::COOKIE_NAME] = $Bot;
 
                 $resp = ['gameState' => 1];
                 $zaprosNum = 3;

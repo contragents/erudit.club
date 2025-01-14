@@ -4,10 +4,10 @@ header('Ref: ' . $_SERVER['HTTP_REFERER'] ?? 'NA');
 
 include_once __DIR__ . '/autoload_helper.php';
 
-if (!isset($_COOKIE[Cookie::COOKIE_NAME])) {
-    $_COOKIE = Cookie::setGetCook();
+if (!isset($_COOKIE[CookieErudit::COOKIE_NAME])) {
+    $_COOKIE = CookieErudit::setGetCook();
 } elseif (rand(1, 100) <= 2) {
-    $_COOKIE = Cookie::setGetCook($_COOKIE[Cookie::COOKIE_NAME]);
+    $_COOKIE = CookieErudit::setGetCook($_COOKIE[CookieErudit::COOKIE_NAME]);
 }
 
 @ob_clean();

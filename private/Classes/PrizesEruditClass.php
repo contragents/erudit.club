@@ -55,7 +55,7 @@ class PrizesErudit
 
     public static function playerCurrentRecords($cookie = false)
     {
-        $cookie = $cookie ?: $_COOKIE[Cookie::COOKIE_NAME];
+        $cookie = $cookie ?: $_COOKIE[CookieErudit::COOKIE_NAME];
         $allRecords = Cache::hgetall(static::ALL_RECORDS) ?: [];
         $records = [];
 
@@ -214,7 +214,7 @@ class PrizesErudit
             $eventPeriod,
             [
                 'common_id' => $commonId,
-                'cookie' => $cookie ?: $_COOKIE[Cookie::COOKIE_NAME],
+                'cookie' => $cookie ?: $_COOKIE[CookieErudit::COOKIE_NAME],
                 'value' => $eventValue,
                 'word' => $word,
                 'record_date' => date('U'),
@@ -257,7 +257,7 @@ class PrizesErudit
             static::ALL_RECORDS,
             $eventType . '-' . $eventPeriod,
             [
-                'cookie' => $cookie ? $cookie : $_COOKIE[Cookie::COOKIE_NAME],
+                'cookie' => $cookie ? $cookie : $_COOKIE[CookieErudit::COOKIE_NAME],
                 'value' => $eventValue,
                 'word' => $word,
                 'record_date' => date('U'),

@@ -122,7 +122,7 @@ function setPlayerName()
 
 function avatarUpload()
 {
-    print Dadata\Players::avatarUpload($_FILES, Tg::$tgUser['user']['id'] ?? (Yandex::$yandexUser ?? $_COOKIE[Cookie::COOKIE_NAME]));
+    print Dadata\Players::avatarUpload($_FILES, Tg::$tgUser['user']['id'] ?? (Yandex::$yandexUser ?? $_COOKIE[CookieErudit::COOKIE_NAME]));
 }
 
 function setAvatarUrl()

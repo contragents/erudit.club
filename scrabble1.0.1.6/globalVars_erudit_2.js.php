@@ -1,4 +1,3 @@
-
 //<?php $lang = T::$lang = T::GAME_MODE_LANG[$gameMode]; ?>
 
 var lang = '<?= T::$lang ?>';
@@ -268,13 +267,13 @@ var pageActive = 'visible';
 var fullImgID = false;
 var fullImgWidth = 0;
 
-const FALL_BACK_COOKIE = '<?= COOKIE::getPersonalCookie() ?>';
+const FALL_BACK_COOKIE = '<?= CookieErudit::getPersonalCookie() ?>';
 var cookieStored = false;
 var useLocalStorage = false;
 if(localStorage != 'undefined') {
-    useLocalStorage = !!localStorage.<?= Cookie::COOKIE_NAME ?>;
+    useLocalStorage = !!localStorage.<?= CookieErudit::COOKIE_NAME ?>;
     if (useLocalStorage) {
-        cookieStored = localStorage.<?= Cookie::COOKIE_NAME ?>;
+        cookieStored = localStorage.<?= CookieErudit::COOKIE_NAME ?>;
     }
 }
 var useYandexStorage = false;
@@ -285,7 +284,7 @@ var instruction = `<?= T::S('faq_rules') ?>`;
 
 //<?php include('globals/tgGlobalFunction.js')?>
 //<?php include('globals/buttonSettingsGlobal_1.js.php')?>
-//<?php include('globals/gameStates_1.js.php')?>
+//<?php include('globals/gameStates_erudit_2.js.php')?>
 //<?php include('globals/letterPrices.js')?>
 //<?php include('globals/rusLetters.js')?>
 //<?php include('globals/wav.js')?>

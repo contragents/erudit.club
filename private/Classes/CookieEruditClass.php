@@ -1,7 +1,7 @@
 <?php
 
 
-class Cookie
+class CookieErudit
 {
     // Проблема со сроком жизни Куки - не более 400 дней по правилам Хрома - перезаписываем куки игроку каждые 50 запросов
     const COOKIE_NAME = 'erudit_user_session_ID';
@@ -78,7 +78,7 @@ class Cookie
         if (self::createCookie(
             self::COOKIE_NAME,
             $cook,
-            Cookie::TTL,
+            CookieErudit::TTL,
             '/',
             '',
             true,
@@ -92,11 +92,10 @@ class Cookie
 
     public static function getPersonalCookie(): string
     {
-        return md5($_SERVER['REMOTE_ADDR']
-                   . $_SERVER['REMOTE_HOST']
-                   . $_SERVER['HTTP_ACCEPT']
-                  . $_SERVER['HTTP_ACCEPT_CHARSET']
+        return @md5($_SERVER['REMOTE_ADDR']
+                   . ($_SERVER['REMOTE_HOST'] ?? '')
+                   . ($_SERVER['HTTP_ACCEPT'] ?? '')
+                  . ($_SERVER['HTTP_ACCEPT_CHARSET'] ?? '')
         );
     }
-
 }
