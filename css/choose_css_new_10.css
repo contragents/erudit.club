@@ -2647,3 +2647,17 @@ body {
 img {
     pointer-events: none;
 }
+
+/* CLUB-427 */
+html {
+    background-color: #719998;
+}
+
+:-webkit-full-screen, :fullscreen, :-ms-fullscreen, :-moz-full-screen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background: none;
+}
+/* CLUB-427 END */
