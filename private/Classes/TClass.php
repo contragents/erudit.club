@@ -851,7 +851,9 @@ class T
         'score points' => [
             self::RU_LANG => 'очков'
         ],
-
+        'Error sending message' => [
+            self::RU_LANG => 'Ошибка отправки сообщения'
+        ],
         "Asking for adversaries' approval." => [
             self::RU_LANG => "Запрашиваем подтверждение соперников."
         ],

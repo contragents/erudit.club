@@ -2647,6 +2647,7 @@ body {
 img {
     pointer-events: none;
 }
+/* CLUB-421 END */
 
 /* CLUB-427 */
 html {

@@ -544,8 +544,6 @@ var gameStates = {
                                                         '<?= T::S('COIN Balance') ?>')
                                                     .replaceAll('{{Claim}}', '<?= T::S('Claim') ?>') // Забрать
                                                     .replaceAll('{{Name}}', '<?= T::S('Name') ?>')
-                                                    /*.replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE)
-                                                    .replaceAll('{{cookie}}', profileData.cookie)*/
 
                                                     .replaceAll('{{MAX_FILE_SIZE}}', profileData.MAX_FILE_SIZE[0].value)
                                                     .replaceAll('{{cookie}}', profileData.cookie[0].value)
@@ -1326,7 +1324,6 @@ function commonCallback(data) {
     }
 
     if ('timeLeft' in data) {
-        vremia.text = data['timeLeft'];
         vremiaMinutes = data['minutesLeft'];
         vremiaSeconds = data['secondsLeft'];
 

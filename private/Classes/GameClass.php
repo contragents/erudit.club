@@ -92,8 +92,7 @@ class Game
 
     const INIT_GAME_STATE = 'initGame';
     const INIT_RATING_GAME_STATE = 'initRatingGame';
-    const INIT_COIN_GAME_STATE = 'initCoinGame';
-    const INIT_STATES = [self::INIT_GAME_STATE, self::INIT_RATING_GAME_STATE, self::INIT_COIN_GAME_STATE];
+    const INIT_STATES = [self::INIT_GAME_STATE, self::INIT_RATING_GAME_STATE];
 
     const BOT_ERRORS_KEY = 'erudit_bot_errors';
     const LOG_BOT_ERRORS_KEY = 'erudit_bot_log_errors';
@@ -244,7 +243,6 @@ class Game
 
     public function onlineCoinPlayers()
     {
-        //if (!($coinPlayers = Cache::get(static::NUM_COINS_PLAYERS_KEY)) || self::$gameName === self::SCRABBLE) {
         if (empty(self::$players)) {
             $this->getPlayers();
         }
@@ -282,7 +280,6 @@ class Game
             $this->ratingsCacheTimeout,
             $coinPlayers
         );
-        //}
 
         return $coinPlayers;
     }
@@ -322,13 +319,13 @@ class Game
             }
 
             $rangedOnlinePlayers = [
-                0 => 10, //0
-                1900 => 9,
-                2000 => 6,
-                2100 => 4,
-                2200 => 3,
-                2300 => 2,
-                2400 => 1,
+                0 => 5, //0
+                1900 => 0,
+                2000 => 0,
+                2100 => 0,
+                2200 => 0,
+                2300 => 0,
+                2400 => 0,
                 2500 => 0,
                 2600 => 0,
                 2700 => 0
@@ -717,7 +714,7 @@ class Game
             'prompt' => '',
             'type' => 'hidden',
             'inputName' => 'cookie',
-            'value' => $this->User,
+            'value' => $this->User, // todo что если это пользователь яндекса? или ТГ
         ];
         $message['form'][] = [
             'prompt' => '',
@@ -1029,18 +1026,14 @@ class Game
             $bannedBy = BanModel::bannedBy($commonIdFrom ?: 0);
 
             $this->gameStatus['chatLog'][] = [$this->numUser, $toNumUser, $message];
-            if ($toNumUser !== 'all' && $toNumUser !== 'adv') {
-                {
-                }
-            }
 
             if ($toNumUser == 'all') {
                 foreach ($this->gameStatus['users'] as $num => $User) {
                     if ($num == $this->numUser) {
-                        $this->gameStatus['users'][$num]['chatStack'][] = ['Вы', 'всем: ' . $message];
+                        $this->gameStatus['users'][$num]['chatStack'][] = [T::S('You'), T::S('to all: ') . $message];
                     } elseif (!isset($bannedBy[PlayerModel::getCommonID($User['ID']) ?: 0])) {
                         $this->gameStatus['users'][$num]['chatStack'][] = [
-                            'From player' . ($this->numUser + 1) . T::S(' (to all):'),
+                            T::S('From player') . ($this->numUser + 1) . T::S(' (to all):'),
                             $message
                         ];
                     }
