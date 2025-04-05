@@ -205,7 +205,7 @@ function showFullImage(idImg, width, oldWidth = 198) {
 
 function mergeTheIDs(oldKey, commonID) {
     if (oldKey.trim() == '') {
-        let resp = {result: 'error', message: 'Задано пустое значение'};
+        let resp = {result: 'error', message: '<?= T::S('Empty value is forbidden') ?>'};
         showCabinetActionResult(resp);
 
         return;
@@ -244,7 +244,7 @@ function deleteBan(commonID) {
 
 function savePlayerName(name, commonIdParam = '') {
     if (name.trim() == '') {
-        let resp = {result: 'error', message: 'Задано пустое значение'};
+        let resp = {result: 'error', message: '<?= T::S('Empty value is forbidden') ?>'};
         showCabinetActionResult(resp);
 
         return;
@@ -259,13 +259,13 @@ function savePlayerName(name, commonIdParam = '') {
         });
 }
 
-function savePlayerAvatar(url, commonIdParam) {
+function savePlayerAvatar() {
     // складируем форму в ......форму))
     const checkElement = document.getElementById("player_avatar_file");
     if (!checkElement.checkValidity()) {
         showCabinetActionResult({
             result: 'error',
-            message: 'Ошибка! Выберите файл-картинку размером не более <?= round(Dadata\Players::MAX_UPLOAD_SIZE / 1024 / 1024, 2); ?>MB'
+            message: '<?= T::S('Error! Choose image file with the size not more than') ?> <?= round(Dadata\Players::MAX_UPLOAD_SIZE / 1024 / 1024, 2); ?>MB'
         });
 
         return false;
@@ -391,7 +391,7 @@ async function getStatPageGlobal(userId = commonId) {
 
 function savePlayerAvatarUrl(url, commonID) {
     if (url.trim() == '') {
-        let resp = {result: 'error', message: 'Задано пустое значение'};
+        let resp = {result: 'error', message: '<?= T::S('Empty value is forbidden') ?>'};
         showCabinetActionResult(resp);
 
         return;

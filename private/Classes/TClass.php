@@ -390,6 +390,12 @@ class T
         "Avatar loading" => [
             self::RU_LANG => 'Загрузка Аватара'
         ],
+        'Error! Choose image file with the size not more than' => [
+            self::RU_LANG => 'Ошибка! Выберите файл-картинку размером не более'
+        ],
+        'Empty value is forbidden' => [
+            self::RU_LANG => 'Задано пустое значение',
+        ],
         'Send' => [
             self::RU_LANG => 'Отправить'
         ],
