@@ -20,7 +20,7 @@ class Hints
     const HINT_CACHE_TTL = 12 * 60 * 60;
     const HINT_USER_CACHE_KEY = "erudit.hint_";
     const LAMP_IMG_URL = "img/idea.png";
-    const YANDEX_RATING_URL = "https://yandex.ru/ugcpub/object-digest?app_id=yandex-games&otype=Soft&object=%2Fontoid%2Fygs126941&show_rating=1&view=games";
+    const YANDEX_RATING_URL = "https://yandex.ru/ugcpub/object-digest?app_id=yandex-games&otype=Soft&object=%2Fontoid%2Fygs393661&show_rating=1&view=games";
 
     const TG_GROUP_LINK = [
         'mobile' => 'https://t.me/eruditclub',

@@ -90,21 +90,36 @@ function hideStickyBannerYandex() {
     }
 }
 
-function reportGameIsReadyYandex() {
-    if (isYandexAppGlobal() && !!ysdk) {
+// SUD-42
+async function reportGameIsReadyYandex() {
+    if (!isYandexAppGlobal()) {
+        return;
+    }
+
+    if (!!ysdk) {
         ysdk.features.LoadingAPI?.ready();
+    } else {
+        setTimeout(() => reportGameIsReadyYandex(), 500);
     }
 }
 
 function reportGameStartYandex() {
-    if (isYandexAppGlobal() && !!ysdk) {
+    if (!isYandexAppGlobal()) {
+        return;
+    }
+
+    if (!!ysdk) {
         ysdk.features.GameplayAPI?.start();
+        hideStickyBannerYandex();
+    } else {
+        setTimeout(() => reportGameStartYandex(), 500);
     }
 }
 
 function reportGameStopYandex() {
     if (isYandexAppGlobal() && !!ysdk) {
         ysdk.features.GameplayAPI?.stop();
+        showStickyBannerYandex();
     }
 }
 

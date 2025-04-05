@@ -95,7 +95,6 @@ var gameStates = {
         message: '',
         noDialog: true,
         action: function (data) {
-            showStickyBannerYandex();
             tWaiting = 0;
             isUserBlockActive = false;
             isOpponentBlockActive = false;
@@ -628,7 +627,6 @@ var gameStates = {
                         label: '<?= T::S('Start') ?>',
                         className: 'btn-primary',
                         callback: function () {
-                            hideStickyBannerYandex();
                             reportGameStartYandex();
 
                             activateFullScreenForMobiles();
@@ -1155,24 +1153,23 @@ function commonCallback(data) {
         }
         if (canOpenDialog) {
             if (gameState == 'initGame' || gameState == 'initRatingGame' || gameState == 'initCoinGame') {
-                dialog = bootbox.confirm({
+                dialog = bootbox.dialog({
                     message: ('comments' in data) ? data['comments'] : gameStates[gameState]['message'],
                     size: 'small',
                     className: 'modal-settings modal-profile text-white',
+                    onEscape: false,
+                    closeButton: false,
                     buttons: {
-                        confirm: {
-                            label: 'Ok',
-                        },
+                        // SUD-49
                         cancel: {
                             label: '<?= T::S('New game') ?>',
-                            className: 'btn-danger'
+                            className: 'btn-danger',
+                            callback: function () {
+                                newGameButtonFunction(true);
+                            }
                         }
                     },
-                    callback: function (result) {
-                        if (!result) {
-                            newGameButtonFunction(true);
-                        }
-                    }
+
                 });
                 if ('gameWaitLimit' in data) {
                     dialog.init(function () {
@@ -1244,6 +1241,13 @@ function commonCallback(data) {
             } else if (!('noDialog' in gameStates[gameState])) {
                 setTimeout(function () {
                         bootbox.hideAll();
+
+                        // SUD-42
+                        canOpenDialog = true;
+                        canCloseDialog = true;
+                        dialog = false;
+                        // SUD-42 END
+
                         var message = '';
                         var cancelLabel = '<?= T::S('Close in 5 seconds') ?>';
 
