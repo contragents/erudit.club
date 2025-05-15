@@ -7,6 +7,7 @@ document.documentElement.style.setProperty('--choose-file', chooseFile);
 
 const INVITE_FRIEND_PROMPT = '<?= T::getInviteFriendPrompt() ?>';
 const GAME_BOT_URL = '<?= T::PHRASES['game_bot_url'][T::$lang] ?>';
+const SUDOKU_GAME_BOT_URL = 'sudoku_app_bot';
 const LOADING_TEXT = '<?= T::PHRASES['loading_text'][T::$lang] ?>';
 const errorServerMessage = '<?= T::S('Server connecting error. Please try again')?>';
 
@@ -210,7 +211,7 @@ if (windowInnerWidth > windowInnerHeight) {
         var lotokCellStep = 40 * 2;
         var lotokCapacityX = 9;
     } else {
-        var fishkaScale = buttonHeightKoef;
+        fishkaScale = buttonHeightKoef;
         var lotokCellStep = 40 * 2 * buttonHeightKoef;
         var lotokCapacityX = 9;
     }
@@ -282,7 +283,7 @@ var useYandexStorage = false;
 var soundPlayed = false;
 var instruction = `<?= T::S('faq_rules') ?>`;
 
-//<?php include('globals/tgGlobalFunction.js')?>
+//<?php include('globals/tgGlobalFunction.js.php')?>
 //<?php include('globals/buttonSettingsGlobal_1.js.php')?>
 //<?php include('globals/gameStates_erudit_2.js.php')?>
 //<?php include('globals/letterPrices.js')?>

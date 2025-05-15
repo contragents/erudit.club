@@ -713,12 +713,23 @@ var gameStates = {
                             },
                         },
                     }),
-                    ...(isTgBot() && !isYandexAppGlobal() && {
+                    ...(false && isTgBot() && !isYandexAppGlobal() && {
                         invite: {
                             label: '<?= T::S('Invite a friend') ?>',
                             className: 'btn-danger',
                             callback: function () {
                                 shareTgGlobal();
+
+                                return false;
+                            },
+                        },
+                    }),
+                    ...(!isYandexAppGlobal() /*isTgBot() && !isYandexAppGlobal()*/ && {
+                        sudoku: {
+                            label: '<?= T::S('Sudoku with friends') ?>',
+                            className: 'btn-danger',
+                            callback: function () {
+                                sudokuGlobal();
 
                                 return false;
                             },

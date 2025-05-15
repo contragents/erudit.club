@@ -169,6 +169,9 @@ class T
         'Invite a friend' => [
             self::RU_LANG => 'Пригласить друга'
         ],
+        'Sudoku with friends' => [
+            self::RU_LANG => 'Судоку с друзьями'
+        ],
         'you_lost' => [
             self::EN_LANG => 'You lost!',
             self::RU_LANG => 'Вы проиграли!'

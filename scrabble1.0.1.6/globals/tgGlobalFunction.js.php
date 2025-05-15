@@ -17,3 +17,13 @@ function shareTgGlobal() {
         {path_full: shareUrl,}
     );
 }
+
+function sudokuGlobal() {
+    if (!commonId && !isTgBot()) {
+        return;
+    }
+
+    window.location.href = isTgBot()
+        ? ('https://t.me/' + SUDOKU_GAME_BOT_URL)
+        : 'https://5-5.su/sudoku/?common_id=' + commonId + '&common_id_hash=' + commonIdHash;
+}
