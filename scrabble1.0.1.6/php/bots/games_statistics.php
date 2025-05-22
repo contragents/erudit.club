@@ -198,7 +198,7 @@ function addCookie(&$player)
                     date_registered=UNIX_TIMESTAMP(),
                     first_played = UNIX_TIMESTAMP(),
                     rating={$player['rating']},
-                    games_played={$player['games_played']}
+                    games_played={$player[AchievesModel::GAMES_PLAYED]}
                     ON DUPLICATE KEY
                     UPDATE
                     "
@@ -207,7 +207,7 @@ function addCookie(&$player)
             ? "user_id={$player['userID']}, date_registered=UNIX_TIMESTAMP(),"
             : ""
         )
-        . "rating = {$player['rating']}, games_played = {$player['games_played']}";
+        . "rating = {$player['rating']}, games_played = {$player[AchievesModel::GAMES_PLAYED]}";
 
     DB::queryInsert($INSERTCOOKIE);
 }
@@ -242,7 +242,7 @@ function getRatings(&$players, &$gameStatus)
                 $players[$num]['player_id'] = $sel['player_id'];
                 $players[$num]['user_id'] = $sel['user_id'];
                 $players[$num]['found_cookie'] = $sel['cookie'];
-                $players[$num]['games_played'] = $sel['games_played'];
+                $players[$num][AchievesModel::GAMES_PLAYED] = $sel[AchievesModel::GAMES_PLAYED];
 
                 if (!$players[$num]['user_id']) {
                     $UPDATE = "UPDATE erudit.players SET
@@ -275,7 +275,7 @@ function getRatings(&$players, &$gameStatus)
                 $players[$num]['player_id'] = DB::insertID();
                 $players[$num]['user_id'] = $player['userID'];
                 $players[$num]['found_cookie'] = $player['cookie'];
-                $players[$num]['games_played'] = 1;
+                $players[$num][AchievesModel::GAMES_PLAYED] = 1;
             }
         } else {
             $players[$num]['user_id'] = Game::hash_str_2_int($player['cookie']);
@@ -286,7 +286,7 @@ function getRatings(&$players, &$gameStatus)
                 $players[$num]['rating'] = $sel['rating'];
                 $players[$num]['player_id'] = $sel['player_id'];
                 $players[$num]['found_cookie'] = $sel['cookie'];
-                $players[$num]['games_played'] = $sel['games_played'];
+                $players[$num][AchievesModel::GAMES_PLAYED] = $sel[AchievesModel::GAMES_PLAYED];
             } else {
                 $INSERT = "INSERT INTO erudit.players SET
                             cookie='{$player['cookie']}',
@@ -301,7 +301,7 @@ function getRatings(&$players, &$gameStatus)
                 $players[$num]['rating'] = 1700;
                 $players[$num]['player_id'] = DB::insertID();
                 $players[$num]['found_cookie'] = $player['cookie'];
-                $players[$num]['games_played'] = 1;
+                $players[$num][AchievesModel::GAMES_PLAYED] = 1;
             }
         }
         if (isset($gameStatus['users'][$gameStatus[$player['cookie']]]['rating'])) {

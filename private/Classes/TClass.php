@@ -223,11 +223,11 @@ class T
         'record of the day' => [
             self::RU_LANG => 'рекорд дня'
         ],
-        'game_price' => [
+        AchievesModel::GAME_PRICE => [
             self::EN_LANG => 'game points',
             self::RU_LANG => 'очки за игру'
         ],
-        'games_played' => [
+        AchievesModel::GAMES_PLAYED => [
             self::EN_LANG => 'games played',
             self::RU_LANG => 'сыграно партий'
         ],
@@ -237,15 +237,15 @@ class T
         'top' => [
             self::RU_LANG => 'топ'
         ],
-        'turn_price' => [
+        AchievesModel::TURN_PRICE => [
             self::EN_LANG => 'turn points',
             self::RU_LANG => 'очки за ход'
         ],
-        'word_len' => [
+        AchievesModel::WORD_LEN => [
             self::EN_LANG => 'word length',
             self::RU_LANG => 'длинное слово'
         ],
-        'word_price' => [
+        AchievesModel::WORD_PRICE => [
             self::EN_LANG => 'word points',
             self::RU_LANG => 'очки за слово'
         ],

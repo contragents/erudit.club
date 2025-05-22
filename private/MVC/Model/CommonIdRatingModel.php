@@ -1,5 +1,15 @@
 <?php
 
+
+/**
+ * Class CommonIdRatingModel
+ * @property int $_id;
+ * @property int $_rating_erudit
+ * @property int $_rating_scrabble
+ * @property int $_rating_sudoku
+ */
+
+
 class CommonIdRatingModel extends BaseModel
 {
     const TABLE_NAME = 'common_id_rating';
@@ -9,9 +19,13 @@ class CommonIdRatingModel extends BaseModel
 
     const INITIAL_RATING = 1700;
 
+    public ?int $_rating_erudit = null;
+    public ?int $_rating_scrabble;
+    public ?int $_rating_sudoku;
+
     public static function changeUserRating(int $commonId, int $newRating, string $gameName): bool
     {
-        if (self::update($commonId, [self::RATING_FIELD_PREFIX . $gameName => $newRating])){
+        if (self::update($commonId, [self::RATING_FIELD_PREFIX . $gameName => $newRating])) {
             return true;
         } else {
             // 2 options - ratings are equal OR no common_id record present
@@ -51,6 +65,29 @@ class CommonIdRatingModel extends BaseModel
         );
 
         return (int)DB::queryValue($topQuery);
+    }
+
+    /**
+     * @param string $gameName
+     * @param int $top
+     * @param int|null $topMax
+     * @return self[][]
+     */
+    public static function
+    getTopPlayersO(string $gameName, int $top, ?int $topMax = null): array
+    {
+        $rows1 = self::getTopPlayers($gameName, $top, $topMax);
+
+        $res = [];
+
+        foreach ($rows1 as $top => $rows2) {
+            $res[$top] = [];
+            foreach($rows2 as $row) {
+                $res[$top][] = self::arrayToObject($row);
+            }
+        }
+
+        return $res;
     }
 
     /**

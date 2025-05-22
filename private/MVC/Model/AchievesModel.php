@@ -2,6 +2,21 @@
 
 use BaseController as BC;
 
+/**
+ * @property int $_id
+ * @property int $_common_id
+ * @property string $_date_achieved
+ * @property string $_event_type
+ * @property string $_event_period
+ * @property string $_word
+ * @property string $_event_value
+ * @property bool $_is_active
+ * @property float $_reward
+ * @property float $_income
+ * @property int $_game_name_id
+ *
+ **/
+
 class AchievesModel extends BaseModel
 {
     const TABLE_NAME = 'achieves';
@@ -46,6 +61,13 @@ class AchievesModel extends BaseModel
         'win_percent' => '% of wins',
     ];
 
+    public const WORD_LEN = 'word_len';
+    public const GAME_PRICE = 'game_price';
+    public const TURN_PRICE = 'turn_price';
+    public const WORD_PRICE = 'word_price';
+    public const GAMES_PLAYED = 'games_played';
+    public const REF_COUNT = 'ref_count'; // КОличество рефералов (не используется)
+
     public const DAY_PERIOD = 'day';
     public const WEEK_PERIOD = 'week';
     public const MONTH_PERIOD = 'month';
@@ -54,30 +76,30 @@ class AchievesModel extends BaseModel
     public const TOP_TYPE = 'top';
 
     public const PRIZE_TITLES = [
-        'game_price-year' => 'Очки за ИГРУ - Рекорд Года!',
-        'game_price-month' => 'Очки за ИГРУ - Рекорд Месяца!',
-        'game_price-week' => 'Очки за ИГРУ - Рекорд Недели!',
-        'game_price-day' => 'Очки за ИГРУ - Рекорд Дня!',
+        self::GAME_PRICE . '-year' => 'Очки за ИГРУ - Рекорд Года!',
+        self::GAME_PRICE . '-month' => 'Очки за ИГРУ - Рекорд Месяца!',
+        self::GAME_PRICE . '-week' => 'Очки за ИГРУ - Рекорд Недели!',
+        self::GAME_PRICE . '-day' => 'Очки за ИГРУ - Рекорд Дня!',
 
-        'turn_price-year' => 'Очки за ХОД - Рекорд Года!',
-        'turn_price-month' => 'Очки за ХОД - Рекорд Месяца!',
-        'turn_price-week' => 'Очки за ХОД - Рекорд Недели!',
-        'turn_price-day' => 'Очки за ХОД - Рекорд Дня!',
+        self::TURN_PRICE . '-year' => 'Очки за ХОД - Рекорд Года!',
+        self::TURN_PRICE . '-month' => 'Очки за ХОД - Рекорд Месяца!',
+        self::TURN_PRICE . '-week' => 'Очки за ХОД - Рекорд Недели!',
+        self::TURN_PRICE . '-day' => 'Очки за ХОД - Рекорд Дня!',
 
-        'word_price-year' => 'Очки за СЛОВО - Рекорд Года!',
-        'word_price-month' => 'Очки за СЛОВО - Рекорд Месяца!',
-        'word_price-week' => 'Очки за СЛОВО - Рекорд Недели!',
-        'word_price-day' => 'Очки за СЛОВО - Рекорд Дня!',
+        self::WORD_PRICE . '-year' => 'Очки за СЛОВО - Рекорд Года!',
+        self::WORD_PRICE . '-month' => 'Очки за СЛОВО - Рекорд Месяца!',
+        self::WORD_PRICE . '-week' => 'Очки за СЛОВО - Рекорд Недели!',
+        self::WORD_PRICE . '-day' => 'Очки за СЛОВО - Рекорд Дня!',
 
-        'word_len-year' => 'Самое длинное СЛОВО - Рекорд Года!',
-        'word_len-month' => 'Самое длинное СЛОВО - Рекорд Месяца!',
-        'word_len-week' => 'Самое длинное СЛОВО - Рекорд Недели!',
-        'word_len-day' => 'Самое длинное СЛОВО - Рекорд Дня!',
+        self::WORD_LEN . '-year' => 'Самое длинное СЛОВО - Рекорд Года!',
+        self::WORD_LEN . '-month' => 'Самое длинное СЛОВО - Рекорд Месяца!',
+        self::WORD_LEN . '-week' => 'Самое длинное СЛОВО - Рекорд Недели!',
+        self::WORD_LEN . '-day' => 'Самое длинное СЛОВО - Рекорд Дня!',
 
-        'games_played-year' => 'Сыграно ПАРТИЙ - Рекорд Года!',
-        'games_played-month' => 'Сыграно ПАРТИЙ - Рекорд Месяца!',
-        'games_played-week' => 'Сыграно ПАРТИЙ - Рекорд Недели!',
-        'games_played-day' => 'Сыграно ПАРТИЙ - Рекорд Дня!',
+        self::GAMES_PLAYED . '-year' => 'Сыграно ПАРТИЙ - Рекорд Года!',
+        self::GAMES_PLAYED . '-month' => 'Сыграно ПАРТИЙ - Рекорд Месяца!',
+        self::GAMES_PLAYED . '-week' => 'Сыграно ПАРТИЙ - Рекорд Недели!',
+        self::GAMES_PLAYED . '-day' => 'Сыграно ПАРТИЙ - Рекорд Дня!',
     ];
 
     public const PRIZE_LINKS = [
@@ -86,30 +108,30 @@ class AchievesModel extends BaseModel
         'top-week' => 'img/prizes/top_3.svg',
         'top-day' => 'img/prizes/top_10.svg',
 
-        'game_price-year' => BC::BASE_URL . 'img/prizes/yearly/ochki_za_igru_year.svg',
-        'game_price-month' => BC::BASE_URL . 'img/prizes/monthly/ochki_za_igru_month.svg',
-        'game_price-week' => BC::BASE_URL . 'img/prizes/weekly/ochki_za_igru_week.svg',
-        'game_price-day' => BC::BASE_URL . 'img/prizes/daily/ochki_za_igru_day.svg',
+        self::GAME_PRICE . '-year' => BC::BASE_URL . 'img/prizes/yearly/ochki_za_igru_year.svg',
+        self::GAME_PRICE . '-month' => BC::BASE_URL . 'img/prizes/monthly/ochki_za_igru_month.svg',
+        self::GAME_PRICE . '-week' => BC::BASE_URL . 'img/prizes/weekly/ochki_za_igru_week.svg',
+        self::GAME_PRICE . '-day' => BC::BASE_URL . 'img/prizes/daily/ochki_za_igru_day.svg',
 
-        'turn_price-year' => BC::BASE_URL . 'img/prizes/yearly/ochki_za_hod_year.svg',
-        'turn_price-month' => BC::BASE_URL . 'img/prizes/monthly/ochki_za_hod_month.svg',
-        'turn_price-week' => BC::BASE_URL . 'img/prizes/weekly/ochki_za_hod_week.svg',
-        'turn_price-day' => BC::BASE_URL . 'img/prizes/daily/ochki_za_hod_day.svg',
+        self::TURN_PRICE . '-year' => BC::BASE_URL . 'img/prizes/yearly/ochki_za_hod_year.svg',
+        self::TURN_PRICE . '-month' => BC::BASE_URL . 'img/prizes/monthly/ochki_za_hod_month.svg',
+        self::TURN_PRICE . '-week' => BC::BASE_URL . 'img/prizes/weekly/ochki_za_hod_week.svg',
+        self::TURN_PRICE . '-day' => BC::BASE_URL . 'img/prizes/daily/ochki_za_hod_day.svg',
 
-        'word_price-year' => BC::BASE_URL . 'img/prizes/yearly/ochki_za_slovo_year.svg',
-        'word_price-month' => BC::BASE_URL . 'img/prizes/monthly/ochki_za_slovo_month.svg',
-        'word_price-week' => BC::BASE_URL . 'img/prizes/weekly/ochki_za_slovo_week.svg',
-        'word_price-day' => BC::BASE_URL . 'img/prizes/daily/ochki_za_slovo_day.svg',
+        self::WORD_PRICE . '-year' => BC::BASE_URL . 'img/prizes/yearly/ochki_za_slovo_year.svg',
+        self::WORD_PRICE . '-month' => BC::BASE_URL . 'img/prizes/monthly/ochki_za_slovo_month.svg',
+        self::WORD_PRICE . '-week' => BC::BASE_URL . 'img/prizes/weekly/ochki_za_slovo_week.svg',
+        self::WORD_PRICE . '-day' => BC::BASE_URL . 'img/prizes/daily/ochki_za_slovo_day.svg',
 
-        'word_len-year' => BC::BASE_URL . 'img/prizes/yearly/dlinnoe_slovo_year.svg',
-        'word_len-month' => BC::BASE_URL . 'img/prizes/monthly/dlinnoe_slovo_month.svg',
-        'word_len-week' => BC::BASE_URL . 'img/prizes/weekly/dlinnoe_slovo_week.svg',
-        'word_len-day' => BC::BASE_URL . 'img/prizes/daily/dlinnoe_slovo_day.svg',
+        self::WORD_LEN . '-year' => BC::BASE_URL . 'img/prizes/yearly/dlinnoe_slovo_year.svg',
+        self::WORD_LEN . '-month' => BC::BASE_URL . 'img/prizes/monthly/dlinnoe_slovo_month.svg',
+        self::WORD_LEN . '-week' => BC::BASE_URL . 'img/prizes/weekly/dlinnoe_slovo_week.svg',
+        self::WORD_LEN . '-day' => BC::BASE_URL . 'img/prizes/daily/dlinnoe_slovo_day.svg',
 
-        'games_played-year' => BC::BASE_URL . 'img/prizes/yearly/sygrano_partiy_year.svg',
-        'games_played-month' => BC::BASE_URL . 'img/prizes/monthly/sygrano_partiy_month.svg',
-        'games_played-week' => BC::BASE_URL . 'img/prizes/weekly/sygrano_partiy_week.svg',
-        'games_played-day' => BC::BASE_URL . 'img/prizes/daily/sygrano_partiy_day.svg',
+        self::GAMES_PLAYED . '-year' => BC::BASE_URL . 'img/prizes/yearly/sygrano_partiy_year.svg',
+        self::GAMES_PLAYED . '-month' => BC::BASE_URL . 'img/prizes/monthly/sygrano_partiy_month.svg',
+        self::GAMES_PLAYED . '-week' => BC::BASE_URL . 'img/prizes/weekly/sygrano_partiy_week.svg',
+        self::GAMES_PLAYED . '-day' => BC::BASE_URL . 'img/prizes/daily/sygrano_partiy_day.svg',
     ];
 
     const GAMES_STATS_TABLE = 'games_stats';
@@ -128,7 +150,39 @@ class AchievesModel extends BaseModel
     const YOUR_RATING_PROGRESS = 'your_progress';
     public const ACHIEVES_ELEMENT_ID = 'achieves_table';
 
-    //private static ?Game $instance = null;
+    const GOLD_ACHIEVE_TYPE = 'gold';
+    const SILVER_ACHIEVE_TYPE = 'silver';
+    const BRONZE_ACHIEVE_TYPE = 'bronze';
+    const STONE_ACHIEVE_TYPE = 'stone';
+
+    const TOP_TYPES = [
+        1 => self::GOLD_ACHIEVE_TYPE,
+        2 => self::SILVER_ACHIEVE_TYPE,
+        3 => self::BRONZE_ACHIEVE_TYPE,
+        4 => self::STONE_ACHIEVE_TYPE,
+        5 => self::STONE_ACHIEVE_TYPE,
+        6 => self::STONE_ACHIEVE_TYPE,
+        7 => self::STONE_ACHIEVE_TYPE,
+        8 => self::STONE_ACHIEVE_TYPE,
+        9 => self::STONE_ACHIEVE_TYPE,
+        10 => self::STONE_ACHIEVE_TYPE,
+        self::YEAR_PERIOD => self::GOLD_ACHIEVE_TYPE,
+        self::MONTH_PERIOD => self::SILVER_ACHIEVE_TYPE,
+        self::WEEK_PERIOD => self::BRONZE_ACHIEVE_TYPE,
+        self::DAY_PERIOD => self::STONE_ACHIEVE_TYPE,
+    ];
+
+    public ?int $_id = null;
+    public ?int $_common_id = null;
+    public ?string $_date_achieved = null;
+    public ?string $_event_type = null;
+    public ?string $_event_period = null;
+    public ?string $_word = null;
+    public ?string $_event_value = null;
+    public bool $_is_active = false;
+    public ?float $_reward = null;
+    public ?float $_income = null;
+    public ?int $_game_name_id = null;
 
     public static function getDescription(string $eventType, string $eventPeriod, string $gameName = ''): string
     {
@@ -141,13 +195,14 @@ class AchievesModel extends BaseModel
         }
 
         if ($gameName) {
-            $res .= ' ('. T::S('game_name') .')';
+            $res .= ' (' . T::S('game_name') . ')';
         }
 
         return $res;
     }
 
-    public static function getPastAchievesByCommonId(int $commonId) {
+    public static function getPastAchievesByCommonId(int $commonId)
+    {
         $query = ORM::select(
                 [
                     "substring(" . self::DATE_ACHIEVED_FIELD . ",1,10) as " . self::DATE_ACHIEVED_FIELD,
@@ -169,7 +224,8 @@ class AchievesModel extends BaseModel
         return $res;
     }
 
-    public static function getCurrentAchievesByCommonId(int $commonId) {
+    public static function getCurrentAchievesByCommonId(int $commonId)
+    {
         $query = ORM::select(
                 [
                     "substring(" . self::DATE_ACHIEVED_FIELD . ",1,10) as " . self::DATE_ACHIEVED_FIELD,
@@ -190,7 +246,8 @@ class AchievesModel extends BaseModel
         return $res;
     }
 
-    public static function getAchievesByCommonId(int $commonId, int $limit = 10, int $page = 1, array $filters = []) {
+    public static function getAchievesByCommonId(int $commonId, int $limit = 10, int $page = 1, array $filters = [])
+    {
         $query = ORM::select(
                 [
                     "substring(" . self::DATE_ACHIEVED_FIELD . ",1,10) as " . self::DATE_ACHIEVED_FIELD,
@@ -202,18 +259,34 @@ class AchievesModel extends BaseModel
             )
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
             . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[Game::$gameName], true)
-            . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::DAY_PERIOD) : '')
-            . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::WEEK_PERIOD) : '')
-            . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::MONTH_PERIOD) : '')
-            . ($filters[StatsController::NO_GOLD_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::YEAR_PERIOD) : '')
-            .ORM::orderBy(self::ID_FIELD, false)
-            .ORM::limit($limit, ($page - 1) * $limit);
+            . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(
+                    self::EVENT_PERIOD_FIELD,
+                    '!=',
+                    self::DAY_PERIOD
+                ) : '')
+            . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(
+                    self::EVENT_PERIOD_FIELD,
+                    '!=',
+                    self::WEEK_PERIOD
+                ) : '')
+            . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(
+                    self::EVENT_PERIOD_FIELD,
+                    '!=',
+                    self::MONTH_PERIOD
+                ) : '')
+            . ($filters[StatsController::NO_GOLD_PARAM] ?? false ? ORM::andWhere(
+                    self::EVENT_PERIOD_FIELD,
+                    '!=',
+                    self::YEAR_PERIOD
+                ) : '')
+            . ORM::orderBy(self::ID_FIELD, false)
+            . ORM::limit($limit, ($page - 1) * $limit);
 
         $res = DB::queryArray($query);
 
         if (empty($res)) {
             $res = [
-                0=>[
+                0 => [
                     self::DATE_ACHIEVED_FIELD => '',
                     self::EVENT_TYPE_FIELD => '',
                     self::WORD_FIELD => '',
@@ -229,16 +302,37 @@ class AchievesModel extends BaseModel
     {
         return DB::queryValue(
             ORM::select(['count(1)'], self::TABLE_NAME)
-            . ORM::where(self::COMMON_ID_FIELD,'=', $commonId, true)
+            . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
             . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', RatingHistoryModel::GAME_IDS[Game::$gameName], true)
-            . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::DAY_PERIOD) : '')
-            . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::WEEK_PERIOD) : '')
-            . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::MONTH_PERIOD) : '')
-            . ($filters[StatsController::NO_GOLD_PARAM] ?? false ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '!=', self::YEAR_PERIOD) : '')
+            . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(
+                    self::EVENT_PERIOD_FIELD,
+                    '!=',
+                    self::DAY_PERIOD
+                ) : '')
+            . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(
+                    self::EVENT_PERIOD_FIELD,
+                    '!=',
+                    self::WEEK_PERIOD
+                ) : '')
+            . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(
+                    self::EVENT_PERIOD_FIELD,
+                    '!=',
+                    self::MONTH_PERIOD
+                ) : '')
+            . ($filters[StatsController::NO_GOLD_PARAM] ?? false ? ORM::andWhere(
+                    self::EVENT_PERIOD_FIELD,
+                    '!=',
+                    self::YEAR_PERIOD
+                ) : '')
         );
     }
 
-    public static function getGamesByCommonIdV2(int $commonId, int $limit = 10, int $page = 1, array $filters = []): array {
+    public static function getGamesByCommonIdV2(
+        int $commonId,
+        int $limit = 10,
+        int $page = 1,
+        array $filters = []
+    ): array {
         $query = ORM::select(
                 [
                     self::GAME_ID_FIELD,
@@ -263,13 +357,23 @@ class AchievesModel extends BaseModel
             . (
                 $filters[StatsController::FILTER_PLAYER_PARAM] ?? false
                     ? (' AND ( '
-                        . ORM::getWhereCondition('1_player_id', '=', StatsController::$Request[StatsController::FILTER_PLAYER_PARAM], true)
-                        . ORM::orWhere('2_player_id', '=', StatsController::$Request[StatsController::FILTER_PLAYER_PARAM], true)
+                        . ORM::getWhereCondition(
+                            '1_player_id',
+                            '=',
+                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                            true
+                        )
+                        . ORM::orWhere(
+                            '2_player_id',
+                            '=',
+                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                            true
+                        )
                         . ' ) ')
                     : ''
             )
-            .ORM::orderBy(self::GAME_ID_FIELD, false)
-            .ORM::limit($limit, ($page - 1) * $limit);
+            . ORM::orderBy(self::GAME_ID_FIELD, false)
+            . ORM::limit($limit, ($page - 1) * $limit);
 
         $res = DB::queryArray($query);
 
@@ -278,7 +382,7 @@ class AchievesModel extends BaseModel
         // todo сделать подгрузку классов централизованно
         //include_once(__DIR__ . '/../../../autoload_helper.php');
 
-        foreach($res as $row) {
+        foreach ($res as $row) {
             $opponentCommonId = $row[self::PLAYER1_ID_FIELD] != $commonId ? $row[self::PLAYER1_ID_FIELD] : $row[self::PLAYER2_ID_FIELD];
 
             $gameStats[] = [
@@ -323,7 +427,8 @@ class AchievesModel extends BaseModel
         return $gameStats;
     }
 
-    public static function getGamesByCommonId(int $commonId, int $limit = 10, int $page = 1, array $filters = []) {
+    public static function getGamesByCommonId(int $commonId, int $limit = 10, int $page = 1, array $filters = [])
+    {
         $query = ORM::select(
                 [
                     self::GAME_ID_FIELD,
@@ -348,13 +453,23 @@ class AchievesModel extends BaseModel
             . (
                 $filters[StatsController::FILTER_PLAYER_PARAM] ?? false
                     ? (' AND ( '
-                    . ORM::getWhereCondition('1_player_id', '=', StatsController::$Request[StatsController::FILTER_PLAYER_PARAM], true)
-                    . ORM::orWhere('2_player_id', '=', StatsController::$Request[StatsController::FILTER_PLAYER_PARAM], true)
-                    . ' ) ')
+                        . ORM::getWhereCondition(
+                            '1_player_id',
+                            '=',
+                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                            true
+                        )
+                        . ORM::orWhere(
+                            '2_player_id',
+                            '=',
+                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                            true
+                        )
+                        . ' ) ')
                     : ''
             )
-            .ORM::orderBy(self::GAME_ID_FIELD, false)
-            .ORM::limit($limit, ($page - 1) * $limit);
+            . ORM::orderBy(self::GAME_ID_FIELD, false)
+            . ORM::limit($limit, ($page - 1) * $limit);
 
         $res = DB::queryArray($query);
 
@@ -363,15 +478,19 @@ class AchievesModel extends BaseModel
         // todo сделать подгрузку классов централизованно
         include_once(__DIR__ . '/../../../autoload_helper.php');
 
-        foreach($res as $row) {
+        foreach ($res as $row) {
             $opponentCommonId = $row[self::PLAYER1_ID_FIELD] != $commonId ? $row[self::PLAYER1_ID_FIELD] : $row[self::PLAYER2_ID_FIELD];
 
             $gameStats[] = [
                 self::GAME_DATE_FIELD =>
-                    ViewHelper::tag('span', date('Y-m-d', $row[self::GAME_DATE_FIELD]),[
-                        'style' => 'white-space: nowrap;'
-                    ])
-                . (BaseController::isAjaxRequest()
+                    ViewHelper::tag(
+                        'span',
+                        date('Y-m-d', $row[self::GAME_DATE_FIELD]),
+                        [
+                            'style' => 'white-space: nowrap;'
+                        ]
+                    )
+                    . (BaseController::isAjaxRequest()
                         ? ''
                         : ViewHelper::tag(
                             'a',
@@ -383,11 +502,11 @@ class AchievesModel extends BaseModel
                         )
                     ),
                 self::YOUR_RESULT => $row[self::WINNER_ID_FIELD] == $commonId
-                    ? ViewHelper::tag('span','Победа', ['class' => 'badge badge-success'])
-                    : ViewHelper::tag('span','Проигрыш', ['class' => 'badge badge-warning']),
+                    ? ViewHelper::tag('span', 'Победа', ['class' => 'badge badge-success'])
+                    : ViewHelper::tag('span', 'Проигрыш', ['class' => 'badge badge-warning']),
                 self::YOUR_RATING_PROGRESS => $row[self::PLAYER1_ID_FIELD] == $commonId
-                    ? ((string)($row[self::RATING_OLD_1_FIELD] + $row[self::RATING_DELTA_1_FIELD]) . ' ('. ($row[self::RATING_DELTA_1_FIELD] > 0 ? '+' : '') . $row[self::RATING_DELTA_1_FIELD] .')')
-                    : ((string)($row[self::RATING_OLD_2_FIELD] + $row[self::RATING_DELTA_2_FIELD]) . ' ('. ($row[self::RATING_DELTA_2_FIELD] > 0 ? '+' : '') . $row[self::RATING_DELTA_2_FIELD] .')'),
+                    ? ((string)($row[self::RATING_OLD_1_FIELD] + $row[self::RATING_DELTA_1_FIELD]) . ' (' . ($row[self::RATING_DELTA_1_FIELD] > 0 ? '+' : '') . $row[self::RATING_DELTA_1_FIELD] . ')')
+                    : ((string)($row[self::RATING_OLD_2_FIELD] + $row[self::RATING_DELTA_2_FIELD]) . ' (' . ($row[self::RATING_DELTA_2_FIELD] > 0 ? '+' : '') . $row[self::RATING_DELTA_2_FIELD] . ')'),
                 self::OPPONENT_COMMON_ID =>
                     (BaseController::isAjaxRequest()
                         ? ''
@@ -422,11 +541,11 @@ class AchievesModel extends BaseModel
                         self::getPlayerNameByCommonId($opponentCommonId),
                         [
                             'class' => 'btn btn-sm ' . (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
-                                    ? 'btn-outline-secondary'
-                                    : 'btn-outline-primary',
+                                ? 'btn-outline-secondary'
+                                : 'btn-outline-primary',
                             'title' => (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
-                                    ? T::S('Remove filter')
-                                    : T::S('Filter by player'),
+                                ? T::S('Remove filter')
+                                : T::S('Filter by player'),
                             'onClick' => ViewHelper::onClick(
                                 'refreshId',
                                 AchievesModel::ACHIEVES_ELEMENT_ID,
@@ -440,25 +559,26 @@ class AchievesModel extends BaseModel
                                             : StatsController::FILTER_PLAYER_PARAM
                                         => $opponentCommonId,
                                     ]
-                                )),
-                            (BaseController::isAjaxRequest() ? 'nothing' : 'href') => '/' . StatsController::getUrl(
-                                'games',
-                                [
-                                    'common_id' => StatsController::$Request['common_id'] ?? '',
-                                    'refresh' => '1',
-                                    (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
-                                        ? 'none'
-                                        : StatsController::FILTER_PLAYER_PARAM
-                                    => $opponentCommonId,
-                                ]
+                                )
                             ),
+                            (BaseController::isAjaxRequest() ? 'nothing' : 'href') => '/' . StatsController::getUrl(
+                                    'games',
+                                    [
+                                        'common_id' => StatsController::$Request['common_id'] ?? '',
+                                        'refresh' => '1',
+                                        (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
+                                            ? 'none'
+                                            : StatsController::FILTER_PLAYER_PARAM
+                                        => $opponentCommonId,
+                                    ]
+                                ),
                         ]
                     )
             ];
         }
         if (empty($gameStats)) {
             $gameStats = [
-                0=>[
+                0 => [
                     self::GAME_DATE_FIELD => '',
                     self::YOUR_RESULT => '',
                     self::OPPONENT_COMMON_ID => '',
@@ -484,8 +604,18 @@ class AchievesModel extends BaseModel
             . (
                 $filters[StatsController::FILTER_PLAYER_PARAM] ?? false
                     ? (' AND ( '
-                        . ORM::getWhereCondition('1_player_id', '=', StatsController::$Request[StatsController::FILTER_PLAYER_PARAM], true)
-                        . ORM::orWhere('2_player_id', '=', StatsController::$Request[StatsController::FILTER_PLAYER_PARAM], true)
+                        . ORM::getWhereCondition(
+                            '1_player_id',
+                            '=',
+                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                            true
+                        )
+                        . ORM::orWhere(
+                            '2_player_id',
+                            '=',
+                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                            true
+                        )
                         . ' ) ')
                     : ''
             )
@@ -525,7 +655,6 @@ class AchievesModel extends BaseModel
 
     public static function getPlayerNameByCommonId(int $commonId): string
     {
-        //$instance = self::getGameInstance();
         $cookie = PlayerModel::getOne($commonId)['cookie'] ?? '';
 
         return PlayerModel::getPlayerName(
@@ -536,6 +665,24 @@ class AchievesModel extends BaseModel
         );
     }
 
+    /**
+     * @param string $gameName
+     * @param string $type
+     * @param string $period
+     * @return self[]
+     */
+    public static function getActiveO(string $gameName, string $type = '', string $period = ''): array
+    {
+        $rows = self::getActive($gameName, $type, $period);
+        $res = [];
+
+        foreach ($rows as $row) {
+            $res[] = self::arrayToObject($row);
+        }
+
+        return $res;
+    }
+
     public static function getActive(string $gameName, string $type = '', string $period = ''): array
     {
         return DB::queryArray(
@@ -544,6 +691,7 @@ class AchievesModel extends BaseModel
             . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', self::GAME_IDS[$gameName])
             . ($type ? ORM::andWhere(self::EVENT_TYPE_FIELD, '=', $type) : '')
             . ($period ? ORM::andWhere(self::EVENT_PERIOD_FIELD, '=', $period) : '')
+            . ORM::orderBy(self::REWARD_FIELD, false)
         ) ?: [];
     }
 }

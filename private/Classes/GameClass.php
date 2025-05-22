@@ -860,7 +860,7 @@ class Game
 
             $rating['rating'] = ($rawRating = CommonIdRatingModel::getRating($user['common_id'], self::$gameName))
                 ?: (self::MIN_TOP_RATING . ' (' . T::S('new player') . ')');
-            $rating['games_played'] = RatingHistoryModel::getNumGamesPlayed($user['common_id'], self::$gameName);
+            $rating[AchievesModel::GAMES_PLAYED] = RatingHistoryModel::getNumGamesPlayed($user['common_id'], self::$gameName);
             $rating['win_percent'] = 0; // это не используем
             $rating['inactive_percent'] = 'N/A'; //это не используем
             $rating['top'] = ($rawRating > self::MIN_TOP_RATING)

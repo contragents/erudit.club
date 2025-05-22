@@ -145,7 +145,7 @@ class PlayersController extends BaseController
                         Game::$gameName
                     );
 
-                    $res[$numUser]['games_played'] = RatingHistoryModel::getNumGamesPlayed(
+                    $res[$numUser][AchievesModel::GAMES_PLAYED] = RatingHistoryModel::getNumGamesPlayed(
                         $thisUser->_id,
                         Game::$gameName
                     );

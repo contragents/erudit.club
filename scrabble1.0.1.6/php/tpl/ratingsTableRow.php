@@ -136,6 +136,6 @@ return ViewHelper::tag(
             : ''),
         ['class' => 'text-center']
     ) // td2
-    . ViewHelper::tag('td', ViewHelper::tag('strong', $rating['games_played']), ['class' => 'text-center'], !$vertical),
+    . ViewHelper::tag('td', ViewHelper::tag('strong', $rating[AchievesModel::GAMES_PLAYED]), ['class' => 'text-center'], !$vertical),
     ['style' => 'border-top:1px solid black !important;']
 ); // tr

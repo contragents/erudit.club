@@ -10,23 +10,119 @@ class StatsController extends BaseController
 
     const COMMON_URL = 'mvc/stats/';
 
+    const RATING_PARAM = 'rating';
+    const ACHIEVE_PARAM = 'achieves';
+    const COIN_PARAM = 'coins';
+
+    const RATING_POSITION_FROM_PARAM = 'rating_position_from';
+    const RATING_POSITION_TO_PARAM = 'rating_position_to';
+    const RATING_CHUNK = 20;
+    const DATA_TYPE_PARAM = 'data_type';
+    const COIN_POSITION_FROM_PARAM = 'coin_position_from';
+    const COIN_POSITION_TO_PARAM = 'coin_position_to';
+
+    /**
+     * @param AchievesModel $achieveModel
+     * @return array
+     */
+    private static function getAchieveTranslated(AchievesModel $achieveModel): array
+    {
+        $res = [];
+        $res['record_type'] = strtoupper(T::S('record of the ' . $achieveModel->_event_period));
+        $res['record_value'] = ($achieveModel->_word ?? '') . ' ' . $achieveModel->_event_value;
+        $res['avatar_url'] = PlayerModel::getAvatarUrl($achieveModel->_common_id);
+        $res['nickname'] = AchievesModel::getPlayerNameByCommonId($achieveModel->_common_id);
+        $res['card_type'] = AchievesModel::TOP_TYPES[$achieveModel->_event_period] ?? '';
+
+        return $res;
+    }
+
+
+    public function leadersAction(): string
+    {
+        $result = [self::RATING_PARAM => [], self::ACHIEVE_PARAM => [], self::COIN_PARAM => []];
+
+        try {
+            // Собираем лидеров по рейтингам
+            if (in_array(self::$Request[self::DATA_TYPE_PARAM] ?? '', [self::RATING_PARAM, ''])) {
+                $fromRatingPos = self::$Request[self::RATING_POSITION_FROM_PARAM] ?? 1;
+                $toRatingPos = self::$Request[self::RATING_POSITION_TO_PARAM] ?? ($fromRatingPos + self::RATING_CHUNK - 1);
+
+                $ratingModels = CommonIdRatingModel::getTopPlayersO(Game::$gameName, $fromRatingPos, $toRatingPos);
+
+                foreach ($ratingModels as $top => $rows) {
+                    foreach ($rows as $ratingModel) {
+                        $result[self::RATING_PARAM][$top][] = [
+                            'avatar_url' => PlayerModel::getAvatarUrl($ratingModel->_id),
+                            'card_type' => AchievesModel::TOP_TYPES[$top] ?? '',
+                            self::RATING_PARAM => $ratingModel->{'_rating_' . Game::$gameName},
+                            'nickname' => AchievesModel::getPlayerNameByCommonId($ratingModel->_id)
+                        ];
+                    }
+                }
+            }
+
+            // Собираем обладателей достижений
+            if (in_array(self::$Request[self::DATA_TYPE_PARAM] ?? '', [self::ACHIEVE_PARAM, ''])) {
+                $achieves = AchievesModel::getActiveO(Game::$gameName);
+
+                foreach ($achieves as $achieveModel) {
+                    $result[self::ACHIEVE_PARAM][$achieveModel->_event_type][$achieveModel->_event_period]
+                        = self::getAchieveTranslated($achieveModel);
+                }
+            }
+
+            // Собираем лидеров по монетам
+            if (in_array(self::$Request[self::DATA_TYPE_PARAM] ?? '', [self::COIN_PARAM, ''])) {
+                $fromCoinPos = self::$Request[self::COIN_POSITION_FROM_PARAM] ?? 1;
+                $toCoinPos = self::$Request[self::COIN_POSITION_TO_PARAM] ?? ($fromCoinPos + self::RATING_CHUNK - 1);
+
+                $balanceModels = BalanceModel::getTopPlayersO($fromCoinPos, $toCoinPos);
+                //$result[self::COIN_PARAM] = $balanceModels;
+                foreach ($balanceModels as $top => $rows) {
+                    foreach ($rows as $balanceModel) {
+                        $result[self::COIN_PARAM][$top][] = [
+                            self::COMMON_ID_PARAM => $balanceModel->_id,
+                            'avatar_url' => PlayerModel::getAvatarUrl($balanceModel->_id),
+                            'card_type' => AchievesModel::TOP_TYPES[$top] ?? '',
+                            self::COIN_PARAM => $balanceModel->_sudoku,
+                            'nickname' => AchievesModel::getPlayerNameByCommonId($balanceModel->_id)
+                        ];
+                    }
+                }
+            }
+        } catch (Throwable $e) {
+            return json_encode(['exception' => $e->__toString()], JSON_UNESCAPED_UNICODE);
+        }
+
+        return json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
     public static function addTranslationsToAchieves(array &$achieves): void
     {
-        foreach($achieves as &$achieve) {
+        foreach ($achieves as &$achieve) {
             if ($achieve['event_type'] === AchievesModel::TOP_TYPE) {
                 $achieve['record_type_text'] = T::S('rank position');
-                $achieve['event_type_text'] = T::S(AchievesModel::TOP_TYPE .'_'. $achieve[AchievesModel::EVENT_PERIOD_FIELD]);
+                $achieve['event_type_text'] = T::S(
+                    AchievesModel::TOP_TYPE . '_' . $achieve[AchievesModel::EVENT_PERIOD_FIELD]
+                );
                 $achieve['points_text'] = $achieve[AchievesModel::EVENT_VALUE_FIELD];
             } else {
                 $achieve['record_type_text'] = T::S('record of the ' . $achieve[AchievesModel::EVENT_PERIOD_FIELD]);
                 $achieve['event_type_text'] = T::S($achieve[AchievesModel::EVENT_TYPE_FIELD]);
                 $achieve['points_text'] = $achieve['word'] == ''
-                    ?  $achieve[AchievesModel::EVENT_VALUE_FIELD]
+                    ? $achieve[AchievesModel::EVENT_VALUE_FIELD]
                     : ($achieve['word'] . ' - ' . $achieve[AchievesModel::EVENT_VALUE_FIELD]);
             }
 
-            $achieve[AchievesModel::REWARD_FIELD] = self::trimRightZeros(MonetizationService::REWARD[$achieve[AchievesModel::EVENT_PERIOD_FIELD]],2);
-            $achieve[AchievesModel::INCOME_FIELD] = self::trimRightZeros(MonetizationService::INCOME[$achieve[AchievesModel::EVENT_PERIOD_FIELD]],4);
+            $achieve[AchievesModel::REWARD_FIELD] = self::trimRightZeros(
+                MonetizationService::REWARD[$achieve[AchievesModel::EVENT_PERIOD_FIELD]],
+                2
+            );
+            $achieve[AchievesModel::INCOME_FIELD] = self::trimRightZeros(
+                MonetizationService::INCOME[$achieve[AchievesModel::EVENT_PERIOD_FIELD]],
+                4
+            );
         }
     }
 
@@ -67,7 +163,7 @@ class StatsController extends BaseController
     {
         $res = '';
 
-        foreach(AchievesModel::PRIZE_LINKS as $link) {
+        foreach (AchievesModel::PRIZE_LINKS as $link) {
             $res .= ViewHelper::img(['src' => $link]);
         }
 
@@ -101,8 +197,11 @@ class StatsController extends BaseController
         if ($initialRequest) {
             return $res;
         } else {
-            if(self::getGamesFilters()[self::FILTER_PLAYER_PARAM]) {
-                $opponentStats = AchievesModel::getStatsVsOpponent(self::$Request['common_id'], self::getGamesFilters()[self::FILTER_PLAYER_PARAM]);
+            if (self::getGamesFilters()[self::FILTER_PLAYER_PARAM]) {
+                $opponentStats = AchievesModel::getStatsVsOpponent(
+                    self::$Request['common_id'],
+                    self::getGamesFilters()[self::FILTER_PLAYER_PARAM]
+                );
 
                 $res['opponent_stats'] = $opponentStats;
             }
@@ -113,28 +212,28 @@ class StatsController extends BaseController
 
     public function viewV2Action(): string
     {
-        //ini_set("display_errors", 1);
-        //error_reporting(E_ALL);
-
         try {
-        $result = ['player_name' => AchievesModel::getPlayerNameByCommonId(self::$Request['common_id']), 'player_avatar_url' => PlayerModel::getAvatarUrl(self::$Request['common_id'])];
+            $result = [
+                'player_name' => AchievesModel::getPlayerNameByCommonId(self::$Request['common_id']),
+                'player_avatar_url' => PlayerModel::getAvatarUrl(self::$Request['common_id'])
+            ];
 
-        $baseUrl = self::getUrl('viewV2', self::$Request, ['page']);
+            $baseUrl = self::getUrl('viewV2', self::$Request, ['page']);
 
-        $baseUrlPage = self::getUrl('viewV2', self::$Request);
+            $baseUrlPage = self::getUrl('viewV2', self::$Request);
 
-        $achieves = AchievesModel::getCurrentAchievesByCommonId(self::$Request['common_id']);
-        $pastAchieves = AchievesModel::getPastAchievesByCommonId(self::$Request['common_id']);
+            $achieves = AchievesModel::getCurrentAchievesByCommonId(self::$Request['common_id']);
+            $pastAchieves = AchievesModel::getPastAchievesByCommonId(self::$Request['common_id']);
 
-        self::addTranslationsToAchieves($achieves);
-        self::addTranslationsToAchieves($pastAchieves);
+            self::addTranslationsToAchieves($achieves);
+            self::addTranslationsToAchieves($pastAchieves);
 
-        $result['current_achieves'] = $achieves;
-        $result['past_achieves'] = $pastAchieves;
+            $result['current_achieves'] = $achieves;
+            $result['past_achieves'] = $pastAchieves;
 
-        $result += $this->gamesV2Action(true);
-            } catch(Throwable $e) {
-            return json_encode(['exception' => $e->__toString()] , JSON_UNESCAPED_UNICODE);
+            $result += $this->gamesV2Action(true);
+        } catch (Throwable $e) {
+            return json_encode(['exception' => $e->__toString()], JSON_UNESCAPED_UNICODE);
         }
 
         return json_encode($result, JSON_UNESCAPED_UNICODE);
@@ -142,7 +241,6 @@ class StatsController extends BaseController
 
     public function viewAction()
     {
-
         $baseUrl = self::getUrl('view', self::$Request, ['page']);
 
         $achievesCount = AchievesModel::getAchievesByCommonIdCount(self::$Request['common_id'], self::getViewFilters());
@@ -210,9 +308,14 @@ class StatsController extends BaseController
             self::getGamesFilters()
         );
 
-        if(self::getGamesFilters()[self::FILTER_PLAYER_PARAM]) {
-            $opponentStats = AchievesModel::getStatsVsOpponent(self::$Request['common_id'], self::getGamesFilters()[self::FILTER_PLAYER_PARAM]);
-        } else $opponentStats = false;
+        if (self::getGamesFilters()[self::FILTER_PLAYER_PARAM]) {
+            $opponentStats = AchievesModel::getStatsVsOpponent(
+                self::$Request['common_id'],
+                self::getGamesFilters()[self::FILTER_PLAYER_PARAM]
+            );
+        } else {
+            $opponentStats = false;
+        }
 
 
         if (BaseController::isAjaxRequest()) {

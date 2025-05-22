@@ -6,10 +6,10 @@ class StatsAchievesView extends BaseView
     public const OFF_OPACITY = 0.3;
 
     const ZHETONS_FILTERS = [
-        StatsController::NO_STONE_PARAM => AchievesModel::PRIZE_LINKS['game_price-day'],
-        StatsController::NO_BRONZE_PARAM => AchievesModel::PRIZE_LINKS['game_price-week'],
-        StatsController::NO_SILVER_PARAM => AchievesModel::PRIZE_LINKS['game_price-month'],
-        StatsController::NO_GOLD_PARAM => AchievesModel::PRIZE_LINKS['game_price-year'],
+        StatsController::NO_STONE_PARAM => AchievesModel::PRIZE_LINKS[AchievesModel::GAME_PRICE . '-day'],
+        StatsController::NO_BRONZE_PARAM => AchievesModel::PRIZE_LINKS[AchievesModel::GAME_PRICE . '-week'],
+        StatsController::NO_SILVER_PARAM => AchievesModel::PRIZE_LINKS[AchievesModel::GAME_PRICE . '-month'],
+        StatsController::NO_GOLD_PARAM => AchievesModel::PRIZE_LINKS[AchievesModel::GAME_PRICE . '-year'],
     ];
     const PLAYER_ACHIEVES_MSG = 'Player`s achievements';
 

@@ -311,7 +311,7 @@ class PrizesErudit
         foreach (static::PERIODS as $period) {
             $activeAchieve = AchievesModel::getActive(
                     Game::$gameName,
-                    'games_played',
+                    AchievesModel::GAMES_PLAYED,
                     $period
                 )[0] ?? false;
 
@@ -334,13 +334,13 @@ class PrizesErudit
                     ['number' => $playerDailyPlayedGames]
                 );
 
-                $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS[static::DAY])[0] ?? false;
+                $activeAchieve = AchievesModel::getActive(Game::$gameName, AchievesModel::GAMES_PLAYED, static::PERIODS[static::DAY])[0] ?? false;
 
                 // Проверить, предыдущий рекорд принадлежит этому же игроку - просто обновить число игр
                 if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
                     AchievesModel::setParam($activeAchieve[AchievesModel::ID_FIELD], AchievesModel::EVENT_VALUE_FIELD, $playerDailyPlayedGames, true);
                 } else {
-                    self::saveAchieve($cookie, 'games_played', static::PERIODS[static::DAY], $playerDailyPlayedGames, false);
+                    self::saveAchieve($cookie, AchievesModel::GAMES_PLAYED, static::PERIODS[static::DAY], $playerDailyPlayedGames, false);
                 }
                 $todayRecord['number'] = $playerDailyPlayedGames;
                 $playersRecords[static::DAY] = [$cookie => $playerDailyPlayedGames];
@@ -358,7 +358,7 @@ class PrizesErudit
                         ['number' => $playerWeeklyPlayedGames]
                     );
 
-                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS[static::WEEK])[0] ?? false;
+                    $activeAchieve = AchievesModel::getActive(Game::$gameName, AchievesModel::GAMES_PLAYED, static::PERIODS[static::WEEK])[0] ?? false;
 
                     // Проверить, предыдущий рекорд принадлежит этому же игроку - просто обновить число игр
                     if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
@@ -366,7 +366,7 @@ class PrizesErudit
                     } else {
                         self::saveAchieve(
                             $cookie,
-                            'games_played',
+                            AchievesModel::GAMES_PLAYED,
                             static::PERIODS[static::WEEK],
                             $playerWeeklyPlayedGames,
                             false
@@ -394,14 +394,14 @@ class PrizesErudit
                         ['number' => $playerMonthlyPlayedGames]
                     );
 
-                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS[static::MONTH])[0] ?? false;
+                    $activeAchieve = AchievesModel::getActive(Game::$gameName, AchievesModel::GAMES_PLAYED, static::PERIODS[static::MONTH])[0] ?? false;
 
                     if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
                         AchievesModel::setParam($activeAchieve[AchievesModel::ID_FIELD], AchievesModel::EVENT_VALUE_FIELD, $playerMonthlyPlayedGames, true);
                     } else {
                         self::saveAchieve(
                         $cookie,
-                        'games_played',
+                        AchievesModel::GAMES_PLAYED,
                         static::PERIODS[static::MONTH],
                         $playerMonthlyPlayedGames,
                         false
@@ -425,7 +425,7 @@ class PrizesErudit
                         ['number' => $playerYearlyPlayedGames]
                     );
 
-                    $activeAchieve = AchievesModel::getActive(Game::$gameName, 'games_played', static::PERIODS[static::YEAR])[0] ?? false;
+                    $activeAchieve = AchievesModel::getActive(Game::$gameName, AchievesModel::GAMES_PLAYED, static::PERIODS[static::YEAR])[0] ?? false;
 
                     // Проверить, предыдущий рекорд принадлежит этому же игроку - просто обновить число игр
                     if ($activeAchieve && ($activeAchieve[AchievesModel::COMMON_ID_FIELD] ?? 0) == PlayerModel::getPlayerID($cookie)) {
@@ -433,7 +433,7 @@ class PrizesErudit
                     } else {
                         self::saveAchieve(
                             $cookie,
-                            'games_played',
+                            AchievesModel::GAMES_PLAYED,
                             static::PERIODS[static::YEAR],
                             $playerYearlyPlayedGames,
                             false
@@ -467,7 +467,7 @@ class PrizesErudit
 
             $res = array_merge([static::DAY => true], self::checkWeekGamePriceRecord($price));
             foreach ($res as $period => $value) {
-                self::saveAchieve($cookie, 'game_price', static::PERIODS[$period], $price, false);
+                self::saveAchieve($cookie, AchievesModel::GAME_PRICE, static::PERIODS[$period], $price, false);
             }
 
             return $res;
@@ -561,7 +561,7 @@ class PrizesErudit
 
             $res = array_merge([static::DAY => true], self::checkWeekTurnPriceRecord($price));
             foreach ($res as $period => $value) {
-                self::saveAchieve($cookie, 'turn_price', static::PERIODS[$period], $price, false);
+                self::saveAchieve($cookie, AchievesModel::TURN_PRICE, static::PERIODS[$period], $price, false);
             }
 
             return $res;
@@ -660,7 +660,7 @@ class PrizesErudit
 
             $res = array_merge([static::DAY => true], self::checkWeekWordPriceRecord($word, $price));
             foreach ($res as $period => $value) {
-                self::saveAchieve($cookie, 'word_price', static::PERIODS[$period], $price, $word);
+                self::saveAchieve($cookie, AchievesModel::WORD_PRICE, static::PERIODS[$period], $price, $word);
             }
 
             return $res;
@@ -762,7 +762,7 @@ class PrizesErudit
 
             $res = array_merge([static::DAY => true], self::checkWeekWordLenRecord($word));
             foreach ($res as $period => $value) {
-                self::saveAchieve($cookie, 'word_len', static::PERIODS[$period], $wordLen, $word);
+                self::saveAchieve($cookie, AchievesModel::WORD_LEN, static::PERIODS[$period], $wordLen, $word);
             }
 
             return $res;

@@ -70,13 +70,13 @@ class BaseModel
         $properties = get_object_vars($this);
         $fieldsVals = [];
 
-        foreach($properties as $property => $value) {
+        foreach ($properties as $property => $value) {
             $valueType = gettype($value);
-            if(self::isFieldName($property) && !in_array($valueType, self::SKIP_ATTR_TYPES)) {
+            if (self::isFieldName($property) && !in_array($valueType, self::SKIP_ATTR_TYPES)) {
                 if (is_callable([$this, "from_$valueType"])) {
                     try {
                         $value = call_user_func([$this, "from_$valueType"], $value);
-                    } catch(Throwable $e) {
+                    } catch (Throwable $e) {
                         continue;
                     }
                 }
@@ -85,7 +85,7 @@ class BaseModel
             }
         }
 
-        if(($this->_id ?? false) && self::exists($this->_id)) {
+        if (($this->_id ?? false) && self::exists($this->_id)) {
             unset($fieldsVals['id']);
             return self::update($this->_id, $fieldsVals);
         } else {
@@ -154,7 +154,7 @@ class BaseModel
 
         $res = [];
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $res[] = self::arrayToObject($row);
         }
 
@@ -186,7 +186,7 @@ class BaseModel
         $rows = self::getCustom($field, $condition, $value, $isRaw);
         $res = [];
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $res[] = self::arrayToObject($row);
         }
 
@@ -198,12 +198,13 @@ class BaseModel
      * @param bool $createIfNotExists
      * @return static|null
      */
-    public static function getOneO(int $id, bool $createIfNotExists = false): ?object {
+    public static function getOneO(int $id, bool $createIfNotExists = false): ?object
+    {
         $row = self::getOne($id);
 
         if (!empty($row)) {
             $res = self::arrayToObject($row);
-        } elseif($createIfNotExists) {
+        } elseif ($createIfNotExists) {
             $res = new static();
             $res->_id = $id;
         }
@@ -215,7 +216,7 @@ class BaseModel
     {
         return ($skobki ? ' ( ' : '')
             . ORM::select($fields, static::TABLE_NAME)
-                . $where
+            . $where
             . ($skobki ? ' ) ' : '')
             . ($as ? " as $as" : '');
     }
@@ -301,7 +302,7 @@ class BaseModel
 
         if (isset($where['field_name'])) {
             $ormWhere = ORM::where($where['field_name'], $where['condition'], $where['value'], $where['raw'] ?? false);
-        } elseif(isset($where[0]['field_name'])) {
+        } elseif (isset($where[0]['field_name'])) {
             $ormWhere = ORM::where('1', '=', 1, true)
                 . implode(
                     ' ',
@@ -385,6 +386,29 @@ class BaseModel
         }
 
         return DB::queryArray($query) ?: [];
+    }
+
+    /**
+     * @param $field
+     * @param $condition
+     * @param $value
+     * @param bool $isRaw
+     * @return static[]
+     */
+    public static function getCustomComplexO(
+        $field,
+        $condition,
+        $value,
+        bool $isRaw = false
+    ): array {
+        $rows = self::getCustomComplex($field, $condition, $value, $isRaw);
+        $res = [];
+
+        foreach ($rows as $row) {
+            $res[] = self::arrayToObject($row);
+        }
+
+        return $res;
     }
 
     /**
@@ -649,11 +673,14 @@ class BaseModel
     {
         $updateQuery = ORM::update(static::TABLE_NAME)
             . ORM::set($fieldsVals)
-            . ORM::where(1,'=', 1, true)
-            . implode(' ', array_map(
-                fn($where) => ORM::andWhere($where[0], $where[1], $where[2], $where[3] ?? false),
-                is_array($whereArr[0]) ? $whereArr : [$whereArr]
-            ));
+            . ORM::where(1, '=', 1, true)
+            . implode(
+                ' ',
+                array_map(
+                    fn($where) => ORM::andWhere($where[0], $where[1], $where[2], $where[3] ?? false),
+                    is_array($whereArr[0]) ? $whereArr : [$whereArr]
+                )
+            );
 
         if (DB::queryInsert($updateQuery)) {
             return true;
