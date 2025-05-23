@@ -20,6 +20,7 @@ class StatsController extends BaseController
     const DATA_TYPE_PARAM = 'data_type';
     const COIN_POSITION_FROM_PARAM = 'coin_position_from';
     const COIN_POSITION_TO_PARAM = 'coin_position_to';
+    const ANONYM_AVATAR_URL = 'https://avatarko.ru/img/avatar/1/avatarko_anonim.jpg';
 
     /**
      * @param AchievesModel $achieveModel
@@ -48,6 +49,10 @@ class StatsController extends BaseController
                 $fromRatingPos = self::$Request[self::RATING_POSITION_FROM_PARAM] ?? 1;
                 $toRatingPos = self::$Request[self::RATING_POSITION_TO_PARAM] ?? ($fromRatingPos + self::RATING_CHUNK - 1);
 
+                if (($toRatingPos - $fromRatingPos) >= self::RATING_CHUNK) {
+                    $toRatingPos = $fromRatingPos + self::RATING_CHUNK - 1;
+                }
+
                 $ratingModels = CommonIdRatingModel::getTopPlayersO(Game::$gameName, $fromRatingPos, $toRatingPos);
 
                 foreach ($ratingModels as $top => $rows) {
@@ -67,8 +72,11 @@ class StatsController extends BaseController
                 $achieves = AchievesModel::getActiveO(Game::$gameName);
 
                 foreach ($achieves as $achieveModel) {
-                    $result[self::ACHIEVE_PARAM][$achieveModel->_event_type][$achieveModel->_event_period]
-                        = self::getAchieveTranslated($achieveModel);
+                    if ($achieveModel->_event_type != AchievesModel::TOP_TYPE) {
+                        $result[self::ACHIEVE_PARAM]
+                        [strtoupper(T::S($achieveModel->_event_type))]
+                        [$achieveModel->_event_period] = self::getAchieveTranslated($achieveModel);
+                    }
                 }
             }
 
@@ -77,16 +85,23 @@ class StatsController extends BaseController
                 $fromCoinPos = self::$Request[self::COIN_POSITION_FROM_PARAM] ?? 1;
                 $toCoinPos = self::$Request[self::COIN_POSITION_TO_PARAM] ?? ($fromCoinPos + self::RATING_CHUNK - 1);
 
+                if (($toCoinPos - $fromCoinPos) >= self::RATING_CHUNK) {
+                    $toCoinPos = $fromCoinPos + self::RATING_CHUNK - 1;
+                }
+
                 $balanceModels = BalanceModel::getTopPlayersO($fromCoinPos, $toCoinPos);
-                //$result[self::COIN_PARAM] = $balanceModels;
                 foreach ($balanceModels as $top => $rows) {
                     foreach ($rows as $balanceModel) {
+                        $userModel = UserModel::getOneO($balanceModel->_id);
                         $result[self::COIN_PARAM][$top][] = [
-                            self::COMMON_ID_PARAM => $balanceModel->_id,
-                            'avatar_url' => PlayerModel::getAvatarUrl($balanceModel->_id),
+                            'avatar_url' => ($userModel->_is_balance_hidden ?? false)
+                                ? self::ANONYM_AVATAR_URL
+                                : PlayerModel::getAvatarUrl($balanceModel->_id),
                             'card_type' => AchievesModel::TOP_TYPES[$top] ?? '',
                             self::COIN_PARAM => $balanceModel->_sudoku,
-                            'nickname' => AchievesModel::getPlayerNameByCommonId($balanceModel->_id)
+                            'nickname' => ($userModel->_is_balance_hidden ?? false)
+                                ? T::S(UserModel::BALANCE_HIDDEN_FIELD)
+                                : AchievesModel::getPlayerNameByCommonId($balanceModel->_id)
                         ];
                     }
                 }

@@ -64,6 +64,10 @@ class T
             self::EN_LANG => '&#42;Save this key for further account restoration in <a href="https://t.me/scrabble_online_bot">Telegram</a>',
             self::RU_LANG => '&#42;Сохраните ключ для восстановления аккаунта в <a href="https://t.me/erudit_club_bot">Telegram</a>'
         ],
+        UserModel::BALANCE_HIDDEN_FIELD => [
+            self::EN_LANG => 'User hidden',
+            self::RU_LANG => 'Пользователь скрыт'
+        ],
         PaymentModel::INIT_STATUS => [
             self::EN_LANG => 'Started',
             self::RU_LANG => 'Начата'
@@ -242,8 +246,8 @@ class T
             self::RU_LANG => 'очки за ход'
         ],
         AchievesModel::WORD_LEN => [
-            self::EN_LANG => 'word length',
-            self::RU_LANG => 'длинное слово'
+            self::EN_LANG => 'longest word',
+            self::RU_LANG => 'самое длинное слово'
         ],
         AchievesModel::WORD_PRICE => [
             self::EN_LANG => 'word points',
