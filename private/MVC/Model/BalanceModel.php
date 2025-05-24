@@ -66,7 +66,9 @@ class BalanceModel extends BaseModel
             . ORM::groupBy([self::SUDOKU_BALANCE_FIELD])
             . ORM::orderBy(self::SUDOKU_BALANCE_FIELD, false)
             . ORM::limit($topMax ? $topMax - $top + 1 : 1, $top - 1);
-//print $topBalancesQuery;
+
+        // print $topBalancesQuery;
+
         $topBalances = DB::queryArray($topBalancesQuery) ?: [];
 
         $resultBalances = [];

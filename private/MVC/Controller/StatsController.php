@@ -72,6 +72,7 @@ class StatsController extends BaseController
                 $achieves = AchievesModel::getActiveO(Game::$gameName);
 
                 foreach ($achieves as $achieveModel) {
+                    // Игнорируем ТОПов по рейтингу
                     if ($achieveModel->_event_type != AchievesModel::TOP_TYPE) {
                         $result[self::ACHIEVE_PARAM]
                         [strtoupper(T::S($achieveModel->_event_type))]
