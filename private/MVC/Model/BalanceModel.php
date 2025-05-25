@@ -53,21 +53,30 @@ class BalanceModel extends BaseModel
             return [];
         }
 
-        $topBalancesQuery = self::select([self::SUDOKU_BALANCE_FIELD])
-            . ORM::innerJoin(RatingHistoryModel::TABLE_NAME)
-            . ORM::on(RatingHistoryModel::GAME_NAME_ID_FIELD, '=', self::GAME_IDS[Game::$gameName], true)
-            . ORM::andWhere(
-                BalanceModel::TABLE_NAME . '.' . BalanceModel::ID_FIELD,
-                '=',
-                RatingHistoryModel::COMMON_ID_FIELD,
-                true
+        $topBalancesQuery = self::select(
+                [
+                    self::SUDOKU_BALANCE_FIELD,
+                    RatingHistoryModel::select(
+                        ['1'],
+                        true,
+                        ORM::where(RatingHistoryModel::GAME_NAME_ID_FIELD, '=', self::GAME_IDS[Game::$gameName], true)
+                        . ORM::andWhere(
+                            BalanceModel::getFieldWithTable(BalanceModel::COMMON_ID_FIELD),
+                            '=',
+                            RatingHistoryModel::COMMON_ID_FIELD,
+                            true
+                        )
+                        . ORM::limit(1),
+                        'odin'
+                    )
+                ]
             )
-            . ORM::andWhere(self::SUDOKU_BALANCE_FIELD, '>=', self::MIN_TOP_COIN, true)
+            . ORM::where(self::SUDOKU_BALANCE_FIELD, '>=', self::MIN_TOP_COIN, true)
             . ORM::groupBy([self::SUDOKU_BALANCE_FIELD])
-            . ORM::orderBy(self::SUDOKU_BALANCE_FIELD, false)
+            . ORM::orderBy(self::SUDOKU_BALANCE_FIELD . ' * ' . 'odin', false)
             . ORM::limit($topMax ? $topMax - $top + 1 : 1, $top - 1);
 
-        // print $topBalancesQuery;
+        //print $topBalancesQuery;
 
         $topBalances = DB::queryArray($topBalancesQuery) ?: [];
 
