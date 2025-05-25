@@ -266,6 +266,11 @@ function StatsPage({ json, BASE_URL }) {
                 )
                     ? 'match-history--win'
                     : 'match-history--lose';
+
+                let deltaCoins = +item.delta_coins !== 0
+                ? ('<br>' + (item.delta_coins > 0 ? '+' : '') + item.delta_coins + ' <img src="images/coin.png" width="30%" alt="Sudoku coin image"/>')
+                : '';
+
                 return `
                 <li class="match-history-item ${matchResultClass} box d-flex">
                     <div class="match-history-date">${item.game_ended_date}</div>
@@ -273,7 +278,7 @@ function StatsPage({ json, BASE_URL }) {
                         <div class="pill">${item.your_result}</div>
                     </div>
                     <div class="match-history-rating">
-                        <div class="pill">${item.new_rating} <span>${item.delta_rating}</span></div>
+                        <div class="pill">${item.new_rating} <span>${item.delta_rating} ${deltaCoins}</span></div>
                     </div>
                     <div class="match-history-opponent">
                         <figure class="figure">

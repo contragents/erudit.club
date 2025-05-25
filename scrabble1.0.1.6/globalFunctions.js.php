@@ -637,4 +637,4 @@ function getSVGBlockGlobal(X, Y, buttonName, _this, scalable, hasDigits = false)
 //<?php include('globals/openWindowGlobalFunction_4.js')?>
 //<?php include('globals/buttonGlobalFunctions_4.js.php')?>
 //<?php include('globals/gagetTypeFunctions_1.js.php')?>
-//<?php include('globals/verstkaFunctions_4.js.php')?>
+//<?php include('globals/verstkaFunctions_2.js.php')?>

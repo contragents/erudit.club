@@ -417,6 +417,7 @@ class AchievesModel extends BaseModel
                 'opponent_filter_title' => (StatsController::$Request[StatsController::FILTER_PLAYER_PARAM] ?? 0) == $opponentCommonId
                     ? T::S('Remove filter')
                     : T::S('Filter by player'),
+                'delta_coins' => BalanceHistoryModel::getDeltaCoins($commonId, $row[self::GAME_ID_FIELD]),
             ];
         }
 

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Class BalanceHistoryModel
+ * @property int $_id
+ * @property int $_common_id
+ * @property int $_prev_count
+ * @property int $_new_count
+ * @property int $_reference
+ */
+
 class BalanceHistoryModel extends BaseModel
 {
     const TABLE_NAME = 'balance_history';
@@ -11,7 +20,7 @@ class BalanceHistoryModel extends BaseModel
     const TYPE_ID_FIELD = 'transaction_type_id'; // 0 - game (default), 1 - achieve, 2 - deposit, 3 - withdraw, 4 - motivation
     const REF_FIELD = 'reference';
 
-    const GAME_TYPE =  'game';
+    const GAME_TYPE = 'game';
     const ACHIEVE_TYPE = 'achieve';
     const DEPOSIT_TYPE = 'deposit';
     const WITHDRAW_TYPE = 'withdraw';
@@ -29,7 +38,10 @@ class BalanceHistoryModel extends BaseModel
         self::CLAIM_INCOME_TYPE => 6,
     ];
 
-
+    public ?int $_common_id = null;
+    public ?int $_prev_count = null;
+    public ?int $_new_count = null;
+    public ?int $_reference = null;
 
     public static function addTransaction(
         int $commonId,
@@ -59,5 +71,25 @@ class BalanceHistoryModel extends BaseModel
             + ($typeId ? [self::TYPE_ID_FIELD => $typeId] : [])
             + ($ref ? [self::REF_FIELD => $ref] : [])
         );
+    }
+
+    public static function getDeltaCoins(int $commonId, int $gameId): int
+    {
+        $balanceHistoryModelArr = self::getCustomComplexO(
+            [self::COMMON_ID_FIELD, self::REF_FIELD],
+            ['=', '='],
+            [$commonId, $gameId],
+            true
+        );
+
+        $inBalance = 0;
+        $outBalance = 0;
+
+        foreach ($balanceHistoryModelArr as $balanceHistoryModel) {
+            $inBalance += $balanceHistoryModel->_prev_count;
+            $outBalance += $balanceHistoryModel->_new_count;
+        }
+
+        return $outBalance - $inBalance;
     }
 }
