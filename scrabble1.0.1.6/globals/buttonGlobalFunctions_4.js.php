@@ -76,25 +76,33 @@ function newGameButtonFunction(ignoreDialog = false) {
         return;
     }
 
-    buttons['newGameButton']['svgObject'].disableInteractive();
+    let cancelCallback = function() {
+        buttons.newGameButton.svgObject.setInteractive();
+
+        return true;
+    };
+
+    buttons.newGameButton.svgObject.disableInteractive();
 
     if (gameState == 'myTurn' || gameState == 'preMyTurn' || gameState == 'otherTurn' || gameState == 'startGame') {
 
         bootbox.hideAll();
 
         dialog = bootbox.dialog({
-            // title: 'Требуется подтверждение',
             message: '<?= T::S('You will lose if you quit the game! CONTINUE?') ?>',
             size: 'medium',
             className: 'modal-settings modal-profile text-white',
-            // onEscape: false,
-            closeButton: true,
+            closeButton: false,
+            onEscape: function() {
+                return cancelCallback();
+            },
+
             buttons: {
                 cancel: {
                     label: '<?= T::S('Cancel') ?>',
                     className: 'btn-outline-success',
                     callback: function () {
-                        return true;
+                        return cancelCallback();
                     }
                 },
                 confirm: {
@@ -107,9 +115,7 @@ function newGameButtonFunction(ignoreDialog = false) {
                                 commonCallback(data);
                             });
 
-                        buttons.newGameButton.svgObject.setInteractive();
-
-                        return true;
+                        return cancelCallback();
                     }
                 },
                 invite: {
@@ -142,8 +148,7 @@ function newGameButtonFunction(ignoreDialog = false) {
                                         , 2000
                                     );
 
-                                    buttons['newGameButton']['svgObject'].setInteractive();
-
+                                    buttons.newGameButton.svgObject.setInteractive();
                                 });
                         }, 100);
 
@@ -153,7 +158,7 @@ function newGameButtonFunction(ignoreDialog = false) {
             }
         });
     } else {
-        buttons['newGameButton']['svgObject'].bringToTop(buttons['newGameButton']['svgObject'].getByName('newGameButton' + 'Inactive'));
+        buttons.newGameButton.svgObject.bringToTop(buttons.newGameButton.svgObject.getByName('newGameButton' + 'Inactive'));
 
         fetchGlobal(NEW_GAME_SCRIPT, '', 'gameState=' + gameState)
             .then((data) => {
