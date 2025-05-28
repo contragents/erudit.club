@@ -14,4 +14,3 @@ class Game extends \Game
         parent::__construct();
     }
 }
-
