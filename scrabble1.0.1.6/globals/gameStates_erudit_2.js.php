@@ -95,6 +95,7 @@ var gameStates = {
         message: '',
         noDialog: true,
         action: function (data) {
+            gameLog = [];
             tWaiting = 0;
             isUserBlockActive = false;
             isOpponentBlockActive = false;
@@ -885,7 +886,6 @@ var gameStates = {
             gameStates['myTurn']['from_noGame'](data);
             buttons['submitButton']['svgObject'].disableInteractive();
             buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
-
         },
         from_desync: function (data) {
             if ('fishki' in data)
