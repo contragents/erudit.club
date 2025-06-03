@@ -549,10 +549,7 @@ function playersButtonFunction() {
                     callback: () => {
                         $('.modal-players').modal('hide');
 
-                        bootbox.hideAll();
-                        canOpenDialog = true;
-                        canCloseDialog = true;
-                        dialog = false;
+                        closeDialogs();
                     }
                 });
 

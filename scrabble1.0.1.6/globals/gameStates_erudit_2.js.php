@@ -1251,13 +1251,7 @@ function commonCallback(data) {
                 }
             } else if (!('noDialog' in gameStates[gameState])) {
                 setTimeout(function () {
-                        bootbox.hideAll();
-
-                        // SUD-42
-                        canOpenDialog = true;
-                        canCloseDialog = true;
-                        dialog = false;
-                        // SUD-42 END
+                        closeDialogs();
 
                         var message = '';
                         var cancelLabel = '<?= T::S('Close in 5 seconds') ?>';

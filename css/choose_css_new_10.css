@@ -2623,3 +2623,179 @@ html {
     background: none;
 }
 /* CLUB-427 END */
+
+/* CLUB-437 BEGIN */
+
+.modal-leaderboard .record-card .desc span, .modal-leaderboard .card > span {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #00213a;
+    padding: 8px;
+    border-radius: 10px;
+}
+.modal-leaderboard .record-card .desc span:before, .modal-leaderboard .card > span:before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    bottom: 3px;
+    right: 3px;
+    border: 1px solid #5d7756;
+    border-radius: 8px;
+    z-index: 1;
+}
+
+.modal-leaderboard {
+    color: #ffffff;
+    font-weight: 900;
+}
+.modal-leaderboard .tab-content-wrap {
+    overflow-y: hidden;
+}
+.modal-leaderboard .nav-item {
+    flex-basis: 116px;
+}
+.modal-leaderboard .box {
+    margin-bottom: 2px;
+    padding: 4px 4px 8px;
+}
+.modal-leaderboard .list-heading {
+    display: flex;
+    font-size: 10px;
+    padding: 0 10px;
+}
+.modal-leaderboard .list-heading > span {
+    flex: 1 1 180px;
+    text-align: center;
+    text-decoration: underline;
+    text-transform: uppercase;
+    margin: 0 10px;
+}
+.modal-leaderboard .list-heading span:first-child {
+    flex-basis: 90px;
+    text-align: left;
+    margin: 0;
+}
+.modal-leaderboard .list-heading span:last-child {
+    flex-basis: 90px;
+    text-align: center;
+    margin: 0;
+}
+.modal-leaderboard .card {
+    border: 2px solid #fff;
+    padding: 6px 8px;
+    display: flex;
+    font-size: 10px;
+    font-weight: 700;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+    background-color: transparent;
+    margin: 4px auto;
+    min-height: 70px;
+    background: hsla(227, 56%, 21%, 0.75);
+}
+.modal-leaderboard .card--gold {
+    /*background: red;*/
+    background: url('../images/gold.png') center center no-repeat;
+    background-size: cover;
+}
+.modal-leaderboard .card--silver {
+    /*background: blue;*/
+    background: url('../images/silver.png') center center no-repeat;
+    background-size: cover;
+}
+.modal-leaderboard .card--bronze {
+    /*background: yellow;*/
+    background: url('../images/bronze-background.jpg') center center no-repeat;
+    background-size: cover;
+}
+.modal-leaderboard .card--stone {
+    /*background: #5d7756;*/
+    background: url('../images/moreTexturedStone.png') center center no-repeat;
+    background-size: cover;
+}
+.modal-leaderboard .card .position {
+    flex-basis: 26px;
+    height: 36px;
+    align-self: center;
+    margin-right: 4px;
+}
+.modal-leaderboard .card .avatar {
+    flex-basis: 60px;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+.modal-leaderboard .card .avatar img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 3px;
+    max-width: 100%;
+    height: auto;
+    align-self: center;
+}
+.modal-leaderboard .card .nickname {
+    flex: 1 1 180px;
+    margin: 4px 10px;
+    text-align: left;
+    justify-content: flex-start;
+    word-break: break-word;
+}
+.modal-leaderboard .card .rating, .modal-leaderboard .card .coins {
+    flex-basis: 96px;
+    margin: 4px 0;
+}
+.modal-leaderboard .card .coins {
+    text-align: left;
+    justify-content: space-between;
+}
+.modal-leaderboard .card .coins:after {
+    content: "";
+    order: -1;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-image: url("../images/coin.png");
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+}
+.modal-leaderboard .record-card {
+    min-height: 74px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.modal-leaderboard .record-card .nickname {
+    text-align: center;
+    justify-content: center;
+    flex-basis: 128px;
+    margin: 0;
+    min-height: 46px;
+    align-self: center;
+}
+.modal-leaderboard .record-card .avatar {
+    margin: 2px 13px 2px 9px;
+}
+.modal-leaderboard .record-card .desc {
+    flex-basis: 174px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-self: center;
+}
+.modal-leaderboard .record-card .desc span:last-child:before {
+    content: none;
+}
+.modal-leaderboard .records-heading {
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    text-transform: uppercase;
+    font-size: 10px;
+}
+
+/* CLUB-437 BEGIN */

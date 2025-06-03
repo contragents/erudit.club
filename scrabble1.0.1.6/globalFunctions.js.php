@@ -1,4 +1,11 @@
 //
+function closeDialogs() {
+    bootbox.hideAll();
+    canOpenDialog = true;
+    canCloseDialog = true;
+    dialog = false;
+}
+
 function activateFullScreenForMobiles() {
     if(isYandexAppGlobal()) {
         return;
@@ -473,35 +480,30 @@ function placeToLotok(fishka) {
 
 function disableButtons() {
     for (let k in buttons) {
-        if (buttons[k]['svgObject'] !== false)
-            buttons[k]['svgObject'].disableInteractive();
+        if (buttons[k].svgObject !== false)
+            buttons[k].svgObject.disableInteractive();
     }
 }
 
 function enableButtons() {
-    //if (bootBoxIsOpenedGlobal()) return;
     for (let k in buttons)
         if ('enabled' in buttons[k]) {
-            if (gameState in buttons[k]['enabled']) {
-                if (buttons[k]['svgObject'] !== false) {
-                    buttons[k]['svgObject'].setInteractive();
-                    buttons[k]['svgObject']
-                        .bringToTop(buttons[k]['svgObject']
-                            .getByName(k + OTJAT_MODE));
+            if (gameState in buttons[k].enabled) {
+                if (buttons[k].svgObject !== false) {
+                    buttons[k].svgObject.setInteractive();
+                    buttons[k].svgObject.bringToTop(buttons[k].svgObject.getByName(k + OTJAT_MODE));
                 }
 
             } else {
                 if (buttons[k]['svgObject'] !== false) {
                     buttons[k]['svgObject'].disableInteractive();
-                    buttons[k]['svgObject']
-                        .bringToTop(buttons[k]['svgObject']
-                            .getByName(k + 'Inactive'));
+                    buttons[k]['svgObject'].bringToTop(buttons[k].svgObject.getByName(k + 'Inactive'));
                 }
 
             }
         } else {
-            if (buttons[k]['svgObject'] !== false)
-                buttons[k]['svgObject'].setInteractive();
+            if (buttons[k].svgObject !== false)
+                buttons[k].svgObject.setInteractive();
         }
 }
 

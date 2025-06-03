@@ -20,8 +20,8 @@ class CommonIdRatingModel extends BaseModel
     const INITIAL_RATING = 1700;
 
     public ?int $_rating_erudit = null;
-    public ?int $_rating_scrabble;
-    public ?int $_rating_sudoku;
+    public ?int $_rating_scrabble = null;
+    public ?int $_rating_sudoku = null;
 
     public static function changeUserRating(int $commonId, int $newRating, string $gameName): bool
     {

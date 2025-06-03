@@ -53,17 +53,18 @@ class BalanceModel extends BaseModel
             return [];
         }
 
+        // Берем только те балансы, которые играли в игру Game::$gameName - рейтинг > 0
         $topBalancesQuery = self::select(
                 [
                     self::SUDOKU_BALANCE_FIELD,
-                    RatingHistoryModel::select(
+                    CommonIdRatingModel::select(
                         ['1'],
                         true,
-                        ORM::where(RatingHistoryModel::GAME_NAME_ID_FIELD, '=', self::GAME_IDS[Game::$gameName], true)
+                        ORM::where(CommonIdRatingModel::RATING_FIELD_PREFIX . Game::$gameName, '>', 0, true)
                         . ORM::andWhere(
                             BalanceModel::getFieldWithTable(BalanceModel::COMMON_ID_FIELD),
                             '=',
-                            RatingHistoryModel::COMMON_ID_FIELD,
+                            CommonIdRatingModel::COMMON_ID_FIELD,
                             true
                         )
                         . ORM::limit(1),
@@ -76,13 +77,15 @@ class BalanceModel extends BaseModel
             . ORM::orderBy(self::SUDOKU_BALANCE_FIELD . ' * ' . 'odin', false)
             . ORM::limit($topMax ? $topMax - $top + 1 : 1, $top - 1);
 
-        //print $topBalancesQuery;
-
         $topBalances = DB::queryArray($topBalancesQuery) ?: [];
 
         $resultBalances = [];
 
         for ($i = $top; $i <= $topMax ?: $top; $i++) {
+            if(!($topBalances[$i - $top]['odin'] ?? false)) {
+                break;
+            }
+
             $currentBalance = $topBalances[$i - $top][self::SUDOKU_BALANCE_FIELD] ?? false;
             if (!$currentBalance) {
                 break;

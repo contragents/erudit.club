@@ -154,10 +154,7 @@ const btnFAQClickHandler = (backButton = true) => {
                                     gameStates['chooseGame']['action'](data)
                                 });
                             } else {
-                                bootbox.hideAll();
-                                canOpenDialog = true;
-                                canCloseDialog = true;
-                                dialog = false;
+                                closeDialogs();
                             }
                         }
                     },
@@ -397,8 +394,6 @@ function StatsPage({ json, BASE_URL }) {
                 onStatsModalLoaded();
                 tabsModule.update();
             };
-
-
 
             const linkHandler = (e) => {
                 e.preventDefault();
@@ -1013,5 +1008,513 @@ function PlayersPage(json) {
     return {
         buildHtml: init,
         onLoad,
+    };
+}
+
+function prizesButtonHandler() {
+    if (bootBoxIsOpenedGlobal()) {
+        return;
+    }
+
+    disableButtons();
+
+    const leaderboard = Leaderboard();
+    window.leaderboard = leaderboard;
+    leaderboard.getModal().then( (html) => {
+            dialog = bootbox.alert({
+                title: '',
+                message: html,
+                // locale: 'ru',
+                closeButton: false,
+                className: 'modal-settings modal-leaderboard  modal--footer-compact',
+                buttons: {
+                    ok: {
+                        label: lang === 'RU' ? 'Назад' : 'Back',
+                        className: 'btn-sm ml-auto mr-0',
+                    },
+                },
+                callback: function() {
+                    closeDialogs();
+                    enableButtons();
+                },
+            }).off('shown.bs.modal').on('shown.bs.modal', function() {
+                if (tabsModule) {
+                    tabsModule.initTabs();
+                }
+
+                const getNextRatingChunk = debounceAsync(leaderboard.getNextRatingChunk.bind(leaderboard), 500);
+                const getNextCoinsChunk = debounceAsync(leaderboard.getNextCoinsChunk.bind(leaderboard), 500);
+
+                document.querySelector('.modal-leaderboard .modal-body').addEventListener('scroll', (e) => {
+                    const container = e.currentTarget;
+                    const ratingListEl = container.querySelector('#leaderboard-rating');
+                    const coinsListEl = container.querySelector('#leaderboard-coins');
+
+                    if (container.scrollTop + container.offsetHeight >= container.scrollHeight * 0.95) {
+
+                        if (ratingListEl.closest('.tab-pane.active')) {
+                            getNextRatingChunk().then( (list) => {
+                                if (!list.length) return;
+                                const ratingElements = list.map( (r) => leaderboard.RatingItem(r), );
+                                const wrapper = document.createElement('div');
+                                wrapper.innerHTML = ratingElements.join('');
+                                ratingListEl.append(...wrapper.childNodes);
+                                setTimeout(() => {
+                                    if (tabsModule) {
+                                        tabsModule.initTabs();
+                                    }
+                                })
+                            });
+                        }
+
+                        if (coinsListEl.closest('.tab-pane.active')) {
+                            getNextCoinsChunk().then( (list) => {
+                                if (!list.length) return;
+                                const coinsElements = list.map( (r) => leaderboard.CoinsItem(r), );
+                                const wrapper = document.createElement('div');
+                                wrapper.innerHTML = coinsElements.join('');
+                                coinsListEl.append(...wrapper.childNodes);
+                                setTimeout(() => {
+                                    if (tabsModule) {
+                                        tabsModule.initTabs();
+                                    }
+                                })
+
+                            });
+                        }
+                    }
+                });
+            }).find('.modal-content').css({
+                'background-color': 'rgba(230, 255, 230, 1)',
+            });
+        }
+    );
+
+    return;
+}
+function Leaderboard() {
+    const pageSize = 20;
+
+    const parseFlatList = (data) => {
+        const result = [];
+        for (const position in data) {
+            const users = data[position];
+            users.forEach((user) => {
+                result.push({
+                    ...user,
+                    position: Number(position),
+                });
+            });
+        }
+        return result;
+    };
+
+    const fetchData = async (params) => {
+        const url = new URL(BASE_URL + 'mvc/stats/leaders');
+
+        for (const key in params) {
+            url.searchParams.set(key, params[key]);
+        }
+
+        try {
+            const response = await fetch(url.toString(), {
+                method: 'GET',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
+            if (!response.ok) throw new Error('Ошибка загрузки данных');
+            return await response.json();
+        } catch (e) {
+            console.error('Fetch error:', e);
+            throw e;
+        }
+    };
+
+    return {
+        state: {
+            pageSize,
+            rating: {
+                isError: false,
+                isLoading: false,
+                data: [],
+                apiPage: 0,
+                apiPageSize: 20,
+                apiDone: false,
+                page: 0,
+                pageSize: 20,
+                done: false,
+            },
+            coins: {
+                isError: false,
+                isLoading: false,
+                data: [],
+                apiPage: 0,
+                apiPageSize: 20,
+                apiDone: false,
+                page: 0,
+                pageSize: 20,
+                done: false,
+            },
+            achieves: {
+                isError: false,
+                isLoading: false,
+                data: [],
+            },
+        },
+
+        async fetchDefault() {
+            this.state.isLoading = true;
+            this.state.isError = false;
+            try {
+                const data = await fetchData({});
+                if (!data.rating) {
+                    this.state.rating.apiDone = true;
+                }
+                this.state.rating.data = parseFlatList(data.rating);
+                this.state.coins.data = parseFlatList(data.coins);
+                if (!data.coins) {
+                    this.state.coins.apiDone = true;
+                }
+                this.state.achieves.data = data.achieves;
+            } catch (e) {
+                this.state.isError = true;
+            } finally {
+                this.state.isLoading = false;
+            }
+        },
+
+        async fetchRating(page = 0) {
+            const rating = this.state.rating;
+
+            rating.isLoading = true;
+            rating.isError = false;
+
+            const from = page * rating.pageSize + 1;
+            const to = (page + 1) * rating.pageSize;
+
+            try {
+                const data = await fetchData({
+                    data_type: 'rating',
+                    rating_position_from: from,
+                    rating_position_to: to,
+                });
+
+                if (!data.rating) {
+                    rating.apiDone = true;
+                    return;
+                }
+
+                if (!rating.apiPageSize) {
+                    rating.apiPageSize = data.rating.length;
+                }
+
+                if (data.rating.length < rating.apiPageSize) {
+                    rating.apiDone = true;
+                }
+
+                const list = parseFlatList(data.rating);
+
+                rating.data.push(...list);
+            } catch (e) {
+                rating.isError = true;
+            } finally {
+                rating.isLoading = false;
+            }
+        },
+
+        /**
+         * Asynchronously retrieves the next chunk of rating data based on the current pagination state.
+         * @async
+         * @returns {Promise<Array>} A promise that resolves to the next chunk of rating data, or an empty array if no more data is available.
+         */
+        async getNextRatingChunk() {
+            const rating = this.state.rating;
+            const {pageSize} = rating;
+
+            if (rating.done || rating.isLoading) return [];
+
+            const start = rating.page * pageSize;
+            const end = start + pageSize;
+
+
+            if (rating.data.length >= end) {
+                const chunk = rating.data.slice(start, end);
+                rating.page++;
+
+                return chunk;
+            }
+
+            // Если API ещё не закончил, догружаем
+            if (!rating.apiDone) {
+                rating.apiPage++;
+                await this.fetchRating(rating.apiPage);
+                return this.getNextRatingChunk();
+            }
+
+            // Остались хвостовые данные, меньше pageSize
+            const chunk = rating.data.slice(start);
+            if (chunk.length > 0) {
+                rating.page++;
+                rating.done = true;
+                return chunk;
+            }
+
+            // Ничего не осталось
+            rating.done = true;
+            return [];
+        },
+
+
+        async fetchCoins(page = 0) {
+            const coins = this.state.coins;
+
+            coins.isLoading = true;
+            coins.isError = false;
+
+            const from = page * coins.pageSize + 1;
+            const to = (page + 1) * coins.pageSize;
+
+            try {
+                const data = await fetchData({
+                    data_type: 'coins',
+                    coin_position_from: from,
+                    coin_position_to: to,
+                });
+
+                if (!data.coins) {
+                    coins.apiDone = true;
+                    return;
+                }
+
+                if (!coins.apiPageSize) {
+                    coins.apiPageSize = data.coins.length;
+                }
+
+                if (data.coins.length < coins.apiPageSize) {
+                    coins.apiDone = true;
+                }
+
+                const list = parseFlatList(data.coins);
+
+                coins.data.push(...list);
+            } catch (e) {
+                coins.isError = true;
+            } finally {
+                coins.isLoading = false;
+            }
+        },
+
+        /**
+         * Asynchronously retrieves the next chunk of coins data based on the current pagination state.
+         * @async
+         * @returns {Promise<Array>} A promise that resolves to the next chunk of coins data, or an empty array if no more data is available.
+         */
+        async getNextCoinsChunk() {
+            const coins = this.state.coins;
+            const {pageSize} = coins;
+
+            if (coins.done || coins.isLoading) return [];
+
+            const start = coins.page * pageSize;
+            const end = start + pageSize;
+
+
+            if (coins.data.length >= end) {
+                const chunk = coins.data.slice(start, end);
+                coins.page++;
+
+                return chunk;
+            }
+
+            // Если API ещё не закончил, догружаем
+            if (!coins.apiDone) {
+                coins.apiPage++;
+                await this.fetchCoins(coins.apiPage);
+                return this.getNextCoinsChunk();
+            }
+
+            // Остались хвостовые данные, меньше pageSize
+            const chunk = coins.data.slice(start);
+            if (chunk.length > 0) {
+                coins.page++;
+                coins.done = true;
+                return chunk;
+            }
+
+            // Ничего не осталось
+            coins.done = true;
+            return [];
+        },
+
+
+        async fetchRecords() {
+            this.state.isLoading = true;
+            this.state.isError = false;
+
+            try {
+                const data = await fetchData({data_type: 'achieves'});
+                this.state.achieves = data.achieves;
+            } catch (e) {
+                this.state.isError = true;
+            } finally {
+                this.state.isLoading = false;
+            }
+        },
+
+        getModal: function () {
+            return fetch(BASE_URL + 'leaderboard-modal-tpl_' + lang + '.html')
+                .then((response) => response.text())
+                .then((template) => {
+                    return this.fetchDefault().then(async () => {
+                        const message = document.createElement('div');
+
+                        const {isError, achieves} = this.state;
+                        if (isError) throw new Error('Net Error');
+                        try {
+                            let ratingList = await this.getNextRatingChunk(
+                                this.state
+                            );
+
+                            ratingList = ratingList.map((r) =>
+                                this.RatingItem(r)
+                            );
+
+                            let coinsList = await this.getNextCoinsChunk(
+                                this.state
+                            );
+
+                            coinsList = coinsList.map((r) =>
+                                this.CoinsItem(r)
+                            );
+
+
+                            let recordList = Object.entries(achieves.data).map(section => {
+                                let [heading, items] = section;
+                                items = Object.values(items);
+                                items = items.map(a => this.RecordsItem(a)).join('');
+                                return `<span class="records-heading">${heading}</span>${items}`;
+                            });
+
+                            const ratingHtml = `
+                                <div class="list-heading">
+                                    <span>№</span>
+                                    <span>Игрок</span>
+                                    <span>Рейтинг</span>
+                                </div>
+                                ${ratingList.join('')}
+                            `;
+
+                            const coinsHtml = `
+                                <div class="list-heading">
+                                    <span>№</span>
+                                    <span>Игрок</span>
+                                    <span>Баланс</span>
+                                </div>
+                                ${coinsList.join('')}
+                            `;
+
+                            const tabs = {
+                                'leaderboard-rating': ratingHtml,
+                                'leaderboard-records': recordList.join(''),
+                                'leaderboard-coins': coinsHtml,
+                            };
+
+                            message.innerHTML = template;
+                            [
+                                'leaderboard-rating',
+                                'leaderboard-records',
+                                'leaderboard-coins',
+                            ].forEach((id) => {
+                                if (tabs[id]) {
+                                    message.querySelector(`#${id}`).innerHTML =
+                                        tabs[id];
+                                }
+                            });
+                            return message;
+                        } catch (error) {
+                            console.log(error);
+                            return 'error';
+                        }
+                    });
+                })
+                .catch((error) =>
+                    console.error('Ошибка загрузки leaderboard-modal:', error)
+                );
+        },
+
+        RatingItem: ({avatar_url, card_type, rating, nickname, position}) => {
+            const classMod = card_type ? ` card--${card_type}` : '';
+            return /*html*/ `
+                <div class="card${classMod}">
+                    <span class="position">${position}</span>
+                    <div class="avatar"><img src="${avatar_url}" alt="${nickname}"></div>
+                    <span class="nickname">${nickname}</span>
+                    <span class="rating">${rating}</span>
+                </div>
+            `;
+        },
+
+        CoinsItem: ({avatar_url, card_type, coins, nickname, position}) => {
+            const classMod = card_type ? ` card--${card_type}` : '';
+            const coinsFormatted = coins.toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).replaceAll('&nbsp;', ',');
+            return /*html*/ `
+                <div class="card${classMod}">
+                    <span class="position">${position}</span>
+                    <div class="avatar"><img src="${avatar_url}" alt="${nickname}"></div>
+                    <span class="nickname">${nickname}</span>
+                    <span class="coins">${coinsFormatted}</span>
+                </div>
+            `;
+        },
+        RecordsItem: ({record_type, record_value, nickname, card_type, avatar_url}) => {
+            const classMod = card_type ? ` card--${card_type}` : '';
+
+            return /*html*/ `
+                <div class="card record-card${classMod}">
+                    <div class="desc">
+                        <span>${record_type}</span>
+                        <span>${record_value}</span>
+                    </div>
+                    <div class="avatar"><img src="${avatar_url}" alt="${nickname}"></div>
+                    <span class="nickname">${nickname}</span>
+                </div>
+            `;
+        },
+    };
+}
+
+function debounce(func, wait) {
+    let timeout;
+
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+function debounceAsync(func, wait) {
+    let timeout;
+
+    return function (...args) {
+        const context = this;
+
+        return new Promise((resolve, reject) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(async () => {
+                try {
+                    const result = await func.apply(context, args);
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
+                }
+            }, wait);
+        });
     };
 }

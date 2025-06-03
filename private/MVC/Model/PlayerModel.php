@@ -22,7 +22,7 @@ class PlayerModel extends BaseModel
     const COOKIE_FIELD = 'cookie';
 
     const TOP_10 = 10;
-    const MIN_TOP_RATING = 2100; // Рейтинг, ниже которого ТОП не рассчитывается в некоторых запросах
+    const MIN_TOP_RATING = 1000; // Рейтинг, ниже которого ТОП не рассчитывается в некоторых запросах
     const TOP_PLAYERS_CACHE_TTL = 3600;
     private static array $cache = [];
 

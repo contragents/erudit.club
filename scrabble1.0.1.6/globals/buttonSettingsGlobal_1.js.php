@@ -2,8 +2,8 @@
 var topButtons = {
     newGameButton: {displayWidth: 0},
     instructButton: {displayWidth: 0},
+    prizesButton: {displayWidth: 0},
     ...(!isYandexAppGlobal() && {
-        prizesButton: {displayWidth: 0},
         inviteButton: {displayWidth: 0}
     }),
 };
@@ -41,25 +41,19 @@ var buttons = {
             // shareButtonFunction();
         }
     },
+    prizesButton: {
+        filename: 'prizes2',
+        modes: [OTJAT_MODE, 'Navedenie', 'Najatie'],
+        x: (topXY.x + knopkiWidth) / 2,
+        y: (topXY.y + topHeight) / 2,
+        caption: 'Prizes',
+        width: buttonWidth / 2,
+        //height: topHeight,
+        object: false,
+        svgObject: false,
+        pointerupFunction: prizesButtonHandler,
+    },
     ...(!isYandexAppGlobal() && {
-        prizesButton: {
-            filename: 'prizes2',
-            modes: [OTJAT_MODE, 'Navedenie', 'Najatie'],
-            x: (topXY.x + knopkiWidth) / 2,
-            y: (topXY.y + topHeight) / 2,
-            caption: 'Prizes',
-            width: buttonWidth / 2,
-            //height: topHeight,
-            object: false,
-            svgObject: false,
-            pointerupFunction: function () {
-                if (bootBoxIsOpenedGlobal()) {
-                    return;
-                }
-
-                return;
-            }
-        },
         inviteButton: {
             filename: 'invite2',
             modes: [OTJAT_MODE, 'Navedenie', 'Najatie'],
