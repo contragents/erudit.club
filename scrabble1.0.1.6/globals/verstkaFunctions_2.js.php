@@ -327,19 +327,19 @@ function StatsPage({ json, BASE_URL }) {
 				<div class="total box">
 
 					<div class="col">
-						<span>Всего<br>партий</span>
+						<span><?= T::S('Games<br>total') ?></span>
 						<span>${opponent_stats[0].games_count}</span>
 					</div>
 					<div class="col">
-						<span>Всего<br>побед</span>
+						<span><?= T::S('Wins<br>total') ?></span>
 						<span>${opponent_stats[0].wins}</span>
 					</div>
 					<div class="col">
-						<span>Прибавка/потеря<br>в рейтинге</span>
+						<span><?= T::S('Gain/loss<br>in ranking') ?></span>
 						<span class="${resultClass}">${prefix}${opponent_stats[0].delta_rating}</span>
 					</div>
 					<div class="col">
-						<span>% Побед</span>
+						<span><?= T::S('% Wins') ?></span>
 						<span>${opponent_stats[0].win_percent}</span>
 					</div>
 

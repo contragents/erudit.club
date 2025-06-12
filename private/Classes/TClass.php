@@ -54,6 +54,9 @@ class T
     }
 
     const PHRASES = [
+         'Agreement' => [
+            self::RU_LANG => 'Оферта'
+        ],
         'Слово не найдено.' => [
             self::EN_LANG => 'Word not found'
         ],
@@ -147,7 +150,7 @@ class T
             self::RU_LANG => 'Ошибка. Пожалуйста попробуйте позднее'
         ],
         'game_name' => [
-            self::EN_LANG => 'Scrabble',
+            self::EN_LANG => 'Scramble',
             self::RU_LANG => 'Эрудит'
         ],
         'invite_friend_prompt' => [
@@ -159,7 +162,7 @@ class T
             self::RU_LANG => 'https://t.me/erudit_club_bot'
         ],
         'loading_text' => [
-            self::EN_LANG => 'Scrabble is loading...',
+            self::EN_LANG => 'Game is loading...',
             self::RU_LANG => 'Загружаем игру...'
         ],
         'ground_file' => [
@@ -911,6 +914,18 @@ class T
         ],
         'Opponents' => [
             self::RU_LANG => 'Оппоненты'
+        ],
+        'Games<br>total' => [
+            self::RU_LANG => 'Всего<br>партий',
+        ],
+        'Wins<br>total' => [
+            self::RU_LANG => 'Всего<br>побед',
+        ],
+        'Gain/loss<br>in ranking' => [
+            self::RU_LANG => 'Прибавка/потеря<br>в рейтинге',
+        ],
+        '% Wins' => [
+            self::RU_LANG => '% Побед',
         ],
         'Games in total' => [
             self::RU_LANG => 'Всего партий'

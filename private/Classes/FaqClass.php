@@ -7,7 +7,7 @@ class Faq
         T::EN_LANG =>
         <<<EN
 <h2 id="nav1">About the game</h2>
-                            <p>Scrabble &mdash; a word board game that can be played by 2 to 4 people by building words from the letters they have on a 15x15 field.</p>
+                            <p>Scramble &mdash; a word board game that can be played by 2 to 4 people by building words from the letters they have on a 15x15 field.</p>
                             <div class="fon-right">
                                 <h2 id="nav2">Playing board</h2>
                                 <p>The game board consists of 15x15, i.e. 225 squares, on which the participants of the game put letters, thus making words. At the beginning of the game each player receives 7 random letters. 
@@ -1611,7 +1611,7 @@ RU
     ];
     const COINS = [
         T::EN_LANG => <<<EN
-Coin <strong>SUDOKU</strong> {{sudoku_icon}} is an in-game currency for a network of games - <strong>Erudite, Scrabble, Sudoku</strong> (coming soon)<br><br>
+Coin <strong>SUDOKU</strong> {{sudoku_icon}} is an in-game currency for a network of games - <strong>Erudite, Scramble, Sudoku</strong><br><br>
 One account for all games, one currency, one wallet<br><br>
 {{yandex_exclude}}{{In the crypto world, the coin is also called SUDOKU. Soon it will be possible to withdraw any number of SUDOKU coins from your in-game wallet to an external wallet in the TON (Telegram) network
 <br><br>}}
@@ -1698,7 +1698,7 @@ Passive coin earning stops when your record is broken by another player
 EN
         ,
         T::RU_LANG => <<<RU
-Монета {{yandex_exclude}}{{<strong>SUDOKU</strong>}} {{sudoku_icon}} - это внутриигровая валюта{{yandex_exclude}}{{ для сети игр - <strong>Эрудит, Scrabble, Sudoku</strong> (скоро)<br><br>
+Монета {{yandex_exclude}}{{<strong>SUDOKU</strong>}} {{sudoku_icon}} - это внутриигровая валюта{{yandex_exclude}}{{ для сети игр - <strong>Эрудит, Scramble, Sudoku</strong><br><br>
 Один аккаунт на все игры, одна валюта, один кошелек}}<br><br>
 {{yandex_exclude}}{{В крипто-мире монета также называется SUDOKU. Скоро станет возможным вывести любое количество монет SUDOKU со своего игрового кошелька на внешний кошелек сети TON (Телеграм)
 <br><br>}}

@@ -422,7 +422,7 @@ var gameStates = {
 
                                 <span><?= T::S('CHOOSE GAME OPTIONS') ?></span>
 
-                                <div class="ml-auto"><a href="#" id="btn-faq" class="btn">${isYandexAppGlobal() ? 'ЧАВО' : 'FAQ'}</a>
+                                <div class="ml-auto"><a href="#" id="btn-faq" class="btn">${(isYandexAppGlobal() && lang === 'RU') ? 'ЧАВО' : 'FAQ'}</a>
                                 </div>
                             </div>
                         </div>
@@ -608,10 +608,9 @@ var gameStates = {
                             }, 100);
                         },
                     }
-                    //})
                     ,
                     instruction: {
-                        label: isYandexAppGlobal() ? 'ЧАВО' : 'FAQ',
+                        label: (isYandexAppGlobal() && lang === 'RU') ? 'ЧАВО' : 'FAQ',
                         className: 'btn-outline-success d-none',
                         callback: function () {
                             dialog = bootbox
@@ -738,14 +737,14 @@ var gameStates = {
                     }),
                     ...(isYandexAppGlobal() && {
                         oferta: {
-                            label: '<?= T::S('Оферта') ?>',
+                            label: '<?= T::S('Agreement') ?>',
                             className: 'btn-outline-success',
                             callback: function () {
                                 async function getOfertaModal() {
-                                    return fetch(BASE_URL + 'oferta.html' + version(true))
+                                    return fetch(BASE_URL + 'oferta' + (lang === 'EN' ? '_EN' : '') + '.html' + version(true))
                                         .then((response) => response.text());
                                 };
-                                console.log('!!!!!!!!!!!');
+
                                 getOfertaModal().then((html) => {
                                     dialog = bootbox.alert({
                                         title: '',

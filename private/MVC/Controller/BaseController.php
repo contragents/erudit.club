@@ -65,7 +65,7 @@ class BaseController
         } elseif (strpos($_SERVER['HTTP_REFERER'] ?? '', 'private.html')) {
             return T::GAME_MODE_LANG['yandex'];
         } elseif  (strpos($_SERVER['HTTP_REFERER'] ?? '', 'scramble.html')) {
-            return T::GAME_MODE_LANG['scrabble'];
+            return T::GAME_MODE_LANG[Game::SCRABBLE];
         } else {
             return T::GAME_MODE_LANG['yandex'];
         }
