@@ -30,7 +30,7 @@ const SUDOKU_PRICE = <?= MonetizationService::SUDOKU_PRICE ?>;
 const BASE_URL = '<?= BaseController::BASE_URL ?>';
 const SUBMIT_SCRIPT = 'turn_submitter.php';
 const WORD_CHECKER_SCRIPT = 'word_checker.php';
-const WORD_SCRIPT = 'word.php';
+const WORD_SCRIPT = 'mvc/stats/word/';
 const STATUS_CHECKER_SCRIPT = 'status_checker.php';
 const INIT_GAME_SCRIPT = 'init_game.php';
 const CHAT_SCRIPT = 'send_chat_message.php';

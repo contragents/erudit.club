@@ -7,6 +7,11 @@ class Yandex
     public static ?string $yandexUser = null;
     public static ?int $commonId = null;
 
+    const GAMES_ID_LANG = [
+        '443011' => T::EN_LANG, // Scramble
+        '393661' => T::RU_LANG, // Эрудит
+    ];
+
     public static function authorize(): bool
     {
         if (!empty($_REQUEST[self::USER_ID_PARAM])) {

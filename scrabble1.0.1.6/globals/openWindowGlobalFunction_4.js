@@ -1,28 +1,31 @@
 //
-async function openWindowGlobal(word){
-    /*const response = await fetch(BASE_URL + '<?=$dir?>/php/word.php?ingame=yes&word='+word, {
-    method: 'POST',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: '12=12'
-  });
+async function openWindowGlobal(word) {
+    const response = await fetch(BASE_URL + WORD_SCRIPT + '?word=' + word, {
+        method: 'GET',
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'include',
+        headers: {
+            //'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    });
 
-  return await response.text(); // parses JSON response into native JavaScript objects
-  */
+    // Проверяем успешность запроса
+    if (!response.ok) {
+        throw new Error(`Ошибка запроса: ${response.status}`);
+    }
 
-    fetchGlobal(WORD_SCRIPT, '', 'ingame=yes&word=' + word)
-        .then((resp) => {
-            if ('result' in resp) {
-               let dialogWord = bootbox.alert({
-                    message: resp.result,
-                    className: 'modal-settings modal-profile text-white',
-                    locale: lang === 'RU' ? 'ru' : 'en',
-                }).off("shown.bs.modal");
-            }
-        });
+    const returndata = await response.json();
+    // Получаем JSON
+
+    if ('result' in returndata) {
+        let dialogWord = bootbox.alert({
+            message: returndata.result,
+            className: 'modal-settings modal-profile text-white',
+            locale: lang.toLowerCase(),
+        }).off("shown.bs.modal");
+    }
 }
+
 

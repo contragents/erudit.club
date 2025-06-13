@@ -67,6 +67,15 @@ class BaseController
         } elseif  (strpos($_SERVER['HTTP_REFERER'] ?? '', 'scramble.html')) {
             return T::GAME_MODE_LANG[Game::SCRABBLE];
         } else {
+            // SUD-51
+            if (isset($_SERVER['HTTP_REFERER'])) {
+                foreach (Yandex::GAMES_ID_LANG as $gameId => $lang) {
+                    if (strstr($_SERVER['HTTP_REFERER'], (string)$gameId) !== false) {
+                        return $lang;
+                    }
+                }
+            }
+
             return T::GAME_MODE_LANG['yandex'];
         }
     }

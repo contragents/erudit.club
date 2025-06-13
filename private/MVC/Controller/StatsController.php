@@ -22,6 +22,77 @@ class StatsController extends BaseController
     const COIN_POSITION_TO_PARAM = 'coin_position_to';
     const ANONYM_AVATAR_URL = 'https://avatarko.ru/img/avatar/1/avatarko_anonim.jpg';
 
+    public function wordAction(): string
+    {
+        $content = '';
+
+        $CONTENT_SELECT = "SELECT 
+content COLLATE utf8_general_ci, 
+content_perevod COLLATE utf8_general_ci
+FROM 
+gufo_me 
+WHERE 
+slovo = '" . urldecode($_REQUEST['word']) . "'
+UNION
+SELECT
+comment COLLATE utf8_general_ci as content,
+substring(comment,1,0) COLLATE utf8_general_ci as content_perevod
+FROM
+dict_cambrige
+WHERE 
+slovo = '" . urldecode($_REQUEST['word']) . "'
+UNION
+SELECT
+comment COLLATE utf8_general_ci as content,
+substring(comment,1,0) COLLATE utf8_general_ci as content_perevod
+FROM
+dict
+WHERE 
+slovo = '" . urldecode(self::$Request['word']) . "';";
+
+        $res = DB::queryArray($CONTENT_SELECT);
+        if (!is_array($res) || empty($res)) {
+            $content .= T::S("Слово не найдено.");
+        } else {
+            $row = current($res);
+            if (!is_array($row) || empty($row)) {
+                $content .= T::S("Слово не найдено.");
+            }
+
+            foreach ($row as $field => $value) {
+                if ($spacePos = strpos($field, ' ')) {
+                    $row[substr($field, 0, $spacePos)] = $value;
+                }
+            }
+        }
+
+        // убираем всякую херню после парсинга
+        if (strstr($_SERVER['HTTP_REFERER'] ?? '', 'andex') || strstr($_SERVER['HTTP_REFERER'] ?? '', '-5.su')) {
+            $row['content'] = str_replace('href=', '', $row['content']);
+            $row['content_perevod'] = str_replace('href=', '', $row['content_perevod']);
+        }
+
+        $row['content'] = str_ireplace(
+            $_REQUEST['word'] . ' noun',
+            '<h2>' . strtoupper($_REQUEST['word']) . ' noun</h2>',
+            $row['content']
+        );
+
+        $content .= str_replace(
+            ["\r\n", "\n"],
+            '<br />',
+            str_replace('href="', 'href="' . Config::$config['domain'], $row['content'] . $row['content_perevod'])
+        );
+
+        $content = preg_replace('/googletag\.cmd\.push\(.{0,400}\}\);/','', $content);
+
+        if(T::$lang === T::EN_LANG) {
+            $content = str_replace(T::CYR,'', $content);
+        }
+
+        return json_encode(['result' => $content], JSON_UNESCAPED_UNICODE);
+    }
+
     /**
      * @param AchievesModel $achieveModel
      * @return array
@@ -37,7 +108,6 @@ class StatsController extends BaseController
 
         return $res;
     }
-
 
     public function leadersAction(): string
     {
