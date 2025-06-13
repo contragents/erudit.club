@@ -528,6 +528,8 @@ class Game
      */
     public function getPlayerName(array $user)
     {
+        return PlayerModel::getPlayerName($user);
+
         if (strpos($user['ID'], 'bot') !== false) {
             return $this->config['botNames'][substr($user['ID'], (strlen($user['ID']) == 7 ? -1 : -2))];
         }
@@ -867,7 +869,7 @@ class Game
                 ? CommonIdRatingModel::getTopByRating($rating['rating'], self::$gameName)
                 : '';
 
-            $rating['playerName'] = $this->getPlayerName($user);
+            $rating['playerName'] = PlayerModel::getPlayerName($user); // CLUB-440 $this->getPlayerName($user);
             $rating['playerAvatarUrl'] = $this->getAvatarUrl($user['ID']);
             $rating['isActive'] = (!isset($user['lastActiveTime']) || !$user['isActive']) ? false : true;
 
@@ -2384,9 +2386,9 @@ class Game
                 $arr = array_merge($arr, ['userInfo' => $this->User]);
                 $arr = array_merge($arr, ['gameNumber' => $this->gameStatus['gameNumber']]);
                 $arr = array_merge($arr, ['winScore' => $this->gameStatus['winScore']]);
-                /** todo После релиза убрать substr(strtoupper($this->gameStatus['lang']),0,2), оставить только $this->gameStatus['lang'] */
-                $arr = array_merge($arr, ['lang' => substr(strtoupper($this->gameStatus['lang']), 0, 2)]);
-                $arr = array_merge($arr, ['langTest' => $this->gameStatus['lang']]);
+
+                $arr = array_merge($arr, ['lang' => T::$lang /* CLUB-440 substr(strtoupper($this->gameStatus['lang']), 0, 2)*/]);
+
                 //Добавили в респонс очки игроков
             }
 

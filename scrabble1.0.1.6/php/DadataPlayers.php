@@ -147,6 +147,8 @@ class Players
         array $user = ['ID' => 'cookie', 'common_id' => 15, 'userID' => 'user_ID']
     ) {
 
+        return PlayerModel::getPlayerName($user); // CLUB-440
+
         if (strpos($user['ID'], 'bot') !== false) {
             return Game::$configStatic['botNames'][substr($user['ID'], (strlen($user['ID']) == 7 ? -1 : -2))];
         }

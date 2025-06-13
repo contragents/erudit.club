@@ -340,7 +340,7 @@ class Hints
         $record = Prizes::getRandomRecord();
         $recorderCommonID = Players::getCommonIDByCookie($record['cookie']);
         $recorderPlayerID = Players::getUserIDByCookie($record['cookie']);
-        $recordPlayerName = Players::getPlayerName(
+        $recordPlayerName = PlayerModel::getPlayerName( // CLUB-440 Players::getPlayerName(
             $recorderPlayerID
                 ? ['ID' => $record['cookie'], 'common_id' => $recorderCommonID,]
                 : ['ID' => $record['cookie'], 'common_id' => $recorderCommonID, 'userID' => $recorderPlayerID]

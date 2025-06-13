@@ -13,7 +13,7 @@ if($gameData = DB::queryValue($gameDataQuery)) {
 $players = [];
 foreach ($gameData['users'] ?? [] as $num => $player) {
     $players[$num] = $player;
-    $players[$num]['nickName'] = $instance->getPlayerName($player);
+    $players[$num]['nickName'] = PlayerModel::getPlayerName($player); // CLUB-440 $instance->getPlayerName($player);
     $players[$num]['avatarUrl'] = $instance->getAvatarUrl($player['ID']);
 }
 print "Играют " . implode('&nbsp;vs&nbsp;', array_map(function ($player) {

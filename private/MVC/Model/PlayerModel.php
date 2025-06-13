@@ -357,6 +357,13 @@ class PlayerModel extends BaseModel
                 }
             }
 
+            if(T::$lang === T::EN_LANG) {
+                $letterName = T::translit(
+                    $letterName,
+                    true
+                );
+            }
+
             return mb_strtoupper(mb_substr($letterName, 0, 1)) . mb_substr($letterName, 1);
         }
     }
