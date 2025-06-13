@@ -20,6 +20,9 @@ if (isYandexAppGlobal() && typeof YaGames != 'undefined') {
 
             ysdk.on('game_api_pause', pauseCallback);
             ysdk.on('game_api_resume', resumeCallback);
+
+            // CLUB-440 #2
+            let nothing = ysdk.environment.i18n.lang.toUpperCase();
         });
 }
 
