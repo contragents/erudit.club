@@ -1029,7 +1029,7 @@ function prizesButtonHandler() {
                 className: 'modal-settings modal-leaderboard  modal--footer-compact',
                 buttons: {
                     ok: {
-                        label: lang === 'RU' ? 'Назад' : 'Back',
+                        label: '<?= T::S('Back') ?>', // lang === 'RU' ? 'Назад' : 'Back',
                         className: 'btn-sm ml-auto mr-0',
                     },
                 },
@@ -1402,8 +1402,8 @@ function Leaderboard() {
                             const ratingHtml = `
                                 <div class="list-heading">
                                     <span>№</span>
-                                    <span>Игрок</span>
-                                    <span>Рейтинг</span>
+                                    <span><?= T::S('Player')?></span>
+                                    <span><?= T::S('Rating')?></span>
                                 </div>
                                 ${ratingList.join('')}
                             `;
@@ -1411,8 +1411,8 @@ function Leaderboard() {
                             const coinsHtml = `
                                 <div class="list-heading">
                                     <span>№</span>
-                                    <span>Игрок</span>
-                                    <span>Баланс</span>
+                                    <span><?= T::S('Player')?></span>
+                                    <span><?= T::S('Balance')?></span>
                                 </div>
                                 ${coinsList.join('')}
                             `;
