@@ -941,6 +941,17 @@
     text-transform: uppercase;
 }
 
+.btn-red {
+    color: #fff !important;
+    background: rgb(75, 118, 177) !important;
+    background: radial-gradient(circle, rgba(255, 100, 100, 1) 0%, rgba(36, 64, 99, 1) 100%) !important;
+}
+
+.btn-red:hover {
+    color: #fff !important;
+    background: radial-gradient(circle, rgb(56, 89, 134) 0%, rgb(21, 38, 58) 100%) !important;
+}
+
 .modal-settings a.btn {
     display: inline-flex;
     text-align: center;
