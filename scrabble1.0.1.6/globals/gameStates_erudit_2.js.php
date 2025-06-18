@@ -801,40 +801,40 @@ var gameStates = {
         message: '<?= T::S('Your turn!') ?>',
         refresh: 15,
         action: function (data) {
-            gameStates['gameResults']['action'](data);
-            buttons['submitButton']['svgObject'].setInteractive();
-            buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + OTJAT_MODE));
+            gameStates.gameResults.action(data);
+            buttons.submitButton.svgObject.setInteractive();
+            buttons.submitButton.svgObject.bringToTop(buttons.submitButton.svgObject.getByName('submitButton' + OTJAT_MODE));
         },
         from_initRatingGame: function (data) {
-            gameStates['startGame']['from_initGame']();
-            gameStates['myTurn']['from_noGame'](data);
+            gameStates.startGame.from_initGame();
+            gameStates.myTurn.from_noGame(data);
         },
         from_initCoinGame: function (data) {
-            gameStates['startGame']['from_initGame']();
-            gameStates['myTurn']['from_noGame'](data);
+            gameStates.startGame.from_initGame();
+            gameStates.myTurn.from_noGame(data);
         },
         from_initGame: function (data) {
-            gameStates['startGame']['from_initGame']();
-            gameStates['myTurn']['from_noGame'](data);
+            gameStates.startGame.from_initGame();
+            gameStates.myTurn.from_noGame(data);
         },
         from_noGame: function (data) {
             if ('fishki' in data)
-                placeFishki(data['fishki']);
+                placeFishki(data.fishki);
         },
         from_desync: function (data) {
             if ('fishki' in data)
-                placeFishki(data['fishki']);
+                placeFishki(data.fishki);
         },
         from_gameResults: function () {
-            gameStates['startGame']['from_initGame']();
+            gameStates.startGame.from_initGame();
         },
         from_preMyTurn: function () {
             resetButtonFunction(true);
-            gameStates['startGame']['from_initGame']();
+            gameStates.startGame.from_initGame();
         },
         from_startGame: function () {
             resetButtonFunction(true);
-            gameStates['startGame']['from_initGame']();
+            gameStates.startGame.from_initGame();
         }
     },
     preMyTurn: {
@@ -842,65 +842,65 @@ var gameStates = {
         message: '<?= T::S('Get ready - your turn is next!') ?>',
         refresh: 5,
         action: function (data) {
-            gameStates['gameResults']['action'](data);
+            gameStates.gameResults.action(data);
 
-            buttons['submitButton']['svgObject'].disableInteractive();
-            buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
+            buttons.submitButton.svgObject.disableInteractive();
+            buttons.submitButton.svgObject.bringToTop(buttons.submitButton.svgObject.getByName('submitButton' + 'Inactive'));
         },
         from_desync: function (data) {
             if ('fishki' in data)
-                placeFishki(data['fishki']);
+                placeFishki(data.fishki);
         },
         from_initRatingGame: function (data) {
-            gameStates['startGame']['from_initGame']();
-            gameStates['myTurn']['from_noGame'](data);
+            gameStates.startGame.from_initGame();
+            gameStates.myTurn.from_noGame(data);
         },
         from_initCoinGame: function (data) {
-            gameStates['startGame']['from_initGame']();
-            gameStates['myTurn']['from_noGame'](data);
+            gameStates.startGame.from_initGame();
+            gameStates.myTurn.from_noGame(data);
         },
         from_initGame: function (data) {
-            gameStates['startGame']['from_initGame']();
-            gameStates['myTurn']['from_noGame'](data);
+            gameStates.startGame.from_initGame();
+            gameStates.myTurn.from_noGame(data);
         },
         from_noGame: function (data) {
-            gameStates['myTurn']['from_noGame'](data)
+            gameStates.myTurn.from_noGame(data)
         },
         from_myTurn: function (data) {
-            gameStates['myTurn']['from_noGame'](data)
+            gameStates.myTurn.from_noGame(data)
         },
         from_otherTurn: function (data) {
-            gameStates['myTurn']['from_noGame'](data)
+            gameStates.myTurn.from_noGame(data)
         },
         from_gameResults: function () {
-            gameStates['startGame']['from_initGame']()
+            gameStates.startGame.from_initGame()
         },
     },
     otherTurn: {
         1: 'waiting', 2: 'done', message: '<?= T::S('Take a break - your move in one') ?>',
         refresh: 5,
         action: function (data) {
-            gameStates['gameResults']['action'](data);
+            gameStates.gameResults.action(data);
 
-            gameStates['myTurn']['from_noGame'](data);
-            buttons['submitButton']['svgObject'].disableInteractive();
-            buttons['submitButton']['svgObject'].bringToTop(buttons['submitButton']['svgObject'].getByName('submitButton' + 'Inactive'));
+            gameStates.myTurn.from_noGame(data);
+            buttons.submitButton.svgObject.disableInteractive();
+            buttons.submitButton.svgObject.bringToTop(buttons.submitButton.svgObject.getByName('submitButton' + 'Inactive'));
         },
         from_desync: function (data) {
             if ('fishki' in data)
-                placeFishki(data['fishki']);
+                placeFishki(data.fishki);
         },
         from_initRatingGame: function (data) {
-            gameStates['startGame']['from_initGame']();
+            gameStates.startGame.from_initGame();
         },
         from_initCoinGame: function (data) {
-            gameStates['startGame']['from_initGame']();
+            gameStates.startGame.from_initGame();
         },
         from_initGame: function (data) {
-            gameStates['startGame']['from_initGame']();
+            gameStates.startGame.from_initGame();
         },
         from_gameResults: function () {
-            gameStates['startGame']['from_initGame']();
+            gameStates.startGame.from_initGame();
         }
     },
     gameResults: {
@@ -961,7 +961,7 @@ var gameStates = {
                                             callback: function () {
                                                 dialogResponse.modal('hide');
                                                 dataInvite['comments'] = data['comments'];
-                                                gameStates['gameResults']['results'](dataInvite);
+                                                gameStates.gameResults.results(dataInvite);
                                             }
                                         });
 
@@ -1162,7 +1162,7 @@ function commonCallback(data) {
             intervalId = 0;
         }
         if (canOpenDialog) {
-            if (gameState == 'initGame' || gameState == 'initRatingGame' || gameState == 'initCoinGame') {
+            if ([INIT_RATING_GAME_STATE, INIT_GAME_STATE].indexOf(gameState) >= 0) {
                 dialog = bootbox.dialog({
                     message: ('comments' in data) ? data['comments'] : gameStates[gameState]['message'],
                     size: 'small',
@@ -1236,17 +1236,17 @@ function commonCallback(data) {
                         }, 1000);
                     });
 
-            } else if (gameState == 'gameResults') {
+            } else if (gameState == GAME_RESULTS_STATE) {
                 if ('inviteStatus' in data) {
-                    if (data['inviteStatus'] == 'newGameStarting') {
+                    if (data.inviteStatus == 'newGameStarting') {
                         document.location.reload(true);
-                    } else if (data['inviteStatus'] == 'waiting') {
-                        gameStates['gameResults']['results'](data);
+                    } else if (data.inviteStatus == 'waiting') {
+                        gameStates.gameResults.results(data);
                     } else {
-                        gameStates['gameResults']['decision'](data);
+                        gameStates.gameResults.decision(data);
                     }
                 } else {
-                    gameStates['gameResults']['results'](data);
+                    gameStates.gameResults.results(data);
                 }
             } else if (!('noDialog' in gameStates[gameState])) {
                 setTimeout(function () {

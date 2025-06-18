@@ -75,14 +75,14 @@ function (time, delta) {
         }
     }
 
-    if (gameState == 'gameResults') {
+    if (gameState == GAME_RESULTS_STATE) {
         if ((flor % 2) === 0) {
-            buttons['newGameButton']['svgObject']
-                .bringToTop(buttons['newGameButton']['svgObject']
+            buttons.newGameButton.svgObject
+                .bringToTop(buttons.newGameButton.svgObject
                     .getByName('newGameButton' + ALARM_MODE));
         } else {
-            buttons['newGameButton']['svgObject']
-                .bringToTop(buttons['newGameButton']['svgObject']
+            buttons.newGameButton.svgObject
+                .bringToTop(buttons.newGameButton.svgObject
                     .getByName('newGameButton' + OTJAT_MODE));
         }
     }

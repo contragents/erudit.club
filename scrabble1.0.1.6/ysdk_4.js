@@ -93,7 +93,6 @@ function hideStickyBannerYandex() {
     }
 }
 
-// SUD-42
 async function reportGameIsReadyYandex() {
     if (!isYandexAppGlobal()) {
         return;
@@ -131,7 +130,9 @@ function reportVisibilityChangeYandex() {
         if(pageActive === 'hidden') {
             ysdk.features.GameplayAPI?.stop();
         } else {
-            ysdk.features.GameplayAPI?.start();
+            if ([MY_TURN_STATE, PRE_MY_TURN_STATE, OTHER_TURN_STATE, INIT_GAME_STATE, GAME_RESULTS_STATE].indexOf(gameState) >= 0) {
+                ysdk.features.GameplayAPI?.start();
+            }
         }
     }
 }
@@ -141,8 +142,6 @@ const pauseCallback = () => {
     onVisibilityChange();
     console.log('GAME PAUSED');
 };
-
-
 
 const resumeCallback = () => {
     pageActive = 'visible';

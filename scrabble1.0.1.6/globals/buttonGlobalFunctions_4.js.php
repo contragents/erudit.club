@@ -137,7 +137,7 @@ function newGameButtonFunction(ignoreDialog = false) {
                                         className: 'modal-settings modal-profile text-white',
                                         callback: function () {
                                             dialogResponse.modal('hide');
-                                            gameStates['gameResults']['results'](dataInvite);
+                                            gameStates.gameResults.results(dataInvite);
                                         }
                                     });
 

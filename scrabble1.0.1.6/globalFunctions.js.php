@@ -7,7 +7,7 @@ function closeDialogs() {
 }
 
 function activateFullScreenForMobiles() {
-    if(isYandexAppGlobal()) {
+    if (isYandexAppGlobal()) {
         return;
     }
 
@@ -20,7 +20,7 @@ function activateFullScreenForMobiles() {
     }
 }
 
-document.addEventListener("fullscreenchange", function() {
+document.addEventListener("fullscreenchange", function () {
     if (isYandexAppGlobal()) {
         return;
     }
@@ -30,8 +30,8 @@ document.addEventListener("fullscreenchange", function() {
             size: 'small',
             message: '<?= T::S('Return to fullscreen mode?') ?>',
             locale: '<?= strtolower(T::$lang) ?>',
-            callback: function(result) {
-                if(result) {
+            callback: function (result) {
+                if (result) {
                     document.body.requestFullscreen();
                 }
             }
@@ -150,11 +150,13 @@ function asyncCSS(href) {
 }
 
 window.onbeforeunload = function () {
-    if (gameState == 'myTurn'
-        || gameState == 'preMyTurn'
-        || gameState == 'otherTurn'
-        || gameState == 'initGame'
-        || gameState == 'initRatingGame') {
+    if (
+        gameState == MY_TURN_STATE
+        || gameState == PRE_MY_TURN_STATE
+        || gameState == OTHER_TURN_STATE
+        || gameState == INIT_GAME_STATE
+        || gameState == INIT_RATING_GAME_STATE
+    ) {
         fetchGlobal(SET_INACTIVE_SCRIPT, '', '');
         return "Вы в игре - уверены, что хотите выйти?";
     }
@@ -169,11 +171,13 @@ document.addEventListener("visibilitychange", function () {
 function onVisibilityChange() {
     reportVisibilityChangeYandex();
 
-    if (gameState == 'myTurn'
-        || gameState == 'preMyTurn'
-        || gameState == 'otherTurn'
-        || gameState == 'initGame'
-        || gameState == 'initRatingGame') {
+    if (
+        gameState == MY_TURN_STATE
+        || gameState == PRE_MY_TURN_STATE
+        || gameState == OTHER_TURN_STATE
+        || gameState == INIT_GAME_STATE
+        || gameState == INIT_RATING_GAME_STATE
+    ) {
         if (pageActive === 'hidden') {
             fetchGlobal(STATUS_CHECKER_SCRIPT)
                 .then((data) => {
@@ -272,7 +276,10 @@ function savePlayerAvatar() {
     if (!checkElement.checkValidity()) {
         showCabinetActionResult({
             result: 'error',
-            message: '<?= T::S('Error! Choose image file with the size not more than') ?> <?= round(Dadata\Players::MAX_UPLOAD_SIZE / 1024 / 1024, 2); ?>MB'
+            message: '<?= T::S('Error! Choose image file with the size not more than') ?> <?= round(
+                Dadata\Players::MAX_UPLOAD_SIZE / 1024 / 1024,
+                2
+            ); ?>MB'
         });
 
         return false;
@@ -304,7 +311,7 @@ function savePlayerAvatar() {
 
     $.ajax({
         url: URL,
-        xhrFields: { withCredentials: true },
+        xhrFields: {withCredentials: true},
         type: 'POST',
         data: formData,
         async: false,
@@ -547,7 +554,7 @@ function getSVGBlockGlobal(X, Y, buttonName, _this, scalable, hasDigits = false)
     for (let mode in playerBlockModes) {
         elements[elementNumber] = _this.add.image(0, 0, buttonName + playerBlockModes[mode])
             .setName(buttonName + playerBlockModes[mode]);
-        if(scalable) {
+        if (scalable) {
             elements[elementNumber].setScale(1, buttonHeightKoef);
         }
         elementNumber++;
@@ -557,7 +564,7 @@ function getSVGBlockGlobal(X, Y, buttonName, _this, scalable, hasDigits = false)
         let imgName = 'numbersX3' in players[buttonName] ? 'timer_' : 'player_';
         let y = 'numbersY' in players[buttonName] ? players[buttonName].numbersY : 0;
         let x3 = 'numbersX3' in players[buttonName] ? players[buttonName].numbersX3 : elements[0].displayWidth * 0.75 * 0.5;
-        let x2 = 'numbersX2' in players[buttonName] ? players[buttonName].numbersX2: elements[0].displayWidth * 0.6 * 0.5;
+        let x2 = 'numbersX2' in players[buttonName] ? players[buttonName].numbersX2 : elements[0].displayWidth * 0.6 * 0.5;
         let x1 = 'numbersX1' in players[buttonName] ? players[buttonName].numbersX1 : elements[0].displayWidth * 0.45 * 0.5;
 
         playerBlockModes.forEach(mode => {
@@ -593,7 +600,7 @@ function getSVGBlockGlobal(X, Y, buttonName, _this, scalable, hasDigits = false)
                     .setName(mode + '_' + k.replace('digit_', '') + '_2')
                     .setVisible(false);
 
-                if(scalable) {
+                if (scalable) {
                     elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
                 }
 
@@ -610,7 +617,7 @@ function getSVGBlockGlobal(X, Y, buttonName, _this, scalable, hasDigits = false)
                     .setName(mode + '_' + k.replace('digit_', '') + '_1')
                     .setVisible(false);
 
-                if(scalable) {
+                if (scalable) {
                     elements[elementNumber].setScale(buttonHeightKoef, buttonHeightKoef);
                 }
 
