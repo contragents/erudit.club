@@ -20,8 +20,6 @@ class PlayersController extends BaseController
 
     public function Run()
     {
-        ini_set("display_errors", 1); error_reporting(E_ALL);
-
         return parent::Run();
     }
 
@@ -40,23 +38,38 @@ class PlayersController extends BaseController
         $salt = Config::$envConfig['SALT'];
         $method = 'addRef';
 
-        $sign = md5($salt . $method . implode('', array_map(fn($key) => $key . self::$Request[$key] ?? '', self::ADD_REF_PARAMS_ORDER)));
+        $sign = md5(
+            $salt . $method . implode(
+                '',
+                array_map(fn($key) => $key . self::$Request[$key] ?? '', self::ADD_REF_PARAMS_ORDER)
+            )
+        );
         $res = ['result' => 'error'];
 
-        if($sign !== self::$Request[self::SIGN_PARAM]) {
+        if ($sign !== self::$Request[self::SIGN_PARAM]) {
             return json_encode($res);
         }
 
         /**
          * @var ?RefModel $ref
          */
-        $ref = RefModel::getCustomO(RefModel::REF_TG_ID_FIELD, '=', self::$Request[self::REF_TG_ID_PARAM], true)[0] ?? null;
+        $ref = RefModel::getCustomO(
+                RefModel::REF_TG_ID_FIELD,
+                '=',
+                self::$Request[self::REF_TG_ID_PARAM],
+                true
+            )[0] ?? null;
 
         if (!$ref) {
             return json_encode($res);
         }
 
-        if (BalanceModel::changeBalance(self::$Request[self::COMMON_ID_PARAM], MonetizationService::REWARD[AchievesModel::DAY_PERIOD], 'Referral bonus for ' . $ref->_name, BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::MOTIVATION_TYPE])) {
+        if (BalanceModel::changeBalance(
+            self::$Request[self::COMMON_ID_PARAM],
+            MonetizationService::REWARD[AchievesModel::DAY_PERIOD],
+            'Referral bonus for ' . $ref->_name,
+            BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::MOTIVATION_TYPE]
+        )) {
             $res['result'] = 'success';
         }
 
@@ -72,7 +85,10 @@ class PlayersController extends BaseController
 
         $commonId = self::$Request[self::COMMON_ID_PARAM] ?? false;
 
-        if($commonId && PlayerModel::validateCommonIdByCookie($commonId, $_COOKIE[CookieErudit::COOKIE_NAME] ?? 'aaabbbccc')) {
+        if ($commonId && PlayerModel::validateCommonIdByCookie(
+                $commonId,
+                $_COOKIE[CookieErudit::COOKIE_NAME] ?? 'aaabbbccc'
+            )) {
             if (in_array($hide, self::PARAM_VALUES[self::HIDE_PARAM])) {
                 $user = UserModel::getOneO($commonId, true);
 
@@ -156,8 +172,9 @@ class PlayersController extends BaseController
                             . '.svg';
                     }
 
-
                     $achieves = AchievesModel::getCurrentAchievesByCommonId($thisUser->_id);
+                    self::sortAchieves($achieves);
+
                     if (!empty($achieves)) {
                         StatsController::addTranslationsToAchieves($achieves);
                         $res[$numUser]['achieves'] = $achieves;
@@ -170,5 +187,24 @@ class PlayersController extends BaseController
             $res,
             JSON_UNESCAPED_UNICODE
         );
+    }
+
+    /**
+     * Упорядочиваем достижения по периоду - от ГОДа до ДНя
+     * @param array $achieves
+     */
+    private function sortAchieves(array &$achieves): void
+    {
+        $resultAchieves = [];
+
+        foreach (array_reverse(PrizesScrabble::PERIODS, true) as $period => $nothing) {
+            foreach ($achieves as $achieve) {
+                if ($achieve[AchievesModel::EVENT_PERIOD_FIELD] === $period) {
+                    $resultAchieves[] = $achieve;
+                }
+            }
+        }
+
+        $achieves = $resultAchieves;
     }
 }

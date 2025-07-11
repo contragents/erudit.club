@@ -11,7 +11,7 @@ class PrizesScrabble extends PrizesErudit
     protected const MONTH = 'month';
     protected const YEAR = 'year';
 
-    protected const PERIODS = [
+    const PERIODS = [
         self::DAY => 'day',
         self::WEEK => 'week',
         self::MONTH => 'month',

@@ -17,7 +17,7 @@ class PrizesErudit
     protected const MONTH = 'месяц';
     protected const YEAR = 'год';
 
-    protected const PERIODS = [
+    const PERIODS = [
         self::DAY => 'day',
         self::WEEK => 'week',
         self::MONTH => 'month',
