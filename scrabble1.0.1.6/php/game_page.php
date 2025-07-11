@@ -1,21 +1,19 @@
 <?php
-include_once 'EruditGame.php';
-
-$instance = new \Erudit\Game();
-
 $gameDataQuery = "SELECT uncompress(game_data) FROM games WHERE id = {$_GET['game_id']}";
 if($gameData = DB::queryValue($gameDataQuery)) {
     $gameData = unserialize($gameData);
 } else {
-    $gameData = Cache::get($instance::GAME_STATUS_KEY . ($_GET['game_id'] - GameController::GAME_ID_BASE_INC));
+    $gameData = Cache::get(Game::GAME_STATUS_KEY . ($_GET['game_id'] - GameController::GAME_ID_BASE_INC));
 }
 
 $players = [];
 foreach ($gameData['users'] ?? [] as $num => $player) {
     $players[$num] = $player;
-    $players[$num]['nickName'] = PlayerModel::getPlayerName($player); // CLUB-440 $instance->getPlayerName($player);
-    $players[$num]['avatarUrl'] = $instance->getAvatarUrl($player['ID']);
+    $players[$num]['nickName'] = PlayerModel::getPlayerName($player);
+    $players[$num]['common_id'] = PlayerModel::getPlayerID($player['ID'], false);
+    $players[$num]['avatarUrl'] = PlayerModel::getAvatarUrl($players[$num]['common_id']);
 }
+
 print "Играют " . implode('&nbsp;vs&nbsp;', array_map(function ($player) {
         return ViewHelper::tag('a', $player['nickName'], ['href' => '/mvc/stats/view?common_id=' . $player['common_id']])
             . '&nbsp;'

@@ -58,7 +58,7 @@ Config::makeEnvironment();
 // Проверяем режим дебага
 Config::checkDebugFlag();
 
-T::$lang = in_array(($_GET['lang'] ?? 'NA'), T::GAME_MODE_LANG)
+T::$lang = in_array(($_GET['lang'] ?? 'NA'), T::SUPPORTED_LANGS)
     ? $_GET['lang']
     : BaseController::getLang();
 Game::$gameName = Game::GAME_LANG[T::$lang];
@@ -73,8 +73,8 @@ Game::$gameName = Game::GAME_LANG[T::$lang];
 function mp($data, string $comment = '', string $class = 'NA'): void
 {
     Cache::setex(
-            implode('_',[LOG_KEY, $class, date('c'), microtime(true)]),
-            LOG_TTL,
-            ['data' => $data, 'comment' => $comment, 'class' => $class]
-        );
+        implode('_', [LOG_KEY, $class, date('c'), microtime(true)]),
+        LOG_TTL,
+        ['data' => $data, 'comment' => $comment, 'class' => $class]
+    );
 }

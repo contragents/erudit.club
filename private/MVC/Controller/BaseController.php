@@ -22,12 +22,6 @@ class BaseController
         static::$Request = $request;
 
         $this->Action = $action . 'Action';
-
-        if (!empty(self::$Request['lang'])) {
-            T::$lang = self::$Request['lang'];
-        } else {
-            T::$lang = self::getLang();
-        }
     }
 
     public static function isAjaxRequest(): bool
@@ -63,20 +57,27 @@ class BaseController
         if (strpos($_SERVER['HTTP_REFERER'] ?? '', 'dev.html')) {
             return T::GAME_MODE_LANG['dev'];
         } elseif (strpos($_SERVER['HTTP_REFERER'] ?? '', 'private.html')) {
-            return T::GAME_MODE_LANG['yandex'];
+            return T::RU_LANG;
         } elseif  (strpos($_SERVER['HTTP_REFERER'] ?? '', 'scramble.html')) {
             return T::GAME_MODE_LANG[Game::SCRABBLE];
         } else {
-            // SUD-51
-            if (isset($_SERVER['HTTP_REFERER'])) {
-                foreach (Yandex::GAMES_ID_LANG as $gameId => $lang) {
-                    if (strstr($_SERVER['HTTP_REFERER'], (string)$gameId) !== false) {
-                        return $lang;
-                    }
+            $preferredLangPos = [];
+            foreach (T::SUPPORTED_LANGS as $lang) {
+                $langPos = strpos($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', strtolower($lang));
+                if ($langPos !== false) {
+                    $preferredLangPos[$lang] = $langPos;
                 }
             }
 
-            return T::GAME_MODE_LANG['yandex'];
+            if (count($preferredLangPos)) {
+                asort($preferredLangPos);
+
+                return strtoupper(key($preferredLangPos));
+            }
+
+            return (stripos($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', 'ru') !== false)
+                ? T::RU_LANG
+                : T::EN_LANG;
         }
     }
 
