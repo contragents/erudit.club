@@ -98,6 +98,10 @@ async function reportGameIsReadyYandex() {
         return;
     }
 
+    if(typeof YaGames == 'undefined') {
+        return;
+    }
+
     if (!!ysdk) {
         ysdk.features.LoadingAPI?.ready();
     } else {
@@ -107,6 +111,10 @@ async function reportGameIsReadyYandex() {
 
 function reportGameStartYandex() {
     if (!isYandexAppGlobal()) {
+        return;
+    }
+
+    if(typeof YaGames == 'undefined') {
         return;
     }
 

@@ -1092,6 +1092,7 @@ function prizesButtonHandler() {
 
     return;
 }
+
 function Leaderboard() {
     const pageSize = 20;
 

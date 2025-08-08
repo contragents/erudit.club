@@ -1123,10 +1123,6 @@ function commonCallback(data) {
 
     if ('lang' in data && data['lang'] != lang) {
         lang = data['lang'];
-        if (lang === 'EN') {
-            // ToDo not working under Yandex
-            asyncCSS('/css/choose_css.css');
-        }
     }
 
     if ('common_id' in data && !commonId) {
