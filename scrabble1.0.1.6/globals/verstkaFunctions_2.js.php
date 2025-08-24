@@ -1117,6 +1117,8 @@ function Leaderboard() {
             url.searchParams.set(key, params[key]);
         }
 
+        url.searchParams.set('ver', Math.floor(Date.now()));
+
         try {
             const response = await fetch(url.toString(), {
                 method: 'GET',
