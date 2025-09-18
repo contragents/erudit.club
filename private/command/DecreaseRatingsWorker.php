@@ -48,15 +48,15 @@ class DecreaseRatingsWorker
             . ORM::orderBy(self::RATING_FIELD, false)
             . ORM::limit(self::LIMIT_PLAYERS);
 
-        print $playersArrQuery;
+        // print $playersArrQuery; exit;
 
         $playersArr = DB::queryArray($playersArrQuery);
 
         foreach ($playersArr as $player) {
             $commonIdRatingModel = CommonIdRatingModel::new($player);
+            print PHP_EOL . $commonIdRatingModel->_id . PHP_EOL;
 
-            //print_r($commonIdRatingModel); exit;
-            // todo занести в game_stats таблицу
+            // занести в game_stats таблицу
             $newGameId = Cache::incr(Queue::GAMES_COUNTER);
 
             if ($newGameId == 1) {
@@ -88,10 +88,13 @@ class DecreaseRatingsWorker
 
             if (!DB::insertID()) {
                 Cache::rpush(Game::STATS_FAILED, ['query' => $queryParams,]);
+                print "STATS_FAILED" . PHP_EOL . $queryParams;
+
+                continue;
             }
 
-            // todo занести в RatingHistoryModel
-            RatingHistoryModel::addRatingChange(
+            // занести в RatingHistoryModel
+            print RatingHistoryModel::addRatingChange(
                 $commonIdRatingModel->_id,
                 $commonIdRatingModel->_rating_erudit,
                 $commonIdRatingModel->_rating_erudit + self::RATING_CHARGE,
@@ -100,12 +103,12 @@ class DecreaseRatingsWorker
                 Game::ERUDIT
             );
 
-            // todo занести в CommonIdRatingmodel
-            CommonIdRatingModel::changeUserRating(
+            // занести в CommonIdRatingmodel
+            var_export(CommonIdRatingModel::changeUserRating(
                 $commonIdRatingModel->_id,
                 $commonIdRatingModel->_rating_erudit + self::RATING_CHARGE,
                 Game::ERUDIT
-            );
+            ));
         }
     }
 }

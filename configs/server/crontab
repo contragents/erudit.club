@@ -29,7 +29,7 @@ MAILTO=root
 
 50 4 * * * root php /var/www/erudit.club/yandex1.0.1.1/php/bots/redisDailyCleaner.php > /dev/null 2>&1
 
-1 1 * * * root php /var/www/sudoku/private/command/BotBalanceWorker > /dev/null 2>&1
+1 1 * * * root php /var/www/sudoku/private/command/BotBalanceWorker.php > /dev/null 2>&1
+4 4 * * * root php /var/www/sudoku/private/command/DecreaseRatingsWorker.php > /dev/null 2>&1
 #
-
 
