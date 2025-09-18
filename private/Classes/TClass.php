@@ -55,6 +55,8 @@ class T
     }
 
     const PHRASES = [
+        'System' => [self::RU_LANG => 'Система'],
+        'Rating decrease' => [self::RU_LANG => 'Штраф за незаход'],
          'Agreement' => [
             self::RU_LANG => 'Оферта'
         ],

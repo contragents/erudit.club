@@ -293,13 +293,8 @@ class PlayerModel extends BaseModel
         }
 
         $commonId = $user['common_id'];
-        if (
-        $commonIDName = DB::queryValue(
-            "SELECT name 
-                    FROM users 
-                    WHERE id=$commonId 
-                    LIMIT 1"
-        )) {
+        $commonIDName = UserModel::getNameByCommonId($commonId);
+        if($commonIDName) {
             return $commonIDName;
         }
 

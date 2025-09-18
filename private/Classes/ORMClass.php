@@ -57,7 +57,15 @@ class ORM
             return ' SET ' . implode(',', $fields);
         }
 
-        return ' SET ' . implode(',', array_map(fn($field, $value) => " $field = '$value' ", array_keys($fieldsvals), $fieldsvals));
+        return ' SET '
+            . implode(
+                ',',
+                array_map(
+                    fn($field, $value) => " $field = '$value' ",
+                    array_keys($fieldsvals),
+                    $fieldsvals
+                )
+            );
     }
 
     public static function whereIn(string $fieldName, array $values): string
@@ -80,7 +88,8 @@ class ORM
         return ' AND ' . self::getWhereCondition($fieldName, $cond, $value, $isRaw);
     }
 
-    public static function getWhereCondition($fieldName, $cond, $value, $isRaw = false): string {
+    public static function getWhereCondition($fieldName, $cond, $value, $isRaw = false): string
+    {
         return " ($fieldName $cond " . ($value instanceof ORM ? $value->rawExpression : ($isRaw ? $value : "'$value'")) . ') ';
     }
 
@@ -182,6 +191,11 @@ class ORM
     public static function groupBy(array $conditions)
     {
         return ' GROUP BY ' . implode(', ', $conditions) . ' ';
+    }
+
+    public static function having(string $condition): string
+    {
+        return ' having ' . $condition;
     }
 
     public static function orWhere(string $field, string $condition, $value, bool $isRaw = false): string

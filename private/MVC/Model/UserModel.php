@@ -20,6 +20,7 @@ class UserModel extends BaseModel
     const UPDATABLE_FIELDS = [self::NAME_FIELD, self::AVATAR_URL_FIELD];
 
     // public ?int $_id = null; // =common_id наследует
+    const SYSTEM_ACCOUNTS = ['System' => 0, 'Rating_decrease' => 1];
     public ?string $_avatar_url = null;
     public ?string $_name = null;
     public ?string $_created_at = null;
@@ -69,7 +70,16 @@ class UserModel extends BaseModel
         return (bool)$res;
     }
 
-    public static function getNameByCommonId(int $commonId) {
-        return self::getOne($commonId)['name'] ?? false;
+    public static function getNameByCommonId(int $commonId): ?string {
+        $name = self::getOneO($commonId)->_name ?? null;
+        if(!$name) {
+            return null;
+        }
+
+        if(in_array($commonId, self::SYSTEM_ACCOUNTS)) {
+            return T::S($name);
+        } else {
+            return $name;
+        }
     }
 }
