@@ -365,7 +365,8 @@ class T
             'Потеря синхронизации с сервером',
         ],
         'Closed game window' => [
-            self::RU_LANG => 'Закрыл вкладку с игрой'
+            self::EN_LANG => 'closed game window',
+            self::RU_LANG => 'закрыл вкладку с игрой'
         ],
         "You closed the game window and became inactive!" => [
             self::RU_LANG => 'Вы закрыли вкладку с игрой и стали Неактивным!'
