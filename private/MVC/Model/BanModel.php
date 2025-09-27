@@ -41,6 +41,8 @@ class BanModel extends BaseModel
         $countComplaintsQuery = ORM::select([ORM::agg(ORM::COUNT, self::ID_FIELD)], self::TABLE_NAME)
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
             . ORM::andWhere(self::IS_DELETED_FIELD, '=', 0, true)
+            . ORM::andWhere(self::TS_TO_FIELD, '>', date('U'), true)
+            . ORM::andWhere(self::COMPLAINER_ID_FIELD, '>', 0, true)
             . ORM::limit(1);
 
         return DB::queryValue($countComplaintsQuery) ?: 0;

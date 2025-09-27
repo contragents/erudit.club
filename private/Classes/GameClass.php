@@ -788,7 +788,7 @@ class Game
         $decrypted_message = openssl_decrypt($encryptedMessage, $method, $secretKey, 0, $iv);
 
         if (!is_numeric($decrypted_message)) {
-            if($secretKey !== Config::$envConfig['OLD_SALT']) {
+            if ($secretKey !== Config::$envConfig['OLD_SALT']) {
                 return $this->mergeTheIDs($encryptedMessage, $commonID, Config::$envConfig['OLD_SALT']);
             }
 
@@ -1002,6 +1002,13 @@ class Game
     public function addToChat($message, $toNumUser = 'all', $needConfirm = true)
     {
         try {
+            if ($toNumUser === Hints::TYPE_WORDS_QUERY) {
+                return $this->makeResponse(
+                    Hints::getWordHint($message)
+                    + ['gameState' => self::WORD_QUERY_STATE]
+                );
+            }
+
             $commonIdFrom = PlayerModel::getPlayerID($this->User, true);
 
             $bannedTill = BanModel::isBannedTotal($commonIdFrom ?: 0);
@@ -1018,12 +1025,6 @@ class Game
                 }
             }
 
-            if ($toNumUser == Hints::TYPE_WORDS_QUERY) {
-                return $this->makeResponse(
-                    Hints::getWordHint($message)
-                    + ['gameState' => self::WORD_QUERY_STATE]
-                );
-            }
 
             $bannedBy = BanModel::bannedBy($commonIdFrom ?: 0);
 
@@ -2445,7 +2446,7 @@ class Game
                 $arr = array_merge($arr, ['turnTime' => $this->gameStatus['turnTime']]);
             }
 
-            if(!isset($arr['desk']) && in_array($arr['gameState'], [self::MY_TURN_STATUS, self::PRE_MY_TURN_STATUS, self::OTHER_TURN_STATUS, self::START_GAME_STATUS])) {
+            if (!isset($arr['desk']) && in_array($arr['gameState'], [self::MY_TURN_STATUS, self::PRE_MY_TURN_STATUS, self::OTHER_TURN_STATUS, self::START_GAME_STATUS])) {
                 $arr['desk'] = $this->gameStatus['lngClass']::init_desk();
             }
 
