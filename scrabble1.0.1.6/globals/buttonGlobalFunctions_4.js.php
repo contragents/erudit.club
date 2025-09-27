@@ -49,6 +49,10 @@ function checkButtonFunction() {
         return;
     }
 
+    if (bootBoxIsOpenedGlobal()) {
+        return;
+    }
+
     buttons['checkButton']['svgObject'].disableInteractive();
     buttons['checkButton']['svgObject'].bringToTop(buttons['checkButton']['svgObject'].getByName('checkButton' + 'Inactive'));
 
