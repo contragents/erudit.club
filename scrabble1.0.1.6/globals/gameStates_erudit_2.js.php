@@ -1187,19 +1187,12 @@ function commonCallback(data) {
                 if ('gameWaitLimit' in data) {
                     dialog.init(function () {
                         intervalId = setInterval(function () {
-                            // CLUB-449
-                            console.log('init interval called'); // Выводится. Продолжить поиск бага..
-
                             var igrokiWaiting = '';
                             if ('gameSubState' in data)
                                 igrokiWaiting = "<br /><?= T::S('Players ready:') ?> " + data['gameSubState'];
 
                             if ('timeWaiting' in data) {
-                                // CLUB-449
-                                console.log('timeWaiting in data');
-                                if (!tWaiting /*|| data.timeWaiting > 0*/) {
-                                    // CLUB-449
-                                    console.log('!tWaiting || data.timeWaiting > 0');
+                                if (!tWaiting) {
                                     tWaiting = data.timeWaiting;
                                 }
                                 if (!gWLimit) {
