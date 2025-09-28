@@ -55,9 +55,14 @@ class T
     }
 
     const PHRASES = [
+        'invite_link' => [
+            self::EN_LANG => 'https://xn--d1aiwkc2d.club/scramble.html/?friend=',
+            self::RU_LANG => 'https://эрудит.club/?friend='
+        ],
+        'Your invitation link has been copied to clipboard' => [self::RU_LANG => 'Ваша ссылка-приглашение скопирована в буфер'],
         'System' => [self::RU_LANG => 'Система'],
         'Rating decrease' => [self::RU_LANG => 'Штраф за незаход'],
-         'Agreement' => [
+        'Agreement' => [
             self::RU_LANG => 'Оферта'
         ],
         'Слово не найдено.' => [

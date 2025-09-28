@@ -69,7 +69,26 @@ var buttons = {
                         return;
                     }
 
-                    shareTgGlobal();
+                    if (!isTgBot()) {
+                        buttons.inviteButton.svgObject.disableInteractive();
+                        var copyLinkDialog = bootbox.alert(
+                            {
+                                className: 'modal-settings modal-profile text-white',
+                                message: '<?= T::S('Your invitation link has been copied to clipboard') ?>',
+                            }
+                        );
+
+                        setTimeout(
+                            function () {
+                                copyTextToClipboard(inviteLink());
+                                copyLinkDialog.find(".bootbox-close-button").trigger("click");
+                                buttons.inviteButton.svgObject.setInteractive();
+                            }
+                            , 2000
+                        );
+                    } else {
+                        shareTgGlobal();
+                    }
 
                     return false;
                 }

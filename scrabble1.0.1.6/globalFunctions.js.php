@@ -1,4 +1,17 @@
 //
+async function copyTextToClipboard(text) {
+    try {
+        await navigator.clipboard.writeText(text);
+        console.log('Текст успешно скопирован!');
+    } catch (err) {
+        console.error('Ошибка при копировании:', err);
+    }
+}
+
+const inviteLink = function () {
+    return '<?= T::S('invite_link') ?>' + (commonId ? commonId : '');
+}
+
 function closeDialogs() {
     bootbox.hideAll();
     canOpenDialog = true;
