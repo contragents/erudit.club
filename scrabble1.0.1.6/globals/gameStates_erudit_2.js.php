@@ -5,7 +5,7 @@ var gameStates = {
         refresh: 1,
         action: function (data) {
             useLocalStorage = true;
-            if(localStorage != 'undefined') {
+            if (localStorage != 'undefined') {
                 if (!('<?= CookieErudit::COOKIE_NAME ?>' in localStorage)) {
                     localStorage['<?= CookieErudit::COOKIE_NAME ?>'] = data['cookie'];
                     if (localStorage['<?= CookieErudit::COOKIE_NAME ?>'] === data['cookie']) {
@@ -701,7 +701,7 @@ var gameStates = {
 
                         },
                     },
-                    ...(!isTgBot()  && !isYandexAppGlobal() && {
+                    ...(!isTgBot() && !isYandexAppGlobal() && {
                         telegram: {
                             label: '<?= T::S('Play on') ?>',
                             className: 'btn-tg',
@@ -1113,10 +1113,14 @@ function commonCallback(data) {
 
     if (gameState == 'myTurn') {
         if (pageActive == 'hidden') {
-            if(!isYandexAppGlobal()) {snd.play();}
+            if (!isYandexAppGlobal()) {
+                snd.play();
+            }
             soundPlayed = true;
         } else if (!soundPlayed) {
-            if(!isYandexAppGlobal()) {snd.play();}
+            if (!isYandexAppGlobal()) {
+                snd.play();
+            }
             soundPlayed = true;
         }
     }
@@ -1151,12 +1155,16 @@ function commonCallback(data) {
             requestToServerEnabled = false;
         }
 
+        tWaiting = false;
+        gWLimit = false;
+
         if (dialog && canCloseDialog)
             dialog.modal('hide');
         if (intervalId) {
             clearInterval(intervalId);
             intervalId = 0;
         }
+
         if (canOpenDialog) {
             if ([INIT_RATING_GAME_STATE, INIT_GAME_STATE].indexOf(gameState) >= 0) {
                 dialog = bootbox.dialog({
@@ -1175,18 +1183,23 @@ function commonCallback(data) {
                             }
                         }
                     },
-
                 });
                 if ('gameWaitLimit' in data) {
                     dialog.init(function () {
                         intervalId = setInterval(function () {
+                            // CLUB-449
+                            console.log('init interval called'); // Выводится. Продолжить поиск бага..
+
                             var igrokiWaiting = '';
                             if ('gameSubState' in data)
                                 igrokiWaiting = "<br /><?= T::S('Players ready:') ?> " + data['gameSubState'];
 
-
                             if ('timeWaiting' in data) {
-                                if (!tWaiting || data.timeWaiting > 0) {
+                                // CLUB-449
+                                console.log('timeWaiting in data');
+                                if (!tWaiting /*|| data.timeWaiting > 0*/) {
+                                    // CLUB-449
+                                    console.log('!tWaiting || data.timeWaiting > 0');
                                     tWaiting = data.timeWaiting;
                                 }
                                 if (!gWLimit) {
@@ -1213,7 +1226,7 @@ function commonCallback(data) {
                 } else if ('ratingGameWaitLimit' in data)
                     dialog.init(function () {
                         intervalId = setInterval(function () {
-                            if ('timeWaiting' in data)
+                            if ('timeWaiting' in data) {
                                 if (!tWaiting)
                                     tWaiting = data['timeWaiting'];
                                 else {
@@ -1221,6 +1234,7 @@ function commonCallback(data) {
                                     if (!tWaiting)
                                         tWaiting = data['timeWaiting'];
                                 }
+                            }
                             dialog.find('.bootbox-body').html(data['comments'] +
                                 '<br /><?= T::S('Time elapsed:') ?> ' +
                                 (tWaiting++) +
@@ -1231,8 +1245,7 @@ function commonCallback(data) {
                                 '<hr><?= T::S('You can start a new game if you wait for a long time') ?>');
                         }, 1000);
                     });
-
-            } else if (gameState == GAME_RESULTS_STATE) {
+            } else if (gameState === GAME_RESULTS_STATE) {
                 if ('inviteStatus' in data) {
                     if (data.inviteStatus == 'newGameStarting') {
                         document.location.reload(true);
@@ -1344,7 +1357,7 @@ function commonCallback(data) {
             buttons.playersButton.svgObject.x += (buttons.changeButton.svgObject.width - buttons.playersButton.svgObject.width) / 2
             buttons.chatButton.svgObject.x = buttons.logButton.svgObject.x + (buttons.playersButton.svgObject.x - buttons.logButton.svgObject.x) / 2;
         } else {
-            while(players.bankBlock.svgObject.length) {
+            while (players.bankBlock.svgObject.length) {
                 players.bankBlock.svgObject.pop().setVisible(false).destroy();
             }
         }
@@ -1374,7 +1387,7 @@ function commonCallback(data) {
         preloaderObject.load.on('complete', function () {
             playerBlockModes = [OTJAT_MODE];
 
-            while(players.bankBlock.svgObject.length) {
+            while (players.bankBlock.svgObject.length) {
                 players.bankBlock.svgObject.pop().setVisible(false).destroy();
             }
             players.bankBlock.svgObject.push(getSVGBlockGlobal(players.bankBlock.x, players.bankBlock.y, resourceName, faserObject, players.bankBlock.scalable, false));
@@ -1406,7 +1419,7 @@ function commonCallback(data) {
 
     if ('winScore' in data) {
         // почемуто с if не работает... if (!winScore) {
-            buttonSetModeGlobal(players, 'goalBlock', data.winScore == 200 ? OTJAT_MODE : ALARM_MODE);
+        buttonSetModeGlobal(players, 'goalBlock', data.winScore == 200 ? OTJAT_MODE : ALARM_MODE);
         //}
 
         winScore = data.winScore;
@@ -1545,7 +1558,7 @@ function RobokassaPaymentGlobal(actionType) {
             calcPriceElement.html('<?= T::S('calc_price') ?>');
         }
 
-        if(amountToBuy > 1000) {
+        if (amountToBuy > 1000) {
             amountToBuy = 1000;
         }
 

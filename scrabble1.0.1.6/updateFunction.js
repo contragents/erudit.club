@@ -11,7 +11,7 @@ function (time, delta) {
         noNetworkImg.visible = false;
     }
 
-    if (gameState == 'chooseGame' && (queryNumber > 1)) {
+    if (gameState === CHOOSE_GAME_STATE && (queryNumber > 1)) {
         return;
     }
 

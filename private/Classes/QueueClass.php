@@ -160,8 +160,7 @@ class Queue
 
     protected function initGameResponse(string $queue)
     {
-        return $this->caller
-            ->makeResponse(
+        return $this->caller->makeResponse(
                 [
                     'gameState' => Game::INIT_GAME_STATE,
                     'gameSubState' => Cache::hlen(static::QUEUES["erudit.{$queue}{$this->lang}players_waiters"]),
@@ -187,15 +186,6 @@ class Queue
             }
 
             return $this->initGameResponse('invite');
-            /*return $this->caller
-                ->makeResponse(
-                    [
-                        'gameState' => Game::INIT_GAME_STATE,
-                        'gameSubState' => Cache::hlen(static::QUEUES["erudit.invite{$this->lang}players_waiters"]),
-                        'gameWaitLimit' => $this->caller->gameWaitLimit,
-                        'timeWaiting' => date('U') - ($this->userTime ?? date('U')),
-                    ]
-                );*/
         }
 
         // Блок поиска рейтингового игрока
@@ -702,15 +692,6 @@ class Queue
         }
 
         return $this->initGameResponse('invite');
-        /*
-        return $this->caller->makeResponse(
-            [
-                'gameState' => Game::INIT_GAME_STATE,
-                'gameSubState' => Cache::hlen(static::QUEUES["erudit.invite{$this->lang}players_waiters"]),
-                'gameWaitLimit' => $this->caller->gameWaitLimit
-            ]
-        );
-        */
     }
 
     protected function players2Waiting($User)
@@ -750,14 +731,6 @@ class Queue
         }
 
         return $this->initGameResponse('2');
-        /*
-        return $this->caller->makeResponse(
-            [
-                'gameState' => Game::INIT_GAME_STATE,
-                'gameSubState' => Cache::hlen(static::QUEUES["erudit.2{$this->lang}players_waiters"]),
-                'gameWaitLimit' => $this->caller->gameWaitLimit
-            ]
-        );*/
     }
 
     protected function addToQueue(string $queue, string $user, $options, array $params = []): bool
