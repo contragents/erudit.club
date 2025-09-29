@@ -1386,9 +1386,9 @@ class Game
         }
     }
 
-    public function gameWordsPlayed()
+    public function gameWordsPlayed(): array
     {
-        return $this->gameStatus['wordsAccepted'];
+        return $this->gameStatus['wordsAccepted'] ?? [];
     }
 
     public function wordChecker()
@@ -2541,6 +2541,11 @@ class Game
     protected function isBot(): bool
     {
         return !(strstr($this->User, self::BOT_TPL) === false);
+    }
+
+    public static function isBotStatic(string $User): bool
+    {
+        return !(strstr($User, self::BOT_TPL) === false);
     }
 
     protected function getBotFishkiToChange(): array

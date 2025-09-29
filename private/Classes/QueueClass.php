@@ -114,14 +114,16 @@ class Queue
         //Удалили указатель на текущую игру для пользователя
     }
 
-    private static function getBid(int $maxBid): ?int
+    private static function getBid(int $maxBid, bool $isBot = false): ?int
     {
         $bidsArr = MonetizationService::BIDS;
         arsort($bidsArr);
 
-        foreach ($bidsArr as $bid) {
-            if ($bid <= floor($maxBid / 20)) {
-                return $bid;
+        if(!$isBot) {
+            foreach ($bidsArr as $bid) {
+                if ($bid <= floor($maxBid / 20)) {
+                    return $bid;
+                }
             }
         }
 
@@ -588,17 +590,17 @@ class Queue
 
                 // todo иногда ставка делает баланс игрока отрицательным. Нужно не давать балансу уходить в минус
 
-                if (!isset($user['options']['bid'])) {
+                if (!isset($user['options']['bid']) || !$user['options']['bid'] || $user['options']['bid'] > $userBalance) {
                     if ($userBalance > 0) {
-                        $user['options']['bid'] = self::getBid($userBalance);
+                        $user['options']['bid'] = self::getBid($userBalance, Game::isBotStatic($user['userCookie']));
+                    } else {
+                        unset($user['options']['bid']);
                     }
-                } elseif ($user['options']['bid'] > $userBalance) {
-                    unset($user['options']['bid']);
                 }
 
-                if (!isset($user['options']['bid'])) {
+                if (!($user['options']['bid'] ?? 0) || $noCoinGame) {
                     $noCoinGame = true;
-                } elseif ($bid == 0 || $bid > $user['options']['bid'] || $bid > $userBalance) {
+                } elseif ($bid == 0 || $bid > $user['options']['bid']) {
                     $bid = $user['options']['bid'];
                 }
             }
