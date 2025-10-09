@@ -1386,6 +1386,20 @@ class Game
         }
     }
 
+    public static function staticGameWordsPlayed(string $cookie): array
+    {
+        $currentGame = Cache::get(Queue::GET_GAME_KEY . $cookie);
+
+        if (!$currentGame) {
+            return [];
+        } else {
+            $gameStatus = Cache::get(static::GAME_STATUS_KEY . $currentGame);
+            //Забрали статус игры из кэша
+
+            return $gameStatus['wordsAccepted'] ?? [];
+        }
+    }
+
     public function gameWordsPlayed(): array
     {
         return $this->gameStatus['wordsAccepted'] ?? [];

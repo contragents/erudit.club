@@ -115,7 +115,7 @@ class BotEng
                             print self::$thinkEndTime;
                             $botsTurns[$Bot] = $resp['gameSubState'];
 
-                            $turn_submit = self::sendResponse($resp);
+                            $turn_submit = self::sendResponse($resp, $Bot);
                         }
                     }
                 }
@@ -183,17 +183,17 @@ class BotEng
         return $resp;
     }
 
-    public
-    static function sendResponse(
-        &$data
-    ) {
+    public static function sendResponse(&$data, $Bot)
+    {
         if (isset($data['desk'])) {
             $desk = $data['desk'];
 
             // todo сделать через static метод ::staticGameWordsPlayed($cookie)
-            $obj = new Game();
-            $slovaPlayed = $obj->gameWordsPlayed();
-            $obj->botUnlock(); // разблокировали состояние игры
+            $slovaPlayed = Game::staticGameWordsPlayed($Bot);
+
+            //$obj = new Game();
+            //$slovaPlayed = $obj->gameWordsPlayed();
+            //$obj->botUnlock(); // разблокировали состояние игры
         } else {
             $desk = static::$langClass::init_desk();
             $slovaPlayed = [];
@@ -466,7 +466,9 @@ class BotEng
 
                         if ($cells[$x + $k - $slovoNach + 1 + $delta][$y][0] === false) {
                             $cells[$x + $k - $slovoNach + 1 + $delta][$y][0] = true;
-                            $cells[$x + $k - $slovoNach + 1 + $delta][$y][1] = static::$langClass::getLetterCode($letter);
+                            $cells[$x + $k - $slovoNach + 1 + $delta][$y][1] = static::$langClass::getLetterCode(
+                                $letter
+                            );
 
                             if (
                                 isset($lettersZvezd[$letter])
