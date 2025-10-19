@@ -12,7 +12,7 @@ if ($_GET['word'] == '') {
 
     exit();
 }
-
+//
 include(__DIR__ . '/yandex1.0.1.1/php/word.php');
 include(__DIR__ . '/private/MVC/View/Tpl/main_footer.php');
 
