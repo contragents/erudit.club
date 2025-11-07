@@ -25,5 +25,5 @@ function sudokuGlobal() {
 
     window.location.href = isTgBot()
         ? ('https://t.me/' + SUDOKU_GAME_BOT_URL)
-        : 'https://5-5.su/sudoku/?common_id=' + commonId + '&common_id_hash=' + commonIdHash;
+        : 'https://skipbo.eth.box/sudoku/?common_id=' + commonId + '&common_id_hash=' + commonIdHash;
 }
