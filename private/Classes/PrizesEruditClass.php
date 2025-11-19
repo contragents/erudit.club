@@ -1,5 +1,7 @@
 <?php
 
+use classes\Record;
+
 class PrizesErudit
 {
     protected const DAY_DISCOUNT = 0.5;
@@ -47,6 +49,15 @@ class PrizesErudit
     protected const GAMES_PLAYED_WEEKLY = 'erudit_games_played_weekly_';
     protected const GAMES_PLAYED_MONTHLY = 'erudit_games_played_monthly_';
     protected const GAMES_PLAYED_YEARLY = 'erudit_games_played_yearly_';
+    const DEFAULT_WEEK_GAME_PRICE_RECORD = 300;
+    const DEFAULT_WEEK_WORD = 'эра';
+    const DEFAULT_WEEK_WORD_LENGTH = 3;
+    const DEFAULT_MONTH_WORD = 'ершик';
+    const DEFAULT_MONTH_WORD_LENGTH = 5;
+    const DEFAULT_YEAR_WORD = 'куртка';
+    const DEFAULT_YEAR_WORD_LENGTH = 6;
+    const DEFAULT_DAY_WORD = 'ар';
+    const DEFAULT_DAY_WORD_LENGTH = 2;
 
     public static function restoreRecords(
         array $recordTypes = [
@@ -55,21 +66,21 @@ class PrizesErudit
             AchievesModel::TURN_PRICE,
             AchievesModel::WORD_PRICE,
         ]
-    ) {
-
+    ): bool {
+        return false;
     }
 
-    public
-    static function playerCurrentRecords(
-        $cookie = false
-    ) {
-        $cookie = $cookie ?: $_COOKIE[CookieErudit::COOKIE_NAME];
+    public static function playerCurrentRecords(int $commonId): array
+    {
         $allRecords = Cache::hgetall(static::ALL_RECORDS) ?: [];
         $records = [];
 
         foreach ($allRecords as $type => $record) {
             $record = unserialize($record);
-            if ($record['cookie'] == $cookie) {
+            if (!isset($record['common_id'])) {
+                $record['common_id'] = PlayerModel::getCommonID($record['cookie']);
+            }
+            if ($record['common_id'] == $commonId) {
                 $records[$type] = array_merge($record, ['link' => AchievesModel::PRIZE_LINKS[$type], 'type' => $type]);
             }
         }
@@ -93,7 +104,7 @@ class PrizesErudit
                 [
                     'link' => AchievesModel::PRIZE_LINKS[$type],
                     'type' => $type,
-                    'common_id' => PlayerModel::getPlayerID($record['cookie'])
+                    'common_id' => $record['common_id'] ?? PlayerModel::getPlayerID($record['cookie'])
                 ]
             );
 
@@ -172,7 +183,7 @@ class PrizesErudit
                 AchievesModel::IS_ACTIVE_FIELD => 1,
                 AchievesModel::REWARD_FIELD => MonetizationService::REWARD[$eventPeriod],
                 AchievesModel::INCOME_FIELD => MonetizationService::INCOME[$eventPeriod],
-                AchievesModel::GAME_NAME_ID_FIELD => RatingHistoryModel::GAME_IDS[static::GAME_NAME],
+                AchievesModel::GAME_NAME_ID_FIELD => BaseModel::GAME_IDS[static::GAME_NAME],
             ]
         )) {
             return $newId;
@@ -183,16 +194,13 @@ class PrizesErudit
 
     protected
     static function saveAchieve(
-        $cookie,
-        $eventType,
-        $eventPeriod,
-        $eventValue,
-        $word = false
+        Record $record
     ): bool {
-        $commonId = PlayerModel::getPlayerID($cookie);
-        if (!$commonId) {
+        $record->_common_id = $record->_common_id ?? PlayerModel::getPlayerID($record->cookie);
+        if (!$record->_common_id) {
             return false;
         }
+
 
         \DB::transactionStart();
 
@@ -203,13 +211,13 @@ class PrizesErudit
                 [
                     'field_name' => AchievesModel::EVENT_TYPE_FIELD,
                     'condition' => BaseModel::CONDITIONS['='],
-                    'value' => $eventType,
+                    'value' => $record->_event_type,
                     'raw' => false,
                 ],
                 [
                     'field_name' => AchievesModel::EVENT_PERIOD_FIELD,
                     'condition' => BaseModel::CONDITIONS['='],
-                    'value' => $eventPeriod,
+                    'value' => $record->_event_period,
                     'raw' => false,
                 ],
                 [
@@ -221,20 +229,20 @@ class PrizesErudit
                 [
                     'field_name' => AchievesModel::GAME_NAME_ID_FIELD,
                     'condition' => BaseModel::CONDITIONS['='],
-                    'value' => RatingHistoryModel::GAME_IDS[static::GAME_NAME],
+                    'value' => BaseModel::GAME_IDS[static::GAME_NAME],
                     'raw' => true,
                 ],
             ]
         );
 
         if (!($newId = self::saveHistory(
-            $eventType,
-            $eventPeriod,
+            $record->_event_type,
+            $record->_event_period,
             [
-                'common_id' => $commonId,
-                'cookie' => $cookie ?: $_COOKIE[CookieErudit::COOKIE_NAME],
-                'value' => $eventValue,
-                'word' => $word,
+                'common_id' => $record->_common_id,
+                'cookie' => $record->cookie ?? $_COOKIE[CookieErudit::COOKIE_NAME],
+                'value' => $record->_event_value,
+                'word' => $record->_word ?? null,
                 'record_date' => date('U'),
             ]
         ))) {
@@ -243,11 +251,10 @@ class PrizesErudit
             return false;
         };
 
-        // todo здесь начислить reward на баланс монет
         if (!BalanceModel::changeBalance(
-            $commonId,
-            MonetizationService::REWARD[$eventPeriod],
-            AchievesModel::getDescription($eventType, $eventPeriod, static::GAME_NAME),
+            $record->_common_id,
+            MonetizationService::REWARD[$record->_event_period],
+            AchievesModel::getDescription($record->_event_type, $record->_event_period, static::GAME_NAME),
             BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::ACHIEVE_TYPE],
             $newId
         )) {
@@ -256,11 +263,10 @@ class PrizesErudit
             return false;
         }
 
-        // todo начислить income за первый час
         if (!IncomeModel::changeIncome(
-            $commonId,
-            MonetizationService::INCOME[$eventPeriod],
-            AchievesModel::getDescription($eventType, $eventPeriod, static::GAME_NAME),
+            $record->_common_id,
+            MonetizationService::INCOME[$record->_event_period],
+            AchievesModel::getDescription($record->_event_type, $record->_event_period, static::GAME_NAME),
             IncomeHistoryModel::TYPE_IDS[IncomeHistoryModel::ACHIEVE_TYPE],
             $newId
         )) {
@@ -273,13 +279,8 @@ class PrizesErudit
 
         Cache::hset(
             static::ALL_RECORDS,
-            $eventType . '-' . $eventPeriod,
-            [
-                'cookie' => $cookie ? $cookie : $_COOKIE[CookieErudit::COOKIE_NAME],
-                'value' => $eventValue,
-                'word' => $word,
-                'record_date' => date('U'),
-            ]
+            $record->_event_type . '-' . $record->_event_period,
+            $record
         );
 
         return true;
@@ -370,11 +371,14 @@ class PrizesErudit
                     );
                 } else {
                     self::saveAchieve(
-                        $cookie,
-                        AchievesModel::GAMES_PLAYED,
-                        static::PERIODS[static::DAY],
-                        $playerDailyPlayedGames,
-                        false
+                        Record::new(
+                            [
+                                Record::COOKIE_PARAM => $cookie,
+                                Record::EVENT_TYPE_FIELD => AchievesModel::GAMES_PLAYED,
+                                Record::EVENT_PERIOD_FIELD => static::PERIODS[static::DAY],
+                                Record::EVENT_VALUE_FIELD => $playerDailyPlayedGames,
+                            ]
+                        )
                     );
                 }
                 $todayRecord['number'] = $playerDailyPlayedGames;
@@ -410,11 +414,14 @@ class PrizesErudit
                         );
                     } else {
                         self::saveAchieve(
-                            $cookie,
-                            AchievesModel::GAMES_PLAYED,
-                            static::PERIODS[static::WEEK],
-                            $playerWeeklyPlayedGames,
-                            false
+                            Record::new(
+                                [
+                                    Record::COOKIE_PARAM => $cookie,
+                                    Record::EVENT_TYPE_FIELD => AchievesModel::GAMES_PLAYED,
+                                    Record::EVENT_PERIOD_FIELD => static::PERIODS[static::WEEK],
+                                    Record::EVENT_VALUE_FIELD => $playerWeeklyPlayedGames,
+                                ]
+                            )
                         );
                     }
 
@@ -454,11 +461,14 @@ class PrizesErudit
                         );
                     } else {
                         self::saveAchieve(
-                            $cookie,
-                            AchievesModel::GAMES_PLAYED,
-                            static::PERIODS[static::MONTH],
-                            $playerMonthlyPlayedGames,
-                            false
+                            Record::new(
+                                [
+                                    Record::COOKIE_PARAM => $cookie,
+                                    Record::EVENT_TYPE_FIELD => AchievesModel::GAMES_PLAYED,
+                                    Record::EVENT_PERIOD_FIELD => static::PERIODS[static::MONTH],
+                                    Record::EVENT_VALUE_FIELD => $playerMonthlyPlayedGames,
+                                ]
+                            )
                         );
                     }
 
@@ -498,11 +508,14 @@ class PrizesErudit
                         );
                     } else {
                         self::saveAchieve(
-                            $cookie,
-                            AchievesModel::GAMES_PLAYED,
-                            static::PERIODS[static::YEAR],
-                            $playerYearlyPlayedGames,
-                            false
+                            Record::new(
+                                [
+                                    Record::COOKIE_PARAM => $cookie,
+                                    Record::EVENT_TYPE_FIELD => AchievesModel::GAMES_PLAYED,
+                                    Record::EVENT_PERIOD_FIELD => static::PERIODS[static::YEAR],
+                                    Record::EVENT_VALUE_FIELD => $playerYearlyPlayedGames,
+                                ]
+                            )
                         );
                     }
 
@@ -534,7 +547,16 @@ class PrizesErudit
 
             $res = array_merge([static::DAY => true], self::checkWeekGamePriceRecord($price));
             foreach ($res as $period => $value) {
-                self::saveAchieve($cookie, AchievesModel::GAME_PRICE, static::PERIODS[$period], $price, false);
+                self::saveAchieve(
+                    Record::new(
+                        [
+                            Record::COOKIE_PARAM => $cookie,
+                            Record::EVENT_TYPE_FIELD => AchievesModel::GAME_PRICE,
+                            Record::EVENT_PERIOD_FIELD => static::PERIODS[$period],
+                            Record::EVENT_VALUE_FIELD => $price,
+                        ]
+                    )
+                );
             }
 
             return $res;
@@ -553,7 +575,7 @@ class PrizesErudit
             $preWeekRecord = Cache::get(static::GAME_PRICE_WEEKLY . (date('W') - 1));
             $weekRecord = $preWeekRecord
                 ? ['price' => $preWeekRecord['price'] * static::WEEK_DISCOUNT]
-                : ['price' => 10];
+                : ['price' => self::DEFAULT_WEEK_GAME_PRICE_RECORD];
         }
 
         if ($price > $weekRecord['price']) {
@@ -628,7 +650,16 @@ class PrizesErudit
 
             $res = array_merge([static::DAY => true], self::checkWeekTurnPriceRecord($price));
             foreach ($res as $period => $value) {
-                self::saveAchieve($cookie, AchievesModel::TURN_PRICE, static::PERIODS[$period], $price, false);
+                self::saveAchieve(
+                    Record::new(
+                        [
+                            Record::COOKIE_PARAM => $cookie,
+                            Record::EVENT_TYPE_FIELD => AchievesModel::TURN_PRICE,
+                            Record::EVENT_PERIOD_FIELD => static::PERIODS[$period],
+                            Record::EVENT_VALUE_FIELD => $price,
+                        ]
+                    )
+                );
             }
 
             return $res;
@@ -726,7 +757,17 @@ class PrizesErudit
 
             $res = array_merge([static::DAY => true], self::checkWeekWordPriceRecord($word, $price));
             foreach ($res as $period => $value) {
-                self::saveAchieve($cookie, AchievesModel::WORD_PRICE, static::PERIODS[$period], $price, $word);
+                self::saveAchieve(
+                    Record::new(
+                        [
+                            Record::COOKIE_PARAM => $cookie,
+                            Record::EVENT_TYPE_FIELD => AchievesModel::WORD_PRICE,
+                            Record::EVENT_PERIOD_FIELD => static::PERIODS[$period],
+                            Record::EVENT_VALUE_FIELD => $price,
+                            Record::WORD_FIELD => $word,
+                        ]
+                    )
+                );
             }
 
             return $res;
@@ -810,13 +851,15 @@ class PrizesErudit
         $word,
         $cookie
     ) {
+        $res = [];
+
         $wordLen = mb_strlen($word, 'UTF-8');
         $todayRecord = Cache::get(static::WORD_LEN_DAILY . strtotime('today'));
         if (!$todayRecord) {
             $yesterdayRecord = Cache::get(static::WORD_LEN_DAILY . strtotime('-1 day'));
             $todayRecord = $yesterdayRecord
                 ? ['word' => $yesterdayRecord['word'], 'length' => $yesterdayRecord['length'] * static::DAY_DISCOUNT]
-                : ['word' => 'эра', 'length' => 3];
+                : ['word' => static::DEFAULT_DAY_WORD, 'length' => mb_strlen(static::DEFAULT_DAY_WORD, 'UTF-8')];
         }
 
         if ($wordLen > $todayRecord['length']) {
@@ -827,19 +870,25 @@ class PrizesErudit
 
             $res = array_merge([static::DAY => true], self::checkWeekWordLenRecord($word));
             foreach ($res as $period => $value) {
-                self::saveAchieve($cookie, AchievesModel::WORD_LEN, static::PERIODS[$period], $wordLen, $word);
+                self::saveAchieve(
+                    Record::new(
+                        [
+                            Record::COOKIE_PARAM => $cookie,
+                            Record::EVENT_TYPE_FIELD => AchievesModel::WORD_LEN,
+                            Record::EVENT_PERIOD_FIELD => static::PERIODS[$period],
+                            Record::EVENT_VALUE_FIELD => $wordLen,
+                            Record::WORD_FIELD => $word,
+                        ]
+                    )
+                );
             }
-
-            return $res;
         }
 
-        return [];
+        return $res;
     }
 
-    public
-    static function checkWeekWordLenRecord(
-        $word
-    ) {
+    public static function checkWeekWordLenRecord($word)
+    {
         $wordLen = mb_strlen($word, 'UTF-8');
         $weekRecord = Cache::get(static::WORD_LEN_WEEKLY . date('W'));
         if (!$weekRecord) {
@@ -849,7 +898,7 @@ class PrizesErudit
                     'word' => $preWeekRecord['word'],
                     'length' => mb_strlen($preWeekRecord['word'], 'UTF-8') * static::WEEK_DISCOUNT
                 ]
-                : ['word' => 'эра', 'length' => 3];
+                : ['word' => static::DEFAULT_WEEK_WORD, 'length' => mb_strlen(static::DEFAULT_WEEK_WORD, 'UTF-8')];
         }
 
         if ($wordLen > $weekRecord['length']) {
@@ -871,7 +920,7 @@ class PrizesErudit
             $preMonthRecord = Cache::get(static::WORD_LEN_MONTHLY . (date('n') - 1));
             $monthRecord = $preMonthRecord
                 ? ['word' => $preMonthRecord['word'], 'length' => $preMonthRecord['length'] * static::MONTH_DISCOUNT]
-                : ['word' => 'ерш', 'length' => 3];
+                : ['word' => static::DEFAULT_MONTH_WORD, 'length' => mb_strlen(static::DEFAULT_MONTH_WORD, 'UTF-8')];
         }
 
         if ($wordLen > $monthRecord['length']) {
@@ -893,7 +942,7 @@ class PrizesErudit
             $preYearRecord = Cache::get(static::WORD_LEN_YEARLY . (date('Y') - 1));
             $yearRecord = $preYearRecord
                 ? ['word' => $preYearRecord['word'], 'length' => $preYearRecord['length'] * static::YEAR_DISCOUNT]
-                : ['word' => 'юра', 'length' => 3];
+                : ['word' => static::DEFAULT_YEAR_WORD, 'length' => mb_strlen(static::DEFAULT_YEAR_WORD, 'UTF-8')];
         }
         if ($wordLen > $yearRecord['length']) {
             Cache::set(static::WORD_LEN_YEARLY . date('Y'), ['word' => $word, 'length' => $wordLen]);

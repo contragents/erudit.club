@@ -8,12 +8,12 @@ use PrizesScrabble;
 
 class Prizes
 {
-    public static function playerCurrentRecords($cookie = false)
+    public static function playerCurrentRecords(int $commonId): array
     {
         if (Game::$gameName === Game::SCRABBLE) {
-            return PrizesScrabble::playerCurrentRecords($cookie);
+            return PrizesScrabble::playerCurrentRecords($commonId);
         } else {
-            return PrizesErudit::playerCurrentRecords($cookie);
+            return PrizesErudit::playerCurrentRecords($commonId);
         }
     }
 

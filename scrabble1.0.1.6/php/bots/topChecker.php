@@ -28,7 +28,7 @@ class TopChecker {
         foreach([Game::ERUDIT, Game::SCRABBLE] as $gameName) {
             T::setLangGame(T::GAME_MODE_LANG[$gameName], $gameName);
 
-            $gameNameId = RatingHistoryModel::GAME_IDS[$gameName];
+            $gameNameId = BaseModel::GAME_IDS[$gameName];
 
             foreach (self::TOP_PARAMS as $period => $params) {
                 $topPlayersNow = CommonIdRatingModel::getTopPlayers(...array_merge([$gameName], $params));

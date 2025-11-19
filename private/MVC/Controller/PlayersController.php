@@ -173,7 +173,12 @@ class PlayersController extends BaseController
                     }
 
                     $achieves = AchievesModel::getCurrentAchievesByCommonId($thisUser->_id);
+
+                    Cache::setex('test_query', 3600, $achieves);
+
                     self::sortAchieves($achieves);
+
+
 
                     if (!empty($achieves)) {
                         StatsController::addTranslationsToAchieves($achieves);
@@ -199,6 +204,7 @@ class PlayersController extends BaseController
 
         foreach (array_reverse(PrizesScrabble::PERIODS, true) as $period => $nothing) {
             foreach ($achieves as $achieve) {
+                Cache::setex('test_query_'.$achieve[AchievesModel::EVENT_PERIOD_FIELD], 3600, $achieve);
                 if ($achieve[AchievesModel::EVENT_PERIOD_FIELD] === $period) {
                     $resultAchieves[] = $achieve;
                 }

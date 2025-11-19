@@ -24,7 +24,7 @@ class RatingHistoryModel extends BaseModel
                 self::RATING_AFTER_FIELD => $newRating,
                 self::IS_WINNER_FIELD => $isWinner ? 1 : 0,
                 self::GAME_ID_FIELD => $gameId,
-                self::GAME_NAME_ID_FIELD => self::GAME_IDS[$gameName],
+                self::GAME_NAME_ID_FIELD => BaseModel::GAME_IDS[$gameName],
                 self::CREATED_AT_FIELD => date('U'),
             ]
         );
@@ -35,8 +35,8 @@ class RatingHistoryModel extends BaseModel
         return DB::queryValue(
             ORM::select(['count(1)'], self::TABLE_NAME)
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
-            . (in_array($gameName, self::GAME_IDS)
-                ? ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', self::GAME_IDS[$gameName], true)
+            . (in_array($gameName, BaseModel::GAME_IDS)
+                ? ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', BaseModel::GAME_IDS[$gameName], true)
                 : '')
         ) ?: 0;
     }
@@ -46,7 +46,7 @@ class RatingHistoryModel extends BaseModel
         $lastRatingChangeRecord = DB::queryArray(
             self::select(['*'])
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
-            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', self::GAME_IDS[$gameName], true)
+            . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', BaseModel::GAME_IDS[$gameName], true)
             . ORM::orderBy(self::ID_FIELD, false)
             . ORM::limit(1)
         )[0] ?? false;

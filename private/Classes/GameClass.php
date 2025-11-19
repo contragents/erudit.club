@@ -875,8 +875,7 @@ class Game
 
             $canDeleteBan = false;
             if ($user != $this->User) {
-                $currentUserCommonId = PlayerModel::getCommonID($user['ID']);
-                if ($currentUserCommonId && !empty($thisPlayerHasBanned[$currentUserCommonId])) {
+                if (!empty($thisPlayerHasBanned[$user['common_id']])) {
                     $canDeleteBan = true;
                 }
             }
@@ -884,7 +883,7 @@ class Game
             $message .= include($this->dir . '/tpl/ratingsTableRow.php');
 
             $recImgs = '';
-            $records = Prizes::playerCurrentRecords($user['ID']);
+            $records = Prizes::playerCurrentRecords($user['common_id']);
             $recordsShown = 0;
             foreach ($records as $record) {
                 $recImgs .= VH::img(

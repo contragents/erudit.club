@@ -114,7 +114,7 @@ class RatingService
                 GameStatsModel::PLAYERS_NUM_FIELD => count($results),
                 GameStatsModel::GAME_ENDED_AT_FIELD => $Game['turnBeginTime'],
                 GameStatsModel::WINNER_ID_FIELD => $results[0]['common_id'],
-                GameStatsModel::GAME_NAME_ID => AchievesModel::GAME_IDS[Game::$gameName],
+                GameStatsModel::GAME_NAME_ID => BaseModel::GAME_IDS[Game::$gameName],
             ]
             + [
                 $Game[$results[0]['cookie']] + 1 . '_player_id' => $results[0]['common_id'],

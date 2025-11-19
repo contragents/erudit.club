@@ -120,6 +120,10 @@ class BaseModel
             $property = '_' . $field;
 
             if (!array_key_exists($property, $properties)) {
+                if(array_key_exists($field, $properties)) {
+                    $res->$property = $value;
+                }
+
                 continue;
             }
 

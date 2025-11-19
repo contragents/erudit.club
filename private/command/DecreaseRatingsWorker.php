@@ -71,7 +71,7 @@ class DecreaseRatingsWorker
                         GameStatsModel::PLAYERS_NUM_FIELD => 2,
                         GameStatsModel::GAME_ENDED_AT_FIELD => date('U'),
                         GameStatsModel::WINNER_ID_FIELD => self::RATING_DECREASE_USER_ID,
-                        GameStatsModel::GAME_NAME_ID => AchievesModel::GAME_IDS[Game::ERUDIT],
+                        GameStatsModel::GAME_NAME_ID => BaseModel::GAME_IDS[Game::ERUDIT],
                     ]
                     + [
                         '1_player_id' => $commonIdRatingModel->_id,
