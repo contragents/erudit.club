@@ -119,7 +119,8 @@ class Ru
                                 'i' => $i,
                                 'j' => $j,
                                 'letter_code' => $cells[$i][$j][2],
-                                'is_correct' => ($desk[$i][$j][1] - 999 - 1 - $cells[$i][$j][2]) === 0, // код фишки, которая забрала звезду с поля
+                                'is_correct' => ($desk[$i][$j][1] - 999 - 1 - $cells[$i][$j][2]) === 0,
+                                // код фишки, которая забрала звезду с поля
                                 'desk_letter_code' => $desk[$i][$j][1]
                             ];
                         }
@@ -182,7 +183,7 @@ class Ru
         if (!self::isCorrectZvezdy($zvezdyTemporary)) {
             LogModel::add(
                 [
-                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR . '|' .LogModel::CATEGORY_SUBMIT_ERROR,
+                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR . '|' . LogModel::CATEGORY_SUBMIT_ERROR,
                     LogModel::MESSAGE_FIELD => var_export($zvezdyTemporary, true)
                 ]
             );
@@ -260,6 +261,19 @@ class Ru
         foreach (self::$goodWords as $h_v => $h_v_word) {
             $ij = explode('-', $h_v);
             if (isset($h_v_word['hor'])) {
+                // Проверка, что все фишки слова валидированы
+                if (!self::checkWordFishki(
+                    $desk,
+                    $ij[0],
+                    $ij[1],
+                    $ij[0] + mb_strlen(self::$goodWords[$h_v]['hor'], 'utf-8') - 1,
+                    $ij[1]
+                )) {
+                    unset(self::$goodWords[$h_v]['hor']);
+
+                    continue;
+                }
+
                 if (!isset($good_words[$h_v_word['hor']])) {
                     $good_words[$h_v_word['hor']] = self::wordPrice($h_v_word['hor'], $ij[0], $ij[1], 'hor');
                 } else {
@@ -271,6 +285,19 @@ class Ru
             }
 
             if (isset($h_v_word['vert'])) {
+                // Проверка, что все фишки слова валидированы
+                if (!self::checkWordFishki(
+                    $desk,
+                    $ij[0],
+                    $ij[1],
+                    $ij[0],
+                    $ij[1] + mb_strlen(self::$goodWords[$h_v]['vert'], 'utf-8') - 1
+                )) {
+                    unset(self::$goodWords[$h_v]['vert']);
+
+                    continue;
+                }
+
                 if (!isset($good_words[$h_v_word['vert']])) {
                     $good_words[$h_v_word['vert']] = self::wordPrice($h_v_word['vert'], $ij[0], $ij[1], 'vert');
                 } else {
@@ -466,8 +493,8 @@ class Ru
 
         $tmpPlayerFishki = $playerFishki;
         $tmpCellsFishki = $fshki;
-        foreach($tmpCellsFishki as $cellNum => $cellFishka) {
-            foreach($tmpPlayerFishki as $playerNum => $playerFishka) {
+        foreach ($tmpCellsFishki as $cellNum => $cellFishka) {
+            foreach ($tmpPlayerFishki as $playerNum => $playerFishka) {
                 // ищем новую фишку с поля в массиве фишек игрока
                 if (
                     $cellFishka['code'] == $playerFishka
@@ -493,7 +520,7 @@ class Ru
         if (!empty($tmpCellsFishki)) {
             LogModel::add(
                 [
-                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR . '|' .LogModel::CATEGORY_SUBMIT_ERROR,
+                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR . '|' . LogModel::CATEGORY_SUBMIT_ERROR,
                     LogModel::MESSAGE_FIELD => var_export(
                         [
                             '$tmpPlayerFishki' => $tmpPlayerFishki,
@@ -734,9 +761,30 @@ class Ru
 
     protected static function isCorrectZvezdy(array $zvezdyTemporary): bool
     {
-        foreach($zvezdyTemporary as $zvezda) {
-            if(!$zvezda['is_correct']){
+        foreach ($zvezdyTemporary as $zvezda) {
+            if (!$zvezda['is_correct']) {
                 return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Проверяет, что все фишки слова являются connected и принадлежат полю
+     * @param int $i0 Начало слова по горизонтали
+     * @param int $j0 Начало слова по вертикали
+     * @param int $i1 Конец слова по горизонтали
+     * @param int $j1 Конгец слова по вертикали
+     * @return bool
+     */
+    protected static function checkWordFishki(array &$desk, int $i0, int $j0, int $i1, int $j1): bool
+    {
+        for ($i = $i0; $i <= $i1; $i++) {
+            for ($j = $j0; $j <= $j1; $j++) {
+                if (!$desk[$i][$j][0]) {
+                    return false;
+                }
             }
         }
 
