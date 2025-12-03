@@ -190,7 +190,7 @@ class BotEng
 
             // todo сделать через static метод ::staticGameWordsPlayed($cookie)
             $slovaPlayed = Game::staticGameWordsPlayed($Bot);
-
+            print '$slovaPlayed'; print_r($slovaPlayed);
             //$obj = new Game();
             //$slovaPlayed = $obj->gameWordsPlayed();
             //$obj->botUnlock(); // разблокировали состояние игры

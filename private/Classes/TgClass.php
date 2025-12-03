@@ -49,7 +49,7 @@ class Tg
                     self::$tgUser
                 );
                 self::$commonId = PlayerModel::getPlayerID(self::$tgUser['user']['id'], true);
-                TgUserModel::refresh(self::$tgUser);
+                TgUserModel::refreshByTgUserArr(self::$tgUser);
 
                 return true;
             }

@@ -139,7 +139,7 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
 
             // Собираем обладателей достижений
             if (in_array(self::$Request[self::DATA_TYPE_PARAM] ?? '', [self::ACHIEVE_PARAM, ''])) {
-                $achieves = AchievesModel::getActiveO(Game::$gameName);
+                $achieves = AchievesModel::getActiveAchievesO(Game::$gameName);
 
                 foreach ($achieves as $achieveModel) {
                     // Игнорируем ТОПов по рейтингу
