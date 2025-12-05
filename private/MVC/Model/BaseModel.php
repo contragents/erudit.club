@@ -158,6 +158,9 @@ class BaseModel implements Iterator
                     } catch (Throwable $e) {
                         continue;
                     }
+                } elseif(!is_int($value)) {
+                    // Добавим экранирование спецсимволов
+                    $value = DB::escapeString($value);
                 }
 
                 $fieldsVals[self::fieldName($property)] = $value;
@@ -417,6 +420,10 @@ class BaseModel implements Iterator
         return ' ' . static::TABLE_NAME . '.' . $field . ' ';
     }
 
+    /**
+     * @param array $fieldsVals
+     * @return bool|int
+     */
     public static function add(array $fieldsVals)
     {
         try {
@@ -437,7 +444,7 @@ class BaseModel implements Iterator
                 return false;
             }
         } catch (Throwable $e) {
-            return;
+            return false;
         }
     }
 

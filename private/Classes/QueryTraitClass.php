@@ -1,11 +1,5 @@
 <?php
 
-/*
-use BaseModel;
-use Iterator;
-use ReflectionProperty;
-use Throwable;
-*/
 
 trait QueryTrait
 {
@@ -32,7 +26,7 @@ trait QueryTrait
     /**
      * @var bool|null if current element is valid
      */
-    private ?bool $isValid = false;
+    private ?bool $isValid = null;
 
     /**
      * @param string[] $fields
@@ -134,6 +128,23 @@ trait QueryTrait
         return $res;
     }
 
+    public function getQuery(): string
+    {
+        $where = '';
+
+        foreach ($this->queryParts->where as $partWhere) {
+            $where .= (
+            empty($where)
+                ? ORM::where(...array_values($partWhere))
+                : ORM::andWhere(...array_values($partWhere))
+            );
+        }
+
+        return ORM::select($this->queryParts->fields, static::TABLE_NAME)
+            . ' ' . $where
+            . ' ' . $this->getOrder() . $this->getLimit();
+    }
+
     /**
      * @return static[]
      */
@@ -219,6 +230,11 @@ trait QueryTrait
      */
     public function current(): ?self
     {
+        // Делаем rewind, если current вызвали до него
+        if($this->Value === null && $this->isValid === null) {
+            $this->rewind();
+        }
+
         if($this->valid()) {
             return $this->Value ?? null;
         } else {

@@ -34,9 +34,11 @@ class ORM
                 . (
                 $fieldsvals['value'] instanceof ORM
                     ? $fieldsvals['value']->rawExpression
-                    : ($fieldsvals['raw'] ?? false
+                    : (
+                ($fieldsvals['raw'] ?? false)
                     ? $fieldsvals['value']
-                    : "'{$fieldsvals['value']}'")
+                    : ("'" . DB::escapeString($fieldsvals['value']) . "'")
+                )
                 )
                 . ' ';
         }
@@ -50,7 +52,7 @@ class ORM
                         ? $fv['value']->rawExpression
                         : ($fv['raw'] ?? false
                         ? $fv['value']
-                        : "'{$fv['value']}'")
+                        : ("'" . DB::escapeString($fv['value']) . "'"))
                     )
                     . ' ';
             }
@@ -58,7 +60,12 @@ class ORM
             return ' SET ' . implode(',', $fields);
         }
 
-        return ' SET ' . implode(',', array_map(fn($field, $value) => " $field = '$value' ", array_keys($fieldsvals), $fieldsvals));
+        return ' SET ' . implode(
+                ',',
+                array_map(fn($field, $value) => " $field = '$value' ",
+                    array_keys($fieldsvals),
+                    $fieldsvals)
+            );
     }
 
     public static function whereIn(string $fieldName, array $values): string

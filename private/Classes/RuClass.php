@@ -87,6 +87,17 @@ class Ru
     protected static $goodWords = [];
     protected static $goodWordsLinks = [];
 
+    public static function getLetterScore(string $letter): int
+    {
+        foreach(static::$bukvy as $letterArr) {
+            if ($letterArr[0] === $letter) {
+                return $letterArr[1];
+            }
+        }
+
+        return 0;
+    }
+
     public static function generateBankFishki()
     {
         $bankFishki = [];
