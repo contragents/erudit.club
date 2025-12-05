@@ -28,6 +28,9 @@ trait QueryTrait
      */
     private ?bool $isValid = null;
 
+    private int $chunkSize = self::DEFAULT_BATCH_CHUNK_SIZE;
+    private array $currentChunk = [];
+
     /**
      * @param string[] $fields
      * @return static
@@ -211,7 +214,7 @@ trait QueryTrait
     /**
      * @return static[]
      */
-    public function each(): Iterator
+    public function each(int $chunkSize = self::DEFAULT_BATCH_CHUNK_SIZE): Iterator
     {
         return new static(
             [
@@ -219,6 +222,7 @@ trait QueryTrait
                 'queryParts' => $this->queryParts,
                 'Limit' => $this->queryParts->limit[0] ?? $this->queryParts->limit,
                 'Offset' => $this->queryParts->limit[1] ?? 0,
+                'chunkSize' => $chunkSize,
             ]
         );
     }
@@ -261,9 +265,15 @@ trait QueryTrait
             return;
         }
 
-        $this->queryParts->limit = [1, $this->Offset + $this->Iteration];
+        if($this->Iteration % $this->chunkSize !== 0) {
+            $this->Value = $this->currentChunk[$this->Iteration % $this->chunkSize] ?? null;
+        } else {
+            $this->queryParts->limit = [$this->chunkSize, $this->Offset + $this->Iteration * $this->chunkSize];
 
-        $this->Value = $this->one();
+            $this->currentChunk = $this->all();
+            $this->Value = $this->currentChunk[0] ?? null;
+        }
+
         $this->isValid = (bool)$this->Value;
     }
 
@@ -298,9 +308,10 @@ trait QueryTrait
     {
         $this->Iteration = 0;
 
-        $this->queryParts->limit = [1, $this->Offset + $this->Iteration];
+        $this->queryParts->limit = [$this->chunkSize, $this->Offset + $this->Iteration * $this->chunkSize];
 
-        $this->Value = $this->one();
+        $this->currentChunk = $this->all();
+        $this->Value = $this->currentChunk[0] ?? null;
 
         $this->isValid = (bool)$this->Value;
     }

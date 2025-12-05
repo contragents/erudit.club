@@ -191,9 +191,6 @@ class BotEng
             // todo сделать через static метод ::staticGameWordsPlayed($cookie)
             $slovaPlayed = Game::staticGameWordsPlayed($Bot);
             print '$slovaPlayed'; print_r($slovaPlayed);
-            //$obj = new Game();
-            //$slovaPlayed = $obj->gameWordsPlayed();
-            //$obj->botUnlock(); // разблокировали состояние игры
         } else {
             $desk = static::$langClass::init_desk();
             $slovaPlayed = [];
@@ -277,8 +274,6 @@ class BotEng
                     }
 
                     if (!$desk[$i][$j][0] && (isset($desk[$i][$j - 1]) && $desk[$i][$j - 1][0])) {
-                        //print $i.$j.$desk[$i+1][$j][1];
-                        $ff = '';//для временного отключения поиска слов вниз
                         if (date('U') < self::$thinkEndTime) {
                             print 'vniz';
                             self::findWordVniz($i, $j, $desk, $fishki, $slovaPlayed);
@@ -287,7 +282,6 @@ class BotEng
                     }
 
                     if (!$desk[$i][$j][0] && ($desk[$i + 1][$j][0] ?? false)) {
-                        $ff = '';//для временного отключения поиска слов слева
                         if (date('U') < self::$thinkEndTime) {
                             print 'sleva;';
                             self::findWordSleva($i, $j, $desk, $fishki, $slovaPlayed);
@@ -296,7 +290,6 @@ class BotEng
                     }
 
                     if (!$desk[$i][$j][0] && (isset($desk[$i][$j + 1]) && $desk[$i][$j + 1][0])) {
-                        $ff = '';//для временного отключения поиска слов сверху
                         if (date('U') < self::$thinkEndTime) {
                             print 'sverhu;';
                             self::findWordSverhu($i, $j, $desk, $fishki, $slovaPlayed);
@@ -305,7 +298,6 @@ class BotEng
                     }
 
                     if (!$desk[$i][$j][0] && ($desk[$i - 1][$j][0] ?? false)) {
-                        $ff = '';//для временного отключения поиска слов справа
                         if (date('U') < self::$thinkEndTime) {
                             print 'sprava;';
                             self::findWordSprava($i, $j, $desk, $fishki, $slovaPlayed);
@@ -420,7 +412,7 @@ class BotEng
         */
 
         $andLng = 'AND lng=' . static::LNG_ID;
-        $zapros .= "$\") AND NOT deleted = 1 AND slovo != '$lastLetter' AND length<=$maxWordLen $andLng ORDER BY length ASC";
+        $zapros .= "$\") AND NOT deleted = 1 AND slovo != '$lastLetter' AND length<=$maxWordLen $andLng ORDER BY word_score/length DESC";
 
         if ($res = DB::queryArray($zapros)) {
             foreach ($res as $row) {
@@ -563,7 +555,7 @@ class BotEng
         }//так работает индекс
 
         $andLng = 'AND lng=' . static::LNG_ID;
-        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY length ASC";;
+        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY word_score/length DESC";;
 
         // Длина фрагмента из фишек уже на поле
         $lastLetterLen = ($lastLetter === '' ? 0 : mb_strlen($lastLetter, 'UTF-8'));
@@ -707,7 +699,7 @@ class BotEng
 
         $zapros = "select slovo from dict where (slovo REGEXP \"^$zapros{$lastLetter}[$regexp]{0,$maxLen}";
         $andLng = 'AND lng=' . static::LNG_ID;
-        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY length ASC";
+        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY word_score/length DESC";
 
         $xLastLetter = $x - mb_strlen($lastLetter, 'UTF-8');
         if ($res = DB::queryArray($zapros)) {
@@ -849,7 +841,7 @@ class BotEng
 
         $zapros = "select slovo from dict where (slovo REGEXP \"^$zapros{$lastLetter}[$regexp]{0,$maxLen}";
         $andLng = 'AND lng=' . static::LNG_ID;
-        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY length ASC";;
+        $zapros .= "$\") AND NOT deleted = 1  AND length<=$maxWordLen $andLng ORDER BY word_score/length DESC";;
 
         // Длина фрагмента из фишек уже на поле
         $lastLetterLen = mb_strlen($lastLetter, 'UTF-8');

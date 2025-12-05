@@ -21,6 +21,8 @@ class BaseModel implements Iterator
     const TABLE_NAME = 'players';
     const AND_NOT_DELETED = ' AND is_deleted = 0 ';
 
+    const DEFAULT_BATCH_CHUNK_SIZE = 10;
+
     /** int */
     const ID_FIELD = 'id';
     const CREATED_AT_FIELD = 'created_at';
