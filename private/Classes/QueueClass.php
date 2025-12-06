@@ -26,6 +26,7 @@ class Queue
     const GET_GAME_KEY = 'erudit.get_game_';
     const GAME_KEY = 'erudit.game_';
     const RATING_QUEUE = 'ratingQueue';
+    const MAX_BOT_BID = 100; // Максимальная ставка бота
 
     protected $User;
     protected $userTime;
@@ -108,6 +109,27 @@ class Queue
         return false;
     }
 
+    public static function isUserInQueueByLang(string $user, string $lang): bool
+    {
+        foreach (static::QUEUES as $queue) {
+            if (Cache::hget($queue, $user)) {
+                switch ($lang) {
+                    case T::RU_LANG:
+                        if (!str_contains($queue, T::EN_LANG)) {
+                            return true;
+                        }
+
+                    case T::EN_LANG:
+                        if (str_contains($queue, T::EN_LANG)) {
+                            return true;
+                        }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static function botExitGame($botCookie)
     {
         Cache::del(static::GET_GAME_KEY . $botCookie);
@@ -119,17 +141,17 @@ class Queue
         $bidsArr = MonetizationService::BIDS;
         arsort($bidsArr);
 
-        if(!$isBot) {
+        if (!$isBot) {
             foreach ($bidsArr as $bid) {
                 if ($bid <= floor($maxBid / 20)) {
                     return $bid;
                 }
             }
-        }
-
-        foreach ($bidsArr as $bid) {
-            if ($bid <= $maxBid) {
-                return $bid;
+        } else {
+            foreach ($bidsArr as $bid) {
+                if ($bid <= $maxBid && $bid <= self::MAX_BOT_BID) {
+                    return $bid;
+                }
             }
         }
 
@@ -163,13 +185,13 @@ class Queue
     protected function initGameResponse(string $queue)
     {
         return $this->caller->makeResponse(
-                [
-                    'gameState' => Game::INIT_GAME_STATE,
-                    'gameSubState' => Cache::hlen(static::QUEUES["erudit.{$queue}{$this->lang}players_waiters"]),
-                    'gameWaitLimit' => $this->caller->gameWaitLimit,
-                    'timeWaiting' => date('U') - ($this->userTime),
-                ]
-            );
+            [
+                'gameState' => Game::INIT_GAME_STATE,
+                'gameSubState' => Cache::hlen(static::QUEUES["erudit.{$queue}{$this->lang}players_waiters"]),
+                'gameWaitLimit' => $this->caller->gameWaitLimit,
+                'timeWaiting' => date('U') - ($this->userTime),
+            ]
+        );
     }
 
     public function doSomethingWithThisStuff(string $lang = '')

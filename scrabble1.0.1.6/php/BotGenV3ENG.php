@@ -4,13 +4,12 @@ class BotGenV3ENG
 {
     const BOTSNUM = 47; // число ботов)
     const MINUTES_TO_GO = 5;
-    const LANG = 'EN';
+    const LANG = T::EN_LANG;
 
     private $config;
 
     const BOT_GAMES = 'erudit.botEN_games';
     const WAITERS_2_PLAYERS_QUEUE = 'erudit.2ENplayers_waiters';
-    const WAITERS_4_PLAYERS_QUEUE = 'erudit.4ENplayers_waiters';
     const BOT_LIST = 'erudit.bot_v3_list';
     const BOT_TPL = Game::BOT_TPL;
 
@@ -29,7 +28,6 @@ class BotGenV3ENG
                     if ($this->noBots2Waiting()) {
                         if ($newBot = $this->genNewBot()) {
                             $this->storeTo2Players($newBot);
-                            $prevLlen = Cache::llen(static::BOT_GAMES);
                             Cache::rpush(static::BOT_GAMES, $newBot);
                         }
                     }
@@ -38,25 +36,45 @@ class BotGenV3ENG
 
             sleep(5);
 
-            if (Cache::llen(static::BOT_GAMES) == 0) {
-                self::releaseBots();
-            }
+            // Проверяем и освобождаем незанятых ботов
+            self::releaseBots();
 
             print 'next!';
         }
     }
 
 
-    protected static function releaseBots() {
+    /**
+     * Проверяет BOT_LIST и освобождает незанятых ботов или возвращает выпавших в стек
+     * @return void
+     */
+    protected static function releaseBots(): void
+    {
         $botsInUse = Cache::hgetall(self::BOT_LIST) ?: [];
+        $botsInStack = Cache::lrange(static::BOT_GAMES, 0, -1);
 
-        foreach($botsInUse as $bot => $nothing) {
+        foreach ($botsInUse as $bot => $nothing) {
             // проверим бота на участие в играх или в очереди подбора
-            if(Game::isInGame($bot, (bool)(date('U') % 10))) {
+            if ($lang = Game::isInGame($bot, mt_rand(1, 20) <= 2)) {
+                if($lang === static::LANG && !in_array($bot, $botsInStack)) {
+                    // Бот в игре, но вылетел из стека - ставим обратно
+                    Cache::rpush(static::BOT_GAMES, $bot);
+                }
+
                 continue;
             }
 
-            if(Queue::isUserInQueue($bot)) {
+            if (Queue::isUserInQueueByLang($bot, static::LANG)) {
+                if(!in_array($bot, $botsInStack)) {
+                    // Бот в очереди, но вылетел из стека - ставим обратно
+                    Cache::rpush(static::BOT_GAMES, $bot);
+                }
+
+                continue;
+            }
+
+            if (Queue::isUserInQueue($bot)) {
+                // Бот в очереди, но на другом языке - пропускаем
                 continue;
             }
 
@@ -83,14 +101,15 @@ class BotGenV3ENG
         }
     }
 
-    private function noBots2Waiting()
+    private function noBots2Waiting(): bool
     {
         $allPlayers2Waiting = Cache::hgetall(static::WAITERS_2_PLAYERS_QUEUE);
         foreach ($allPlayers2Waiting as $player => $serializedData) {
-            if (strpos($player, self::BOT_TPL) !== false) {
+            if (str_contains($player, self::BOT_TPL)) {
                 return false;
             }
         }
+
         return true;
     }
 

@@ -444,12 +444,12 @@ class Game
         return $incomingCookie;
     }
 
-    public static function isInGame(string $cookie, bool $clearCache = false): bool
+    public static function isInGame(string $cookie, bool $clearCache = false): ?string
     {
         if ($clearCache) {
-            static::$playersInGames = [];
-        } elseif (isset(static::$playersInGames[$cookie])) {
-            return static::$playersInGames[$cookie];
+            self::$playersInGames = [];
+        } elseif (isset(self::$playersInGames[$cookie])) {
+            return self::$playersInGames[$cookie];
         }
 
         $lastGame = Cache::get(Queue::GAMES_COUNTER);
@@ -461,15 +461,15 @@ class Game
                         continue;
                     }
                     if (!isset($game['results'])) {
-                        static::$playersInGames[$user['ID']] = true; // игрок в игре
-                    } else {
-                        static::$playersInGames[$user['ID']] = false; // игрок в игре, которая завершена
+                        self::$playersInGames[$user['ID']] = $game['lang']; // игрок в игре
+                    } elseif(!(self::$playersInGames[$user['ID']] ?? false)) {
+                        self::$playersInGames[$user['ID']] = null; // игрок в игре, которая завершена
                     }
                 }
             }
         }
 
-        return static::$playersInGames[$cookie] ?? false;
+        return self::$playersInGames[$cookie] ?? null;
     }
 
     private static function unauthorized()

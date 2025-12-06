@@ -59,7 +59,7 @@ class BotEng
 
                 print ($resp['gameState'] ?? 'no State');
 
-                if ($resp['gameState'] == Game::GAME_RESULTS_STATE) {
+                if ($resp['gameState'] === Game::GAME_RESULTS_STATE) {
                     // Игра окончена
 
                     // Удаляем ссылку на игру бота
