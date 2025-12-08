@@ -105,7 +105,7 @@ class BotGenV3ENG
     {
         $allPlayers2Waiting = Cache::hgetall(static::WAITERS_2_PLAYERS_QUEUE);
         foreach ($allPlayers2Waiting as $player => $serializedData) {
-            if (str_contains($player, self::BOT_TPL)) {
+            if (strpos($player, self::BOT_TPL) !== false) {
                 return false;
             }
         }

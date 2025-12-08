@@ -115,12 +115,12 @@ class Queue
             if (Cache::hget($queue, $user)) {
                 switch ($lang) {
                     case T::RU_LANG:
-                        if (!str_contains($queue, T::EN_LANG)) {
+                        if (strpos($queue, T::EN_LANG) === false) {
                             return true;
                         }
 
                     case T::EN_LANG:
-                        if (str_contains($queue, T::EN_LANG)) {
+                        if (strpos($queue, T::EN_LANG) !== false) {
                             return true;
                         }
                 }
