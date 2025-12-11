@@ -21,17 +21,19 @@ spl_autoload_register(
 
 include_once __DIR__ . "/../../autoload.php";
 
-set_error_handler(
-    function ($err_severity, $err_msg, $err_file, $err_line, $err_context = []) {
-        \BadRequest::sendBadRequest(
-            [
-                'err_severity' => $err_severity,
-                'err_msg' => $err_msg,
-                'err_file' => $err_file,
-                'err_line' => $err_line,
-                'err_context' => $err_context
-            ]
-        );
-    },
-    E_ALL & ~E_NOTICE
-);
+if(!($isBot ?? false)) {
+    set_error_handler(
+        function ($err_severity, $err_msg, $err_file, $err_line, $err_context = []) {
+            \BadRequest::sendBadRequest(
+                [
+                    'err_severity' => $err_severity,
+                    'err_msg' => $err_msg,
+                    'err_file' => $err_file,
+                    'err_line' => $err_line,
+                    'err_context' => $err_context
+                ]
+            );
+        },
+        E_ALL & ~E_NOTICE
+    );
+}

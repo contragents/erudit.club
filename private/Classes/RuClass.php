@@ -205,6 +205,13 @@ class Ru
         $fishki = self::compare_desks($desk, $cells, $playerFishki);
 
         if ($fishki === false) {
+            LogModel::add(
+                [
+                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BOT_ERROR . '|' . LogModel::CATEGORY_SUBMIT_ERROR,
+                    LogModel::MESSAGE_FIELD => var_export(['desk' => $desk, 'cells' => $cells, 'fishki' => $playerFishki], true)
+                ]
+            );
+
             return false;
         } else {
             $zvezdy = self::validateFishki($fishki, $playerFishki, $zvezdyTemporary);
@@ -356,19 +363,19 @@ class Ru
         ];
     }
 
-    public static function getLetterCode($letter)
+    public static function getLetterCode($letter): ?int
     {
         foreach (static::$bukvy as $num => $bukva) {
-            if ($bukva[0] == $letter) {
+            if ($bukva[0] === $letter) {
                 return $num;
             } else { // Буква под звездочкой?
-                if ($bukva[0] == mb_strtolower($letter, 'UTF-8') || stripos($letter, $bukva[0]) !== false) {
+                if ($bukva[0] === mb_strtolower($letter, 'UTF-8') || stripos($letter, $bukva[0]) !== false) {
                     return $num + 999 + 1;
                 }
             }
         }
 
-        return;
+        return null;
     }
 
     private static function wordPrice($word, $i, $j, $orientation = 'hor')

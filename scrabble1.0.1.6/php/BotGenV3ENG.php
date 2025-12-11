@@ -53,6 +53,10 @@ class BotGenV3ENG
         $botsInUse = Cache::hgetall(self::BOT_LIST) ?: [];
         $botsInStack = Cache::lrange(static::BOT_GAMES, 0, -1);
 
+        // Объединяем массивы из hset занятых ботов и стека ботов в игре/очереди
+        $botsInUse = array_merge($botsInUse, $botsInStack);
+        $botsInUse = array_unique($botsInUse);
+
         foreach ($botsInUse as $bot => $nothing) {
             // проверим бота на участие в играх или в очереди подбора
             if ($lang = Game::isInGame($bot, mt_rand(1, 20) <= 2)) {

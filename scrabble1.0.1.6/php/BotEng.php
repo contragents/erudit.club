@@ -39,104 +39,109 @@ class BotEng
         $botsTurns = [];
         $botTimes = [];
         while ((date('U') - $start_script_time) < $script_work_time) {
-            if ($Bot = Cache::lpop(static::BOT_GAMES)) {
-                static::$botname = $Bot;
-                $_COOKIE[CookieErudit::COOKIE_NAME] = $Bot;
-                print_r($_COOKIE);
-                $resp = ['gameState' => 1];
-                $zaprosNum = 3;
+            try {
+                if ($Bot = Cache::lpop(static::BOT_GAMES)) {
+                    static::$botname = $Bot;
+                    $_COOKIE[CookieErudit::COOKIE_NAME] = $Bot;
+                    print_r($_COOKIE);
+                    $resp = ['gameState' => 1];
+                    $zaprosNum = 3;
 
-                $_GET['queryNumber'] = $zaprosNum;
-                $_GET['lang'] = static::$lang;
+                    $_GET['queryNumber'] = $zaprosNum;
+                    $_GET['lang'] = static::$lang;
 
-                $resp = self::makeRequest(
-                    static::STATUS_CHECKER_SCRIPT,
-                    $Bot,
-                    ['queryNumber' => $zaprosNum, 'lang' => static::$lang]
-                );
+                    $resp = self::makeRequest(
+                        static::STATUS_CHECKER_SCRIPT,
+                        $Bot,
+                        ['queryNumber' => $zaprosNum, 'lang' => static::$lang]
+                    );
 
-                $resp = json_decode($resp, true);
+                    $resp = json_decode($resp, true);
 
-                print ($resp['gameState'] ?? 'no State');
+                    print ($resp['gameState'] ?? 'no State');
 
-                if ($resp['gameState'] === Game::GAME_RESULTS_STATE) {
-                    // Игра окончена
+                    if ($resp['gameState'] === Game::GAME_RESULTS_STATE) {
+                        // Игра окончена
 
-                    // Удаляем ссылку на игру бота
-                    Queue::botExitGame($Bot);
-                    unset($botsTurns[$Bot]);
-                    unset($botTimes[$Bot]);
+                        // Удаляем ссылку на игру бота
+                        Queue::botExitGame($Bot);
+                        unset($botsTurns[$Bot]);
+                        unset($botTimes[$Bot]);
 
-                    // Удаляем бота из списка занятых ботов
-                    Cache::hdel(self::BOT_LIST, $Bot);
+                        // Удаляем бота из списка занятых ботов
+                        Cache::hdel(self::BOT_LIST, $Bot);
 
-                    continue;
-                } else {
-                    Cache::rpush(static::BOT_GAMES, $Bot);
-                    //Вернули бота в список игроков
+                        continue;
+                    } else {
+                        Cache::rpush(static::BOT_GAMES, $Bot);
+                        //Вернули бота в список игроков
 
-                    if ($resp['gameState'] == Game::MY_TURN_STATUS) {
-                        if (
-                            ($resp['turnTime'] == 120
-                                && (
-                                    (
-                                        ($resp['minutesLeft'] <= 1)
-                                        &&
-                                        ($resp['secondsLeft'] < 40)
+                        if ($resp['gameState'] == Game::MY_TURN_STATUS) {
+                            if (
+                                ($resp['turnTime'] == 120
+                                    && (
+                                        (
+                                            ($resp['minutesLeft'] <= 1)
+                                            &&
+                                            ($resp['secondsLeft'] < 40)
+                                        )
+                                        ||
+                                        ($resp['minutesLeft'] < 1)
                                     )
-                                    ||
-                                    ($resp['minutesLeft'] < 1)
                                 )
-                            )
-                            ||
-                            ($resp['turnTime'] == 90
-                                && (
-                                    (
-                                        ($resp['minutesLeft'] <= 1)
-                                        &&
-                                        ($resp['secondsLeft'] < 10)
+                                ||
+                                ($resp['turnTime'] == 90
+                                    && (
+                                        (
+                                            ($resp['minutesLeft'] <= 1)
+                                            &&
+                                            ($resp['secondsLeft'] < 10)
+                                        )
+                                        ||
+                                        ($resp['minutesLeft'] < 1)
                                     )
-                                    ||
-                                    ($resp['minutesLeft'] < 1)
                                 )
-                            )
-                            ||
-                            (
-                                ($resp['turnTime'] == 60)
-                                &&
-                                ($resp['secondsLeft'] < 40)
-                                &&
-                                ($resp['secondsLeft'] > 0)
-                            )
-                        ) {
-                            $secondsToThink = $resp['minutesLeft'] * 60 + $resp['secondsLeft'];
-                            $thinkStartTime = date('U');
-                            self::$thinkEndTime = $thinkStartTime + $secondsToThink;
-                            print self::$thinkEndTime;
-                            $botsTurns[$Bot] = $resp['gameSubState'];
+                                ||
+                                (
+                                    ($resp['turnTime'] == 60)
+                                    &&
+                                    ($resp['secondsLeft'] < 40)
+                                    &&
+                                    ($resp['secondsLeft'] > 0)
+                                )
+                            ) {
+                                $secondsToThink = $resp['minutesLeft'] * 60 + $resp['secondsLeft'];
+                                $thinkStartTime = date('U');
+                                self::$thinkEndTime = $thinkStartTime + $secondsToThink;
+                                print self::$thinkEndTime;
+                                $botsTurns[$Bot] = $resp['gameSubState'];
 
-                            $turn_submit = self::sendResponse($resp, $Bot);
+                                $turn_submit = self::sendResponse($resp, $Bot);
+                            }
                         }
                     }
-                }
 
-                if (isset($botTimes[$Bot])) {
-                    if (($time = date('U') - $botTimes[$Bot]) < $secondsToBotRefresh) {
-                        sleep($secondsToBotRefresh - $time);
+                    if (isset($botTimes[$Bot])) {
+                        if (($time = date('U') - $botTimes[$Bot]) < $secondsToBotRefresh) {
+                            sleep($secondsToBotRefresh - $time);
+                        }
                     }
+                    $botTimes[$Bot] = date('U');
                 }
-                $botTimes[$Bot] = date('U');
-            }
 
-            if ($botTimes == []) {
-                sleep(10);
-            } else {
-                sleep(1);
-            }
+                if ($botTimes == []) {
+                    sleep(10);
+                } else {
+                    sleep(1);
+                }
 
-            print 'next!';
+                print 'next!';
+            } catch (Throwable $e) {
+                BadRequest::sendBadRequest(['error' => $e->__toString()], true);
+
+                continue;
+            }
         }
-
 
         exit();
     }
@@ -188,9 +193,9 @@ class BotEng
         if (isset($data['desk'])) {
             $desk = $data['desk'];
 
-            // todo сделать через static метод ::staticGameWordsPlayed($cookie)
             $slovaPlayed = Game::staticGameWordsPlayed($Bot);
-            print '$slovaPlayed'; print_r($slovaPlayed);
+            print '$slovaPlayed';
+            print_r($slovaPlayed);
         } else {
             $desk = static::$langClass::init_desk();
             $slovaPlayed = [];
@@ -239,7 +244,7 @@ class BotEng
                     foreach ($fishki as $num => $fishka) {
                         if (($fishka + 999 + 1) === $desk[$i][$j][1]) {
                             $desk[$i][$j][2] = $fishka;
-                            // $fishki[$num] = $desk[$i][$j][1]; // временно фишку не меняем - смотрим где ошибка
+                            $fishki[$num] = $desk[$i][$j][1];
 
                             // todo CLUB-402 иногда звездочка берется с поля какимито другими буквами - разобраться. Не всегда, редко
                             self::mp(
@@ -261,19 +266,35 @@ class BotEng
         // Собрали звезды с поля
 
         print '$k - cycle;';
-        for ($k = 0; $k < 2; $k++) {// 2 прохода
+        for ($k = 0; $k < 7; $k++) { // 7 проходов макс
             //$j - строки, $i - столбцы
-            print 'j,i cycle; ';
+            print 'j,i cycle; ' . PHP_EOL;
+
+            $candidateCellsArr = []; // Массив пустых клеток-кандидатов
+
             for ($j = 0; $j <= 14; $j++) {
                 for ($i = 0; $i <= 14; $i++) {
                     if (($i == 7) && ($j == 7) && !$desk[$i][$j][0]) {
+                        $candidateCellsArr[] = new CellBot(
+                            $i, $j, 1000000, 'Sleva'
+                        ); // Макс. приоритет на клетку посредине поля
+
+                        break 2;
+
                         if (date('U') < self::$thinkEndTime) {
                             print 'sleva;';
                             self::findWordSleva($i, $j, $desk, $fishki, $slovaPlayed);
                         }
                     }
 
+                    // Можно приставить буквы снизу?
                     if (!$desk[$i][$j][0] && (isset($desk[$i][$j - 1]) && $desk[$i][$j - 1][0])) {
+                        $candidateCellsArr[] = new CellBot(
+                            $i, $j, self::getKUp($i, $j, $desk), 'Vniz'
+                        );
+
+                        continue; // Переходим к следующей клетке
+
                         if (date('U') < self::$thinkEndTime) {
                             print 'vniz';
                             self::findWordVniz($i, $j, $desk, $fishki, $slovaPlayed);
@@ -281,7 +302,14 @@ class BotEng
                         //Ищем слова по вертикали (пока) начинающиеся на $j-1...
                     }
 
+                    // Можно приставить буквы слева?
                     if (!$desk[$i][$j][0] && ($desk[$i + 1][$j][0] ?? false)) {
+                        $candidateCellsArr[] = new CellBot(
+                            $i, $j, self::getKRight($i, $j, $desk), 'Sleva'
+                        );
+
+                        continue; // Переходим к следующей клетке
+
                         if (date('U') < self::$thinkEndTime) {
                             print 'sleva;';
                             self::findWordSleva($i, $j, $desk, $fishki, $slovaPlayed);
@@ -289,7 +317,14 @@ class BotEng
                         //Ищем слова по горизонтали (пока) заканчивающиеся на $i+1...
                     }
 
+                    // Можно приставить буквы сверху?
                     if (!$desk[$i][$j][0] && (isset($desk[$i][$j + 1]) && $desk[$i][$j + 1][0])) {
+                        $candidateCellsArr[] = new CellBot(
+                            $i, $j, self::getKDown($i, $j, $desk), 'Sverhu'
+                        );
+
+                        continue; // Переходим к следующей клетке
+
                         if (date('U') < self::$thinkEndTime) {
                             print 'sverhu;';
                             self::findWordSverhu($i, $j, $desk, $fishki, $slovaPlayed);
@@ -297,7 +332,14 @@ class BotEng
                         //Ищем слова по вертикали (пока) заканчивающиеся на $j+1...
                     }
 
+                    // Можно приставить буквы справа?
                     if (!$desk[$i][$j][0] && ($desk[$i - 1][$j][0] ?? false)) {
+                        $candidateCellsArr[] = new CellBot(
+                            $i, $j, self::getKLeft($i, $j, $desk), 'Sverhu'
+                        );
+
+                        continue; // Переходим к следующей клетке
+
                         if (date('U') < self::$thinkEndTime) {
                             print 'sprava;';
                             self::findWordSprava($i, $j, $desk, $fishki, $slovaPlayed);
@@ -306,6 +348,26 @@ class BotEng
                         //break 2;
                     }
                 }
+            }
+
+            // Упорядочиваем массив кандидатов по УМЕНЬШЕНИЮ K
+            uasort($candidateCellsArr, fn($a, $b) => $a->K < $b->K ? 1 : -1);
+
+            print 'Candidates: ' . print_r($candidateCellsArr, true) . PHP_EOL;
+            // Проходим весь массив подходящих пустых клеток от лучшей к худшей
+            foreach ($candidateCellsArr as $cell) {
+                $funcName = 'findWord' . $cell->direction;
+                if (self::{$funcName}($cell->i, $cell->j, $desk, $fishki, $slovaPlayed)) {
+                    // Слово найдено - прерываем обход
+                    break;
+                }
+            }
+
+            // Проверяем время на обдумывание хода
+            if (date('U') >= self::$thinkEndTime) {
+                print "date('U') >= self::thinkEndTime";
+
+                break;
             }
 
             if (count($fishki) && (count($fishki1) != count($fishki))) {
@@ -348,6 +410,32 @@ class BotEng
         }
 
         self::mp(['cells' => $result]);
+    }
+
+    /**
+     * Рассчитывает коэффициент полезности клетки - буквы справа
+     * @param $x
+     * @param $y
+     * @param $desk
+     * @return float|null
+     */
+    protected static function getKRight($x, $y, &$desk): ?float
+    {
+        // Собираем буквы, которые примыкают к слову справа
+        $sumLetter = 0; // Сумма очков за буквы с учетом зеленых/желтых клеток
+        $step = 1;
+        $mult = static::$langClass::$multi[$x][$y]['slovo'] ?? 1; // Коэффициент для синих/красных клеток
+
+        // Идем вправо, пока есть занятые клетки или не кончится доска
+        while ($desk[$x + $step][$y][0] ?? false) {
+            $codeFishka = self::getFishkaCode($desk[$x + $step][$y][1]);
+            $sumLetter += static::$langClass::$bukvy[$codeFishka][1] * (static::$langClass::$multi[$x + $step][$y]['bukva'] ?? 1);
+            $mult *= static::$langClass::$multi[$x + $step][$y]['slovo'] ?? 1;
+
+            $step++;
+        }
+
+        return $sumLetter / ($step - 1) * $mult;
     }
 
     public static function findWordSleva(
@@ -436,11 +524,10 @@ class BotEng
                             if (
                                 isset($lettersZvezd[$letter])
                                 && count($lettersZvezd[$letter])
-                                && $cells[$x - $k][$y][2] !== false
                             ) {
                                 reset($lettersZvezd[$letter]);
                                 // Указали на занятую звездочку
-                                $cells[$x - $k][$y][2] = current($lettersZvezd[$letter]);
+                                // $cells[$x - $k][$y][2] = current($lettersZvezd[$letter]);
 
                                 unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                             }
@@ -465,11 +552,10 @@ class BotEng
                             if (
                                 isset($lettersZvezd[$letter])
                                 && count($lettersZvezd[$letter])
-                                && $cells[$x + $k - $slovoNach + 1 + $delta][$y][2] !== false
                             ) {
                                 reset($lettersZvezd[$letter]);
                                 // Указали на занятую звездочку
-                                $cells[$x + $k - $slovoNach + 1 + $delta][$y][2] = current($lettersZvezd[$letter]);
+                                //$cells[$x + $k - $slovoNach + 1 + $delta][$y][2] = current($lettersZvezd[$letter]);
 
                                 unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                             }
@@ -506,6 +592,32 @@ class BotEng
         }
 
         return '';
+    }
+
+    /**
+     * Рассчитывает коэффициент полезности клетки - буквы снизу
+     * @param $x
+     * @param $y
+     * @param $desk
+     * @return float|null
+     */
+    protected static function getKDown($x, $y, &$desk): ?float
+    {
+        // Собираем буквы, которые примыкают к слову снизу
+        $sumLetter = 0; // Сумма очков за буквы с учетом зеленых/желтых клеток
+        $step = 1;
+        $mult = static::$langClass::$multi[$x][$y]['slovo'] ?? 1; // Коэффициент для синих/красных клеток
+
+        // Идем вниз, пока есть занятые клетки или не кончится доска
+        while ($desk[$x][$y + $step][0] ?? false) {
+            $codeFishka = self::getFishkaCode($desk[$x][$y + $step][1]);
+            $sumLetter += static::$langClass::$bukvy[$codeFishka][1] * (static::$langClass::$multi[$x][$y + $step]['bukva'] ?? 1);
+            $mult *= static::$langClass::$multi[$x][$y + $step]['slovo'] ?? 1;
+
+            $step++;
+        }
+
+        return $sumLetter / ($step - 1) * $mult;
     }
 
     public static function findWordSverhu(
@@ -587,11 +699,10 @@ class BotEng
                             if (
                                 isset($lettersZvezd[$letter])
                                 && count($lettersZvezd[$letter])
-                                && $cells[$x][$y - $k][2] !== false
                             ) {
                                 reset($lettersZvezd[$letter]);
                                 // Указали на занятую звездочку
-                                $cells[$x][$y - $k][2] = current($lettersZvezd[$letter]);
+                                // $cells[$x][$y - $k][2] = current($lettersZvezd[$letter]);
 
                                 unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                             }
@@ -609,11 +720,10 @@ class BotEng
                             if (
                                 isset($lettersZvezd[$letter])
                                 && count($lettersZvezd[$letter])
-                                && $cells[$x][$y + $k - $slovoNach + 1][2] !== false
                             ) {
                                 reset($lettersZvezd[$letter]);
                                 // Указали на занятую звездочку
-                                $cells[$x][$y + $k - $slovoNach + 1][2] = current($lettersZvezd[$letter]);
+                                // $cells[$x][$y + $k - $slovoNach + 1][2] = current($lettersZvezd[$letter]);
 
                                 unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                             }
@@ -650,6 +760,32 @@ class BotEng
         }
 
         return '';
+    }
+
+    /**
+     * Рассчитывает коэффициент полезности клетки - буквы слева
+     * @param $x
+     * @param $y
+     * @param $desk
+     * @return float|null
+     */
+    protected static function getKLeft($x, $y, &$desk): ?float
+    {
+        // Собираем буквы, которые примыкают к слову слева
+        $sumLetter = 0; // Сумма очков за буквы с учетом зеленых/желтых клеток
+        $step = 1;
+        $mult = static::$langClass::$multi[$x][$y]['slovo'] ?? 1; // Коэффициент для синих/красных клеток
+
+        // Идем влево, пока есть занятые клетки или не кончится доска
+        while ($desk[$x - $step][$y][0] ?? false) {
+            $codeFishka = self::getFishkaCode($desk[$x - $step][$y][1]);
+            $sumLetter += static::$langClass::$bukvy[$codeFishka][1] * (static::$langClass::$multi[$x - $step][$y]['bukva'] ?? 1);
+            $mult *= static::$langClass::$multi[$x - $step][$y]['slovo'] ?? 1;
+
+            $step++;
+        }
+
+        return $sumLetter / ($step - 1) * $mult;
     }
 
     public static function findWordSprava(
@@ -728,11 +864,10 @@ class BotEng
                             if (
                                 isset($lettersZvezd[$letter])
                                 && count($lettersZvezd[$letter])
-                                && $cells[$xLastLetter - $k - 1][$y][2] !== false
                             ) {
                                 reset($lettersZvezd[$letter]);
                                 // Указали на занятую звездочку
-                                $cells[$xLastLetter - $k - 1][$y][2] = current($lettersZvezd[$letter]);
+                                // $cells[$xLastLetter - $k - 1][$y][2] = current($lettersZvezd[$letter]);
 
                                 unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                             }
@@ -749,11 +884,10 @@ class BotEng
                             if (
                                 isset($lettersZvezd[$letter])
                                 && count($lettersZvezd[$letter])
-                                && $cells[$x + $k][$y][2] !== false
                             ) {
                                 reset($lettersZvezd[$letter]);
                                 // Указали на занятую звездочку
-                                $cells[$x + $k][$y][2] = current($lettersZvezd[$letter]);
+                                // $cells[$x + $k][$y][2] = current($lettersZvezd[$letter]);
 
                                 unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                             }
@@ -790,6 +924,32 @@ class BotEng
         }
 
         return '';
+    }
+
+    /**
+     * Рассчитывает коэффициент полезности клетки - буквы сверху
+     * @param $x
+     * @param $y
+     * @param $desk
+     * @return float|null
+     */
+    protected static function getKUp($x, $y, &$desk): ?float
+    {
+        // Собираем буквы, которые примыкают к слову сверху
+        $sumLetter = 0; // Сумма очков за буквы с учетом зеленых/желтых клеток
+        $step = 1;
+        $mult = static::$langClass::$multi[$x][$y]['slovo'] ?? 1; // Коэффициент для синих/красных клеток
+
+        // Идем вверх, пока есть занятые клетки или не кончится доска
+        while ($desk[$x][$y - $step][0] ?? false) {
+            $codeFishka = self::getFishkaCode($desk[$x][$y - $step][1]);
+            $sumLetter += static::$langClass::$bukvy[$codeFishka][1] * (static::$langClass::$multi[$x][$y - $step]['bukva'] ?? 1);
+            $mult *= static::$langClass::$multi[$x][$y - $step]['slovo'] ?? 1;
+
+            $step++;
+        }
+
+        return $sumLetter / ($step - 1) * $mult;
     }
 
     public static function findWordVniz(
@@ -873,11 +1033,10 @@ class BotEng
                             if (
                                 isset($lettersZvezd[$letter])
                                 && count($lettersZvezd[$letter])
-                                && $cells[$x][$yLastLetter - $k - 1][2] !== false
                             ) {
                                 reset($lettersZvezd[$letter]);
                                 // Указали на занятую звездочку
-                                $cells[$x][$yLastLetter - $k - 1][2] = current($lettersZvezd[$letter]);
+                                // $cells[$x][$yLastLetter - $k - 1][2] = current($lettersZvezd[$letter]);
 
                                 unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                             }
@@ -895,11 +1054,10 @@ class BotEng
                             if (
                                 isset($lettersZvezd[$letter])
                                 && count($lettersZvezd[$letter])
-                                && $cells[$x][$y + $k][2] !== false
                             ) {
                                 reset($lettersZvezd[$letter]);
                                 // Указали на занятую звездочку
-                                $cells[$x][$y + $k][2] = current($lettersZvezd[$letter]);
+                                // cells[$x][$y + $k][2] = current($lettersZvezd[$letter]);
 
                                 unset($lettersZvezd[$letter][key($lettersZvezd[$letter])]);
                             }
@@ -983,14 +1141,6 @@ class BotEng
         $lettersWord = mb_str_split($word, 1, 'UTF-8');
         $lettersZvezd = [];
 
-        self::mp(
-            [
-                'Слово' => $lettersWord,
-                'Буквы на поле' => $lettersLastLetter,
-                'Фишки' => $fishki1
-            ]
-        );
-
         // удалим из слова все старые буквы, поставленные до текуего хода
         foreach ($lettersWord as $numLetter => $letter) {
             foreach ($lettersLastLetter as $num => $lastLetter) {
@@ -1006,7 +1156,7 @@ class BotEng
 
         foreach ($lettersWord as $numLetter => $letter) {
             if (strpos($letter, '_')) {
-                // Буква поставлена дог нашего хода
+                // Буква поставлена до нашего хода
                 continue;
             }
 
@@ -1031,16 +1181,6 @@ class BotEng
             }
 
             // Сюда попадаем, если буква не найдена в фишках
-            self::mp(
-                [
-                    'Лишняя буква' => $letter,
-                    'Слово' => $lettersWord,
-                    'Буквы на поле' => $lettersLastLetter,
-                    'Фишки' => $fishki1,
-                    'error_type' => 'Буква без совпадения'
-                ]
-            );
-
             return false;
         }
 

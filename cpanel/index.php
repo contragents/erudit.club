@@ -22,6 +22,8 @@
 
 <body>
 <?php
+// ini_set("display_errors", 1); error_reporting(E_ALL);
+
 include_once __DIR__ . '/../autoload.php';
 $lastGame = Cache::get('erudit.num_games');
 $table = include('tpl/gamesTableHeader.php');
