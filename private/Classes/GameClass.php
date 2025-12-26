@@ -1308,8 +1308,8 @@ class Game
                         !BalanceModel::changeBalance(
                             $user['common_id'],
                             $sudokuCount,
-                            'Winner reward',
-                            BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::GAME_TYPE],
+                            BalanceHistoryModel::WINNER_REWARD_TYPE,
+                            BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::WINNER_REWARD_TYPE],
                             $this->currentGame
                         )) {
                         DB::transactionRollback();

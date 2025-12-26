@@ -36,7 +36,9 @@ class BalanceHistoryModel extends BaseModel
         self::MOTIVATION_TYPE => 4,
         self::GREETING_DEPOSIT_TYPE => 5,
         self::CLAIM_INCOME_TYPE => 6,
+        self::WINNER_REWARD_TYPE => 7,
     ];
+    const WINNER_REWARD_TYPE = 'Winner reward';
 
     public ?int $_common_id = null;
     public ?int $_prev_count = null;
@@ -50,6 +52,11 @@ class BalanceHistoryModel extends BaseModel
         ?int $typeId = null,
         ?int $ref = null
     ): bool {
+        if (!$ref) {
+            // Ставим $ref равным - последний ID, чтобы соблюдать уникальность индекса
+            $ref = -1 * self::getLastID();
+        }
+
         return (bool)self::add(
             [
                 self::COMMON_ID_FIELD => $commonId,
@@ -69,7 +76,7 @@ class BalanceHistoryModel extends BaseModel
                 ),
             ]
             + ($typeId ? [self::TYPE_ID_FIELD => $typeId] : [])
-            + ($ref ? [self::REF_FIELD => $ref] : [])
+            + ([self::REF_FIELD => $ref])
         );
     }
 

@@ -329,16 +329,6 @@ class PrizesErudit
 
         $playersRecords = [];
 
-        foreach (static::PERIODS as $period) {
-            $activeAchieve = AchievesModel::getActive(
-                Game::$gameName,
-                AchievesModel::GAMES_PLAYED,
-                $period
-            )[0] ?? false;
-
-            Cache::rpush('activeAchieve', $activeAchieve);
-        }
-
         foreach ($players as $cookie) {
             $playerDailyPlayedGames = Cache::incr(static::GAMES_PLAYED_DAILY . $cookie . strtotime('today'));
             Cache::set(
