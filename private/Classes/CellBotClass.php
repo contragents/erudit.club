@@ -7,7 +7,7 @@ class CellBot
     public float $K; // Коэффициент полезности
     public string $direction; // sleva, sprava, sverhu, vniz
 
-    public function __construct(int $i, int $j, int $K, string $direction)
+    public function __construct(int $i, int $j, float $K, string $direction)
     {
         $this->j = $j;
         $this->i = $i;
