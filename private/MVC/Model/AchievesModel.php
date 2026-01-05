@@ -647,8 +647,12 @@ class AchievesModel extends BaseModel
 
         $res = DB::queryArray($query);
 
-        if (count($res)) {
+        if (count($res) && $res[0]['games_count']) {
             $res[0]['win_percent'] = number_format($res[0]['wins'] / $res[0]['games_count'] * 100, 1, ',', ' ') . '%';
+        } else {
+            $res = [
+                0 => ['games_count' => 0, 'win_percent' => 0, 'delta_rating' => 0, 'wins' => 0]
+            ];
         }
 
         return $res;

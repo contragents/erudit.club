@@ -58,6 +58,10 @@ class PrizesErudit
     const DEFAULT_YEAR_WORD_LENGTH = 6;
     const DEFAULT_DAY_WORD = 'ар';
     const DEFAULT_DAY_WORD_LENGTH = 2;
+    const DEFAULT_DAY_GAMES = 2;
+    const DEFAULT_WEEK_GAMES = 20;
+    const DEFAULT_MONTH_GAMES = 70;
+    const DEFAULT_YEAR_GAMES = 500;
 
     public static function restoreRecords(
         array $recordTypes = [
@@ -283,7 +287,7 @@ class PrizesErudit
             $yesterdayRecord = Cache::get(static::GAMES_PLAYED_DAILY . strtotime('-1 day'));
             $todayRecord = $yesterdayRecord
                 ? ['number' => $yesterdayRecord['number'] * static::DAY_DISCOUNT]
-                : ['number' => 2];
+                : ['number' => static::DEFAULT_DAY_GAMES];
         }
 
         $weekRecord = Cache::get(static::GAMES_PLAYED_WEEKLY . date('W'));
@@ -292,7 +296,7 @@ class PrizesErudit
             $lastWeekRecord = Cache::get(static::GAMES_PLAYED_WEEKLY . (date('W') - 1));
             $weekRecord = $lastWeekRecord
                 ? ['number' => $lastWeekRecord['number'] * static::WEEK_DISCOUNT]
-                : ['number' => 20];
+                : ['number' => static::DEFAULT_WEEK_GAMES];
         }
 
         $monthRecord = Cache::get(static::GAMES_PLAYED_MONTHLY . date('n'));
@@ -301,7 +305,7 @@ class PrizesErudit
             $lastMonthRecord = Cache::get(static::GAMES_PLAYED_MONTHLY . (date('n') - 1));
             $monthRecord = $lastMonthRecord
                 ? ['number' => $lastMonthRecord['number'] * static::MONTH_DISCOUNT]
-                : ['number' => 70];
+                : ['number' => static::DEFAULT_MONTH_GAMES];
         }
 
         $yearRecord = Cache::get(static::GAMES_PLAYED_YEARLY . date('Y'));
@@ -310,7 +314,7 @@ class PrizesErudit
             $lastYearRecord = Cache::get(static::GAMES_PLAYED_YEARLY . (date('Y') - 1));
             $yearRecord = $lastYearRecord
                 ? ['number' => $lastYearRecord['number'] * static::YEAR_DISCOUNT]
-                : ['number' => 500];
+                : ['number' => static::DEFAULT_YEAR_GAMES];
         }
 
         $playersRecords = [];
