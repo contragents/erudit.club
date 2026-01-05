@@ -70,35 +70,22 @@ class PrizesErudit
         return false;
     }
 
-    public static function playerCurrentRecords(int $commonId): array
-    {
-        $allRecords = Cache::hgetall(static::ALL_RECORDS) ?: [];
-        $records = [];
-
-        foreach ($allRecords as $type => $record) {
-            $record = unserialize($record);
-            if (!isset($record['common_id'])) {
-                $record['common_id'] = PlayerModel::getCommonID($record['cookie']);
-            }
-            if ($record['common_id'] == $commonId) {
-                $records[$type] = array_merge($record, ['link' => AchievesModel::PRIZE_LINKS[$type], 'type' => $type]);
-            }
-        }
-
-        if (count($records) > 1) {
-            usort($records, ['self', 'recordsSort']);
-        }
-
-        return $records;
-    }
-
     public
-    static function getRandomRecord()
+    static function getRandomRecord(): ?array
     {
         $allRecords = Cache::hgetall(static::ALL_RECORDS);
 
+        if(!is_array($allRecords)) {
+            return null;
+        }
+
         foreach ($allRecords as $type => $record) {
             $record = unserialize($record);
+
+            if(!is_array($record)) {
+                return null;
+            }
+
             $record = array_merge(
                 $record,
                 [
@@ -317,7 +304,6 @@ class PrizesErudit
                 : ['number' => 70];
         }
 
-
         $yearRecord = Cache::get(static::GAMES_PLAYED_YEARLY . date('Y'));
 
         if (!$yearRecord) {
@@ -335,7 +321,6 @@ class PrizesErudit
                 static::GAMES_PLAYED_DAILY . $cookie . strtotime('today'),
                 $playerDailyPlayedGames
             );
-            //Просто пересохранили в кеше с ТТЛ
 
             if ($playerDailyPlayedGames > $todayRecord['number']) {
                 Cache::set(

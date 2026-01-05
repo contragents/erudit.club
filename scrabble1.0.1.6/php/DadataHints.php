@@ -291,7 +291,7 @@ class Hints
 
     private static function supportHint()
     {
-        if(self::isYandexApp()) {
+        if (self::isYandexApp()) {
             return '';
         }
 
@@ -315,8 +315,11 @@ class Hints
     public static function getWordHint(string $word): array
     {
         try {
-            $words = json_decode(file_get_contents(self::getBotWordRequestURL() . $word . '&game=' . Game::$gameName), true);
-        } catch(\Throwable $e) {
+            $words = json_decode(
+                file_get_contents(self::getBotWordRequestURL() . $word . '&game=' . Game::$gameName),
+                true
+            );
+        } catch (\Throwable $e) {
             $words = ['Ошибка сервера'];
         }
 
@@ -324,7 +327,7 @@ class Hints
             $words = [];
         }
 
-        if(count($words) == 5) {
+        if (count($words) == 5) {
             $words[] = T::S('Only 5 words are shown in random order')
                 . '<br>'
                 . T::S('connect_bot');
@@ -335,9 +338,14 @@ class Hints
         return $res;
     }
 
-    private static function recordsHint()
+    private static function recordsHint(): string
     {
         $record = Prizes::getRandomRecord();
+
+        if (!is_array($record)) {
+            return '';
+        }
+
         $recorderCommonID = Players::getCommonIDByCookie($record['cookie']);
         $recorderPlayerID = Players::getUserIDByCookie($record['cookie']);
         $recordPlayerName = PlayerModel::getPlayerName( // CLUB-440 Players::getPlayerName(

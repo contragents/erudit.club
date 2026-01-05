@@ -8,16 +8,7 @@ use PrizesScrabble;
 
 class Prizes
 {
-    public static function playerCurrentRecords(int $commonId): array
-    {
-        if (Game::$gameName === Game::SCRABBLE) {
-            return PrizesScrabble::playerCurrentRecords($commonId);
-        } else {
-            return PrizesErudit::playerCurrentRecords($commonId);
-        }
-    }
-
-    public static function getRandomRecord()
+    public static function getRandomRecord(): ?array
     {
         if (Game::$gameName === Game::SCRABBLE) {
             return PrizesScrabble::getRandomRecord();

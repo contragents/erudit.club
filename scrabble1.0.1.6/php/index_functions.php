@@ -7,7 +7,6 @@ const SCRIPTS = [
     'turn_submitter' => 'turnSubmitter',
     'new_game' => 'newGame',
     'word_checker' => 'wordChecker',
-    'players_ratings' => 'playersRatings',
     'complain' => 'complain',
     'send_chat_message' => 'sendChatMessage',
     'change_fishki' => 'changeFishki',
@@ -65,10 +64,6 @@ function wordChecker()
     print (new Erudit\Game())->wordChecker();
 }
 
-function playersRatings()
-{
-    print (new Erudit\Game())->playersInfo();
-}
 
 function complain()
 {
