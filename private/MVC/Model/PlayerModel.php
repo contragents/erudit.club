@@ -29,7 +29,8 @@ class PlayerModel extends BaseModel
     public ?string $_cookie = null;
     public ?int $_common_id = null;
 
-    public static function validateCommonIdByCookie(int $commonId, string $cookie): bool {
+    public static function validateCommonIdByCookie(int $commonId, string $cookie): bool
+    {
         return true; // todo CLUB-397 убрать после тестирования задачи
 
         $player = self::getOneCustomO(self::COOKIE_FIELD, $cookie);
@@ -41,10 +42,14 @@ class PlayerModel extends BaseModel
      * Определяет common_id по сложной схеме через связанные куки и ID от яндекса
      * @param string $cookie
      * @param bool $createIfNotExist
-     * @return array|false|string
+     * @return int|null
      */
-    public static function getPlayerID(string $cookie, bool $createIfNotExist = false)
+    public static function getPlayerID(?string $cookie = null, bool $createIfNotExist = false): ?int
     {
+        if (!$cookie) {
+            return null;
+        }
+
         if (self::$cache[$cookie]['common_id'] ?? false) {
             return self::$cache[$cookie]['common_id'];
         }
@@ -52,7 +57,7 @@ class PlayerModel extends BaseModel
         if ($commonId = self::getCommonID($cookie)) {
             self::$cache[$cookie]['common_id'] = $commonId;
 
-            return $commonId;
+            return (int)$commonId;
         }
 
         // Пробуем найти связанный common_id у другого плеера по user_id
@@ -63,7 +68,7 @@ class PlayerModel extends BaseModel
             if ($commonIdCrossing) {
                 self::$cache[$cookie]['common_id'] = $commonIdCrossing;
 
-                return $commonIdCrossing;
+                return (int)$commonIdCrossing;
             }
 
             // ..а если common_id не установлен - создаем
@@ -116,7 +121,7 @@ class PlayerModel extends BaseModel
             }
         }
 
-        return false;
+        return null;
     }
 
     public static function getNameBySomeId(string $someId)
@@ -150,32 +155,28 @@ class PlayerModel extends BaseModel
         }
     }
 
-    public static function getCommonID($cookie = false, $userID = false)
+    public static function getCommonID($cookie = false): ?int
     {
         if ($cookie) {
             $res = self::getCommonIdFromCookie($cookie);
             if ($res) {
-                return $res;
+                return (int)$res;
             }
         }
 
-        if ($userID) {
-            $res = self::getCommonIdFromUserId($userID);
-            if ($res) {
-                return $res;
-            }
-        }
-
-        return false;
+        return null;
     }
 
-    public static function getCommonIdFromCookie(string $cookie)
+    public static function getCommonIdFromCookie(string $cookie): ?int
     {
+        return self::find()->where([self::COOKIE_FIELD => $cookie])->one()->_common_id ?? null;
+        /* todo CLUB-466
         $commonIDQuery = ORM::select(['common_id'], self::TABLE_NAME)
             . ORM::where('cookie', '=', $cookie)
             . ORM::limit(1);
 
         return DB::queryValue($commonIDQuery);
+        */
     }
 
     public static function getCommonIdFromUserId($userId)
@@ -195,7 +196,8 @@ class PlayerModel extends BaseModel
             return 0;
         }
 
-        return CommonIdRatingModel::getRating($player[self::COMMON_ID_FIELD], \Game::$gameName) ?: ($player[self::RATING_FIELD] ?? CommonIdRatingModel::INITIAL_RATING);
+        return CommonIdRatingModel::getRating($player[self::COMMON_ID_FIELD], \Game::$gameName)
+            ?: ($player[self::RATING_FIELD] ?? CommonIdRatingModel::INITIAL_RATING);
     }
 
     public static function getRating($commonID = false, $cookie = false, $userID = false)
@@ -252,7 +254,7 @@ class PlayerModel extends BaseModel
 
     public static function getTopPlayersCached(int $top, ?int $topMax = null): array
     {
-        $cacheKey = self::RATING_CACHE_PREFIX . "_top_{$top}_" . ($topMax ??  self::TOP_10);
+        $cacheKey = self::RATING_CACHE_PREFIX . "_top_{$top}_" . ($topMax ?? self::TOP_10);
 
         if ($topRatings = Cache::get($cacheKey)) {
             return $topRatings;
@@ -294,7 +296,7 @@ class PlayerModel extends BaseModel
 
         $commonId = $user['common_id'];
         $commonIDName = UserModel::getNameByCommonId($commonId);
-        if($commonIDName) {
+        if ($commonIDName) {
             return $commonIDName;
         }
 
@@ -305,12 +307,12 @@ class PlayerModel extends BaseModel
         }
 
         if (
-        $res = DB::queryValue(
-            "SELECT name FROM player_names 
+            $res = DB::queryValue(
+                "SELECT name FROM player_names 
             WHERE
             some_id=" . \Game::hash_str_2_int($idSource)
-            . " LIMIT 1"
-        )
+                . " LIMIT 1"
+            )
         ) {
             return $res;
         } else {
@@ -352,7 +354,7 @@ class PlayerModel extends BaseModel
                 }
             }
 
-            if(T::$lang === T::EN_LANG) {
+            if (T::$lang === T::EN_LANG) {
                 $letterName = T::translit(
                     $letterName,
                     true
@@ -397,7 +399,7 @@ class PlayerModel extends BaseModel
         $resultRatings = [];
 
         for ($i = $top; $i <= $top + $topMax ?? 0; $i++) {
-            $currentRating = $topRatings[$i-$top][self::RATING_FIELD] ?? false;
+            $currentRating = $topRatings[$i - $top][self::RATING_FIELD] ?? false;
             if (!$currentRating) {
                 break;
             }

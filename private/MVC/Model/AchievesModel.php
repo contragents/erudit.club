@@ -16,7 +16,6 @@ use BaseController as BC;
  * @property int $_game_name_id
  *
  **/
-
 class AchievesModel extends BaseModel
 {
     const TABLE_NAME = 'achieves';
@@ -68,10 +67,20 @@ class AchievesModel extends BaseModel
     public const GAMES_PLAYED = 'games_played';
     public const REF_COUNT = 'ref_count'; // КОличество рефералов (не используется)
 
+    public const VALID_RECORD_TYPES = [
+        self::WORD_LEN,
+        self::GAME_PRICE,
+        self::TURN_PRICE,
+        self::WORD_PRICE,
+        self::GAMES_PLAYED
+    ];
+
     public const DAY_PERIOD = 'day';
     public const WEEK_PERIOD = 'week';
     public const MONTH_PERIOD = 'month';
     public const YEAR_PERIOD = 'year';
+
+    public const VALID_PERIODS = [self::DAY_PERIOD, self::WEEK_PERIOD, self::MONTH_PERIOD, self::YEAR_PERIOD];
 
     public const TOP_TYPE = 'top';
 
@@ -260,25 +269,25 @@ class AchievesModel extends BaseModel
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
             . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', BaseModel::GAME_IDS[Game::$gameName], true)
             . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(
-                    self::EVENT_PERIOD_FIELD,
-                    '!=',
-                    self::DAY_PERIOD
-                ) : '')
+                self::EVENT_PERIOD_FIELD,
+                '!=',
+                self::DAY_PERIOD
+            ) : '')
             . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(
-                    self::EVENT_PERIOD_FIELD,
-                    '!=',
-                    self::WEEK_PERIOD
-                ) : '')
+                self::EVENT_PERIOD_FIELD,
+                '!=',
+                self::WEEK_PERIOD
+            ) : '')
             . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(
-                    self::EVENT_PERIOD_FIELD,
-                    '!=',
-                    self::MONTH_PERIOD
-                ) : '')
+                self::EVENT_PERIOD_FIELD,
+                '!=',
+                self::MONTH_PERIOD
+            ) : '')
             . ($filters[StatsController::NO_GOLD_PARAM] ?? false ? ORM::andWhere(
-                    self::EVENT_PERIOD_FIELD,
-                    '!=',
-                    self::YEAR_PERIOD
-                ) : '')
+                self::EVENT_PERIOD_FIELD,
+                '!=',
+                self::YEAR_PERIOD
+            ) : '')
             . ORM::orderBy(self::ID_FIELD, false)
             . ORM::limit($limit, ($page - 1) * $limit);
 
@@ -305,25 +314,25 @@ class AchievesModel extends BaseModel
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
             . ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', BaseModel::GAME_IDS[Game::$gameName], true)
             . ($filters[StatsController::NO_STONE_PARAM] ?? false ? ORM::andWhere(
-                    self::EVENT_PERIOD_FIELD,
-                    '!=',
-                    self::DAY_PERIOD
-                ) : '')
+                self::EVENT_PERIOD_FIELD,
+                '!=',
+                self::DAY_PERIOD
+            ) : '')
             . ($filters[StatsController::NO_BRONZE_PARAM] ?? false ? ORM::andWhere(
-                    self::EVENT_PERIOD_FIELD,
-                    '!=',
-                    self::WEEK_PERIOD
-                ) : '')
+                self::EVENT_PERIOD_FIELD,
+                '!=',
+                self::WEEK_PERIOD
+            ) : '')
             . ($filters[StatsController::NO_SILVER_PARAM] ?? false ? ORM::andWhere(
-                    self::EVENT_PERIOD_FIELD,
-                    '!=',
-                    self::MONTH_PERIOD
-                ) : '')
+                self::EVENT_PERIOD_FIELD,
+                '!=',
+                self::MONTH_PERIOD
+            ) : '')
             . ($filters[StatsController::NO_GOLD_PARAM] ?? false ? ORM::andWhere(
-                    self::EVENT_PERIOD_FIELD,
-                    '!=',
-                    self::YEAR_PERIOD
-                ) : '')
+                self::EVENT_PERIOD_FIELD,
+                '!=',
+                self::YEAR_PERIOD
+            ) : '')
         );
     }
 
@@ -356,21 +365,21 @@ class AchievesModel extends BaseModel
             . ' ) '
             . (
                 $filters[StatsController::FILTER_PLAYER_PARAM] ?? false
-                    ? (' AND ( '
-                        . ORM::getWhereCondition(
-                            '1_player_id',
-                            '=',
-                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
-                            true
-                        )
-                        . ORM::orWhere(
-                            '2_player_id',
-                            '=',
-                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
-                            true
-                        )
-                        . ' ) ')
-                    : ''
+                ? (' AND ( '
+                . ORM::getWhereCondition(
+                    '1_player_id',
+                    '=',
+                    StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                    true
+                )
+                . ORM::orWhere(
+                    '2_player_id',
+                    '=',
+                    StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                    true
+                )
+                . ' ) ')
+                : ''
             )
             . ORM::orderBy(self::GAME_ID_FIELD, false)
             . ORM::limit($limit, ($page - 1) * $limit);
@@ -453,21 +462,21 @@ class AchievesModel extends BaseModel
             . ' ) '
             . (
                 $filters[StatsController::FILTER_PLAYER_PARAM] ?? false
-                    ? (' AND ( '
-                        . ORM::getWhereCondition(
-                            '1_player_id',
-                            '=',
-                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
-                            true
-                        )
-                        . ORM::orWhere(
-                            '2_player_id',
-                            '=',
-                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
-                            true
-                        )
-                        . ' ) ')
-                    : ''
+                ? (' AND ( '
+                . ORM::getWhereCondition(
+                    '1_player_id',
+                    '=',
+                    StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                    true
+                )
+                . ORM::orWhere(
+                    '2_player_id',
+                    '=',
+                    StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                    true
+                )
+                . ' ) ')
+                : ''
             )
             . ORM::orderBy(self::GAME_ID_FIELD, false)
             . ORM::limit($limit, ($page - 1) * $limit);
@@ -604,21 +613,21 @@ class AchievesModel extends BaseModel
             . ' ) '
             . (
                 $filters[StatsController::FILTER_PLAYER_PARAM] ?? false
-                    ? (' AND ( '
-                        . ORM::getWhereCondition(
-                            '1_player_id',
-                            '=',
-                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
-                            true
-                        )
-                        . ORM::orWhere(
-                            '2_player_id',
-                            '=',
-                            StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
-                            true
-                        )
-                        . ' ) ')
-                    : ''
+                ? (' AND ( '
+                . ORM::getWhereCondition(
+                    '1_player_id',
+                    '=',
+                    StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                    true
+                )
+                . ORM::orWhere(
+                    '2_player_id',
+                    '=',
+                    StatsController::$Request[StatsController::FILTER_PLAYER_PARAM],
+                    true
+                )
+                . ' ) ')
+                : ''
             )
         ) ?: null;
     }

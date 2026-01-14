@@ -84,7 +84,7 @@ for ($i = 0; $i <= NUM_CYCLES; $i++) {
 <?php
 exit;
 */
-
+print 0 ?: 1;
 $url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest';
 $parameters = [
     'slug' => 'toncoin',

@@ -366,9 +366,6 @@ class T
         'Error saving Nick change' => [
             self::RU_LANG => 'Ошибка сохранения Ника!',
         ],
-        'Lost server synchronization' => [
-            'Потеря синхронизации с сервером',
-        ],
         'Closed game window' => [
             self::EN_LANG => 'closed game window',
             self::RU_LANG => 'закрыл вкладку с игрой'

@@ -1638,12 +1638,7 @@ class Game
 
             if (isset($this->gameStatus['results'])) {
                 $arr = Prizes::checkDayGamesPlayedRecord(
-                    array_map(
-                        function ($user) {
-                            return $user['ID'];
-                        },
-                        $this->gameStatus['users']
-                    )
+                    array_column($this->gameStatus['users'], 'common_id')
                 );
 
                 foreach ($arr as $period => $record) {
@@ -1651,7 +1646,7 @@ class Game
                         T::S('set record for number of games played for') . " $period - <strong>"
                         . reset($record)
                         . "</strong>",
-                        $this->gameStatus[key($record)]
+                        $this->getNumPlayerByCommonId(key($record)) ?? false
                     );
                 }
             }
@@ -2500,5 +2495,16 @@ class Game
         }
 
         return $fishkiToChange;
+    }
+
+    private function getNumPlayerByCommonId(int $commonId): ?int
+    {
+        foreach($this->gameStatus['users'] as $num => $user) {
+            if($user['common_id'] === $commonId) {
+                return $num;
+            }
+        }
+
+        return null;
     }
 }

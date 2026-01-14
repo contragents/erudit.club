@@ -30,7 +30,7 @@ class RatingHistoryModel extends BaseModel
         );
     }
 
-    public static function getNumGamesPlayed($commonId, string $gameName = ''): int
+    public static function getNumGamesPlayed($commonId, string $gameName = '', ?string $fromTimestamp = null): int
     {
         return DB::queryValue(
             ORM::select(['count(1)'], self::TABLE_NAME)
@@ -38,6 +38,7 @@ class RatingHistoryModel extends BaseModel
             . (in_array($gameName, BaseModel::GAME_IDS)
                 ? ORM::andWhere(self::GAME_NAME_ID_FIELD, '=', BaseModel::GAME_IDS[$gameName], true)
                 : '')
+            . ($fromTimestamp ? ORM::andWhere(self::CREATED_AT_FIELD, '>', strtotime($fromTimestamp), true) : '')
         ) ?: 0;
     }
 
