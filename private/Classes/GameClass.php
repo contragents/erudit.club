@@ -462,7 +462,7 @@ class Game
                     }
                     if (!isset($game['results'])) {
                         self::$playersInGames[$user['ID']] = $game['lang']; // игрок в игре
-                    } elseif(!(self::$playersInGames[$user['ID']] ?? false)) {
+                    } elseif (!(self::$playersInGames[$user['ID']] ?? false)) {
                         self::$playersInGames[$user['ID']] = null; // игрок в игре, которая завершена
                     }
                 }
@@ -701,7 +701,9 @@ class Game
             $message['img_title'] = T::S('Avatar by provided link');
         }
 
-        $message['name'] = $userData['name'] ?? PlayerModel::getPlayerName(['ID' => $this->User, 'common_id' => $this->commonId]);
+        $message['name'] = $userData['name'] ?? PlayerModel::getPlayerName(
+            ['ID' => $this->User, 'common_id' => $this->commonId]
+        );
 
         $message['text'] = '';
         $message['form'][] = [
@@ -796,25 +798,27 @@ class Game
                 [
                     'result' => 'error_decryption' . ' ' . $decrypted_message,
                     'message' => T::S('Key transcription error')
-                ], JSON_UNESCAPED_UNICODE
+                ],
+                JSON_UNESCAPED_UNICODE
             );
         }
 
         $oldCommonID = UserModel::getCustom(
-                'id',
-                '=',
-                $decrypted_message,
-                false,
-                false,
-                ['id']
-            )[0]['id'] ?? false;
+            'id',
+            '=',
+            $decrypted_message,
+            false,
+            false,
+            ['id']
+        )[0]['id'] ?? false;
 
         if ($oldCommonID === false) {
             return json_encode(
                 [
                     'result' => 'error_query_oldID',
                     'message' => T::S("Player's ID NOT found by key")
-                ], JSON_UNESCAPED_UNICODE
+                ],
+                JSON_UNESCAPED_UNICODE
             );
         }
 
@@ -833,14 +837,16 @@ class Game
                 [
                     'result' => 'save',
                     'message' => T::S('Accounts linked')
-                ], JSON_UNESCAPED_UNICODE
+                ],
+                JSON_UNESCAPED_UNICODE
             );
         } else {
             return json_encode(
                 [
                     'result' => 'error_update ' . $oldCommonID . '->' . $commonID,
                     'message' => T::S('Accounts are already linked')
-                ], JSON_UNESCAPED_UNICODE
+                ],
+                JSON_UNESCAPED_UNICODE
             );
         }
     }
@@ -1060,16 +1066,16 @@ class Game
     protected function coinsPrompt(): string
     {
         return ($this->gameStatus['bid'] ?? false
-                ? (
-                    VH::br()
-                    . T::S('The bank of') . ' '
-                    . VH::strong(
-                        number_format($this->gameStatus['bid'] * count($this->gameStatus['users']), 0, '.', ',')
-                    )
-                    . T::S('{{sudoku_icon_15}}') . ' '
-                    . T::S('will go to the winner')
+            ? (
+                VH::br()
+                . T::S('The bank of') . ' '
+                . VH::strong(
+                    number_format($this->gameStatus['bid'] * count($this->gameStatus['users']), 0, '.', ',')
                 )
-                : ''
+                . T::S('{{sudoku_icon_15}}') . ' '
+                . T::S('will go to the winner')
+            )
+            : ''
         );
     }
 
@@ -1557,19 +1563,33 @@ class Game
                     $this->gameStatus['wordsAccepted'][$word] = $word;
                     //Добавили слово в список сыгранных слов
 
-                    $arr = Prizes::checkDayWordLenRecord($word, $this->User);
-                    foreach ($arr as $period => $value) {
-                        $this->addToLog(
-                            T::S('set word lenght record for') . " $period - <strong>$word</strong>",
-                            $this->numUser
+                    $wordLen = mb_strlen($word, 'UTF-8');
+                    try {
+                        $arr = Prizes::checkWordLenRecord(
+                            $wordLen,
+                            $this->gameStatus['users'][$this->numUser]['common_id'] ?? null,
+                            $word
                         );
-                    }
+                        foreach ($arr as $period => $value) {
+                            $this->addToLog(
+                                T::S('set word lenght record for') . " $period - <strong>$word ({$wordLen})</strong>",
+                                $this->numUser
+                            );
+                        }
 
-                    $arr = Prizes::checkDayWordPriceRecord($word, $price, $this->User);
-                    foreach ($arr as $period => $value) {
-                        $this->addToLog(
-                            T::S('set word cost record for') . " $period - <strong>$word - $price</strong>",
-                            $this->numUser
+                        $arr = Prizes::checkDayWordPriceRecord($word, $price, $this->User);
+                        foreach ($arr as $period => $value) {
+                            $this->addToLog(
+                                T::S('set word cost record for') . " $period - <strong>$word - $price</strong>",
+                                $this->numUser
+                            );
+                        }
+                    } catch (Throwable $e) {
+                        LogModel::add(
+                            [
+                                LogModel::CATEGORY_FIELD => LogModel::CATEGORY_RECORD_ERROR,
+                                LogModel::MESSAGE_FIELD => $e->getMessage(),
+                            ]
                         );
                     }
                 }
@@ -1579,11 +1599,23 @@ class Game
             if ($ochkiZaHod == 0) {
                 $this->gameStatus['users'][$this->numUser]['lostTurns']++;
             } else {
-                $arr = Prizes::checkDayTurnPriceRecord($ochkiZaHod, $this->User);
-                foreach ($arr as $period => $value) {
-                    $this->addToLog(
-                        T::S('set record for turn cost for') . " $period - <strong>$ochkiZaHod</strong>",
-                        $this->numUser
+                try {
+                    $playerTurnPriceRecordsArr = Prizes::checkDayTurnPriceRecord(
+                        $ochkiZaHod,
+                        $this->gameStatus['users'][$this->numUser]['common_id'] ?? null
+                    );
+                    foreach ($playerTurnPriceRecordsArr as $period => $nothing) {
+                        $this->addToLog(
+                            T::S('set record for turn cost for') . " $period - <strong>$ochkiZaHod</strong>",
+                            $this->numUser
+                        );
+                    }
+                } catch (Throwable $e) {
+                    LogModel::add(
+                        [
+                            LogModel::CATEGORY_FIELD => LogModel::CATEGORY_RECORD_ERROR,
+                            LogModel::MESSAGE_FIELD => $e->getMessage(),
+                        ]
                     );
                 }
             }
@@ -1700,7 +1732,9 @@ class Game
     {
         $res = '<br />';
         foreach ($words as $word => $price) {
-            $res .= " <a href=\"#\" onclick=\"event.preventDefault(); openWindowGlobal('" . urlencode($word) . "');\">$word</a>-$price&nbsp;";
+            $res .= " <a href=\"#\" onclick=\"event.preventDefault(); openWindowGlobal('" . urlencode(
+                    $word
+                ) . "');\">$word</a>-$price&nbsp;";
         }
 
         return $res;
@@ -1899,16 +1933,16 @@ class Game
                 ['style' => 'color:' . ($isWinner ? '#00ff00' : 'red') . ';']
             )
             . ($this->gameStatus['bid'] ?? false
-                    ? (
-                        VH::br()
-                        . T::S('The bank of') . ' '
-                        . VH::strong(
-                            number_format($this->gameStatus['bid'] * count($this->gameStatus['users']), 0, '.', ',')
-                        )
-                        . T::S('{{sudoku_icon_15}}') . ' '
-                        . ($isWinner ? T::S('goes to you') : T::S('is taken by the opponent'))
+                ? (
+                    VH::br()
+                    . T::S('The bank of') . ' '
+                    . VH::strong(
+                        number_format($this->gameStatus['bid'] * count($this->gameStatus['users']), 0, '.', ',')
                     )
-                    : ''
+                    . T::S('{{sudoku_icon_15}}') . ' '
+                    . ($isWinner ? T::S('goes to you') : T::S('is taken by the opponent'))
+                )
+                : ''
             )
             . VH::br()
             . T::S('start_new_game');
@@ -2265,9 +2299,9 @@ class Game
         }
 
         $commonId = $this->gameStatus['users'][$this->numUser]['common_id'] ?? PlayerModel::getPlayerID(
-                $this->User,
-                true
-            );
+            $this->User,
+            true
+        );
 
         $arr = array_merge(
             $arr,
@@ -2321,10 +2355,7 @@ class Game
                 $arr = array_merge($arr, ['userInfo' => $this->User]);
                 $arr = array_merge($arr, ['gameNumber' => $this->gameStatus['gameNumber']]);
                 $arr = array_merge($arr, ['winScore' => $this->gameStatus['winScore']]);
-
-                $arr = array_merge($arr, ['lang' => T::$lang /* CLUB-440 substr(strtoupper($this->gameStatus['lang']), 0, 2)*/]);
-
-                //Добавили в респонс очки игроков
+                $arr = array_merge($arr, ['lang' => T::$lang]);
             }
 
             if (isset($this->gameStatus['bid']) && $arr['gameState'] !== self::CHOOSE_GAME_STATUS) {
@@ -2380,7 +2411,15 @@ class Game
                 $arr = array_merge($arr, ['turnTime' => $this->gameStatus['turnTime']]);
             }
 
-            if (!isset($arr['desk']) && in_array($arr['gameState'], [self::MY_TURN_STATUS, self::PRE_MY_TURN_STATUS, self::OTHER_TURN_STATUS, self::START_GAME_STATUS])) {
+            if (!isset($arr['desk']) && in_array(
+                    $arr['gameState'],
+                    [
+                        self::MY_TURN_STATUS,
+                        self::PRE_MY_TURN_STATUS,
+                        self::OTHER_TURN_STATUS,
+                        self::START_GAME_STATUS
+                    ]
+                )) {
                 $arr['desk'] = $this->gameStatus['lngClass']::init_desk();
             }
 
@@ -2499,8 +2538,8 @@ class Game
 
     private function getNumPlayerByCommonId(int $commonId): ?int
     {
-        foreach($this->gameStatus['users'] as $num => $user) {
-            if($user['common_id'] === $commonId) {
+        foreach ($this->gameStatus['users'] as $num => $user) {
+            if ($user['common_id'] === $commonId) {
                 return $num;
             }
         }

@@ -1,9 +1,5 @@
 <?php
 
-namespace classes;
-
-use BaseModel;
-
 /**
  * @inheritDoc
  * @property string $cookie
@@ -89,7 +85,7 @@ class Record extends \AchievesModel
 
         return self::find()->where(
             [
-                self::EVENT_TYPE_FIELD => self::GAMES_PLAYED,
+                self::EVENT_TYPE_FIELD => $type,
                 self::EVENT_PERIOD_FIELD => $period,
                 self::IS_ACTIVE_FIELD => true,
             ]

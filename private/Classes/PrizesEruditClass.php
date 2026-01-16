@@ -1,7 +1,5 @@
 <?php
 
-use classes\Record;
-
 class PrizesErudit
 {
     protected const DAY_DISCOUNT = 0.5;
@@ -69,12 +67,41 @@ class PrizesErudit
     const DEFAULT_WEEK_GAMES = 20;
     const DEFAULT_MONTH_GAMES = 70;
     const DEFAULT_YEAR_GAMES = 500;
+    const DEFAULT_DAY_TURN_PRICE = 50;
+    const DEFAULT_WEEK_TURN_PRICE = 60;
+    const DEFAULT_MONTH_TURN_PRICE = 70;
+    const DEFAULT_YEAR_TURN_PRICE = 80;
+    const DEFAULT_DAY_WORD_PRICE = 10;
+    const DEFAULT_WEEK_WORD_PRICE = 20;
+    const DEFAULT_MONTH_WORD_PRICE = 30;
+    const DEFAULT_YEAR_WORD_PRICE = 40;
 
     const DEFAULT_GAME_RECORDS = [
         Record::DAY_PERIOD => self::DEFAULT_DAY_GAMES,
         Record::WEEK_PERIOD => self::DEFAULT_WEEK_GAMES,
         Record::MONTH_PERIOD => self::DEFAULT_MONTH_GAMES,
         Record::YEAR_PERIOD => self::DEFAULT_YEAR_GAMES,
+    ];
+
+    const DEFAULT_TURN_PRICE_RECORDS = [
+        Record::TURN_PRICE => [
+            Record::DAY_PERIOD => self::DEFAULT_DAY_TURN_PRICE,
+            Record::WEEK_PERIOD => self::DEFAULT_WEEK_TURN_PRICE,
+            Record::MONTH_PERIOD => self::DEFAULT_MONTH_TURN_PRICE,
+            Record::YEAR_PERIOD => self::DEFAULT_YEAR_TURN_PRICE,
+        ],
+        Record::WORD_LEN => [
+            Record::DAY_PERIOD => self::DEFAULT_DAY_WORD_LENGTH,
+            Record::WEEK_PERIOD => self::DEFAULT_WEEK_WORD_LENGTH,
+            Record::MONTH_PERIOD => self::DEFAULT_MONTH_WORD_LENGTH,
+            Record::YEAR_PERIOD => self::DEFAULT_YEAR_WORD_LENGTH,
+        ],
+        Record::WORD_PRICE => [
+            Record::DAY_PERIOD => self::DEFAULT_DAY_WORD_PRICE,
+            Record::WEEK_PERIOD => self::DEFAULT_WEEK_WORD_PRICE,
+            Record::MONTH_PERIOD => self::DEFAULT_MONTH_WORD_PRICE,
+            Record::YEAR_PERIOD => self::DEFAULT_YEAR_WORD_PRICE,
+        ],
     ];
 
     public static function restoreRecords(
@@ -297,7 +324,7 @@ class PrizesErudit
     ): array {
         $playersRecords = [];
 
-        // todo CLUB-466 удалить ключи в Redis  redis-cli keys erudit_games_played_daily_* | xargs redis-cli DEL
+        // todo CLUB-466 удалить ключи в Redis  redis-cli keys erudit_games_played_* | xargs redis-cli DEL
 
         foreach (static::PERIODS as $localizedPeriod => $period) {
             $periodRecord = Record::getRecord(Record::GAMES_PLAYED, $period, static::GAME_NAME, true);
@@ -329,12 +356,6 @@ class PrizesErudit
                 default:
                     return $playersRecords;
             }
-
-            Cache::hset(
-                'erudit_test_games_played_records',
-                $period,
-                ['$timestamp' => $timestamp, '$periodRecord' => $periodRecord]
-            );
 
             foreach ($playerIds as $commonId) {
                 $playerPeriodPlayedGames = RatingHistoryModel::getNumGamesPlayed(
@@ -480,41 +501,156 @@ class PrizesErudit
         return [];
     }
 
+    /**
+     * Общий метод проверки рекорда. Возвращает массив ['день' => [<common_id> => <значение>], ...]
+     * @param int $checkValue Значение для проверки
+     * @param int $commonId
+     * @param string $type Тип рекорда для проверки
+     * @param string|null $word Слово для статистики
+     * @return array
+     */
     public
-    static function checkDayTurnPriceRecord(
-        $price,
-        $cookie
-    ) {
-        $todayRecord = Cache::get(static::TURN_PRICE_DAILY . strtotime('today'));
-
-        if (!$todayRecord) {
-            $yesterdayRecord = Cache::get(static::TURN_PRICE_DAILY . strtotime('-1 day'));
-            $todayRecord = $yesterdayRecord
-                ? ['price' => $yesterdayRecord['price'] * static::DAY_DISCOUNT]
-                : ['price' => 10];
+    static function checkRecord(
+        int $checkValue,
+        int $commonId,
+        string $type,
+        ?string $word = null
+    ): array {
+        if (!in_array($type, Record::VALID_RECORD_TYPES)) {
+            return [];
         }
 
-        if ($price > $todayRecord['price']) {
-            Cache::set(static::TURN_PRICE_DAILY . strtotime('today'), ['price' => $price]);
+        $playersRecords = [];
 
-            $res = array_merge([static::DAY => true], self::checkWeekTurnPriceRecord($price));
-            foreach ($res as $period => $value) {
+        // todo CLUB-466 удалить ключи в Redis  redis-cli keys erudit_turn_price_* | xargs redis-cli DEL
+
+        foreach (static::PERIODS as $localizedPeriod => $period) {
+            $periodRecord = Record::getRecord($type, $period, static::GAME_NAME, true);
+            if (!$periodRecord) {
+                $lastPeriodRecord = Record::getRecord($type, $period, static::GAME_NAME, false);
+                $periodRecord = new Record();
+                $periodRecord->_event_value = $lastPeriodRecord
+                    ? $lastPeriodRecord->_event_value * static::PERIOD_DISCOUNTS[$period]
+                    : static::DEFAULT_TURN_PRICE_RECORDS[$type][$period];
+            }
+
+            switch ($period) {
+                case Record::DAY_PERIOD:
+                    $timestamp = date('Y-m-d');
+
+                    break;
+                case Record::WEEK_PERIOD:
+                    $timestamp = date('Y-m-d', strtotime('monday this week'));
+
+                    break;
+                case Record::MONTH_PERIOD:
+                    $timestamp = date('Y-m-01');
+
+                    break;
+                case Record::YEAR_PERIOD:
+                    $timestamp = date('Y-01-01');
+
+                    break;
+                default:
+                    return $playersRecords;
+            }
+
+            // todo CLUB 466 убрать
+            Cache::hset(
+                "erudit_test_{$type}_records",
+                "$period",
+                ['$timestamp' => $timestamp, '$periodRecord' => $periodRecord]
+            );
+
+            if ($checkValue > $periodRecord->_event_value) {
                 self::saveAchieve(
                     Record::new(
                         [
-                            Record::COOKIE_PARAM => $cookie,
+                            Record::COMMON_ID_FIELD => $commonId,
+                            Record::EVENT_TYPE_FIELD => $type,
+                            Record::EVENT_PERIOD_FIELD => $period,
+                            Record::EVENT_VALUE_FIELD => $checkValue,
+                        ]
+                        + ($word ? [Record::WORD_FIELD => $word] : [])
+                    )
+                );
+
+                // Сохраняем с ключом $localizedPeriod для подстановки в локализованные строки на нужном языке
+                $playersRecords[$localizedPeriod] = [$commonId => $checkValue];
+            } else {
+                break;
+            }
+        }
+
+        return $playersRecords;
+    }
+
+    public
+    static function checkDayTurnPriceRecord(
+        $price,
+        $commonId
+    ): array {
+        $playersRecords = [];
+
+        // todo CLUB-466 удалить ключи в Redis  redis-cli keys erudit_turn_price_* | xargs redis-cli DEL
+
+        foreach (static::PERIODS as $localizedPeriod => $period) {
+            $periodRecord = Record::getRecord(Record::TURN_PRICE, $period, static::GAME_NAME, true);
+            if (!$periodRecord) {
+                $lastPeriodRecord = Record::getRecord(Record::TURN_PRICE, $period, static::GAME_NAME, false);
+                $periodRecord = new Record();
+                $periodRecord->_event_value = $lastPeriodRecord
+                    ? $lastPeriodRecord->_event_value * static::PERIOD_DISCOUNTS[$period]
+                    : static::DEFAULT_TURN_PRICE_RECORDS[Record::TURN_PRICE][$period];
+            }
+
+            switch ($period) {
+                case Record::DAY_PERIOD:
+                    $timestamp = date('Y-m-d');
+
+                    break;
+                case Record::WEEK_PERIOD:
+                    $timestamp = date('Y-m-d', strtotime('monday this week'));
+
+                    break;
+                case Record::MONTH_PERIOD:
+                    $timestamp = date('Y-m-01');
+
+                    break;
+                case Record::YEAR_PERIOD:
+                    $timestamp = date('Y-01-01');
+
+                    break;
+                default:
+                    return $playersRecords;
+            }
+
+            Cache::hset(
+                'erudit_test_turn_price_records',
+                $period,
+                ['$timestamp' => $timestamp, '$periodRecord' => $periodRecord]
+            );
+
+            if ($price > $periodRecord->_event_value) {
+                self::saveAchieve(
+                    Record::new(
+                        [
+                            Record::COMMON_ID_FIELD => $commonId,
                             Record::EVENT_TYPE_FIELD => AchievesModel::TURN_PRICE,
-                            Record::EVENT_PERIOD_FIELD => static::PERIODS[$period],
+                            Record::EVENT_PERIOD_FIELD => $period,
                             Record::EVENT_VALUE_FIELD => $price,
                         ]
                     )
                 );
-            }
 
-            return $res;
+                // Сохраняем с ключом $localizedPeriod для подстановки в локализованные строки на нужном языке
+                $playersRecords[$localizedPeriod] = [$commonId => $price];
+            } else {
+                break;
+            }
         }
 
-        return [];
+        return $playersRecords;
     }
 
     public

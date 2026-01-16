@@ -1,6 +1,6 @@
 <?php
 
-use classes\Record;
+use Record;
 
 
 /**

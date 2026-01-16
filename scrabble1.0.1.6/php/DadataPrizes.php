@@ -2,6 +2,7 @@
 
 namespace Dadata;
 
+use Record;
 use Game;
 use PrizesErudit;
 use PrizesScrabble;
@@ -35,12 +36,16 @@ class Prizes
         }
     }
 
-    public static function checkDayTurnPriceRecord($price, $cookie)
+    public static function checkDayTurnPriceRecord($price, ?int $commonId = null): array
     {
+        if (!$commonId) {
+            return [];
+        }
+
         if (Game::$gameName === Game::SCRABBLE) {
-            return PrizesScrabble::checkDayTurnPriceRecord($price, $cookie);
+            return PrizesScrabble::checkDayTurnPriceRecord($price, $commonId);
         } else {
-            return PrizesErudit::checkDayTurnPriceRecord($price, $cookie);
+            return PrizesErudit::checkDayTurnPriceRecord($price, $commonId);
         }
     }
 
@@ -53,12 +58,16 @@ class Prizes
         }
     }
 
-    public static function checkDayWordLenRecord($word, $cookie)
+    public static function checkWordLenRecord($checkValue, $commonId, $word): array
     {
+        if (!$commonId) {
+            return [];
+        }
+
         if (Game::$gameName === Game::SCRABBLE) {
-            return PrizesScrabble::checkDayWordLenRecord($word, $cookie);
+            return PrizesScrabble::checkRecord($checkValue, $commonId, Record::WORD_LEN, $word);
         } else {
-            return PrizesErudit::checkDayWordLenRecord($word, $cookie);
+            return PrizesErudit::checkRecord($checkValue, $commonId, Record::WORD_LEN, $word);
         }
     }
 }

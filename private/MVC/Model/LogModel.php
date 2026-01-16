@@ -20,10 +20,12 @@ class LogModel extends BaseModel
     const CATEGORY_BOT_ERROR = 'bot_error';
     const CATEGORY_RULANG_ERROR = 'lang_error';
     const CATEGORY_SUBMIT_ERROR = 'submit_error';
+    const CATEGORY_RECORD_ERROR = 'record_error';
     const CATEGORIES = [
         self::CATEGORY_BOT_ERROR,
         self::CATEGORY_RULANG_ERROR,
         self::CATEGORY_SUBMIT_ERROR,
+        self::CATEGORY_RECORD_ERROR,
     ];
 
     public static function add(array $fieldsVals)

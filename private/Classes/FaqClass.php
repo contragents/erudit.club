@@ -1,6 +1,5 @@
 <?php
 
-
 class Faq
 {
     const RULES = [
