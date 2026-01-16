@@ -1564,6 +1564,7 @@ class Game
                     //Добавили слово в список сыгранных слов
 
                     $wordLen = mb_strlen($word, 'UTF-8');
+                    // Оборачиваем начисление призов в try-catch
                     try {
                         $arr = Prizes::checkWordLenRecord(
                             $wordLen,
@@ -1577,8 +1578,12 @@ class Game
                             );
                         }
 
-                        $arr = Prizes::checkDayWordPriceRecord($word, $price, $this->User);
-                        foreach ($arr as $period => $value) {
+                        $arr = Prizes::checkWordPriceRecord(
+                            $price,
+                            $this->gameStatus['users'][$this->numUser]['common_id'] ?? null,
+                            $word
+                        );
+                        foreach ($arr as $period => $nothing) {
                             $this->addToLog(
                                 T::S('set word cost record for') . " $period - <strong>$word - $price</strong>",
                                 $this->numUser
@@ -1599,8 +1604,9 @@ class Game
             if ($ochkiZaHod == 0) {
                 $this->gameStatus['users'][$this->numUser]['lostTurns']++;
             } else {
+                // Оборачиваем проверку рекордов в try-catch
                 try {
-                    $playerTurnPriceRecordsArr = Prizes::checkDayTurnPriceRecord(
+                    $playerTurnPriceRecordsArr = Prizes::checkTurnPriceRecord(
                         $ochkiZaHod,
                         $this->gameStatus['users'][$this->numUser]['common_id'] ?? null
                     );
@@ -1639,16 +1645,26 @@ class Game
                     $this->numUser
                 );
 
-                $arr = Prizes::checkDayGamePriceRecord(
-                    $this->gameStatus['users'][$this->numUser]['score'],
-                    $this->User
-                );
-                foreach ($arr as $period => $value) {
-                    $this->addToLog(
-                        T::S(
-                            'set record for gotten points in the game for'
-                        ) . " $period - <strong>{$this->gameStatus['users'][$this->numUser]['score']}</strong>",
-                        $this->numUser
+                // Оборачиваем проверку рекордов в try-catch
+                try {
+                    $arr = Prizes::checkGamePriceRecord(
+                        $this->gameStatus['users'][$this->numUser]['score'],
+                        $this->gameStatus['users'][$this->numUser]['common_id'] ?? null
+                    );
+                    foreach ($arr as $period => $value) {
+                        $this->addToLog(
+                            T::S(
+                                'set record for gotten points in the game for'
+                            ) . " $period - <strong>{$this->gameStatus['users'][$this->numUser]['score']}</strong>",
+                            $this->numUser
+                        );
+                    }
+                } catch (Throwable $e) {
+                    LogModel::add(
+                        [
+                            LogModel::CATEGORY_FIELD => LogModel::CATEGORY_RECORD_ERROR,
+                            LogModel::MESSAGE_FIELD => $e->getMessage(),
+                        ]
                     );
                 }
 
@@ -1669,7 +1685,7 @@ class Game
             }
 
             if (isset($this->gameStatus['results'])) {
-                $arr = Prizes::checkDayGamesPlayedRecord(
+                $arr = Prizes::checkGamesPlayedRecord(
                     array_column($this->gameStatus['users'], 'common_id')
                 );
 

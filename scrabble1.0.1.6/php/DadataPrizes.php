@@ -18,43 +18,47 @@ class Prizes
         }
     }
 
-    public static function checkDayGamesPlayedRecord(array $players)
+    public static function checkGamesPlayedRecord(array $players): array
     {
         if (Game::$gameName === Game::SCRABBLE) {
-            return PrizesScrabble::checkDayGamesPlayedRecord($players);
+            return PrizesScrabble::checkGamesPlayedRecord($players);
         } else {
-            return PrizesErudit::checkDayGamesPlayedRecord($players);
+            return PrizesErudit::checkGamesPlayedRecord($players);
         }
     }
 
-    public static function checkDayGamePriceRecord($price, $cookie)
+    public static function checkGamePriceRecord($price, $commonId): array
     {
         if (Game::$gameName === Game::SCRABBLE) {
-            return PrizesScrabble::checkDayGamePriceRecord($price, $cookie);
+            return PrizesScrabble::checkRecord($price, $commonId, Record::GAME_PRICE);
         } else {
-            return PrizesErudit::checkDayGamePriceRecord($price, $cookie);
+            return PrizesErudit::checkRecord($price, $commonId, Record::GAME_PRICE);
         }
     }
 
-    public static function checkDayTurnPriceRecord($price, ?int $commonId = null): array
+    public static function checkTurnPriceRecord($price, ?int $commonId = null): array
     {
         if (!$commonId) {
             return [];
         }
 
         if (Game::$gameName === Game::SCRABBLE) {
-            return PrizesScrabble::checkDayTurnPriceRecord($price, $commonId);
+            return PrizesScrabble::checkRecord($price, $commonId, Record::TURN_PRICE);
         } else {
-            return PrizesErudit::checkDayTurnPriceRecord($price, $commonId);
+            return PrizesErudit::checkRecord($price, $commonId, Record::TURN_PRICE);
         }
     }
 
-    public static function checkDayWordPriceRecord($word, $price, $cookie)
+    public static function checkWordPriceRecord(int $price, ?int $commonId, ?string $word)
     {
+        if (!$commonId) {
+            return [];
+        }
+
         if (Game::$gameName === Game::SCRABBLE) {
-            return PrizesScrabble::checkDayWordPriceRecord($word, $price, $cookie);
+            return PrizesScrabble::checkRecord($price, $commonId, Record::WORD_PRICE, $word);
         } else {
-            return PrizesErudit::checkDayWordPriceRecord($word, $price, $cookie);
+            return PrizesErudit::checkRecord($price, $commonId, Record::WORD_PRICE, $word);
         }
     }
 
