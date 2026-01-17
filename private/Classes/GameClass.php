@@ -182,7 +182,10 @@ class Game
                 //Номер пользователя по порядку
 
                 if (isset($_GET['page_hidden']) && $_GET['page_hidden'] == 'true') {
-                    if (isset($_GET['queryNumber']) && $_GET['queryNumber'] < ($this->gameStatus['users'][$this->numUser]['last_request_num'] ?? 0)) {
+                    if (
+                        isset($_GET['queryNumber']) && $_GET['queryNumber'] > 1
+                        && $_GET['queryNumber'] < ($this->gameStatus['users'][$this->numUser]['last_request_num'] ?? 0)
+                    ) {
                         throw new BadRequest('Returned from page_hidden state');
                     }
                 }

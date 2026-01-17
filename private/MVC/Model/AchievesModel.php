@@ -84,6 +84,7 @@ class AchievesModel extends BaseModel
 
     public const TOP_TYPE = 'top';
 
+    // todo сделать переводы T::S()
     public const PRIZE_TITLES = [
         self::GAME_PRICE . '-year' => 'Очки за ИГРУ - Рекорд Года!',
         self::GAME_PRICE . '-month' => 'Очки за ИГРУ - Рекорд Месяца!',
@@ -109,6 +110,11 @@ class AchievesModel extends BaseModel
         self::GAMES_PLAYED . '-month' => 'Сыграно ПАРТИЙ - Рекорд Месяца!',
         self::GAMES_PLAYED . '-week' => 'Сыграно ПАРТИЙ - Рекорд Недели!',
         self::GAMES_PLAYED . '-day' => 'Сыграно ПАРТИЙ - Рекорд Дня!',
+
+        self::TOP_TYPE . '-year' => 'ТОП 1 по рейтингу!',
+        self::TOP_TYPE . '-month' => 'ТОП 2 по рейтингу!',
+        self::TOP_TYPE . '-week' => 'ТОП 3 по рейтингу!',
+        self::TOP_TYPE . '-day' => 'В десятке лучших по рейтингу!',
     ];
 
     public const PRIZE_LINKS = [
@@ -192,6 +198,26 @@ class AchievesModel extends BaseModel
     public ?float $_reward = null;
     public ?float $_income = null;
     public ?int $_game_name_id = null;
+    /**
+     * @var AchievesModel[]|BaseModel|mixed|object|string|null
+     */
+
+    /**
+     * @return static[]
+     */
+    public static function getActiveO(): array
+    {
+        $queryObject = static::find()
+            ->where([
+                        static::IS_ACTIVE_FIELD => true,
+                        static::GAME_NAME_ID_FIELD => BaseModel::GAME_IDS[Game::$gameName]
+                    ]);
+
+        // todo CLUB-466 remove
+        Cache::set('erudit.random_record', ['query' => $queryObject->getSQL()]);
+
+        return $queryObject->all();
+    }
 
     public static function getDescription(string $eventType, string $eventPeriod, string $gameName = ''): string
     {

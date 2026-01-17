@@ -9,15 +9,6 @@ use PrizesScrabble;
 
 class Prizes
 {
-    public static function getRandomRecord(): ?array
-    {
-        if (Game::$gameName === Game::SCRABBLE) {
-            return PrizesScrabble::getRandomRecord();
-        } else {
-            return PrizesErudit::getRandomRecord();
-        }
-    }
-
     public static function checkGamesPlayedRecord(array $players): array
     {
         if (Game::$gameName === Game::SCRABBLE) {

@@ -41,11 +41,17 @@ function initGame()
 
 function statusChecker()
 {
-    if ($_GET['page_hidden'] ?? false === 'true') {
+    if (($_GET['page_hidden'] ?? false) === 'true' && ($_GET['queryNumber'] ?? 2) != 1) {
         sleep(PAGE_HIDDEN_SLEEP_TIME);
     }
-    $res = (new Erudit\Game())->checkGameStatus();
-    print $res;
+    try {
+        $res = (new Erudit\Game())->checkGameStatus();
+        print $res;
+    } catch(Throwable $e) {
+        Cache::set('yandex_error', $e->getMessage());
+
+        print json_encode($e);
+    }
 }
 
 function turnSubmitter()

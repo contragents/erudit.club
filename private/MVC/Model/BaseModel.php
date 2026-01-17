@@ -1,7 +1,5 @@
 <?php
 
-use Record;
-
 
 /**
  * @property int $_id

@@ -5,26 +5,26 @@ namespace Dadata;
 use \Cache;
 use AchievesModel;
 use Erudit\Game;
+use LogModel;
 use PlayerModel;
+use PrizesErudit;
 use T;
 
 class Hints
 {
     public const TYPE_WORDS_QUERY = 'words';
-
-    private static $p;
     private static $gameState;
     private static $User;
 
     const HINT_DAILY_SHOW = 2;
     const HINT_CACHE_TTL = 12 * 60 * 60;
     const HINT_USER_CACHE_KEY = "erudit.hint_";
-    const LAMP_IMG_URL = "img/idea.png";
+    const LAMP_IMG_URL = 'https://xn--d1aiwkc2d.club/img/idea_white.png'; // "img/idea_white.png";
     const YANDEX_RATING_URL = "https://yandex.ru/ugcpub/object-digest?app_id=yandex-games&otype=Soft&object=%2Fontoid%2Fygs393661&show_rating=1&view=games";
 
     const TG_GROUP_LINK = [
         'mobile' => 'https://t.me/eruditclub',
-        'desktop' => 'https://web.telegram.org/#/im?p=@eruditclub'
+        'desktop' => 'https://t.me/eruditclub'
     ];
 
     public static $VIDEOS;
@@ -37,7 +37,7 @@ class Hints
     ];
 
     const EXCEPTIONS = [
-        'Android' => [//Подсказки, зависящие от приложения Андроид
+        'Android' => [ // Подсказки, зависящие от приложения Андроид
             'share' => 'isAndroidApp',
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные' => 'IsNotAndroidApp',
             'Оставьте Ваш отзыв о приложении - мы ценим мнение каждого игрока и постоянно улучшаем Игру - <strong><a href="https://play.google.com/store/apps/details?id=club.erudite.app">Оценить</a></strong>' => 'IsNotAndroidApp',
@@ -45,7 +45,7 @@ class Hints
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>' => 'isAndroidApp',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>' => 'isAndroidApp',
         ],
-        Game::MY_TURN_STATUS => [//Подсказки для myTurn
+        Game::MY_TURN_STATUS => [ // Подсказки для myTurn
             'share' => 'isMyTurn',
             //не просить поделиться во время хода игрока
             'video' => 'isMyTurn',
@@ -53,7 +53,7 @@ class Hints
             'Оставьте Ваш отзыв о приложении - мы ценим мнение каждого игрока и постоянно улучшаем Игру - <strong><a href="https://play.google.com/store/apps/details?id=club.erudite.app">Оценить</a></strong>' => 'isMyTurn',
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>' => 'isMyTurn',
         ],
-        'Yandex' => [//подсказки, зависящие от Яндекса
+        'Yandex' => [ // подсказки, зависящие от Яндекса
             'Ссылка на наш <a target="_blank" href="https://www.youtube.com/channel/UCipptDPm5oRX_VCo5TaTHaQ">Youtube-канал</a> - откроется в новом окне' => 'isYandexApp',
             'video' => 'isYandexApp',
         ]
@@ -73,11 +73,11 @@ class Hints
             'Рекомендуем в <strong>Английской</strong> версии выбирать время <strong>на ход 2 минуты</strong>',
             'В <strong>Английскую</strong> версию включены популярные <strong>аббревиатуры</strong> - ознакомьтесь со списком в новой инструкции',
             'support',
-            'video',
+            //'video',
             'Сохраните КЛЮЧ от учетной записи - доступен в ЛИЧНОМ КАБИНЕТЕ',
             'Ссылка на наш <a target="_blank" href="https://www.youtube.com/channel/UCipptDPm5oRX_VCo5TaTHaQ">Youtube-канал</a> - откроется в новом окне',
             'wordsRuHint',
-            'wordsEnHint',
+            //'wordsEnHint',
         ],
         1800 => [
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
@@ -96,6 +96,7 @@ class Hints
             '<strong>Ъ</strong> труднее всего пристроить на поле. Совет - меняйте',
             'ИНСТРУКЦИЮ лучше изучить ДО начала игры',
             'В наш Эрудит можно играть как со смартфона, так и с ПК',
+            'recordsHint',
             //'<strong>Подбор слов</strong> по словарю Эрудита доступен в <a target="_blank" href="https://t.me/erudit_club_bot">Телеграм-боте</a>',
         ],
         1900 => [
@@ -131,7 +132,7 @@ class Hints
             'Оставьте Ваш отзыв о приложении - мы ценим мнение каждого игрока и постоянно улучшаем Игру - <strong><a href="https://play.google.com/store/apps/details?id=club.erudite.app">Оценить</a></strong>',
             'recordsHint',
         ],
-        2100 => [
+        2000 => [
             //'<strong>Подбор слов</strong> по словарю Эрудита доступен в <a target="_blank" href="https://t.me/erudit_club_bot">Телеграм-боте</a>',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные',
@@ -152,7 +153,7 @@ class Hints
             'Оцените Игру по <a href="' . self::YANDEX_RATING_URL . '" target="_blank">ссылке</a> - откроется в новом окне',
             'recordsHint',
         ],
-        2300 => [
+        2050 => [
             //'<strong>Подбор слов</strong> по словарю Эрудита доступен в <a target="_blank" href="https://t.me/erudit_club_bot">Телеграм-боте</a>',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
             '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш приложения:<br />Нажать шестерёнку справа вверху<br />Выбрать пункт Приложения<br />В списке приложений найти Эрудит, нажать на него<br />Выбрать пункт меню Память<br />Нажать Очистить кэш справа внизу. Только кэш, НЕ данные',
@@ -167,20 +168,18 @@ class Hints
             'Не держите долго <strong>Ъ</strong> - меняйте сразу, если вероятность собрать с ним слово в следующем ходу мала',
             'Сохраните КЛЮЧ от учетной записи - доступен в ЛИЧНОМ КАБИНЕТЕ',
             'Оцените Игру по <a href="' . self::YANDEX_RATING_URL . '" target="_blank">ссылке</a> - откроется в новом окне',
-            'wordsEnHint',
+            //'wordsEnHint',
             'Оставьте Ваш отзыв о приложении - мы ценим мнение каждого игрока и постоянно улучшаем Игру - <strong><a href="https://play.google.com/store/apps/details?id=club.erudite.app">Оценить</a></strong>',
-            'recordsHint',
             'recordsHint',
         ],
     ];
 
     private static function checkCache($User, &$gameStatus, $hint)
     {
-        self::$p = Cache::getInstance();
-        $showsCount = self::$p->redis->get(self::HINT_USER_CACHE_KEY . $User . $hint);
+        $showsCount = Cache::get(self::HINT_USER_CACHE_KEY . $User . $hint);
 
         if (!$showsCount || $showsCount < self::HINT_DAILY_SHOW) {
-            self::$p->redis->setex(
+            Cache::setex(
                 self::HINT_USER_CACHE_KEY . $User . $hint,
                 self::HINT_CACHE_TTL,
                 $showsCount ? ++$showsCount : 1
@@ -340,33 +339,52 @@ class Hints
 
     private static function recordsHint(): string
     {
-        $record = Prizes::getRandomRecord();
+        // todo CLUB-466 remove
+        // return '';
 
-        if (!is_array($record)) {
+        try {
+            // todo CLUB-466 remove
+            Cache::set('erudit.random_record', 'obtaining record..' . Cache::incr('erudit.random_record_counter'));
+
+            $record = PrizesErudit::getRandomRecord();
+
+            if (!$record) {
+                return '';
+            }
+
+            $recordPlayerName = AchievesModel::getPlayerNameByCommonId($record->_common_id);
+            $recordPlayerAvatarUrl = PlayerModel::getAvatarUrl($record->_common_id);
+            $renderType = "{$record->_event_type}-{$record->_event_period}";
+            $renderParams = [
+                'link' => AchievesModel::PRIZE_LINKS[$renderType],
+                'type' => $renderType,
+                'PlayerName' => $recordPlayerName,
+                'AvatarUrl' => $recordPlayerAvatarUrl,
+                'record_date' => strtotime($record->_date_achieved),
+                'value' => $record->_event_value,
+            ];
+
+            // todo CLUB-466 remove
+            Cache::set('erudit.random_record', ['record_model' => $record, 'render_params' => $renderParams]);
+
+            $res = self::renderRecordsView($renderParams);
+            // todo CLUB-466 remove
+            Cache::set(
+                'erudit.random_record',
+                ['record_model' => $record, 'render_params' => $renderParams, 'res' => $res]
+            );
+
+            return $res;
+        } catch (\Throwable $e) {
+            LogModel::add(
+                [
+                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_RECORD_ERROR,
+                    LogModel::MESSAGE_FIELD => $e->getMessage(),
+                ]
+            );
+
             return '';
         }
-
-        $recorderCommonID = Players::getCommonIDByCookie($record['cookie']);
-        $recorderPlayerID = Players::getUserIDByCookie($record['cookie']);
-        $recordPlayerName = PlayerModel::getPlayerName( // CLUB-440 Players::getPlayerName(
-            $recorderPlayerID
-                ? ['ID' => $record['cookie'], 'common_id' => $recorderCommonID,]
-                : ['ID' => $record['cookie'], 'common_id' => $recorderCommonID, 'userID' => $recorderPlayerID]
-        );
-        $recordPlayerAvatarUrl = PlayerModel::getAvatarUrl($recorderCommonID);//Players::getAvatarUrl();
-
-
-        return self::renderRecordsView(
-            array_merge(
-                $record,
-                [
-                    'CommonID' => $recorderCommonID,
-                    'PlayerID' => $recorderPlayerID,
-                    'PlayerName' => $recordPlayerName,
-                    'AvatarUrl' => $recordPlayerAvatarUrl,
-                ]
-            )
-        );
     }
 
 
@@ -399,7 +417,7 @@ class Hints
 				id=\"{$recordData['type']}\" 
 				onclick=\"showFullImage('{$recordData['type']}', 500, 100);\" 
 				src=\"{$recordData['link']}\" width=\"100px\" /> <br />
-Дата установления достижения: <strong>" . date("d.m.Y H:i", $recordData['record_date']) . "</strong>";
+Дата установления достижения: <strong>" . date("d.m.Y", $recordData['record_date']) . "</strong>";
     }
 
     private static function wordsRuHint()

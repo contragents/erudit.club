@@ -28,8 +28,6 @@ class PrizesErudit
 
     const GAME_NAME = Game::ERUDIT;
 
-    protected const ALL_RECORDS = 'erudit_all_records';
-
     const DEFAULT_DAY_GAME_PRICE_RECORD = 350;
     const DEFAULT_WEEK_GAME_PRICE_RECORD = 360;
     const DEFAULT_MONTH_GAME_PRICE_RECORD = 370;
@@ -107,34 +105,16 @@ class PrizesErudit
     }
 
     public
-    static function getRandomRecord(): ?array
+    static function getRandomRecord(): ?Record
     {
-        $allRecords = Cache::hgetall(static::ALL_RECORDS);
+        $allRecords = Record::getActiveO();
 
-        if (!is_array($allRecords)) {
+        if (empty($allRecords)) {
             return null;
         }
 
-        foreach ($allRecords as $type => $record) {
-            $record = unserialize($record);
-
-            if (!is_array($record)) {
-                return null;
-            }
-
-            $record = array_merge(
-                $record,
-                [
-                    'link' => AchievesModel::PRIZE_LINKS[$type],
-                    'type' => $type,
-                    'common_id' => $record['common_id'] ?? PlayerModel::getPlayerID($record['cookie'])
-                ]
-            );
-
-            if ((rand(1, count($allRecords)) / count($allRecords)) <= 0.2) {
-                break;
-            }
-        }
+        shuffle($allRecords);
+        $record = array_shift($allRecords);
 
         return $record;
     }

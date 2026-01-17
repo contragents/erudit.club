@@ -79,7 +79,7 @@ function commonParams() {
         + (gameNumber ? gameNumber : 0)
         + '&gameState='
         + gameState
-        + (pageActive == 'hidden' ? '&page_hidden=true' : '')
+        + ((pageActive == 'hidden' && queryNumber > 1) ? '&page_hidden=true' : '')
         + ('hash' in webAppInitDataUnsafe ? ('&tg_hash=' + webAppInitDataUnsafe.hash) : '')
         + ('user' in webAppInitDataUnsafe && 'id' in webAppInitDataUnsafe.user ? ('&tg_id=' + webAppInitDataUnsafe.user.id) : '')
         + (uniqID ? ('&yandex_user_id=' + encodeURIComponent(uniqID)) : '');

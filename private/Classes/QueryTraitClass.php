@@ -117,6 +117,31 @@ trait QueryTrait
     }
 
     /**
+     * Выдает SQL от объекта с подготовленным запросом
+     * @return string|null
+     */
+    public function getSQL(): ?string
+    {
+        try {
+            $where = '';
+
+            foreach ($this->queryParts->where as $partWhere) {
+                $where .= (
+                empty($where)
+                    ? ORM::where(...array_values($partWhere))
+                    : ORM::andWhere(...array_values($partWhere))
+                );
+            }
+
+            return ORM::select($this->queryParts->fields, static::TABLE_NAME)
+                . ' ' . $where
+                . ' ' . $this->getOrder() . $this->getLimit();
+        } catch (Throwable $e) {
+            return null;
+        }
+    }
+
+    /**
      * @return static|null
      */
     public function one(): ?self
