@@ -7,6 +7,7 @@
  * @property int $_rating_erudit
  * @property int $_rating_scrabble
  * @property int $_rating_sudoku
+ * @property-read ?int $rating // Рейтинг на основании текущей игры Game::$gameName
  */
 
 
@@ -22,6 +23,13 @@ class CommonIdRatingModel extends BaseModel
     public ?int $_rating_erudit = null;
     public ?int $_rating_scrabble = null;
     public ?int $_rating_sudoku = null;
+
+    public function rating(): ?int
+    {
+        $ratingAttr = '_rating_' . Game::$gameName;
+
+        return $this->$ratingAttr ?? null;
+    }
 
     public static function changeUserRating(int $commonId, int $newRating, string $gameName): bool
     {

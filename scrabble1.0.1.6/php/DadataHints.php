@@ -339,13 +339,7 @@ class Hints
 
     private static function recordsHint(): string
     {
-        // todo CLUB-466 remove
-        // return '';
-
         try {
-            // todo CLUB-466 remove
-            Cache::set('erudit.random_record', 'obtaining record..' . Cache::incr('erudit.random_record_counter'));
-
             $record = PrizesErudit::getRandomRecord();
 
             if (!$record) {
@@ -364,15 +358,7 @@ class Hints
                 'value' => $record->_event_value,
             ];
 
-            // todo CLUB-466 remove
-            Cache::set('erudit.random_record', ['record_model' => $record, 'render_params' => $renderParams]);
-
             $res = self::renderRecordsView($renderParams);
-            // todo CLUB-466 remove
-            Cache::set(
-                'erudit.random_record',
-                ['record_model' => $record, 'render_params' => $renderParams, 'res' => $res]
-            );
 
             return $res;
         } catch (\Throwable $e) {

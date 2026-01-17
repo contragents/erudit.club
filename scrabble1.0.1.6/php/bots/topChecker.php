@@ -2,7 +2,8 @@
 
 include_once(__DIR__ . '/../autoload.php');
 
-class TopChecker {
+class TopChecker
+{
     const TOP_PARAMS = [
         AchievesModel::YEAR_PERIOD => [1, null],
         AchievesModel::MONTH_PERIOD => [2, null],
@@ -13,19 +14,19 @@ class TopChecker {
     /*
      * Раздаем позиции ТОП, начисляем income за каждый час
      */
-    public static function Run() {
-        // todo CLUB-398 Сделать обход Топов и ачивок для каждой игры (эрудит, scrabble)
+    public static function Run()
+    {
         try {
             foreach ([Game::ERUDIT, Game::SCRABBLE] as $gameName) {
                 T::setLangGame(T::GAME_MODE_LANG[$gameName], $gameName);
 
                 self::processIncomes($gameName);
             }
-        } catch(Throwable $e) {
+        } catch (Throwable $e) {
             print $e->__toString();
         }
 
-        foreach([Game::ERUDIT, Game::SCRABBLE] as $gameName) {
+        foreach ([Game::ERUDIT, Game::SCRABBLE] as $gameName) {
             T::setLangGame(T::GAME_MODE_LANG[$gameName], $gameName);
 
             $gameNameId = BaseModel::GAME_IDS[$gameName];
@@ -50,6 +51,7 @@ class TopChecker {
                             . ORM::orderBy(AchievesModel::ID_FIELD, false)
                             . ORM::limit(1);
 
+                        // Проверяем, поменялся ли тип ТОПа для игрока
                         if (DB::queryValue($lastPlayerTopAchieveQuery) != $period) {
                             print 'Inserting ' . print_r($player, true);
                             if ($newId = AchievesModel::add(
@@ -231,6 +233,29 @@ class TopChecker {
                                     }
                                 }
                             }
+                        } else { // Тип ТОПа не поменялся - нужно проверить, вдруг текущий рейтинг вырос (тогда заменить на новый)
+                            $achieveModel = Record::find()
+                                ->where([
+                                            Record::COMMON_ID_FIELD => $player[CommonIdRatingModel::COMMON_ID_FIELD],
+                                            Record::IS_ACTIVE_FIELD => true,
+                                            Record::EVENT_TYPE_FIELD => Record::TOP_TYPE,
+                                            Record::EVENT_PERIOD_FIELD => $period,
+                                            Record::GAME_NAME_ID_FIELD => $gameNameId,
+                                        ])
+                                ->one();
+
+                            if (!($achieveModel->_event_value ?? null)) {
+                                continue;
+                            }
+
+                            $currentPlayerRating
+                                = CommonIdRatingModel::getOneO($player[CommonIdRatingModel::COMMON_ID_FIELD])
+                                ->rating ?? null;
+
+                            if ($currentPlayerRating > $achieveModel->_event_value) {
+                                $achieveModel->_event_value = $currentPlayerRating;
+                                $achieveModel->save();
+                            }
                         }
                     }
                 }
@@ -238,10 +263,11 @@ class TopChecker {
         }
     }
 
-    private static function processIncomes($gameName) {
+    private static function processIncomes($gameName)
+    {
         $gameAchieves = AchievesModel::getActive($gameName);
 
-        foreach($gameAchieves as $achieve) {
+        foreach ($gameAchieves as $achieve) {
             if (IncomeModel::changeIncome(
                 $achieve[AchievesModel::COMMON_ID_FIELD],
                 $achieve[AchievesModel::INCOME_FIELD],

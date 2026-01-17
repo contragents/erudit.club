@@ -170,13 +170,6 @@ class PlayerModel extends BaseModel
     public static function getCommonIdFromCookie(string $cookie): ?int
     {
         return self::find()->where([self::COOKIE_FIELD => $cookie])->one()->_common_id ?? null;
-        /* todo CLUB-466
-        $commonIDQuery = ORM::select(['common_id'], self::TABLE_NAME)
-            . ORM::where('cookie', '=', $cookie)
-            . ORM::limit(1);
-
-        return DB::queryValue($commonIDQuery);
-        */
     }
 
     public static function getCommonIdFromUserId($userId)

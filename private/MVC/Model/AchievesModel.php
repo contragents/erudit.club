@@ -213,9 +213,6 @@ class AchievesModel extends BaseModel
                         static::GAME_NAME_ID_FIELD => BaseModel::GAME_IDS[Game::$gameName]
                     ]);
 
-        // todo CLUB-466 remove
-        Cache::set('erudit.random_record', ['query' => $queryObject->getSQL()]);
-
         return $queryObject->all();
     }
 
