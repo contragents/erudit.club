@@ -1118,6 +1118,7 @@ function Leaderboard() {
         }
 
         url.searchParams.set('ver', Math.floor(Date.now()));
+        url.searchParams.set('lang', lang);
 
         try {
             const response = await fetch(url.toString(), {
