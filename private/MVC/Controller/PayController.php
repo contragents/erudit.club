@@ -34,11 +34,21 @@ class PayController extends BaseController
         $res = ['result' => 'error', 'message' => T::S('Error changing settings. Try again later')];
         DB::transactionStart();
 
-        if(!BalanceModel::changeBalance(self::$Request[self::COMMON_ID_PARAM], $incomeToClaim, 'income claiming', BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::CLAIM_INCOME_TYPE])) {
+        if (!BalanceModel::changeBalance(
+            self::$Request[self::COMMON_ID_PARAM],
+            $incomeToClaim,
+            'income claiming',
+            BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::CLAIM_INCOME_TYPE]
+        )) {
             return $res;
         }
 
-        if(!IncomeModel::changeIncome(self::$Request[self::COMMON_ID_PARAM], -1 * $incomeToClaim, 'income claiming', BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::CLAIM_INCOME_TYPE])) {
+        if (!IncomeModel::changeIncome(
+            self::$Request[self::COMMON_ID_PARAM],
+            -1 * $incomeToClaim,
+            'income claiming',
+            BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::CLAIM_INCOME_TYPE]
+        )) {
             return $res;
         }
 
@@ -49,7 +59,9 @@ class PayController extends BaseController
             'result' => 'success',
             'message' => T::S('success'),
             Game::SUDOKU_BALANCE => $newSudokuBalance,
-            'SUDOKU_TOP' => BalanceModel::getTopByBalance(BalanceModel::getBalance(self::$Request[self::COMMON_ID_PARAM])),
+            'SUDOKU_TOP' => BalanceModel::getTopByBalance(
+                BalanceModel::getBalance(self::$Request[self::COMMON_ID_PARAM])
+            ),
             'rewards' => IncomeModel::getIncome(self::$Request[self::COMMON_ID_PARAM]) ?: '0.00'
         ];
     }
@@ -77,6 +89,7 @@ class PayController extends BaseController
             'label' => $transaction->_id,
             'sum' => $transaction->_summ,
             'quickpay-form' => 'button',
+            // 'targets' => 'Оплата заказа с сайта Эрудит.club №' . $transaction->_id, // это на работает, пользователь на странице юмани видит стандартную фразу - перевод по кнопке (или en)
         ];
 
         $response = self::makeRequest('https://yoomoney.ru/quickpay/confirm', [], $formData);
@@ -108,7 +121,8 @@ class PayController extends BaseController
         $opts = [
             "http" => [
                     "method" => (!empty($post)) ? "POST" : "GET",
-                    "header" => "Accept-language: en\r\n"
+                    //"header" => "Accept-language: en\r\n"
+                    "header" => "Accept-language: ru-RU,ru;q=0.8,en;q=0.6\r\n"
                         . "Referer: {$_SERVER['HTTP_REFERER']}\r\n" // https://xn--d1aiwkc2d.club/ todo вынести в константу или переменную
                         . ($post ? "Content-Type: application/x-www-form-urlencoded\r\n" : ''),
                 ]
@@ -132,11 +146,14 @@ class PayController extends BaseController
 
     public function successAction(): string
     {
-        // Сохраняет в кеш запрос и возвращает предыдущий запрос
-        $res = Cache::get('yumoney');
-        Cache::setex('yumoney', 3600, json_encode(self::$Request + ['method' => 'success'], JSON_UNESCAPED_UNICODE));
+        LogModel::add(
+            [
+                LogModel::CATEGORY_FIELD => LogModel::CATEGORY_PAYMENT_NOTIFY,
+                LogModel::MESSAGE_FIELD => self::$Request,
+            ]
+        );
 
-        if ($transactionId = (self::$Request['label'] ?? false)) {
+        if ($transactionId = (int)(self::$Request['label'] ?? false)) {
             $transaction = PaymentModel::getOneO($transactionId);
             if ($transaction) {
                 // Транзакция найдена
@@ -154,6 +171,7 @@ class PayController extends BaseController
                         ceil($transaction->_summ / 10),
                         T::S('Coins purchased'),
                         BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::DEPOSIT_TYPE],
+                        $transaction->_id
                     )) {
                         $transaction->_status = PaymentModel::COMPLETE_STATUS;
                     } else {
@@ -162,8 +180,11 @@ class PayController extends BaseController
 
                     $transaction->save();
                 } else {
-                    $transaction->_status = PaymentModel::BAD_CONFIRM_STATUS;
-                    $transaction->save();
+                    if ($transaction) {
+                        $transaction->_status = PaymentModel::BAD_CONFIRM_STATUS;
+                        $transaction->save();
+                    }
+
                     $badConfirm = PaymentModel::new(
                         [
                             PaymentModel::STATUS_FIELD => PaymentModel::BAD_CONFIRM_STATUS,
@@ -179,31 +200,43 @@ class PayController extends BaseController
 
         Tg::botSendMessage(
             json_encode(
-                ['request' => self::$Request, 'transaction' => $transaction, 'badConfirm' => $badConfirm ?? false],
+                [
+                    'request' => self::$Request,
+                    'transaction' => $transaction ?? 'not found',
+                    'badConfirm' => $badConfirm ?? false
+                ],
                 JSON_UNESCAPED_UNICODE
             ),
             null,
             Game::$gameName
         );
 
-        return $res;
+        return 'OK';
     }
 
-
-    private static function checkSum(float $summ, float $summConfirmed, float $comsa = 0.03): bool
-    {
+    private
+    static function checkSum(
+        float $summ,
+        float $summConfirmed,
+        float $comsa = 0.03
+    ): bool {
         return abs(($summ - $summConfirmed) / $summ - $comsa) < self::EPSILON;
     }
 
-    public static function checkCommonIdHash(int $commonId, string $commonIdHash): bool
-    {
+    public
+    static function checkCommonIdHash(
+        int $commonId,
+        string $commonIdHash
+    ): bool {
         $salt = Config::$envConfig['SALT'];
 
         return $commonIdHash === md5($commonId . $salt);
     }
 
-    public static function getCommonIdHash(int $commonId): string
-    {
+    public
+    static function getCommonIdHash(
+        int $commonId
+    ): string {
         $salt = Config::$envConfig['SALT'];
 
         return md5($commonId . $salt);

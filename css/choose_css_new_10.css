@@ -1847,6 +1847,11 @@ label.file-label:active:before {
     background-size: cover;
 }
 
+.purple_card {
+    background: url('../images/purple.jpg') center center no-repeat;
+    background-size: cover;
+}
+
 .card_record {
     font-size: 28px;
     color: rgb(255, 255, 255);
@@ -2727,6 +2732,11 @@ html {
 .modal-leaderboard .card--stone {
     /*background: #5d7756;*/
     background: url('../images/moreTexturedStone.png') center center no-repeat;
+    background-size: cover;
+}
+.modal-leaderboard .card--purple {
+    /*background: #5d7756;*/
+    background: url('../images/purple.jpg') center center no-repeat;
     background-size: cover;
 }
 .modal-leaderboard .card .position {

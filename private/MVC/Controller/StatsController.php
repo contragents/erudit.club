@@ -84,10 +84,10 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
             str_replace('href="', 'href="' . Config::$config['domain'], $row['content'] . $row['content_perevod'])
         );
 
-        $content = preg_replace('/googletag\.cmd\.push\(.{0,400}\}\);/','', $content);
+        $content = preg_replace('/googletag\.cmd\.push\(.{0,400}\}\);/', '', $content);
 
-        if(T::$lang === T::EN_LANG) {
-            $content = str_replace(T::CYR,'', $content);
+        if (T::$lang === T::EN_LANG) {
+            $content = str_replace(T::CYR, '', $content);
         }
 
         return json_encode(['result' => $content], JSON_UNESCAPED_UNICODE);
@@ -193,6 +193,12 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
                     AchievesModel::TOP_TYPE . '_' . $achieve[AchievesModel::EVENT_PERIOD_FIELD]
                 );
                 $achieve['points_text'] = $achieve[AchievesModel::EVENT_VALUE_FIELD];
+            } elseif ($achieve['event_type'] === AchievesModel::PATREON_TYPE) {
+                $achieve['record_type_text'] = T::S('patreon_level_' . $achieve[AchievesModel::EVENT_PERIOD_FIELD]);
+                $achieve['event_type_text'] = T::S($achieve[AchievesModel::EVENT_TYPE_FIELD]);
+                $achieve['points_text'] = '';
+                // Переназначим период - все патроны - фиолетовые
+                $achieve[AchievesModel::EVENT_PERIOD_FIELD] = AchievesModel::PURPLE_CARD;
             } else {
                 $achieve['record_type_text'] = T::S('record of the ' . $achieve[AchievesModel::EVENT_PERIOD_FIELD]);
                 $achieve['event_type_text'] = T::S($achieve[AchievesModel::EVENT_TYPE_FIELD]);
@@ -202,10 +208,12 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
             }
 
             $achieve[AchievesModel::REWARD_FIELD] = self::trimRightZeros(
+                $achieve[AchievesModel::REWARD_FIELD] ??
                 MonetizationService::REWARD[$achieve[AchievesModel::EVENT_PERIOD_FIELD]],
                 2
             );
             $achieve[AchievesModel::INCOME_FIELD] = self::trimRightZeros(
+                $achieve[AchievesModel::INCOME_FIELD] ??
                 MonetizationService::INCOME[$achieve[AchievesModel::EVENT_PERIOD_FIELD]],
                 4
             );

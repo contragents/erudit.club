@@ -17,7 +17,7 @@ class TopChecker
     public static function Run()
     {
         try {
-            foreach ([Game::ERUDIT, Game::SCRABBLE] as $gameName) {
+            foreach ([Game::ERUDIT, Game::SCRABBLE, BaseModel::ALL_GAMES] as $gameName) {
                 T::setLangGame(T::GAME_MODE_LANG[$gameName], $gameName);
 
                 self::processIncomes($gameName);
@@ -270,12 +270,16 @@ class TopChecker
         foreach ($gameAchieves as $achieve) {
             if (IncomeModel::changeIncome(
                 $achieve[AchievesModel::COMMON_ID_FIELD],
-                $achieve[AchievesModel::INCOME_FIELD],
-                AchievesModel::getDescription(
+                $achieve[AchievesModel::EVENT_TYPE_FIELD] !== AchievesModel::PATREON_TYPE // Для патронов начисляем 1/24 от указанного значения (там за сутки)
+                    ? $achieve[AchievesModel::INCOME_FIELD]
+                    : $achieve[AchievesModel::INCOME_FIELD] / 24,
+                $achieve[AchievesModel::EVENT_TYPE_FIELD] !== AchievesModel::PATREON_TYPE // Для патронов отдельное описание
+                    ? AchievesModel::getDescription(
                     $achieve[AchievesModel::EVENT_TYPE_FIELD],
                     $achieve[AchievesModel::EVENT_PERIOD_FIELD],
                     $gameName
-                ),
+                )
+                    : 'patron income',
                 IncomeHistoryModel::TYPE_IDS[IncomeHistoryModel::ACHIEVE_TYPE],
                 $achieve[AchievesModel::ID_FIELD]
             )) {

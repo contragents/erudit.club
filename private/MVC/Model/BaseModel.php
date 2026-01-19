@@ -43,15 +43,16 @@ class BaseModel implements Iterator
     const ITEMS_IN_CHUNK = 1000;
     const DECIMALS = 2; // Число десятичных знаков для Formatted-свойств
 
-    const ERUDIT = 'erudit';
-    const SCRABBLE = 'scrabble';
+    const ALL_GAMES = 'all';
 
     const GAME_IDS = [
+        self::ALL_GAMES => 0,
         Game::ERUDIT => 1,
         Game::SCRABBLE => 2,
         Game::SUDOKU => 3,
         Game::GOMOKU => 4,
     ];
+
 
     public ?int $_id = null;
 
@@ -208,6 +209,19 @@ class BaseModel implements Iterator
 
         foreach ($rows as $row) {
             $res[] = self::arrayToObject($row);
+        }
+
+        return $res;
+    }
+
+    public function toArray(): array
+    {
+        $res = [];
+        $properties = get_class_vars(static::class);
+        foreach($properties as $property => $nothing) {
+            if(self::isFieldName($property)) {
+                $res[self::fieldName($property)] = $this->$property;
+            }
         }
 
         return $res;
@@ -423,20 +437,31 @@ class BaseModel implements Iterator
     }
 
     /**
-     * @param array $fieldsVals
+     * @param array $processedFieldsVals
      * @return bool|int
      */
     public static function add(array $fieldsVals)
     {
+        $processedFieldsVals = $fieldsVals;
+
+        // Приводим массивы и булевы к соответствующим типам в БД
+        foreach($processedFieldsVals as $field => &$value) {
+            if(is_array($value)) {
+                $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+            } elseif(is_bool($value)) {
+                $value = $value ? 1 : 0;
+            }
+        }
+
         try {
             $query = ORM::insert(static::TABLE_NAME, 'IGNORE')
-                . ORM::insertFields(array_keys($fieldsVals))
+                . ORM::insertFields(array_keys($processedFieldsVals))
                 . ORM::rawValues(
                     array_map(
                         fn($value) => $value instanceof ORM
                             ? $value->rawExpression
                             : ("'" . DB::escapeString($value) . "'"),
-                        $fieldsVals
+                        $processedFieldsVals
                     )
                 );
 

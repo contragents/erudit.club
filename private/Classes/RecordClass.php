@@ -6,29 +6,7 @@
  */
 class Record extends \AchievesModel
 {
-    const COOKIE_PARAM = 'cookie';
-
     public ?string $cookie = null;
-
-    public static function getDayGamesPlayed(): ?self
-    {
-        return self::getRecord(self::GAMES_PLAYED, self::DAY_PERIOD, BaseModel::ERUDIT, false);
-    }
-
-    public static function getTodayGamesPlayed(): ?self
-    {
-        return self::getRecord(self::GAMES_PLAYED, self::DAY_PERIOD, BaseModel::ERUDIT, true);
-    }
-
-    public static function getWeekGamesPlayed(): ?self
-    {
-        return self::getRecord(self::GAMES_PLAYED, self::WEEK_PERIOD, BaseModel::ERUDIT, false);
-    }
-
-    public static function getThisWeekGamesPlayed(): ?self
-    {
-        return self::getRecord(self::GAMES_PLAYED, self::WEEK_PERIOD, BaseModel::ERUDIT, true);
-    }
 
     /**
      * Получаем модель рекорда
@@ -40,7 +18,7 @@ class Record extends \AchievesModel
     public static function getRecord(
         string $type = self::GAMES_PLAYED,
         string $period = self::DAY_PERIOD,
-        string $gameName = BaseModel::ERUDIT,
+        string $gameName = Game::ERUDIT,
         bool $forceCurrentPeriod = true
     ): ?self {
         if (!in_array($type, self::VALID_RECORD_TYPES) || !in_array($period, self::VALID_PERIODS)) {

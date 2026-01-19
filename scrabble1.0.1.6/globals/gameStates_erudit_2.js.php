@@ -347,7 +347,9 @@ var gameStates = {
             let radioOchki = `
                             <div class="box">
                                 <div class="box-title-wrap">
-                                    <span><?= T::S('Game goal') ?> ${isYandexAppGlobal() ? '<?= T::S('game_goal_descr') ?>' : ''}</span>
+                                    <span><?= T::S('Game goal') ?> ${isYandexAppGlobal() ? '<?= T::S(
+                'game_goal_descr'
+            ) ?>' : ''}</span>
                                 </div>
                                 <div class="label-row">
                                     <div class="form-check form-check-inline">
@@ -392,7 +394,9 @@ var gameStates = {
             let wishTime = `
 				            <div class="box pb-1">
                                 <div class="box-title-wrap mb-0">
-                                    <span><?= T::S('Turn time') ?> ${isYandexAppGlobal() ? '<?= T::S('turn_time_descr') ?>' : ''}</span>
+                                    <span><?= T::S('Turn time') ?> ${isYandexAppGlobal() ? '<?= T::S(
+                'turn_time_descr'
+            ) ?>' : ''}</span>
                                 </div>
 
                                 <div class="label-row">
@@ -568,8 +572,12 @@ var gameStates = {
                                                     .replaceAll('{{calc_price}}', '<?= T::S('calc_price') ?>')
                                                     .replaceAll('{{Check_price}}', '<?= T::S('Check_price') ?>')
                                                     .replaceAll('{{Replenish}}', '<?= T::S('Replenish') ?>')
-                                                    .replaceAll('{{Support in Telegram}}', '<?= T::S('Support in Telegram') ?>')
-                                                    .replaceAll('{{Last transactions}}', '<?= T::S('Last transactions') ?>')
+                                                    .replaceAll('{{Support in Telegram}}', '<?= T::S(
+                                                        'Support in Telegram'
+                                                    ) ?>')
+                                                    .replaceAll('{{Last transactions}}', '<?= T::S(
+                                                        'Last transactions'
+                                                    ) ?>')
                                                     .replaceAll('{{transaction_list}}', profileData.transactionList)
                                                 ;
 
@@ -1541,7 +1549,7 @@ function RobokassaPaymentGlobal(actionType) {
     let amountToBuy = input.val();
 
     if (actionType === 'check') {
-
+        isPayEnabled = false;
         let button = $('#replenish-button');
         let calcPriceElement = $('#calculated-price');
 
@@ -1558,11 +1566,12 @@ function RobokassaPaymentGlobal(actionType) {
         amountToBuy = Math.ceil(amountToBuy / 10) * 10;
         input.val(amountToBuy);
 
-
         let price = amountToBuy * SUDOKU_PRICE; // 10 рублей за монету
         if (amountToBuy > 0) {
             calcPriceElement.html(price + ' &#8381;');
             button.html('<?= T::S('Pay') ?>' + '<br>' + price + ' &#8381;');
+
+            setTimeout(() => isPayEnabled = true, 150);
         } else {
             button.html('<?= T::S('Check_price') ?>');
         }
@@ -1570,7 +1579,7 @@ function RobokassaPaymentGlobal(actionType) {
         return;
     }
 
-    if (actionType === 'pay' && amountToBuy > 0 && (amountToBuy % 10 === 0)) {
+    if (actionType === 'pay' && amountToBuy > 0 && (amountToBuy % 10 === 0) && isPayEnabled) {
         let price = amountToBuy * 10;
 
         let orderParams = {

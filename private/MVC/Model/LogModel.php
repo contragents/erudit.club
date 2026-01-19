@@ -21,19 +21,22 @@ class LogModel extends BaseModel
     const CATEGORY_RULANG_ERROR = 'lang_error';
     const CATEGORY_SUBMIT_ERROR = 'submit_error';
     const CATEGORY_RECORD_ERROR = 'record_error';
+    const CATEGORY_PAYMENT_NOTIFY = 'payment_notification';
     const CATEGORIES = [
         self::CATEGORY_BOT_ERROR,
         self::CATEGORY_RULANG_ERROR,
         self::CATEGORY_SUBMIT_ERROR,
         self::CATEGORY_RECORD_ERROR,
+        self::CATEGORY_PAYMENT_NOTIFY
     ];
 
-    public static function add(array $fieldsVals)
+
+    public static function add(array $processedFieldsVals)
     {
         // Добавляем в лог common_id текущего игрока
         return parent::add(
-            $fieldsVals
-            + ((!isset($fieldsVals[self::COMMON_ID_FIELD]) && Game::$commonID)
+            $processedFieldsVals
+            + ((!isset($processedFieldsVals[self::COMMON_ID_FIELD]) && Game::$commonID)
                 ? [self::COMMON_ID_FIELD => Game::$commonID]
                 : []
             )

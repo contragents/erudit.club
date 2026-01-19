@@ -19,6 +19,7 @@ class T
         'yandex' => self::RU_LANG,
         'dev' => self::RU_LANG,
         'erudit' => self::RU_LANG,
+        BaseModel::ALL_GAMES => self::RU_LANG,
     ];
 
     public static function setLangGame(string $lang, string $gameName)
@@ -219,9 +220,16 @@ class T
         'Effect lasts until beaten' => [
             self::RU_LANG => 'Начисляется, пока не перебито'
         ],
+        'Effect lasts forever' => [
+            self::RU_LANG => 'Начисляется пожизненно'
+        ],
         'per_hour' => [
             self::EN_LANG => 'hour',
             self::RU_LANG => 'час',
+        ],
+        'per_day' => [
+            self::EN_LANG => 'day',
+            self::RU_LANG => 'день',
         ],
         'rank position' => [
             self::RU_LANG => 'место в рейтинге'
@@ -237,6 +245,26 @@ class T
         ],
         'record of the day' => [
             self::RU_LANG => 'рекорд дня'
+        ],
+        'patreon_level_year' => [
+            self::EN_LANG => 'patron',
+            self::RU_LANG => 'меценат'
+        ],
+        'patreon_level_month' => [
+            self::EN_LANG => 'trustee',
+            self::RU_LANG => 'попечитель'
+        ],
+        'patreon_level_week' => [
+            self::EN_LANG => 'master',
+            self::RU_LANG => 'магистр'
+        ],
+        'patreon_level_day' => [
+            self::EN_LANG => 'partner',
+            self::RU_LANG => 'партнер'
+        ],
+        AchievesModel::PATREON_TYPE => [
+            self::EN_LANG => 'project sponsor',
+            self::RU_LANG => 'спонсор проекта'
         ],
         AchievesModel::GAME_PRICE => [
             self::EN_LANG => 'game points',

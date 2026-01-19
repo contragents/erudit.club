@@ -129,7 +129,7 @@ function copyToClipboard(selector) {
         window.dispatchEvent(new Event('resize'));
     };
 
-    window.profileModal = { onProfileModalLoaded };
+    window.profileModal = {onProfileModalLoaded};
 })();
 
 const btnFAQClickHandler = (backButton = true) => {
@@ -147,8 +147,8 @@ const btnFAQClickHandler = (backButton = true) => {
                     ok: {
                         label: backButton ? '<?= T::S('Back')?>' : 'OK',
                         className: 'btn-sm ml-auto mr-0',
-                        callback: function() {
-                            if(backButton) {
+                        callback: function () {
+                            if (backButton) {
                                 fetchGlobal(STATUS_CHECKER_SCRIPT).then((data) => {
                                     commonCallback(data);
                                     gameStates['chooseGame']['action'](data)
@@ -160,7 +160,7 @@ const btnFAQClickHandler = (backButton = true) => {
                     },
                 }
             })
-            .off('shown.bs.modal').on('shown.bs.modal', function() {
+            .off('shown.bs.modal').on('shown.bs.modal', function () {
                 if (tabsModule) {
                     tabsModule.initTabs();
                 }
@@ -183,8 +183,8 @@ document.addEventListener('click', (e) => {
     }
 });
 
-function StatsPage({ json, BASE_URL }) {
-    const CardList = ({ list }) => {
+function StatsPage({json, BASE_URL}) {
+    const CardList = ({list}) => {
         const types = {
             day: 'stone_card',
             week: 'bronze_card',
@@ -251,7 +251,7 @@ function StatsPage({ json, BASE_URL }) {
         return result;
     };
 
-    const GameList = ({ games }) => {
+    const GameList = ({games}) => {
         let gameList = '';
         if (!games.length) {
             return gameList;
@@ -265,8 +265,8 @@ function StatsPage({ json, BASE_URL }) {
                     : 'match-history--lose';
 
                 let deltaCoins = +item.delta_coins !== 0
-                ? ('<br>' + (item.delta_coins > 0 ? '+' : '') + item.delta_coins + ' <img src="images/coin.png" width="30%" alt="Sudoku coin image"/>')
-                : '';
+                    ? ('<br>' + (item.delta_coins > 0 ? '+' : '') + item.delta_coins + ' <img src="images/coin.png" width="30%" alt="Sudoku coin image"/>')
+                    : '';
 
                 return `
                 <li class="match-history-item ${matchResultClass} box d-flex">
@@ -295,7 +295,7 @@ function StatsPage({ json, BASE_URL }) {
         return gameList;
     };
 
-    const Pagination = ({ pagination }) => {
+    const Pagination = ({pagination}) => {
         let result = '';
         for (const key in pagination) {
             if (Object.prototype.hasOwnProperty.call(pagination, key)) {
@@ -318,7 +318,7 @@ function StatsPage({ json, BASE_URL }) {
             `;
     };
 
-    const OpponentStats = ({ opponent_stats }) => {
+    const OpponentStats = ({opponent_stats}) => {
         const isPositiveWinRate = +opponent_stats[0].delta_rating > 0;
         const resultClass = isPositiveWinRate ? 'color-win' : 'color-lose';
         const prefix = isPositiveWinRate ? '+' : '';
@@ -438,7 +438,7 @@ function StatsPage({ json, BASE_URL }) {
 
         };
 
-        window.statsModal = { onStatsModalLoaded };
+        window.statsModal = {onStatsModalLoaded};
     })();
 
     function getStatsModal(json) {
@@ -450,10 +450,10 @@ function StatsPage({ json, BASE_URL }) {
 
                     .replaceAll('{{name}}', json.player_name)
                     .replaceAll('{{imageUrl}}', json.player_avatar_url)
-                    .replaceAll('{{gameList}}', GameList({ games: json.games }))
-                    .replaceAll('{{pagination}}', Pagination({ pagination: json.pagination }))
-                    .replaceAll('{{activeAwards}}', CardList({ list: json.current_achieves }))
-                    .replaceAll('{{pastAwards}}', CardList({ list: json.past_achieves }))
+                    .replaceAll('{{gameList}}', GameList({games: json.games}))
+                    .replaceAll('{{pagination}}', Pagination({pagination: json.pagination}))
+                    .replaceAll('{{activeAwards}}', CardList({list: json.current_achieves}))
+                    .replaceAll('{{pastAwards}}', CardList({list: json.past_achieves}))
 
                     .replaceAll('{{Stats}}', '<?= T::S('Stats') ?>')
                     .replaceAll('{{Past Awards}}', '<?= T::S('Past Awards') ?>')
@@ -624,7 +624,7 @@ function StatsPage({ json, BASE_URL }) {
         }, 100);
     };
 
-    window.tabsModule = { initTabs, update };
+    window.tabsModule = {initTabs, update};
 })();
 
 function onImagesLoaded(container, event) {
@@ -701,6 +701,7 @@ function PlayersPage(json) {
             week: 'bronze_card',
             month: 'silver_card',
             year: 'gold_card',
+            purple: 'purple_card'
         };
 
         const date = new Date(date_achieved);
@@ -711,8 +712,17 @@ function PlayersPage(json) {
             '.' +
             date.getFullYear();
 
-        return `
+        let incomePeriod = event_type === 'patreon'
+            ? '<?= T::S('per_day') ?>'
+            : '<?= T::S('per_hour') ?>';
+        let effectLastsText = event_type === 'patreon'
+            ? '<?= T::S('Effect lasts forever') ?>'
+            : '<?= T::S('Effect lasts until beaten') ?>';
+        if (!reward) {
+            reward = '-';
+        }
 
+        return `
 				<div class="card_item card--big full_card ${types[event_period]}">
 					<h3 class="card_record">
 						${record_type_text} <br>
@@ -733,10 +743,10 @@ function PlayersPage(json) {
 					<p class="card_passive"><?= T::S('Your passive income') ?></p>
 					<div class="card_hour">
 						<img class="card_hourImage" src="./images/smallMoney.png" alt="">
-						<span>x${income}/<?= T::S('per_hour') ?></span>
+						<span>x${income}/${incomePeriod}</span>
 					</div>
 
-					<p class="card_effect"><?= T::S('Effect lasts until beaten') ?></p>
+					<p class="card_effect">${effectLastsText}</p>
 				</div>
 				<span class="date">${strDate}</span>
 
@@ -760,6 +770,7 @@ function PlayersPage(json) {
             week: 'bronze_card',
             month: 'silver_card',
             year: 'gold_card',
+            purple: 'purple_card',
         };
 
         return `
@@ -1020,7 +1031,7 @@ function prizesButtonHandler() {
 
     const leaderboard = Leaderboard();
     window.leaderboard = leaderboard;
-    leaderboard.getModal().then( (html) => {
+    leaderboard.getModal().then((html) => {
             dialog = bootbox.alert({
                 title: '',
                 message: html,
@@ -1033,11 +1044,11 @@ function prizesButtonHandler() {
                         className: 'btn-sm ml-auto mr-0',
                     },
                 },
-                callback: function() {
+                callback: function () {
                     closeDialogs();
                     enableButtons();
                 },
-            }).off('shown.bs.modal').on('shown.bs.modal', function() {
+            }).off('shown.bs.modal').on('shown.bs.modal', function () {
                 if (tabsModule) {
                     tabsModule.initTabs();
                 }
@@ -1053,9 +1064,9 @@ function prizesButtonHandler() {
                     if (container.scrollTop + container.offsetHeight >= container.scrollHeight * 0.95) {
 
                         if (ratingListEl.closest('.tab-pane.active')) {
-                            getNextRatingChunk().then( (list) => {
+                            getNextRatingChunk().then((list) => {
                                 if (!list.length) return;
-                                const ratingElements = list.map( (r) => leaderboard.RatingItem(r), );
+                                const ratingElements = list.map((r) => leaderboard.RatingItem(r),);
                                 const wrapper = document.createElement('div');
                                 wrapper.innerHTML = ratingElements.join('');
                                 ratingListEl.append(...wrapper.childNodes);
@@ -1068,9 +1079,9 @@ function prizesButtonHandler() {
                         }
 
                         if (coinsListEl.closest('.tab-pane.active')) {
-                            getNextCoinsChunk().then( (list) => {
+                            getNextCoinsChunk().then((list) => {
                                 if (!list.length) return;
-                                const coinsElements = list.map( (r) => leaderboard.CoinsItem(r), );
+                                const coinsElements = list.map((r) => leaderboard.CoinsItem(r),);
                                 const wrapper = document.createElement('div');
                                 wrapper.innerHTML = coinsElements.join('');
                                 coinsListEl.append(...wrapper.childNodes);

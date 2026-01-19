@@ -54,11 +54,11 @@ class PlayersController extends BaseController
          * @var ?RefModel $ref
          */
         $ref = RefModel::getCustomO(
-                RefModel::REF_TG_ID_FIELD,
-                '=',
-                self::$Request[self::REF_TG_ID_PARAM],
-                true
-            )[0] ?? null;
+            RefModel::REF_TG_ID_FIELD,
+            '=',
+            self::$Request[self::REF_TG_ID_PARAM],
+            true
+        )[0] ?? null;
 
         if (!$ref) {
             return json_encode($res);
@@ -172,13 +172,12 @@ class PlayersController extends BaseController
                             . '.svg';
                     }
 
-                    $achieves = AchievesModel::getCurrentAchievesByCommonId($thisUser->_id);
-
-                    Cache::setex('test_query', 3600, $achieves);
+                    $achieves = array_merge(
+                        AchievesModel::getCurrentAchievesByCommonId($thisUser->_id),
+                        AchievesModel::getPatreonAchievesByCommonId($thisUser->_id)
+                    );
 
                     self::sortAchieves($achieves);
-
-
 
                     if (!empty($achieves)) {
                         StatsController::addTranslationsToAchieves($achieves);
@@ -204,7 +203,6 @@ class PlayersController extends BaseController
 
         foreach (array_reverse(PrizesScrabble::PERIODS, true) as $period => $nothing) {
             foreach ($achieves as $achieve) {
-                Cache::setex('test_query_'.$achieve[AchievesModel::EVENT_PERIOD_FIELD], 3600, $achieve);
                 if ($achieve[AchievesModel::EVENT_PERIOD_FIELD] === $period) {
                     $resultAchieves[] = $achieve;
                 }

@@ -76,6 +76,7 @@ const INACTIVE_USER_ALPHA = 0.2;
 var activeUser = false;
 var commonId = false;
 var commonIdHash = false;
+var isPayEnabled = false;
 
 // vars initializing in chooseGame state
 var tWaiting = false;
