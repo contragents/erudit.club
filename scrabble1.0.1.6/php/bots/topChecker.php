@@ -265,23 +265,23 @@ class TopChecker
 
     private static function processIncomes($gameName)
     {
-        $gameAchieves = AchievesModel::getActive($gameName);
+        $gameAchieves = AchievesModel::getActiveAchievesO($gameName);
 
         foreach ($gameAchieves as $achieve) {
             if (IncomeModel::changeIncome(
-                $achieve[AchievesModel::COMMON_ID_FIELD],
-                $achieve[AchievesModel::EVENT_TYPE_FIELD] !== AchievesModel::PATREON_TYPE // Для патронов начисляем 1/24 от указанного значения (там за сутки)
-                    ? $achieve[AchievesModel::INCOME_FIELD]
-                    : $achieve[AchievesModel::INCOME_FIELD] / 24,
-                $achieve[AchievesModel::EVENT_TYPE_FIELD] !== AchievesModel::PATREON_TYPE // Для патронов отдельное описание
+                $achieve->_common_id,
+                $achieve->_event_type !== AchievesModel::PATREON_TYPE // Для патронов начисляем 1/24 от указанного значения (там за сутки)
+                    ? $achieve->_income
+                    : $achieve->_income / 24,
+                $achieve->_event_type !== AchievesModel::PATREON_TYPE // Для патронов отдельное описание
                     ? AchievesModel::getDescription(
-                    $achieve[AchievesModel::EVENT_TYPE_FIELD],
-                    $achieve[AchievesModel::EVENT_PERIOD_FIELD],
+                    $achieve->_event_type,
+                    $achieve->_event_period,
                     $gameName
                 )
                     : 'patron income',
                 IncomeHistoryModel::TYPE_IDS[IncomeHistoryModel::ACHIEVE_TYPE],
-                $achieve[AchievesModel::ID_FIELD]
+                $achieve->_id
             )) {
                 print("Income processed: " . var_export($achieve, true) . "\n");
             }

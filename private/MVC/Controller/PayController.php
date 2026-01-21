@@ -174,16 +174,37 @@ class PayController extends BaseController
                         $transaction->_id
                     )) {
                         $transaction->_status = PaymentModel::COMPLETE_STATUS;
+
+                        // Обновляем/создаем карточку патрона
+                        $patreonAchieveModel = AchievesModel::getPatreonAchievesByCommonId($transaction->_common_id)[0]
+                            ?? AchievesModel::new([
+                                                      AchievesModel::COMMON_ID_FIELD => $transaction->_common_id,
+                                                      AchievesModel::EVENT_TYPE_FIELD => AchievesModel::PATREON_TYPE,
+                                                      AchievesModel::EVENT_PERIOD_FIELD => AchievesModel::DAY_PERIOD,
+                                                      AchievesModel::REWARD_FIELD => 0,
+                                                      AchievesModel::INCOME_FIELD => MonetizationService::PATREON_INCOME[AchievesModel::DAY_PERIOD],
+                                                  ]);
+                        $patreonAchieveModel->_event_value += $transaction->_summ;
+                        // Повышаем уровень патрона, если он достигнут
+                        $nextLevel = Record::nextLevel($patreonAchieveModel->_event_period);
+                        if($patreonAchieveModel->_event_value > MonetizationService::PATREON_LEVELS[$nextLevel]) {
+                            $patreonAchieveModel->_event_period = $nextLevel;
+                            $patreonAchieveModel->_income = MonetizationService::PATREON_INCOME[$patreonAchieveModel->_event_period];
+                        }
+
+                        $patreonAchieveModel->save()
+                            ?: LogModel::add([
+                                                 LogModel::CATEGORY_FIELD => LogModel::CATEGORY_PAYMENT_NOTIFY,
+                                                 LogModel::MESSAGE_FIELD => $patreonAchieveModel->toArray(),
+                                             ]);
                     } else {
                         $transaction->_status = PaymentModel::FAIL_STATUS;
                     }
 
                     $transaction->save();
                 } else {
-                    if ($transaction) {
-                        $transaction->_status = PaymentModel::BAD_CONFIRM_STATUS;
-                        $transaction->save();
-                    }
+                    $transaction->_status = PaymentModel::BAD_CONFIRM_STATUS;
+                    $transaction->save();
 
                     $badConfirm = PaymentModel::new(
                         [

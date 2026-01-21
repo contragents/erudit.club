@@ -214,6 +214,10 @@ class BaseModel implements Iterator
         return $res;
     }
 
+    /**
+     * Представляем модель в виде массива [field1=>value1, field2=>value2,...]
+     * @return array
+     */
     public function toArray(): array
     {
         $res = [];
