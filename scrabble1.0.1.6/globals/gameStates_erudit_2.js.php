@@ -484,6 +484,7 @@ var gameStates = {
                                         bonusAccrual: responseArr.info.rewards, // начисление бонусов
                                         balanceSudoku: responseArr.info.SUDOKU_BALANCE, // баланс SUDOKU
                                         transactionList: responseArr.transactions,
+                                        patreonDescription: responseArr.patreon_description,
                                         referrals: responseArr.refs ? responseArr.refs : [],
                                     };
 
@@ -579,6 +580,7 @@ var gameStates = {
                                                         'Last transactions'
                                                     ) ?>')
                                                     .replaceAll('{{transaction_list}}', profileData.transactionList)
+                                                    .replaceAll('{{patreon_description}}', profileData.patreonDescription)
                                                 ;
 
                                                 return message;

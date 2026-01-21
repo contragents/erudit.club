@@ -15,6 +15,7 @@ class Macros
         'bronzeIncome' => '{{bronze_income}}',
         'stoneIncome' => '{{stone_income}}',
         'sudokuIcon' => '{{sudoku_icon}}',
+        'sudokuIcon5' => '{{sudoku_icon_5}}',
         'sudokuIcon15' => '{{sudoku_icon_15}}',
         'sudokuIcon20' => '{{sudoku_icon_20}}',
         'yandexExclude' => ['macros' => '{{yandex_exclude}}', 'text_as_param' => true],
@@ -25,6 +26,11 @@ class Macros
     public static function sudokuIcon(): string
     {
         return self::SUDOKU_IMG_URL;
+    }
+
+    public static function sudokuIcon5(): string
+    {
+        return str_replace('30%', '5%', self::SUDOKU_IMG_URL);
     }
 
     public static function sudokuIcon15(): string

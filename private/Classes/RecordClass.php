@@ -71,4 +71,20 @@ class Record extends \AchievesModel
             + $gameNameCondition // Условие по id вида игры
         )->one();
     }
+
+    /**
+     * Возвращает следующий уровень достижения day->week, week->month...
+     * @param string $param
+     * @return string
+     */
+    public static function nextLevel(?string $param = null): string
+    {
+        switch ($param) {
+            case self::DAY_PERIOD: return self::WEEK_PERIOD;
+            case self::WEEK_PERIOD: return self::MONTH_PERIOD;
+            case self::MONTH_PERIOD: return self::YEAR_PERIOD;
+            case self::YEAR_PERIOD: return self::YEAR_PERIOD;;
+            default: return self::DAY_PERIOD;
+        }
+    }
 }

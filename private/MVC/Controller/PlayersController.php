@@ -174,7 +174,7 @@ class PlayersController extends BaseController
 
                     $achieves = array_merge(
                         AchievesModel::getCurrentAchievesByCommonId($thisUser->_id),
-                        AchievesModel::getPatreonAchievesByCommonId($thisUser->_id)
+                        AchievesModel::getPatreonAchievesByCommonIdAsArray($thisUser->_id)
                     );
 
                     self::sortAchieves($achieves);

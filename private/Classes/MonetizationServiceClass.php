@@ -40,4 +40,15 @@ class MonetizationService
     ];
 
     const SUDOKU_PRICE = 10;
+    public const PATREON_INCOME = [
+        AchievesModel::YEAR_PERIOD => 1000,
+        AchievesModel::MONTH_PERIOD => 100,
+        AchievesModel::WEEK_PERIOD => 10,
+        AchievesModel::DAY_PERIOD => 1,
+    ];
+    public const PATREON_LEVELS = [
+        AchievesModel::YEAR_PERIOD => 100000,
+        AchievesModel::MONTH_PERIOD => 10000,
+        AchievesModel::WEEK_PERIOD => 1000,
+        AchievesModel::DAY_PERIOD => 100,];
 }

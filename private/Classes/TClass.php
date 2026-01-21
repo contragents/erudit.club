@@ -4,7 +4,19 @@ class T
 {
     const RU_LANG = 'RU';
     const EN_LANG = 'EN';
+    const TR_LANG = 'TR';
+    const FR_LANG = 'FR';
+    const IT_LANG = 'IT';
+    const DE_LANG = 'DE';
+    const ES_LANG = 'ES';
+    const PT_LANG = 'PT';
+    const PT_BR_LANG = 'PT_BR';
+    const ZH_CN_LANG = 'ZH_CN';
+    const ZH_TW_LANG = 'ZH_TW';
+    const KO_LANG = 'KO';
     const SUPPORTED_LANGS = [self::EN_LANG, self::RU_LANG];
+
+    const PLURAL_PATTERN = '[[';
 
     public static string $lang = self::EN_LANG;
 
@@ -28,15 +40,70 @@ class T
         Game::$gameName = $gameName;
     }
 
-    public static function S($keyPhrase): string
+    public static function S($keyPhrase, ?array $params = null, ?string $forceLang = null): string
     {
+        $lang = $forceLang ?? self::$lang;
+
         $res = self::PHRASES[$keyPhrase][self::$lang] ?? $keyPhrase;
 
         if (strpos($res, Macros::PATTERN) !== false) {
-            return Macros::applyMacros($res);
+            $res = Macros::applyMacros($res);
         }
 
-        return self::PHRASES[$keyPhrase][self::$lang] ?? $keyPhrase;
+        if (strpos($res, self::PLURAL_PATTERN) !== false && $params) {
+           $res = self::applyPlurals($res, $params, $lang);
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param string $stringPart
+     * @param array $params
+     * @param string $lang Язык указываем явно для комментов пользователям на разных языках
+     * @return string
+     */
+    private static function applyPlurals(string $res, array $params, string $lang): string
+    {
+        $stringParts = explode('[[', $res);
+        // Добавим коррекцию на номер параметра
+        $firstParamOffset = $stringParts ? 1 : 0;
+        foreach($stringParts as $numOuter => &$stringPart) {
+            preg_match_all('/^([a-zA-Z]+)]]/', $stringPart, $matches);
+
+            try {
+                foreach ($matches[1] as $nothing => $value) {
+                    $num = $numOuter - $firstParamOffset;
+                    if (is_callable([self::class, $value . 'Plural'])) {
+                        $wordReplace = call_user_func([self::class, $value . 'Plural'], $params[$num]);
+                    } else {
+                        // Для разных языков и количества делаем отдельную поправку на расчетное количество
+                        $numPlural = $lang === self::EN_LANG
+                            ? $params[$num]
+                            : (
+                            ($params[$num] % 100) < 20
+                                ? ($params[$num] % 20)
+                                : ($params[$num] % 10)
+                            );
+                        for ($i = $numPlural; $i >= 0; $i--) {
+                            if (isset(self::PLURALS[$value][$lang][$i])) {
+                                $wordReplace = self::PLURALS[$value][$lang][$i];
+
+                                break;
+                            }
+                        }
+                    }
+
+                    $stringPart = str_replace("$value]]", $wordReplace ?? $value, $stringPart);
+                }
+            } catch (\Throwable $e) {
+                // $res = $e->__toString(); // todo log the error
+
+                continue;
+            }
+        }
+
+        return implode($stringParts);
     }
 
     public static function SA(array $keyPhraseArr): array
@@ -56,6 +123,14 @@ class T
     }
 
     const PHRASES = [
+        'Invest additional [[number]] [[ruble]] in the project\'s coins to obtain/upgrade your card to the [[value]] level with an income of [[value]] [[coin]] per day' => [
+            self::EN_LANG => 'Invest additional [[number]] [[ruble]] in the project\'s coins to obtain/upgrade your card to the [[value]] level with an income of [[value]] [[coin]] per day',
+            self::RU_LANG => 'Вложите еще [[number]] [[ruble]] в монеты проекта, чтобы получить/обновить карточку до уровня [[value]] с доходом {{sudoku_icon_5}}[[value]] [[coin]] / день',
+        ],
+        'demo_expire_in_[[number]]_[[day]]' => [
+            self::EN_LANG => 'This is a DEMO version of SUDOKU. The trial period will end in [[number]] [[day]].',
+            self::RU_LANG => 'Это ДЕМО-версия СУДОКУ. Пробный период закончится через [[number]] [[day]]',
+        ],
         'invite_link' => [
             self::EN_LANG => 'https://xn--d1aiwkc2d.club/scramble.html/?friend=',
             self::RU_LANG => 'https://эрудит.club/?friend='
@@ -1242,4 +1317,104 @@ class T
         'Ю',
         'Я'
     ];
+
+    const PLURALS = [
+        'day' => [
+            self::EN_LANG => [0 => 'days', 1 => 'day', 2 => 'days'],
+            self::RU_LANG => [0 => 'дней', 1 => 'день', 2 => 'дня', 5 => 'дней'],
+            self::TR_LANG => [0 => 'gün', 1 => 'gün', 2 => 'gün'],
+            self::FR_LANG => [0 => 'jours', 1 => 'jour', 2 => 'jours'],
+            self::IT_LANG => [0 => 'giorni', 1 => 'giorno', 2 => 'giorni'],
+            self::DE_LANG => [0 => 'Tage', 1 => 'Tag', 2 => 'Tage'],
+            self::ES_LANG => [0 => 'días', 1 => 'día', 2 => 'días'],
+            self::PT_LANG => [0 => 'dias', 1 => 'dia', 2 => 'dias'],
+            self::PT_BR_LANG => [0 => 'dias', 1 => 'dia', 2 => 'dias'],
+            self::ZH_CN_LANG => [0 => '天', 1 => '天', 2 => '天'],
+            self::ZH_TW_LANG => [0 => '天', 1 => '天', 2 => '天'],
+            self::KO_LANG => [0 => '일', 1 => '일', 2 => '일'],
+        ],
+        'point' => [
+            self::EN_LANG => [0 => 'points', 1 => 'point', 2 => 'points'],
+            self::RU_LANG => [0 => 'очков', 1 => 'очко', 2 => 'очка', 5 => 'очков'],
+            self::TR_LANG => [0 => 'puan', 1 => 'puan', 2 => 'puan'],
+            self::FR_LANG => [0 => 'points', 1 => 'point', 2 => 'points'],
+            self::IT_LANG => [0 => 'punti', 1 => 'punto', 2 => 'punti'],
+            self::DE_LANG => [0 => 'Punkte', 1 => 'Punkt', 2 => 'Punkte'],
+            self::ES_LANG => [0 => 'puntos', 1 => 'punto', 2 => 'puntos'],
+            self::PT_LANG => [0 => 'pontos', 1 => 'ponto', 2 => 'pontos'],
+            self::PT_BR_LANG => [0 => 'pontos', 1 => 'ponto', 2 => 'pontos'],
+            self::ZH_CN_LANG => [0 => '积分', 1 => '点', 2 => '点数'],
+            self::ZH_TW_LANG => [0 => '點數', 1 => '點', 2 => '點數'],
+            self::KO_LANG => [0 => '점', 1 => '점', 2 => '점'],
+        ],
+        'cell' => [
+            self::EN_LANG => [0 => 'cells', 1 => 'cell', 2 => 'cells'],
+            self::RU_LANG => [0 => 'клеток', 1 => 'клетку', 2 => 'клетки', 5 => 'клеток'],
+            self::FR_LANG => [0 => 'cellules', 1 => 'cellule', 2 => 'cellules'],
+            self::IT_LANG => [0 => 'celle', 1 => 'cella', 2 => 'celle'],
+            self::DE_LANG => [0 => 'Zellen', 1 => 'Zelle', 2 => 'Zellen'],
+            self::ES_LANG => [0 => 'celdas', 1 => 'celda', 2 => 'celdas'],
+            self::PT_LANG => [0 => 'células', 1 => 'célula', 2 => 'células'],
+            self::PT_BR_LANG => [0 => 'células', 1 => 'célula', 2 => 'células'],
+            self::ZH_CN_LANG => [0 => '个牢房', 1 => '个单元', 2 => '个牢房'],
+            self::ZH_TW_LANG => [0 => '細胞', 1 => '細胞', 2 => '細胞'],
+            self::KO_LANG => [0 => '세포', 1 => '셀', 2 => '개 셀'],
+        ],
+        'key' => [
+            self::EN_LANG => [0 => 'keys', 1 => 'key', 2 => 'keys'],
+            self::RU_LANG => [0 => 'ключей', 1 => 'ключ', 2 => 'ключа', 5 => 'ключей'],
+            self::FR_LANG => [0 => 'clés', 1 => 'clé', 2 => 'clés'],
+            self::IT_LANG => [0 => 'chiavi', 1 => 'chiave', 2 => 'chiavi'],
+            self::DE_LANG => [0 => 'Schlüssel', 1 => 'Schlüssel', 2 => 'Schlüssel'],
+            self::ES_LANG => [0 => 'llaves', 1 => 'llave', 2 => 'llaves'],
+            self::PT_LANG => [0 => 'chaves', 1 => 'chave', 2 => 'chaves'],
+            self::PT_BR_LANG => [0 => 'chaves', 1 => 'chave', 2 => 'chaves'],
+            self::ZH_CN_LANG => [0 => '钥匙', 1 => '把钥匙', 2 => '把钥匙'],
+            self::ZH_TW_LANG => [0 => '鑰匙', 1 => '鑰匙', 2 => '鑰匙'],
+            self::KO_LANG => [0 => '키', 1 => '개 키', 2 => '개의 키'],
+        ],
+        'Player' => [
+            self::EN_LANG => [1 => 'Player1', 2 => 'Player2', 3 => 'Player3', 4 => 'Player4'],
+            self::RU_LANG => [1 => 'Игрок1', 2 => 'Игрок2', 3 => 'Игрок3', 4 => 'Игрок4'],
+            self::TR_LANG => [1 => 'Oyuncu1', 2 => 'Oyuncu2', 3 => 'Oyuncu3', 4 => 'Oyuncu1'],
+            self::FR_LANG => [1 => 'Joueur1', 2 => 'Joueur2', 3 => 'Joueur3', 4 => 'Joueur4'],
+            self::IT_LANG => [1 => 'Giocatore1', 2 => 'Giocatore2', 3 => 'Giocatore3', 4 => 'Giocatore4'],
+            self::DE_LANG => [1 => 'Spieler1', 2 => 'Spieler2', 3 => 'Spieler3', 4 => 'Spieler4'],
+            self::ES_LANG => [1 => 'Jugador1', 2 => 'Jugador2', 3 => 'Jugador3', 4 => 'Jugador4'],
+            self::PT_LANG => [1 => 'Jogador1', 2 => 'Jogador2', 3 => 'Jogador3', 4 => 'Jogador4'],
+            self::PT_BR_LANG => [1 => 'Jogador1', 2 => 'Jogador2', 3 => 'Jogador3', 4 => 'Jogador4'],
+            self::ZH_CN_LANG => [1 => '玩家1', 2 => '玩家2', 3 => '玩家3', 4 => '玩家4'],
+            self::ZH_TW_LANG => [1 => '玩家1', 2 => '玩家2', 3 => '玩家3', 4 => '玩家4'],
+            self::KO_LANG => [1 => '플레이어1', 2 => '플레이어2', 3 => '플레이어3', 4 => '플레이어4'],
+        ],
+        'ruble' => [
+            self::EN_LANG => [0 => 'rubles', 1 => 'ruble', 2 => 'rubles'],
+            self::RU_LANG => [0 => 'рублей', 1 => 'рубль', 2 => 'рубля', 5 => 'рублей'],
+        ],
+        'coin' => [
+        self::EN_LANG => [0 => 'coins', 1 => 'coin', 2 => 'coins'],
+        self::RU_LANG => [0 => 'монет', 1 => 'монета', 2 => 'монеты', 5 => 'монет'],
+    ],
+    ];
+
+    public static function upperFirst(?string $str = null): string
+    {
+        if (!$str) {
+            return '';
+        }
+
+        $fc = mb_strtoupper(mb_substr($str, 0, 1));
+
+        return $fc . mb_substr($str, 1);
+    }
+
+    protected static function numberPlural(int $number): string
+    {
+        return (string)$number;
+    }
+
+    protected static function valuePlural($value): string
+    {
+        return (string)$value;
+    }
 }

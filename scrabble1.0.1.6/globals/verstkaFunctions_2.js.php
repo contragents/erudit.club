@@ -753,7 +753,6 @@ function PlayersPage(json) {
 		`;
     }
 
-
     const CardCompact = (props) => {
         const {
             event_value,

@@ -708,6 +708,46 @@ class Game
             ['ID' => $this->User, 'common_id' => $this->commonId]
         );
 
+        $patreonStatusAchievement = Record::getPatreonAchievesByCommonId($this->commonId)[0] ?? null;
+        if ($patreonStatusAchievement) {
+            $message['patreon_description'] = 'Ваш текущий статус спонсора:';
+            $message['patreon_description'] .= VH::renderCard($patreonStatusAchievement);
+        } else {
+            $fakePatreon = AchievesModel::new(
+                [
+                    AchievesModel::EVENT_TYPE_FIELD => AchievesModel::PATREON_TYPE,
+                    AchievesModel::EVENT_PERIOD_FIELD => AchievesModel::DAY_PERIOD,
+                    AchievesModel::EVENT_VALUE_FIELD => 0,
+                    AchievesModel::REWARD_FIELD => 0,
+                    AchievesModel::INCOME_FIELD => 0,
+                ]
+            );
+            $message['patreon_description'] = 'Поддержите проект и получите карточку спонсора';
+            $message['patreon_description'] .= VH::renderCard($fakePatreon);
+        }
+
+        $nextLevelPatreonPeriod = Record::nextLevel($patreonStatusAchievement->_event_period ?? null);
+        $nextLevelRubles = MonetizationService::PATREON_LEVELS[$nextLevelPatreonPeriod] - ($patreonStatusAchievement->_event_value ?? 0);
+        if ($nextLevelRubles > 0) {
+            $message['patreon_description'] .= T::S(
+                'Invest additional [[number]] [[ruble]] in the project\'s coins to obtain/upgrade your card to the [[value]] level with an income of [[value]] [[coin]] per day',
+                [
+                    $nextLevelRubles,
+                    $nextLevelRubles,
+                    T::upperFirst(
+                        T::S(
+                            'patreon_level_' . $nextLevelPatreonPeriod
+                        )
+                    ),
+                    MonetizationService::PATREON_INCOME[$nextLevelPatreonPeriod],
+                    MonetizationService::PATREON_INCOME[$nextLevelPatreonPeriod],
+                ]
+            );//'Вложите еще 900 рублей в монеты проекта, чтобы получить/обновить карточку до уровня Магистр с доходом 100 / день.';
+            $message['patreon_description'] .= VH::br(2) . 'Учитывается каждое пополнение - можно вносить частями.'
+                . VH::br(2) . 'Карточка спонсора выдается навсегда';
+        }
+
+
         $message['text'] = '';
         $message['form'][] = [
             'prompt' => "Никнейм (id: {$this->commonId})",

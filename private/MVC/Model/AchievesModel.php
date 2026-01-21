@@ -258,9 +258,13 @@ class AchievesModel extends BaseModel
         return $res;
     }
 
+    /**
+     * @param int $commonId
+     * @return AchievesModel[]
+     */
     public static function getPatreonAchievesByCommonId(int $commonId): array
     {
-        $patreonAchievesModels = AchievesModel::find()
+        return AchievesModel::find()
             ->where(
                 [
                     self::COMMON_ID_FIELD => $commonId,
@@ -269,13 +273,22 @@ class AchievesModel extends BaseModel
                     self::GAME_NAME_ID_FIELD => BaseModel::GAME_IDS[BaseModel::ALL_GAMES]
                 ]
             )->all();
+    }
+
+    /**
+     * @param int $commonId
+     * @return array[]
+     */
+    public static function getPatreonAchievesByCommonIdAsArray(int $commonId): array
+    {
+        $patreonAchievesModels = self::getPatreonAchievesByCommonId($commonId);
 
         return array_map(fn($obj) => $obj->toArray(), $patreonAchievesModels);
     }
 
     public static function getCurrentAchievesByCommonId(int $commonId): array
     {
-        // todo CLUB-468 Переделать на ::find()->where()->order... ->toArray как в методе getPatreonAchievesByCommonId
+        // todo CLUB-468 Переделать на ::find()->where()->order... ->toArray как в методе getPatreonAchievesByCommonIdAsArray
         $query = ORM::select(
                 [
                     "substring(" . self::DATE_ACHIEVED_FIELD . ",1,10) as " . self::DATE_ACHIEVED_FIELD,
