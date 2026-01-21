@@ -1,4 +1,4 @@
-//<?php $lang = T::$lang = T::GAME_MODE_LANG[$gameMode]; ?>
+//<?php /** @var string $gameMode From main.js */ /*$lang = T::$lang = T::GAME_MODE_LANG[$gameMode]; */?>
 
 var lang = '<?= T::$lang ?>';
 
@@ -276,7 +276,7 @@ var fullImgWidth = 0;
 const FALL_BACK_COOKIE = '<?= CookieErudit::getPersonalCookie() ?>';
 var cookieStored = false;
 var useLocalStorage = false;
-if(localStorage != 'undefined') {
+if (localStorage != 'undefined') {
     useLocalStorage = !!localStorage.<?= CookieErudit::COOKIE_NAME ?>;
     if (useLocalStorage) {
         cookieStored = localStorage.<?= CookieErudit::COOKIE_NAME ?>;

@@ -1,7 +1,7 @@
 /*<?php
 preg_match('/((scrabble|release|yandex|dev)(\d\.\d\.\d\.\d))/', __DIR__, $matches);
 $dir = $matches[1];
-$gameMode = $matches[2];
+//$gameMode = $matches[2];
 //Определяем каталог версии разработки
 ?>*/
 //

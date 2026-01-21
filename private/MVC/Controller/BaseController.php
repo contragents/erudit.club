@@ -61,6 +61,7 @@ class BaseController
         } elseif  (strpos($_SERVER['HTTP_REFERER'] ?? '', 'scramble.html')) {
             return T::GAME_MODE_LANG[Game::SCRABBLE];
         } else {
+            // Расставим языки из заголовков по порядку их упоминания и выберем первый из доступных
             $preferredLangPos = [];
             foreach (T::SUPPORTED_LANGS as $lang) {
                 $langPos = strpos($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '', strtolower($lang));
