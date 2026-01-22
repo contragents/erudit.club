@@ -2,6 +2,7 @@
 
 class Tg
 {
+    const ILYA_TG_ID = 294789510;
     public const TG_USER_INFO_ = 'tg_user_info_';
     public const TG_USER_CACHE_TTL = 7 * 24 * 60 * 60;
 

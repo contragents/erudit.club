@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @property string $_created_at
+ * @property string $_message
+ * @property string $_category
+ * @property int $_common_id
+ */
+
 class LogModel extends BaseModel
 {
     const TABLE_NAME = 'log';
@@ -16,20 +23,26 @@ class LogModel extends BaseModel
             self::MESSAGE_FIELD => self::TYPE_STRING
         ];
 
+    public ?string $_created_at = null;
+    public ?string $_message = null;
+    public ?string $_category = null;
+    public ?int $_common_id = null;
+
     const CATEGORY_QUERY_RESULT_CHECK = 'query_result';
     const CATEGORY_BOT_ERROR = 'bot_error';
     const CATEGORY_RULANG_ERROR = 'lang_error';
     const CATEGORY_SUBMIT_ERROR = 'submit_error';
     const CATEGORY_RECORD_ERROR = 'record_error';
     const CATEGORY_PAYMENT_NOTIFY = 'payment_notification';
+    const CATEGORY_QUERY_ERROR = 'query_error';
     const CATEGORIES = [
         self::CATEGORY_BOT_ERROR,
         self::CATEGORY_RULANG_ERROR,
         self::CATEGORY_SUBMIT_ERROR,
         self::CATEGORY_RECORD_ERROR,
-        self::CATEGORY_PAYMENT_NOTIFY
+        self::CATEGORY_PAYMENT_NOTIFY,
+        self::CATEGORY_QUERY_ERROR,
     ];
-
 
     public static function add(array $processedFieldsVals)
     {

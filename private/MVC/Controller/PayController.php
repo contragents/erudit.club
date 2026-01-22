@@ -146,6 +146,8 @@ class PayController extends BaseController
 
     public function successAction(): string
     {
+        $error = false;
+
         LogModel::add(
             [
                 LogModel::CATEGORY_FIELD => LogModel::CATEGORY_PAYMENT_NOTIFY,
@@ -183,11 +185,13 @@ class PayController extends BaseController
                                                       AchievesModel::EVENT_PERIOD_FIELD => AchievesModel::DAY_PERIOD,
                                                       AchievesModel::REWARD_FIELD => 0,
                                                       AchievesModel::INCOME_FIELD => MonetizationService::PATREON_INCOME[AchievesModel::DAY_PERIOD],
+                                                      AchievesModel::GAME_NAME_ID_FIELD => BaseModel::GAME_IDS[BaseModel::ALL_GAMES],
+                                                      AchievesModel::IS_ACTIVE_FIELD => true,
                                                   ]);
                         $patreonAchieveModel->_event_value += $transaction->_summ;
                         // Повышаем уровень патрона, если он достигнут
                         $nextLevel = Record::nextLevel($patreonAchieveModel->_event_period);
-                        if($patreonAchieveModel->_event_value > MonetizationService::PATREON_LEVELS[$nextLevel]) {
+                        if ($patreonAchieveModel->_event_value > MonetizationService::PATREON_LEVELS[$nextLevel]) {
                             $patreonAchieveModel->_event_period = $nextLevel;
                             $patreonAchieveModel->_income = MonetizationService::PATREON_INCOME[$patreonAchieveModel->_event_period];
                         }
@@ -200,11 +204,8 @@ class PayController extends BaseController
                     } else {
                         $transaction->_status = PaymentModel::FAIL_STATUS;
                     }
-
-                    $transaction->save();
                 } else {
                     $transaction->_status = PaymentModel::BAD_CONFIRM_STATUS;
-                    $transaction->save();
 
                     $badConfirm = PaymentModel::new(
                         [
@@ -217,6 +218,10 @@ class PayController extends BaseController
                     $badConfirm->save();
                 }
             }
+
+            if (!$transaction->save()) {
+                $error = LogModel::getlastO();
+            }
         }
 
         Tg::botSendMessage(
@@ -224,11 +229,12 @@ class PayController extends BaseController
                 [
                     'request' => self::$Request,
                     'transaction' => $transaction ?? 'not found',
-                    'badConfirm' => $badConfirm ?? false
+                    'badConfirm' => $badConfirm ?? false,
+                    'error' => $error
                 ],
                 JSON_UNESCAPED_UNICODE
             ),
-            null,
+            Tg::ILYA_TG_ID,
             Game::$gameName
         );
 

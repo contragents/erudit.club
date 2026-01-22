@@ -161,7 +161,7 @@ class BaseModel implements Iterator
                     } catch (Throwable $e) {
                         continue;
                     }
-                } elseif(!is_int($value)) {
+                } elseif (!is_int($value)) {
                     // Добавим экранирование спецсимволов
                     $value = DB::escapeString($value);
                 }
@@ -222,8 +222,8 @@ class BaseModel implements Iterator
     {
         $res = [];
         $properties = get_class_vars(static::class);
-        foreach($properties as $property => $nothing) {
-            if(self::isFieldName($property)) {
+        foreach ($properties as $property => $nothing) {
+            if (self::isFieldName($property)) {
                 $res[self::fieldName($property)] = $this->$property;
             }
         }
@@ -449,10 +449,10 @@ class BaseModel implements Iterator
         $processedFieldsVals = $fieldsVals;
 
         // Приводим массивы и булевы к соответствующим типам в БД
-        foreach($processedFieldsVals as $field => &$value) {
-            if(is_array($value)) {
+        foreach ($processedFieldsVals as $field => &$value) {
+            if (is_array($value)) {
                 $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-            } elseif(is_bool($value)) {
+            } elseif (is_bool($value)) {
                 $value = $value ? 1 : 0;
             }
         }
@@ -572,6 +572,10 @@ class BaseModel implements Iterator
         if (DB::queryInsert($updateQuery)) {
             return true;
         } else {
+            LogModel::add(
+                [LogModel::CATEGORY_FIELD => LogModel::CATEGORY_QUERY_ERROR, LogModel::MESSAGE_FIELD => $updateQuery]
+            );
+
             return false;
         }
     }
@@ -810,7 +814,8 @@ class BaseModel implements Iterator
      * @param bool $ignoreDeleted
      * @return static|null
      */
-    public static function getOneNextO(int $id, bool $ignoreDeleted = true): ?self {
+    public static function getOneNextO(int $id, bool $ignoreDeleted = true): ?self
+    {
         $row = self::getOneNext($id, $ignoreDeleted ? '' : '');
 
         if (!empty($row)) {
