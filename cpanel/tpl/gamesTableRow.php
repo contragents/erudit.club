@@ -1,7 +1,7 @@
 <?php
-/** @var array $game  */
+/** @var array $game */
 
-/** @var int $i  */
+/** @var int $i */
 
 $game_id = $i + GameController::GAME_ID_BASE_INC;
 
@@ -16,10 +16,12 @@ foreach ($game['users'] as $user) {
     $row .= "<a href=\"checkStatus.php?user=$userCookie\" target=\"_blank\">$userCookie</a>" . '&nbsp;' . (isset($user['lastActiveTime'])
             ? date('H:i:s', $user['lastActiveTime'] + 3 * 3600)
             : 'Отключился')
-        . (isset($user['userID'])
-            ? ' userID:' . $user['userID']
-            : '')
-        . '<br />';
+        . ViewHelper::a(
+            ' Очистить подсказки',
+            ['href' => '/mvc/players/clearHints?player=' . $userCookie, 'target' => '_blank']
+        )
+        .
+        '<br />';
 }
 $row .= "</td>
       <td>";

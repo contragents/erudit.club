@@ -5,15 +5,6 @@ class Config
 {
     const DEV = 'DEV';
     const PROD = 'PROD';
-    const DEBUG_PREFIX = 'debug';
-    const DEBUG_FLAG_KEY = 'debug_flag';
-    const DEFAULT_DEBUG_KEY = 'default_logging';
-
-    const LOGGING_METHODS = [
-        'TrackerController::visitAction' => true, // Инфо по выдаче Тизеров
-        'Customer::checkTeasers' => true, // Инфо по неактивным Тизерам (проверка при выдаче)
-        'BalanceModel::processTeasers' => true, // Инфо по неактивным Тизерам (апдейтер)
-    ];
 
     public static array $config = [];
     public static array $envConfig = [];
@@ -93,39 +84,5 @@ class Config
                 }
             }
         }
-    }
-
-    public static function setDebugFlag(string $key = self::DEFAULT_DEBUG_KEY, int $ttl = LOG_TTL)
-    {
-        $debugInfo = ['debug_key' => Tracker::combineKeys([self::DEBUG_PREFIX, $key]), 'debug_ttl' => $ttl];
-        Cache::setex(self::DEBUG_FLAG_KEY, $ttl, $debugInfo);
-
-        // Настраиваем Config::$config['debug_info']
-        self::checkDebugFlag();
-
-        Cache::del(self::$config['debug_info']['debug_key']);
-        Cache::hset(self::$config['debug_info']['debug_key'], microtime(true), 'Beginning of debug');
-        Cache::expire(self::$config['debug_info']['debug_key'], self::$config['debug_info']['debug_ttl']);
-    }
-
-
-    public
-    static function checkDebugFlag()
-    {
-        $debugInfo = Cache::get(self::DEBUG_FLAG_KEY);
-
-        if (empty($debugInfo)) {
-            self::$config['debug_info'] = false;
-        } else {
-            self::$config['debug_info'] = [
-                'debug_key' => $debugInfo['debug_key'],
-                'debug_ttl' => $debugInfo['debug_ttl'] ?? LOG_TTL
-            ];
-        }
-    }
-
-    public static function isDebug()
-    {
-        return (self::$config['debug_info']['debug_key'] ?? false) ? true : false;
     }
 }

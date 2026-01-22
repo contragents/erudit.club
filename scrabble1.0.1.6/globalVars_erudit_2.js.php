@@ -1,4 +1,4 @@
-//<?php /** @var string $gameMode From main.js */ /*$lang = T::$lang = T::GAME_MODE_LANG[$gameMode]; */?>
+//<?php /** @var string $gameMode From main.js */ $lang = T::$lang = T::GAME_MODE_LANG[$gameMode]; ?>
 
 var lang = '<?= T::$lang ?>';
 

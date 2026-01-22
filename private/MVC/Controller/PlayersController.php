@@ -194,6 +194,24 @@ class PlayersController extends BaseController
     }
 
     /**
+     * Очищает кеш подсказок по первым символам куки
+     * @return array
+     */
+    public function clearHintsAction(): array
+    {
+        $res = [];
+        $res[] = self::$Request['player'];
+        $playerHintsKeys = Cache::keys('erudit.hint_' . self::$Request['player'] . '*');
+        //$res[] = $playerHintsKeys;
+        foreach ($playerHintsKeys as $key) {
+            Cache::del($key);
+            $res[] = substr($key, 20);
+        }
+
+        return $res;
+    }
+
+    /**
      * Упорядочиваем достижения по периоду - от ГОДа до ДНя
      * @param array $achieves
      */

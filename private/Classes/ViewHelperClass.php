@@ -25,7 +25,7 @@ class ViewHelper
 
         if ($achievement->_event_type === AchievesModel::PATREON_TYPE) {
             return '<div class="award-wrap">' . self::img(
-                    ['src' => "./images/purple_compact_{$achievement->_event_period}_RU.png", 'height' => '100px']
+                    ['src' => Config::$config['domain'] . "/images/purple_compact_{$achievement->_event_period}_RU.png", 'height' => '100px']
                 ) . '</div>';
         }
 

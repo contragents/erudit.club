@@ -55,9 +55,6 @@ Config::parseEnv();
 // Создаем окружение (ДЕВ/ПРОД)
 Config::makeEnvironment();
 
-// Проверяем режим дебага
-Config::checkDebugFlag();
-
 T::$lang = in_array(($_GET['lang'] ?? 'NA'), T::SUPPORTED_LANGS)
     ? $_GET['lang']
     : BaseController::getLang();
