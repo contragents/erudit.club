@@ -1,124 +1,130 @@
 <!-- MY MODAL CONTENT -->
 <form id="superForm">
-	<input type="hidden" name="MAX_FILE_SIZE" value="{{MAX_FILE_SIZE}}">
-	<input type="hidden" name="cookie" value="{{cookie}}">
-	<!-- tabs -->
-	<div class="box box-top">
-		<div>
-			<ul class="tabs nav nav-tabs" role="tablist" id="profile-tabs">
-				<li class="nav-item">
-					<a class="nav-link active" id="main-info-tab" href="#main-info-tab-pane" role="tab"
-						aria-selected="true">{{Profile}}</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" id="wallet-tab" href="#wallet-tab-pane" role="tab"
-						aria-selected="false">{{Wallet}}</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" id="referrals-tab" href="#referrals-tab-pane" role="tab"
-						aria-selected="false">{{Referrals}}</a>
-				</li>
-			</ul>
-		</div>
-	</div>
-	<!-- end tabs -->
+    <input type="hidden" name="MAX_FILE_SIZE" value="{{MAX_FILE_SIZE}}">
+    <input type="hidden" name="cookie" value="{{cookie}}">
+    <!-- tabs -->
+    <div class="box box-top">
+        <div>
+            <ul class="tabs nav nav-tabs" role="tablist" id="profile-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" id="main-info-tab" href="#main-info-tab-pane" role="tab"
+                       aria-selected="true">{{Profile}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="wallet-tab" href="#wallet-tab-pane" role="tab"
+                       aria-selected="false">{{Wallet}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="referrals-tab" href="#referrals-tab-pane" role="tab"
+                       aria-selected="false">{{Referrals}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- end tabs -->
 
-	<div class="tab-content-wrap">
-		<div class="tab-content justify-content-start" id="profile-tabs-content">
-			<div class="tab-pane  active" id="main-info-tab-pane">
+    <div class="tab-content-wrap">
+        <div class="tab-content justify-content-start" id="profile-tabs-content">
+            <div class="tab-pane  active" id="main-info-tab-pane">
 
-				<div class="box box-bottom ">
-					<div class="d-flex">
-						<div id="playersAvatar" class="main-info-image-wrap">
-							<img class="main-info-image" src="{{imageUrl}}" alt="{{imageTitle}}">
-						</div>
-						<div class="d-flex flex-column flex-grow-1 flex-shrink-1 pl-2">
-							<p class="main-info-id flex-fill">{{Player ID}} <span>{{common_id}}</span></p>
-							<div class="flex-grow-0">
+                <div class="box box-bottom ">
+                    <div class="d-flex">
+                        <div id="playersAvatar" class="main-info-image-wrap">
+                            <img class="main-info-image" src="{{imageUrl}}" alt="{{imageTitle}}">
+                        </div>
+                        <div class="d-flex flex-column flex-grow-1 flex-shrink-1 pl-2">
+                            <p class="main-info-id flex-fill">{{Player ID}} <span>{{common_id}}</span></p>
+                            <div class="flex-grow-0">
                                 <label class="file-label">
                                     <input class="form-control form-control-sm" id="player_avatar_file" name="url"
                                            type="file" placeholder="" style="opacity:0;">
                                 </label>
-							</div>
+                            </div>
                             <div class="d-flex flex-fill">
                                 <button type="submit" id="file_upload_action_button" class="btn btn-sm ml-auto"
                                         onclick="savePlayerAvatar();return false;" disabled>
-                                    {{Save}}</button>
+                                    {{Save}}
+                                </button>
                                 <script>
                                     $(function () {
                                         $('input[type="file"]').change(function () {
                                             if ($(this).val() != "") {
                                                 $(this).css('opacity', '100%');
                                                 $('#file_upload_action_button').removeAttr('disabled');
-                                            }else{
+                                            } else {
                                                 $(this).css('opacity', '0');
-                                                $('#file_upload_action_button').attr('disabled','disabled');
+                                                $('#file_upload_action_button').attr('disabled', 'disabled');
                                             }
                                         });
                                     })
                                 </script>
                             </div>
-						</div>
+                        </div>
 
-					</div>
-				</div>
-				<div class="box mb-0">
-					<span class="nickname d-block mb-1" id="playersNikname">{{name}}</span>
-					<div class="d-flex">
-						<div class="flex-eq"></div>
-						<div class="nickname-inpit-wrap">
-							<input id="player_name" type="text" name="name" class="form-control"
-								placeholder="{{Input new nickname}}" maxlength="16">
-						</div>
-						<div class="flex-eq d-flex">
-							<button type="submit" class="btn btn-sm ml-auto"
-								onclick="savePlayerName($('#player_name').val(),{{common_id}});return false;">
+                    </div>
+                </div>
+                <div class="box mb-0">
+                    <span class="nickname d-block mb-1" id="playersNikname">{{name}}</span>
+                    <div class="d-flex">
+                        <div class="flex-eq"></div>
+                        <div class="nickname-inpit-wrap">
+                            <input id="player_name" type="text" name="name" class="form-control"
+                                   placeholder="{{Input new nickname}}" maxlength="16">
+                        </div>
+                        <div class="flex-eq d-flex">
+                            <button type="submit" class="btn btn-sm ml-auto"
+                                    onclick="savePlayerName($('#player_name').val(),{{common_id}});return false;">
                                 {{Save}}
-							</button>
-						</div>
-					</div>
-					<div class="rating-list-wrap">
-						<ul class="rating-list d-flex flex-column">
-							<li class="d-flex"><span class="label">{{Your rank}}</span><span class="pill">{{rating}}</span>
-							</li>
-							<li class="d-flex"><span class="label">{{Ranking number}}</span><span
-									class="pill">{{placement}}</span></li>
-							<li class="account-balance d-flex position-relative"><span class="label">{{Balance}}</span><i
-									class="icon icon-coin"></i><span class="pill" id="main_balance">{{balance}}</span>
-							</li>
-							<li class="d-flex"><span class="label">{{Rating by coins}}</span><span class="pill" id="ratingByCoins">{{ratingByCoins}}</span></li>
-                            <li class="d-flex"><span class="label">{{Secret key}}</span><span class="no-pill">{{secret}}</span></li>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="rating-list-wrap">
+                        <ul class="rating-list d-flex flex-column">
+                            <li class="d-flex"><span class="label">{{Your rank}}</span><span
+                                    class="pill">{{rating}}</span>
+                            </li>
+                            <li class="d-flex"><span class="label">{{Ranking number}}</span><span
+                                    class="pill">{{placement}}</span></li>
+                            <li class="account-balance d-flex position-relative"><span
+                                    class="label">{{Balance}}</span><i
+                                    class="icon icon-coin"></i><span class="pill" id="main_balance">{{balance}}</span>
+                            </li>
+                            <li class="d-flex"><span class="label">{{Rating by coins}}</span><span class="pill"
+                                                                                                   id="ratingByCoins">{{ratingByCoins}}</span>
+                            </li>
+                            <li class="d-flex"><span class="label">{{Secret key}}</span><span
+                                    class="no-pill">{{secret}}</span></li>
                         </ul>
-					</div>
+                    </div>
                     <span style="margin:auto; display:table;">
                         {{secret_prompt}}
                     </span>
-				</div>
-			</div>
-			<!-- end .tab-pane #main-info-tab-pane -->
+                </div>
+            </div>
+            <!-- end .tab-pane #main-info-tab-pane -->
 
-			<div class="tab-pane" id="wallet-tab-pane">
-				<!--<div class="box pb-2 box-bottom">
-					<div class="d-flex">
-						<span class="d-block align-self-center">Telegram Wallet</span>
-						<div class="tg-input-wrap d-flex flex-nowrap flex-shrink-1">
-							<input type="text" class="form-control" id="tg-wallet" value="{{tgWallet}}" placeholder="">
-							<a href="#tg-wallet" class="btn-copy js-btn-copy"><i class="icon icon-copy"></i></a>
-						</div>
+            <div class="tab-pane" id="wallet-tab-pane">
+                <!--<div class="box pb-2 box-bottom">
+                    <div class="d-flex">
+                        <span class="d-block align-self-center">Telegram Wallet</span>
+                        <div class="tg-input-wrap d-flex flex-nowrap flex-shrink-1">
+                            <input type="text" class="form-control" id="tg-wallet" value="{{tgWallet}}" placeholder="">
+                            <a href="#tg-wallet" class="btn-copy js-btn-copy"><i class="icon icon-copy"></i></a>
+                        </div>
 
 
-						<div class="btn-wrap ml-auto">
+                        <div class="btn-wrap ml-auto">
                             <a href="#" class="btn btn-sm flex-shrink-0">
                                 {{Link}}
-							</a>
-						</div>
-					</div>
+                            </a>
+                        </div>
+                    </div>
 
-					<span class="d-block text-danger text-uppercase text-center mt-1">Under construction</span>
-				</div>-->
+                    <span class="d-block text-danger text-uppercase text-center mt-1">Under construction</span>
+                </div>-->
                 <div class="box pb-2 box-bottom"><!--<div class="box py-3"> для второго сверху дива-->
-					<div class="d-flex">
-						<div class="wallet-info-wrap">
+                    <div class="d-flex">
+                        <div class="wallet-info-wrap">
                             <div class="d-flex">
                                 <span class="label">{{Bonuses accrued}} </span>
                                 <span class="pill" id="bonusAccrual">{{bonusAccrual}}</span>
@@ -127,15 +133,16 @@
                                 <span class="label">{{SUDOKU Balance}}</span>
                                 <span class="pill" id="balanceSudoku">{{balanceSudoku}}</span>
                             </div>
-						</div>
-						<div class="btn-wrap ml-auto">
-							<button type="button" onclick="claimIncome(); return false;" class="btn btn-sm flex-shrink-0">
+                        </div>
+                        <div class="btn-wrap ml-auto">
+                            <button type="button" onclick="claimIncome(); return false;"
+                                    class="btn btn-sm flex-shrink-0">
                                 {{Claim}}
-							</button>
-						</div>
-					</div>
+                            </button>
+                        </div>
+                    </div>
 
-				</div>
+                </div>
 
                 <span style="color:#00ff00;text-decoration:none;" class="nickname d-block mb-1" id="buy-sudoku">{{Buy_SUDOKU}}</span>
                 <div class="box py-3">
@@ -143,7 +150,10 @@
                         <div class="wallet-info-wrap">
                             <div class="d-flex form-group">
                                 <span class="label">{{SUDOKU_amount}} </span>
-                                <span class="pill"><input style="border:0; opacity: 0.8; color:#000000;" onchange="RobokassaPaymentGlobal('check'); return false;" type="number" step="10" min="10" max="1000" placeholder="{{enter_amount}}" id = "amount-to-buy"/></span>
+                                <span class="pill"><input style="border:0; opacity: 0.8; color:#000000;"
+                                                          onchange="RobokassaPaymentGlobal('check'); return false;"
+                                                          type="number" step="10" min="10" max="1000"
+                                                          placeholder="{{enter_amount}}" id="amount-to-buy"/></span>
                             </div>
                             <div class="d-flex">
                                 <span class="label">{{The_price}}</span>
@@ -166,27 +176,70 @@
                 </div>
             </div>
 
-			<!-- end .tab-pane -->
+            <!-- end .tab-pane -->
 
-			<div class="referrals-tab-pane tab-pane" id="referrals-tab-pane">
-				<div class="box pb-2 box-bottom">
-					<div class="d-flex justify-content-between text-uppercase">
-						<span class="table-heading d-block">{{Name}}</span>
-						<span class="table-heading d-block ml-a bonuses-accrued">{{Bonuses accrued}}</span>
-					</div>
+            <div class="referrals-tab-pane tab-pane" id="referrals-tab-pane">
+                <div class="box pb-2 box-bottom">
+                    <div id="patreon-description-referrals">{{patreon_description_refs}}</div>
+                    <br><br>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                    {{Your link}} <strong>{{Referral link}}</strong> &nbsp;
+                    <button
+                            style="background: none; border: none; padding: 0; cursor: pointer; color: currentColor;"
+                            onclick="copyTextToClipboard('{{Referral link}}'); this.disabled = true; this.style.opacity = '0.2'; this.style.cursor = 'default'; this.title = '{{Link copied to buffer}}'; return false;"
+                            title="{{Copy link to clipboard}}">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
 
-					<!--<span class="d-block text-danger text-uppercase text-center mt-1">Under construction</span>-->
-				</div>
+                    <button
+                            style="background: none; border: none; padding: 0; cursor: pointer; color: currentColor; display: inline-flex; align-items: center; gap: 8px;"
+                            onclick="shareLink('{{Referral link}}'); return false;"
+                            title="Поделиться ссылкой">
 
-				<!-- .referral-list -->
-				{{referralList}}
-				<!-- end .referral-list -->
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                    </button>
+                    </div>
+                    <script>
+                        function shareLink(url) {
+                            if (navigator.share) {
+                                navigator.share({
+                                    title: '{{Invite link for the Game}}',
+                                    url: url
+                                }).catch(console.error);
+                            }
+                        }
+                    </script>
 
-			</div>
-			<!-- end .tab-pane -->
-		</div>
-	</div>
-	<!-- end .tab-content-wrap -->
-	<!-- END MY MODAL CONTENT -->
+                    <br>
+                    {{Referral list}}
+                    <br><br>
+                    <div class="d-flex justify-content-between text-uppercase">
+                        <span class="table-heading d-block">{{Name}}</span>
+                        <span class="table-heading d-block ml-a bonuses-accrued">{{Bonuses accrued}}</span>
+                    </div>
+
+                    <!--<span class="d-block text-danger text-uppercase text-center mt-1">Under construction</span>-->
+                </div>
+
+                <!-- .referral-list -->
+                {{referralList}}
+                <!-- end .referral-list -->
+
+            </div>
+            <!-- end .tab-pane -->
+        </div>
+    </div>
+    <!-- end .tab-content-wrap -->
+    <!-- END MY MODAL CONTENT -->
 </form>
 <!-- END MY MODAL CONTENT -->

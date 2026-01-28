@@ -485,6 +485,8 @@ var gameStates = {
                                         balanceSudoku: responseArr.info.SUDOKU_BALANCE, // баланс SUDOKU
                                         transactionList: responseArr.transactions,
                                         patreonDescription: responseArr.patreon_description,
+                                        patreonDescriptionRefs: responseArr.patreon_description_refs,
+                                        refLink: responseArr.referral_link,
                                         referrals: responseArr.refs ? responseArr.refs : [],
                                     };
 
@@ -573,15 +575,20 @@ var gameStates = {
                                                     .replaceAll('{{calc_price}}', '<?= T::S('calc_price') ?>')
                                                     .replaceAll('{{Check_price}}', '<?= T::S('Check_price') ?>')
                                                     .replaceAll('{{Replenish}}', '<?= T::S('Replenish') ?>')
-                                                    .replaceAll('{{Support in Telegram}}', '<?= T::S(
-                                                        'Support in Telegram'
-                                                    ) ?>')
+                                                    .replaceAll('{{Support in Telegram}}',
+                                                        '<?= T::S('Support in Telegram') ?>')
                                                     .replaceAll('{{Last transactions}}', '<?= T::S(
                                                         'Last transactions'
                                                     ) ?>')
                                                     .replaceAll('{{transaction_list}}', profileData.transactionList)
                                                     .replaceAll('{{patreon_description}}', profileData.patreonDescription)
-                                                ;
+                                                    .replaceAll('{{patreon_description_refs}}', profileData.patreonDescriptionRefs)
+                                                    .replaceAll('{{Referral list}}', '<?= T::S('Referral list') ?>')
+                                                    .replaceAll('{{Your link}}', '<?= T::S('Your link') ?>')
+                                                    .replaceAll('{{Referral link}}', profileData.refLink)
+                                                    .replaceAll('{{Link copied to buffer}}', '<?= T::S('Link copied to buffer') ?>')
+                                                    .replaceAll('{{Copy link to clipboard}}', '<?= T::S('Copy link to clipboard') ?>')
+                                                    .replaceAll('{{Invite link for the Game}}', '<?= T::S('Invite link for the Game') ?>')
 
                                                 return message;
                                             })

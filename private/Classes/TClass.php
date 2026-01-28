@@ -51,7 +51,7 @@ class T
         }
 
         if (strpos($res, self::PLURAL_PATTERN) !== false && $params) {
-           $res = self::applyPlurals($res, $params, $lang);
+            $res = self::applyPlurals($res, $params, $lang);
         }
 
         return $res;
@@ -68,7 +68,7 @@ class T
         $stringParts = explode('[[', $res);
         // Добавим коррекцию на номер параметра
         $firstParamOffset = $stringParts ? 1 : 0;
-        foreach($stringParts as $numOuter => &$stringPart) {
+        foreach ($stringParts as $numOuter => &$stringPart) {
             preg_match_all('/^([a-zA-Z]+)]]/', $stringPart, $matches);
 
             try {
@@ -123,6 +123,18 @@ class T
     }
 
     const PHRASES = [
+        'Invite link for the Game' =>
+            [self::RU_LANG => 'Ссылка приглашение в Эрудит.CLUB'],
+        'Copy link to clipboard' => [self::RU_LANG => 'Скопировать ссылку в буфер обмена'],
+        'Link copied to buffer' => [self::RU_LANG => 'Ссылка скопирована в буфер'],
+        'Your link' => [self::RU_LANG => 'Ваша ссылка'],
+        'Referral list' => [self::RU_LANG => 'Список рефералов'],
+        'OR You could invite [[number]] more [[friend]] (referrals). Visit the Referrals tab for more information' => [
+            self::RU_LANG => 'ИЛИ Вы могли бы пригласить еще [[number]] [[friend]] (рефералов). Перейдите во вкладку Рефералы для подробностей',
+        ],
+        'Invite [[number]] more [[friend]] (referrals) for next card level' => [
+            self::RU_LANG => 'Для повышения уровня карточки спонсора пригласите еще [[number]] [[friend]] (рефералов)',
+        ],
         'Invest additional [[number]] [[ruble]] in the project\'s coins to obtain/upgrade your card to the [[value]] level with an income of [[value]] [[coin]] per day' => [
             self::EN_LANG => 'Invest additional [[number]] [[ruble]] in the project\'s coins to obtain/upgrade your card to the [[value]] level with an income of [[value]] [[coin]] per day',
             self::RU_LANG => 'Вложите еще [[number]] [[ruble]] в монеты проекта, чтобы получить/обновить карточку до уровня [[value]] с доходом {{sudoku_icon_5}}[[value]] [[coin]] / день',
@@ -135,7 +147,8 @@ class T
             self::EN_LANG => 'https://xn--d1aiwkc2d.club/scramble.html/?friend=',
             self::RU_LANG => 'https://эрудит.club/?friend='
         ],
-        'Your invitation link has been copied to clipboard' => [self::RU_LANG => 'Ваша ссылка-приглашение скопирована в буфер'],
+        'Your invitation link has been copied to clipboard' =>
+            [self::RU_LANG => 'Ваша ссылка-приглашение скопирована в буфер'],
         'System' => [self::RU_LANG => 'Система'],
         'Rating decrease' => [self::RU_LANG => 'Штраф за незаход'],
         'Agreement' => [
@@ -1392,9 +1405,13 @@ class T
             self::RU_LANG => [0 => 'рублей', 1 => 'рубль', 2 => 'рубля', 5 => 'рублей'],
         ],
         'coin' => [
-        self::EN_LANG => [0 => 'coins', 1 => 'coin', 2 => 'coins'],
-        self::RU_LANG => [0 => 'монет', 1 => 'монета', 2 => 'монеты', 5 => 'монет'],
-    ],
+            self::EN_LANG => [0 => 'coins', 1 => 'coin', 2 => 'coins'],
+            self::RU_LANG => [0 => 'монет', 1 => 'монета', 2 => 'монеты', 5 => 'монет'],
+        ],
+        'friend' => [
+            self::EN_LANG => [0 => 'friends', 1 => 'friend', 2 => 'friends'],
+            self::RU_LANG => [0 => 'друзей', 1 => 'друга', 2 => 'друга', 5 => 'друзей'],
+        ],
     ];
 
     public static function upperFirst(?string $str = null): string

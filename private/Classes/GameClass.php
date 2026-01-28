@@ -726,6 +726,8 @@ class Game
             $message['patreon_description'] .= VH::renderCard($fakePatreon);
         }
 
+        $message['patreon_description_refs'] = $message['patreon_description'];
+
         $nextLevelPatreonPeriod = Record::nextLevel($patreonStatusAchievement->_event_period ?? null);
         $nextLevelRubles = MonetizationService::PATREON_LEVELS[$nextLevelPatreonPeriod] - ($patreonStatusAchievement->_event_value ?? 0);
         if ($nextLevelRubles > 0) {
@@ -742,11 +744,22 @@ class Game
                     MonetizationService::PATREON_INCOME[$nextLevelPatreonPeriod],
                     MonetizationService::PATREON_INCOME[$nextLevelPatreonPeriod],
                 ]
-            );//'Вложите еще 900 рублей в монеты проекта, чтобы получить/обновить карточку до уровня Магистр с доходом 100 / день.';
+            );
+            $message['patreon_description'] .= VH::br()
+                . T::S(
+                    'OR You could invite [[number]] more [[friend]] (referrals). Visit the Referrals tab for more information',
+                    [(int)($nextLevelRubles / 100), (int)($nextLevelRubles / 100)]
+                );
+            $message['patreon_description_refs'] .= VH::br()
+                . T::S(
+                    'Invite [[number]] more [[friend]] (referrals) for next card level',
+                    [(int)($nextLevelRubles / 100), (int)($nextLevelRubles / 100)]
+                );
             $message['patreon_description'] .= VH::br(2) . 'Учитывается каждое пополнение - можно вносить частями.'
                 . VH::br(2) . 'Карточка спонсора выдается навсегда';
         }
 
+        $message['referral_link'] = T::S('invite_link') . $this->commonId;
 
         $message['text'] = '';
         $message['form'][] = [

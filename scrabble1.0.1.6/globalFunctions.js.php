@@ -5,6 +5,8 @@ async function copyTextToClipboard(text) {
         console.log('Текст успешно скопирован!');
     } catch (err) {
         console.error('Ошибка при копировании:', err);
+    } finally {
+        return false;
     }
 }
 

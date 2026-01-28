@@ -2817,5 +2817,17 @@ html {
     text-transform: uppercase;
     font-size: 10px;
 }
-
 /* CLUB-437 END */
+
+/* CLUB-471 BEGIN */
+.copy-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: #333;
+}
+.copy-btn:hover {
+    color: #007bff; /* Цвет при наведении */
+}
+/* CLUB-471 END */
