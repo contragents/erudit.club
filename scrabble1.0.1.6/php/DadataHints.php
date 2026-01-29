@@ -189,8 +189,11 @@ class Hints
         return '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>';
     }
 
-    private static function checkCache($User, &$gameStatus, $hint)
+    private static function checkCache($User, &$gameStatus, $hint): bool
     {
+        return mt_rand(1, 100) < 30; // с вероятностью 70% хинт пройдет чек
+
+        // todo CLUB-472 не используем cache
         $showsCount = Cache::get(self::HINT_USER_CACHE_KEY . $User . $hint);
 
         if (!$showsCount || $showsCount < self::HINT_DAILY_SHOW) {

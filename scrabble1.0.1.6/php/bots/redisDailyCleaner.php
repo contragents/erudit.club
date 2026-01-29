@@ -33,4 +33,40 @@ error_reporting(E_ALL);
 // todo уменьшать рейтинг через модель CommonIdRating
 //PlayerModel::decreaseRatings();
 
+clearHintsAction();
+
+function clearHintsAction()
+{
+    $res=[];
+    for ($i = 1; $i <= 50000; $i++) {
+        $keyPrefix = 'erudit.hint_' . substr(md5($i),0,2);
+        print $keyPrefix.PHP_EOL;
+        $playerHintsKeys = Cache::keys($keyPrefix . '*');
+        if(!is_array($playerHintsKeys)) {
+            continue;
+        }
+        print "$i: найдено ключей: " . count($playerHintsKeys) . "\n";
+        foreach ($playerHintsKeys as $key) {
+            $res[$i] = ($res[$i] ?? 0) + Cache::del($key);
+        }
+
+        print 'Удалено ключей: ' . $res[$i] . PHP_EOL;
+    }
+
+    $keyPrefix = 'erudit.hint_' . 'bot';
+    print $keyPrefix.PHP_EOL;
+    $playerHintsKeys = Cache::keys($keyPrefix . '*');
+    if(!is_array($playerHintsKeys)) {
+       return;
+    }
+    print "bot: найдено ключей: " . count($playerHintsKeys) . "\n";
+    foreach ($playerHintsKeys as $key) {
+        $res['bot'] = ($res['bot'] ?? 0) + Cache::del($key);
+    }
+
+    print 'Удалено ключей: ' . $res['bot'] . PHP_EOL;
+
+    //return $res;
+}
+
 exit();

@@ -87,7 +87,6 @@ class DecreaseRatingsWorker
             );
 
             if (!DB::insertID()) {
-                Cache::rpush(Game::STATS_FAILED, ['query' => $queryParams,]);
                 print "STATS_FAILED" . PHP_EOL . $queryParams;
 
                 continue;

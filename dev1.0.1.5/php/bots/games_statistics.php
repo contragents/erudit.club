@@ -74,17 +74,6 @@ function saveGameStats(&$Game, &$results)
 
     //print $INSERTSTATS;
     DB::queryInsert($INSERTSTATS);
-
-    if (!DB::insertID()) {
-        Cache::rpush(
-            Game::STATS_FAILED,
-            [
-                'query' => $INSERTSTATS,
-                'game' => $Game,
-                'results' => $results
-            ]
-        );
-    }
 }
 
 function addDeltaRatingsToCache($player)

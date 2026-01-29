@@ -25,7 +25,6 @@ while ((date('U') - $start_script_time) < $script_work_time) {
 }
 
 print 'Чистим лог ошибок сохранения статистики игры' . PHP_EOL;
-Cache::del(Game::STATS_FAILED);
 
 print 'Чистим лог ходов на 0 очков' . PHP_EOL;
 Cache::del(Game::BAD_COMBINATIONS_HSET);

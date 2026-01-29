@@ -132,7 +132,7 @@ class DB
 
     /**
      * @param $mysqlQuery string raw query
-     * @return false|int records affected or false
+     * @return false|int records matched|affected or false
      */
     public static function queryInsert($mysqlQuery)
     {

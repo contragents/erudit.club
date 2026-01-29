@@ -316,6 +316,7 @@ class BotEng
                         continue; // Переходим к следующей клетке
                     }
 
+                    /* todo проблемы с вылетами игры - тестить
                     // Можно приставить буквы слева-сверху?
                     if (!$desk[$i][$j][0] && ($desk[$i + 1][$j][0] ?? false) && ($desk[$i][$j + 1][0] ?? false)) {
                         $candidateCellsArr[] = new CellBot(
@@ -327,6 +328,7 @@ class BotEng
 
                         continue; // Переходим к следующей клетке
                     }
+                    */
                 }
             }
 

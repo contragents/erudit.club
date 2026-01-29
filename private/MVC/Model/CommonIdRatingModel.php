@@ -33,28 +33,45 @@ class CommonIdRatingModel extends BaseModel
 
     public static function changeUserRating(int $commonId, int $newRating, string $gameName): bool
     {
-        if (self::update($commonId, [self::RATING_FIELD_PREFIX . $gameName => $newRating])) {
+        $ratingModel = CommonIdRatingModel::getOneO($commonId) ?? new CommonIdRatingModel(
+            [
+                CommonIdRatingModel::COMMON_ID_FIELD => $commonId,
+                CommonIdRatingModel::RATING_FIELD_PREFIX . $gameName => 0
+            ]
+        );
+
+        $ratingAttr = '_rating_' . $gameName;
+        if ($ratingModel->$ratingAttr === $newRating) {
             return true;
         } else {
-            // 2 options - ratings are equal OR no common_id record present
-            if (
-                self::exists($commonId)
-                && self::getOne($commonId)[self::RATING_FIELD_PREFIX . $gameName] == $newRating
-            ) {
-                return true;
-            } else {
-                self::add([self::ID_FIELD => $commonId, self::RATING_FIELD_PREFIX . $gameName => $newRating]);
+            $ratingModel->$ratingAttr = $newRating;
 
-                if (
-                    self::exists($commonId)
-                    && self::getOne($commonId)[self::RATING_FIELD_PREFIX . $gameName] == $newRating
-                ) {
+            return $ratingModel->save();
+        }
+        /* todo CLUB-472 протестить и убрать
+                if (self::update($commonId, [self::RATING_FIELD_PREFIX . $gameName => $newRating])) {
                     return true;
                 } else {
-                    return false;
+                    // 2 options - ratings are equal OR no common_id record present
+                    if (
+                        self::exists($commonId)
+                        && self::getOne($commonId)[self::RATING_FIELD_PREFIX . $gameName] == $newRating
+                    ) {
+                        return true;
+                    } else {
+                        self::add([self::ID_FIELD => $commonId, self::RATING_FIELD_PREFIX . $gameName => $newRating]);
+
+                        if (
+                            self::exists($commonId)
+                            && self::getOne($commonId)[self::RATING_FIELD_PREFIX . $gameName] == $newRating
+                        ) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
                 }
-            }
-        }
+        */
     }
 
     public static function getRating(int $commonId, string $gameName): int
@@ -82,15 +99,18 @@ class CommonIdRatingModel extends BaseModel
      * @return self[][]
      */
     public static function
-    getTopPlayersO(string $gameName, int $top, ?int $topMax = null): array
-    {
+    getTopPlayersO(
+        string $gameName,
+        int $top,
+        ?int $topMax = null
+    ): array {
         $rows1 = self::getTopPlayers($gameName, $top, $topMax);
 
         $res = [];
 
         foreach ($rows1 as $top => $rows2) {
             $res[$top] = [];
-            foreach($rows2 as $row) {
+            foreach ($rows2 as $row) {
                 $res[$top][] = self::arrayToObject($row);
             }
         }

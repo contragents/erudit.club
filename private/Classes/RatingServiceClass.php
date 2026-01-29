@@ -142,17 +142,6 @@ class RatingService
                 ]
                 : [])
         );
-
-        if (!DB::insertID()) {
-            Cache::rpush(
-                Game::STATS_FAILED,
-                [
-                    'query' => $queryParams,
-                    'game' => $Game,
-                    'results' => $results
-                ]
-            );
-        }
     }
 
     protected static function saveRatings(&$players, int $gameId): bool

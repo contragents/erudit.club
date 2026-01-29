@@ -624,18 +624,6 @@ class Game extends \Game
 
         if ($ochkiZaHod === 0) {
             // Сохраняем в лог комбинацию на 0 очков
-            Cache::hset(
-                self::BAD_COMBINATIONS_HSET,
-                microtime(true),
-                [
-                    'new_fishki' => $new_fishki,
-                    'old_cells' => json_decode($_POST['cells'], true),
-                    'old_desk' => $saveDesk,
-                    'new_desk' => $cells,
-                    'saved_words' => $saveWords,
-                    'new_played_words' => $new_fishki['words'] ?? [],
-                ]
-            );
         } else {
             Cache::setex(static::CURRENT_GAME_KEY . $this->currentGame, $this->cacheTimeout, $cells);
             //Измененная Присланная доска -> текущая

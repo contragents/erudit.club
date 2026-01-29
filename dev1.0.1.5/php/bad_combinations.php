@@ -4,10 +4,12 @@ use Dadata\Cache;
 
 class BadCombinations
 {
-    const BAD_COMBINATIONS_KEY = 'bad_combinations';
+    const BAD_COMBINATIONS_KEY = 'bad_combinations'; // todo не испоьовать
 
     public static function renderOne()
     {
+        return;
+
         $it = null;
         while (true) {
             $records = Cache::hscan(self::BAD_COMBINATIONS_KEY, $it, '*', 1);

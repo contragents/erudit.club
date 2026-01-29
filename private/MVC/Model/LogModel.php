@@ -35,14 +35,7 @@ class LogModel extends BaseModel
     const CATEGORY_RECORD_ERROR = 'record_error';
     const CATEGORY_PAYMENT_NOTIFY = 'payment_notification';
     const CATEGORY_QUERY_ERROR = 'query_error';
-    const CATEGORIES = [
-        self::CATEGORY_BOT_ERROR,
-        self::CATEGORY_RULANG_ERROR,
-        self::CATEGORY_SUBMIT_ERROR,
-        self::CATEGORY_RECORD_ERROR,
-        self::CATEGORY_PAYMENT_NOTIFY,
-        self::CATEGORY_QUERY_ERROR,
-    ];
+    const CATEGORY_BAD_COMBINATION = 'bad_combination';
 
     public static function add(array $processedFieldsVals)
     {

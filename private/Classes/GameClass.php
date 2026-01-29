@@ -1517,15 +1517,10 @@ class Game
                 $this->gameStatus['wordsAccepted']
             );
         } catch (\Throwable $e) {
-            BadRequest::logBadRequest(
+            LogModel::add(
                 [
-                    'message' => 'Ошибка обработки данных!',
-                    'err_msg' => $e->__toString(),//getMessage(),
-                    'err_file' => $e->getFile(),
-                    'err_line' => $e->getLine(),
-                    'err_context' => $e->getTrace(),
-                    'received_desk' => $cells,
-                    'game_desk' => $saveDesk
+                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_SUBMIT_ERROR,
+                    LogModel::MESSAGE_FIELD => $e->__toString(),
                 ]
             );
 
@@ -1755,6 +1750,18 @@ class Game
                 }
             }
         } catch (\Throwable $e) {
+            LogModel::add(
+                [
+                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_SUBMIT_ERROR,
+                    LogModel::MESSAGE_FIELD => $e->__toString(),
+                ]
+            );
+
+            // $this->nextTurn();
+            // $this->destruct();
+            return $this->checkGameStatus();
+
+            // TODO club-472 ПОКА НЕ ВЫКИДЫВЕМ 400Ю ОШИБКУ
             BadRequest::sendBadRequest(
                 [
                     'message' => T::S('Data processing error!'),
@@ -1769,16 +1776,17 @@ class Game
 
         if ($ochkiZaHod === 0) {
             // Сохраняем в лог комбинацию на 0 очков
-            Cache::hset(
-                self::BAD_COMBINATIONS_HSET,
-                microtime(true),
+            LogModel::add(
                 [
-                    'new_fishki' => $new_fishki,
-                    'old_cells' => json_decode($_POST['cells'], true),
-                    'old_desk' => $saveDesk,
-                    'new_desk' => $cells,
-                    'saved_words' => $saveWords,
-                    'new_played_words' => $new_fishki['words'] ?? [],
+                    LogModel::CATEGORY_FIELD => LogModel::CATEGORY_BAD_COMBINATION,
+                    LogModel::MESSAGE_FIELD => [
+                        'new_fishki' => $new_fishki,
+                        'old_cells' => json_decode($_POST['cells'], true),
+                        'old_desk' => $saveDesk,
+                        'new_desk' => $cells,
+                        'saved_words' => $saveWords,
+                        'new_played_words' => $new_fishki['words'] ?? [],
+                    ]
                 ]
             );
         } else {
