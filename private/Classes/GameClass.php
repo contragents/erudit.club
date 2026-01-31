@@ -154,6 +154,15 @@ class Game
             );
         }
 
+        $refererParams = BaseController::parseReferer();
+        if (isset($refererParams['friend'])) {
+            RefModel::register(
+                $refererParams['friend'],
+                $this->commonId,
+                PlayerModel::getPlayerName(['ID' => $this->User, 'common_id' => $this->commonId])
+            );
+        }
+
         $this->currentGame = Cache::get($this->Queue::GET_GAME_KEY . $this->User);
 
         if (!$this->currentGame) {
@@ -646,14 +655,32 @@ class Game
         $message['info']['SUDOKU_TOP'] = BalanceModel::getTopByBalance(BalanceModel::getBalance($this->commonId));
         $message['info']['rewards'] = IncomeModel::getIncome($this->commonId) ?: '0.00';
 
-        $refs = RefModel::getCustomO(RefModel::COMMON_ID_FIELD, '=', $this->commonId, true);
+        $refs = RefModel::find()
+            ->where([RefModel::COMMON_ID_FIELD => $this->commonId, RefModel::IS_ACTIVE_FIELD => true])
+            ->limit(10)
+            ->order(RefModel::ID_FIELD, false)
+            ->all();
 
         $message['refs'] = [];
         if ($refs) {
             foreach ($refs as $ref) {
                 $message['refs'][] = [
-                    $ref->_name,
+                    UserModel::getNameByCommonId($ref->_ref_common_id)
+                    ?? ($ref->_name ?? T::S('is_balance_hidden')),
                     MonetizationService::REWARD[AchievesModel::DAY_PERIOD] . '&nbsp;' . T::S('{{sudoku_icon_20}}')
+                ];
+            }
+
+            if (true || count($refs) === 10) {
+                $totalGamePlayed = RefModel::getNumGamesPlayedByCommonIdRefs($this->commonId);
+                $totalRefsCount = RefModel::find()
+                    ->where([RefModel::COMMON_ID_FIELD => $this->commonId, RefModel::IS_ACTIVE_FIELD => true])
+                    ->count();
+                $message['refs'][] = [
+                    T::S('Newest 10 referrals are shown')
+                    . VH::br()
+                    . T::S('Total referrals count: [[value]]', [$totalRefsCount]),
+                    T::S(AchievesModel::GAMES_PLAYED) . ": $totalGamePlayed"
                 ];
             }
         }
@@ -1339,7 +1366,8 @@ class Game
         foreach ($this->gameStatus['users'] as &$user) {
             $user['result_ratings'] = $resultRatings[$user['common_id']];
 
-            if (RatingHistoryModel::getNumGamesPlayed($user['common_id']) % 100 == 0) {
+            $numGamesPlayed = RatingHistoryModel::getNumGamesPlayed($user['common_id']);
+            if ($numGamesPlayed > 0 && $numGamesPlayed % 100 === 0) {
                 // Начисляем бонус за каждые 100 игр
                 BalanceModel::changeBalance(
                     $user['common_id'],

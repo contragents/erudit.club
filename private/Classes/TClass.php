@@ -123,6 +123,8 @@ class T
     }
 
     const PHRASES = [
+        'Newest 10 referrals are shown' => [self::RU_LANG => 'Показаны только 10 последних рефералов'],
+        'Total referrals count: [[value]]' => [self::RU_LANG => 'Всего ваших активных рефералов: [[value]]'],
         'Invite link for the Game' =>
             [self::RU_LANG => 'Ссылка приглашение в Эрудит.CLUB'],
         'Copy link to clipboard' => [self::RU_LANG => 'Скопировать ссылку в буфер обмена'],

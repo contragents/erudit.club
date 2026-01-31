@@ -125,4 +125,25 @@ class BaseController
 
         return false;
     }
+
+    public static function parseReferer(): array
+    {
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+
+        if ($referer) {
+            // 1. Извлекаем только строку запроса (query) из URL
+            $queryString = parse_url($referer, PHP_URL_QUERY);
+
+            if ($queryString) {
+                // 2. Разбираем строку в ассоциативный массив
+                parse_str($queryString, $params);
+
+                // Теперь в $params находятся все GET-параметры
+                // Пример: echo $params['utm_source'] ?? 'не указан';
+                return $params;
+            }
+        }
+
+        return [];
+    }
 }

@@ -123,15 +123,7 @@ trait QueryTrait
     public function getSQL(): ?string
     {
         try {
-            $where = '';
-
-            foreach ($this->queryParts->where as $partWhere) {
-                $where .= (
-                empty($where)
-                    ? ORM::where(...array_values($partWhere))
-                    : ORM::andWhere(...array_values($partWhere))
-                );
-            }
+            $where = $this->buildWhere();
 
             return ORM::select($this->queryParts->fields, static::TABLE_NAME)
                 . ' ' . $where
@@ -139,6 +131,21 @@ trait QueryTrait
         } catch (Throwable $e) {
             return null;
         }
+    }
+
+    private function buildWhere(): string
+    {
+        $where = '';
+
+        foreach ($this->queryParts->where as $partWhere) {
+            $where .= (
+            empty($where)
+                ? ORM::where(...array_values($partWhere))
+                : ORM::andWhere(...array_values($partWhere))
+            );
+        }
+
+        return $where;
     }
 
     /**
@@ -158,19 +165,29 @@ trait QueryTrait
 
     public function getQuery(): string
     {
-        $where = '';
-
-        foreach ($this->queryParts->where as $partWhere) {
-            $where .= (
-            empty($where)
-                ? ORM::where(...array_values($partWhere))
-                : ORM::andWhere(...array_values($partWhere))
-            );
-        }
+        $where = $this->buildWhere();
 
         return ORM::select($this->queryParts->fields, static::TABLE_NAME)
             . ' ' . $where
             . ' ' . $this->getOrder() . $this->getLimit();
+    }
+
+    public function count(): int
+    {
+        try {
+            $tpmFields = $this->queryParts->fields; // Временное сохранение полей селекса
+            $this->queryParts->fields = ['count(1)']; // делаем count
+            $query = $this->getQuery(); // готовим запрос
+            $this->queryParts->fields = $tpmFields; // возврат полей
+
+            return DB::queryValue($query) ?: 0;
+        } catch (Throwable $e) {
+            $this->queryParts->fields = $tpmFields; // возврат полей
+
+            LogModel::logQuery($query, $e);
+
+            return 0;
+        }
     }
 
     /**

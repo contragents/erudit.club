@@ -34,6 +34,7 @@ class LogModel extends BaseModel
     const CATEGORY_SUBMIT_ERROR = 'submit_error';
     const CATEGORY_RECORD_ERROR = 'record_error';
     const CATEGORY_PAYMENT_NOTIFY = 'payment_notification';
+    const CATEGORY_REFERRAL_NOTIFY = 'category_referral';
     const CATEGORY_QUERY_ERROR = 'query_error';
     const CATEGORY_BAD_COMBINATION = 'bad_combination';
 
@@ -47,6 +48,14 @@ class LogModel extends BaseModel
                 : []
             )
         );
+    }
+
+    public static function logQuery(string $query, ?Throwable $e = null): bool
+    {
+        return self::add([
+                             LogModel::CATEGORY_FIELD => LogModel::CATEGORY_QUERY_ERROR,
+                             LogModel::MESSAGE_FIELD => $query . ($e ? ("\n" . $e->__toString()) : ''),
+                         ]);
     }
 
 }

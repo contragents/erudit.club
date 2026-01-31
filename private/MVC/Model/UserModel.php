@@ -70,7 +70,11 @@ class UserModel extends BaseModel
         return (bool)$res;
     }
 
-    public static function getNameByCommonId(int $commonId): ?string {
+    public static function getNameByCommonId(?int $commonId): ?string {
+        if(!$commonId) {
+            return null;
+        }
+
         $name = self::getOneO($commonId)->_name ?? null;
         if(!$name) {
             return null;

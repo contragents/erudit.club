@@ -52,6 +52,7 @@ class RatingService
     // todo CLUB-384 не использовать таблицу players для хранения рейтингов - поправить код во всех местах
     protected static function saveRatingsPlayersTable(&$players)
     {
+        return; // todo нахуя этот метод?
         foreach ($players as $num => $player) {
             BaseModel::updateWhere(
                 [PlayerModel::RATING_FIELD => $player['rating'] + $player['deltaRating'],],

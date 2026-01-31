@@ -472,9 +472,13 @@ class BaseModel implements Iterator
             if (DB::queryInsert($query)) {
                 return DB::insertID() ?: true;
             } else {
+                LogModel::logQuery($query);
+
                 return false;
             }
         } catch (Throwable $e) {
+            LogModel::logQuery($query ?? '', $e);
+
             return false;
         }
     }
@@ -572,9 +576,7 @@ class BaseModel implements Iterator
         if (DB::queryInsert($updateQuery)) {
             return true;
         } else {
-            LogModel::add(
-                [LogModel::CATEGORY_FIELD => LogModel::CATEGORY_QUERY_ERROR, LogModel::MESSAGE_FIELD => $updateQuery]
-            );
+            LogModel::logQuery($updateQuery);
 
             return false;
         }
@@ -851,9 +853,26 @@ class BaseModel implements Iterator
         return DB::queryArray($query)[0] ?? false;
     }
 
-    public static function exists(int $id): bool
+    /**
+     * Checks existing of $id or by queryParts->where conditions
+     * @param int|null $id
+     * @return bool
+     */
+    public static function exists(?int $id = null): bool
     {
-        return !empty(static::getOne($id));
+        if ($id) {
+            return !empty(static::getOne($id));
+        } else {
+            $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+            $caller = $trace[1] ?? null;
+            // todo CLUB-471 Log $trace and $caller - is it working????
+            // instanceof static корректно отработает для наследников
+            if (isset($caller['object']) && $caller['object'] instanceof static && !empty($caller['object']->queryParts)) {
+                return !empty($caller['object']->one());
+            }
+        }
+
+        return false;
     }
 
     /**

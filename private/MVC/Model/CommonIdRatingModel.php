@@ -48,30 +48,6 @@ class CommonIdRatingModel extends BaseModel
 
             return $ratingModel->save();
         }
-        /* todo CLUB-472 протестить и убрать
-                if (self::update($commonId, [self::RATING_FIELD_PREFIX . $gameName => $newRating])) {
-                    return true;
-                } else {
-                    // 2 options - ratings are equal OR no common_id record present
-                    if (
-                        self::exists($commonId)
-                        && self::getOne($commonId)[self::RATING_FIELD_PREFIX . $gameName] == $newRating
-                    ) {
-                        return true;
-                    } else {
-                        self::add([self::ID_FIELD => $commonId, self::RATING_FIELD_PREFIX . $gameName => $newRating]);
-
-                        if (
-                            self::exists($commonId)
-                            && self::getOne($commonId)[self::RATING_FIELD_PREFIX . $gameName] == $newRating
-                        ) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                }
-        */
     }
 
     public static function getRating(int $commonId, string $gameName): int
