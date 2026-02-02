@@ -39,6 +39,7 @@ class BalanceHistoryModel extends BaseModel
         self::WINNER_REWARD_TYPE => 7,
     ];
     const WINNER_REWARD_TYPE = 'Winner reward';
+    const BONUS_100_GAMES = '100-game bonus';
 
     public ?int $_common_id = null;
     public ?int $_prev_count = null;

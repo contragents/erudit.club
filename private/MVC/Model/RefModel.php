@@ -20,6 +20,8 @@ class RefModel extends BaseModel
     const IS_ACTIVE_FIELD = 'is_active';
 
     const REF_COMMON_ID_FIELD = 'ref_common_id';
+    const MAX_EMPTY_REFS = 5; // Максимальное количество рефералов, которые не играют (фейковые)
+    const MIN_GAMES_PER_REF = 10; // Число игр на одного активного реферала, чтобы начислить более 5ти рефов
     public ?int $_common_id = null;
     public ?int $_ref_common_id = null;
     public ?int $_ref_tg_id = null;
@@ -49,6 +51,15 @@ class RefModel extends BaseModel
      */
     public static function register($fromCommonId, $refCommonId, ?string $name = null): ?bool
     {
+        LogModel::add([
+                          LogModel::CATEGORY_FIELD => 'register_test',
+                          LogModel::MESSAGE_FIELD => [
+                              '$fromCommonId' => $fromCommonId,
+                              '$refCommonId' => $refCommonId,
+                              '$name' => $name
+                          ]
+                      ]);
+
         if (!ctype_digit((string)$fromCommonId) || !ctype_digit((string)$refCommonId)) {
             return null;
         }
@@ -56,29 +67,41 @@ class RefModel extends BaseModel
         // Проверим, что реферал уже создан
         if (self::find()->where([self::REF_COMMON_ID_FIELD => $refCommonId])->exists()) {
             return null;
-        } elseif (($ref = self::new([
-                                        self::COMMON_ID_FIELD => $fromCommonId,
-                                        self::REF_COMMON_ID_FIELD => $refCommonId,
-                                        self::NAME_FIELD => $name,
-                                    ]))->save()) {
-            $activeUserRefs = self::find()->where(
-                [
-                    self::COMMON_ID_FIELD => $fromCommonId,
-                    self::IS_ACTIVE_FIELD => true,
-                    self::REF_COMMON_ID_FIELD => new ORM('IS NOT NULL')
-                ]
-            )->count();
+        }
 
-            if ($activeUserRefs >= 5) {
+        $ref = self::new([
+                             self::COMMON_ID_FIELD => $fromCommonId,
+                             self::REF_COMMON_ID_FIELD => $refCommonId,
+                             self::NAME_FIELD => $name,
+                         ]);
+
+        LogModel::add([
+            LogModel::CATEGORY_FIELD => 'register_test',
+            LogModel::MESSAGE_FIELD => ['$ref' => $ref]
+                      ]);
+
+        if ($ref->save() ?? false) {
+            $activeUserRefs = self::find()
+                ->where(
+                    [
+                        self::COMMON_ID_FIELD => $fromCommonId,
+                        self::IS_ACTIVE_FIELD => true,
+                        self::REF_COMMON_ID_FIELD => new ORM('IS NOT NULL')
+                    ]
+                )->count();
+
+            if ($activeUserRefs >= self::MAX_EMPTY_REFS) {
                 $totalRefsGamesPlayed = self::getNumGamesPlayedByCommonIdRefs($fromCommonId);
             }
 
             // Если рефералов менее 5 штук, то следующего делаем активным автоматом
             // Иначе, считаем эффективность рефов - должно быть в среднем 10 игр на реферала
-            if ($activeUserRefs < 5 || ($totalRefsGamesPlayed / ($activeUserRefs + 1) >= 10)) {
+            if ($activeUserRefs < self::MAX_EMPTY_REFS || ($totalRefsGamesPlayed / $activeUserRefs >= self::MIN_GAMES_PER_REF)) {
                 $ref->_is_active = true;
 
-                return $ref->save() && self::setRewardToRef($ref) && self::setRewardForRef($ref);
+                return $ref->save()
+                    && self::setRewardToRef($ref) // Начислили бонус Рефу
+                    && self::setRewardForRef($ref); // Начислили бонус Рефоводу и выдали/обновили карточку партнера
             }
 
             return false;
@@ -87,8 +110,10 @@ class RefModel extends BaseModel
         return null; // Ref не создан по какимто причинам
     }
 
-    public static function setRewardToRef(?self $ref): bool
-    {
+    public
+    static function setRewardToRef(
+        ?self $ref
+    ): bool {
         if (!$ref) {
             return false;
         }
@@ -101,8 +126,10 @@ class RefModel extends BaseModel
         );
     }
 
-    public static function setRewardForRef(?self $ref): bool
-    {
+    public
+    static function setRewardForRef(
+        ?self $ref
+    ): bool {
         if (!$ref) {
             return false;
         }
@@ -148,15 +175,17 @@ class RefModel extends BaseModel
         return false;
     }
 
-    public static function getNumGamesPlayedByCommonIdRefs($fromCommonId): int
-    {
+    public
+    static function getNumGamesPlayedByCommonIdRefs(
+        $fromCommonId
+    ): int {
         return
             RatingHistoryModel::find()
                 ->where([
                             [
                                 RatingHistoryModel::COMMON_ID_FIELD,
                                 'in',
-                                new ORM(
+                                new ORM( // todo можно переделать RefModel::find()->where()->getSQL()..
                                     RefModel::select([RefModel::REF_COMMON_ID_FIELD],
                                                      true,
                                                      ORM::where(

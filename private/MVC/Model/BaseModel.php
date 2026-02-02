@@ -3,7 +3,10 @@
 
 /**
  * @property int $_id
+ * @method static bool exists(int $id) Вызов через BaseModel::exists($id)
+ * @method bool exists() Вызов через $model->find()->where(...)->exists()
  **/
+
 class BaseModel implements Iterator
 {
     use QueryTrait;
@@ -151,26 +154,44 @@ class BaseModel implements Iterator
     {
         $properties = get_object_vars($this);
         $fieldsVals = [];
+        $debugArr = [];
 
         foreach ($properties as $property => $value) {
             $valueType = gettype($value);
+            // todo remove $debugArr CLUB-471
+            $debugArr[$property] = ['value' => $value, 'type' => $valueType];
             if (self::isFieldName($property) && !in_array($valueType, self::SKIP_ATTR_TYPES)) {
-                if (is_callable([$this, "from_$valueType"])) {
+                $methodName = "from_$valueType";
+                //if (is_callable([$this, $methodName])) {
+                if (method_exists($this, $methodName)) {
                     try {
-                        $value = call_user_func([$this, "from_$valueType"], $value);
+                        // $value = call_user_func([$this, "from_$valueType"], $value);
+                        $value = $this->$methodName($value);
+                        $debugArr[$property]['called_func'] = $methodName;
+                        $debugArr[$property]['new_value'] = $value;
                     } catch (Throwable $e) {
                         continue;
                     }
                 } elseif (!is_int($value)) {
                     // Добавим экранирование спецсимволов
                     $value = DB::escapeString($value);
+                    $debugArr[$property]['new_value'] = $value;
                 }
 
                 $fieldsVals[self::fieldName($property)] = $value;
             }
         }
-
-        if (($this->_id ?? false) && self::exists($this->_id)) {
+        LogModel::add(
+            [
+                LogModel::CATEGORY_FIELD => 'register_test',
+                LogModel::MESSAGE_FIELD => [
+                    '$debugArr' => $debugArr,
+                    '$fieldsVals' => $fieldsVals,
+                    '$properties' => $properties
+                ],
+            ]
+        );
+        if (($this->_id ?? false) && static::exists($this->_id)) {
             unset($fieldsVals['id']);
             return self::update($this->_id, $fieldsVals);
         } else {
@@ -807,6 +828,8 @@ class BaseModel implements Iterator
     public static function getOne(int $id): array
     {
         $query = "SELECT * FROM " . static::TABLE_NAME . " WHERE id = $id LIMIT 1";
+        // todo CLUB-471
+        LogModel::add([LogModel::CATEGORY_FIELD => '__callStatic_test', LogModel::MESSAGE_FIELD => $query]);
 
         return DB::queryArray($query)[0] ?? [];
     }
@@ -858,21 +881,54 @@ class BaseModel implements Iterator
      * @param int|null $id
      * @return bool
      */
-    public static function exists(?int $id = null): bool
+    // 1. Переименовываем реальную логику (делаем защищенной)
+    protected function internalExists(): ?bool
     {
-        if ($id) {
-            return !empty(static::getOne($id));
-        } else {
-            $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
-            $caller = $trace[1] ?? null;
-            // todo CLUB-471 Log $trace and $caller - is it working????
-            // instanceof static корректно отработает для наследников
-            if (isset($caller['object']) && $caller['object'] instanceof static && !empty($caller['object']->queryParts)) {
-                return !empty($caller['object']->one());
-            }
-        }
+        return empty($this->queryParts)
+            ? null
+            : !empty($this->one());
+    }
 
-        return false;
+    // 2. Обработка вызова $obj->exists()
+    public function __call($name, $arguments)
+    {
+        // todo CLUB-471
+        LogModel::add(
+            [
+                LogModel::CATEGORY_FIELD => '__callDinamic_test',
+                LogModel::MESSAGE_FIELD => ['$name' => $name, '$arguments' => $arguments]
+            ]
+        );
+        switch ($name) {
+            case 'exists':
+                return count($arguments) === 0
+                    ? $this->internalExists()
+                    : self::__callStatic('exists', $arguments);
+            default:
+                return null;
+        }
+    }
+
+    // 3. Обработка вызова Class::exists()
+    public static function __callStatic($name, $arguments)
+    {
+        // todo CLUB-471
+        LogModel::add(
+            [
+                LogModel::CATEGORY_FIELD => '__callStatic_test',
+                LogModel::MESSAGE_FIELD => ['$name' => $name, '$arguments' => $arguments]
+            ]
+        );
+        switch ($name) {
+            case 'exists':
+                if ($id = $arguments[0] ?? null) {
+                    return !empty(static::getOne($id));
+                } else {
+                    return null;
+                }
+            default:
+                return null;
+        }
     }
 
     /**
@@ -881,8 +937,11 @@ class BaseModel implements Iterator
      * @param bool $raw
      * @return bool
      */
-    public static function existsCustom(array $conditions, bool $raw = false): bool
-    {
+    public
+    static function existsCustom(
+        array $conditions,
+        bool $raw = false
+    ): bool {
         $query = ORM::select(['count(1)'], static::TABLE_NAME)
             . ORM::where(1, '=', 1, true)
             . implode(
@@ -897,8 +956,10 @@ class BaseModel implements Iterator
         return ((int)DB::queryValue($query) ?: 0) > 0;
     }
 
-    public function __construct(array $fieldsVals = [])
-    {
+    public
+    function __construct(
+        array $fieldsVals = []
+    ) {
         $properties = get_class_vars(static::class);
         foreach ($properties as $property => $nothing) {
             if (isset($fieldsVals[$property])) {
@@ -918,8 +979,11 @@ class BaseModel implements Iterator
      * @param array $fieldsVals ['f1'=>'v1', 'f2'=>'v2'...]
      * @param array $whereArr [[$field, $condition, $value, $isRaw = false],[]...] OR [$field, $condition, $value, $isRaw = false]
      */
-    public static function updateWhere(array $fieldsVals, array $whereArr): bool
-    {
+    public
+    static function updateWhere(
+        array $fieldsVals,
+        array $whereArr
+    ): bool {
         $updateQuery = ORM::update(static::TABLE_NAME)
             . ORM::set($fieldsVals)
             . ORM::where(1, '=', 1, true)
@@ -938,8 +1002,10 @@ class BaseModel implements Iterator
         }
     }
 
-    public function __get($attr)
-    {
+    public
+    function __get(
+        $attr
+    ) {
         try {
             if (is_callable([$this, $attr])) {
                 return $this->{$attr}();

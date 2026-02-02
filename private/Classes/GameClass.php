@@ -154,6 +154,7 @@ class Game
             );
         }
 
+        // todo CLUB-471 как ускорить, как проверять 1 раз
         $refererParams = BaseController::parseReferer();
         if (isset($refererParams['friend'])) {
             RefModel::register(
@@ -1367,12 +1368,12 @@ class Game
             $user['result_ratings'] = $resultRatings[$user['common_id']];
 
             $numGamesPlayed = RatingHistoryModel::getNumGamesPlayed($user['common_id']);
-            if ($numGamesPlayed > 0 && $numGamesPlayed % 100 === 0) {
+            if ($numGamesPlayed > 0 && ($numGamesPlayed % 100 === 0)) {
                 // Начисляем бонус за каждые 100 игр
                 BalanceModel::changeBalance(
                     $user['common_id'],
                     MonetizationService::REWARD[AchievesModel::DAY_PERIOD],
-                    '100-game bonus',
+                    BalanceHistoryModel::BONUS_100_GAMES,
                     BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::MOTIVATION_TYPE]
                 );
             }

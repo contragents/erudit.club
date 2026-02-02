@@ -175,7 +175,7 @@ trait QueryTrait
     public function count(): int
     {
         try {
-            $tpmFields = $this->queryParts->fields; // Временное сохранение полей селекса
+            $tpmFields = $this->queryParts->fields; // Временное сохранение полей селекта
             $this->queryParts->fields = ['count(1)']; // делаем count
             $query = $this->getQuery(); // готовим запрос
             $this->queryParts->fields = $tpmFields; // возврат полей
