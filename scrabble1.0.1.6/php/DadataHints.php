@@ -425,7 +425,7 @@ class Hints
             LogModel::add(
                 [
                     LogModel::CATEGORY_FIELD => LogModel::CATEGORY_RECORD_ERROR,
-                    LogModel::MESSAGE_FIELD => $e->getMessage(),
+                    LogModel::MESSAGE_FIELD => $e->__toString(),
                 ]
             );
 

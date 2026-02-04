@@ -51,15 +51,6 @@ class RefModel extends BaseModel
      */
     public static function register($fromCommonId, $refCommonId, ?string $name = null): ?bool
     {
-        LogModel::add([
-                          LogModel::CATEGORY_FIELD => 'register_test',
-                          LogModel::MESSAGE_FIELD => [
-                              '$fromCommonId' => $fromCommonId,
-                              '$refCommonId' => $refCommonId,
-                              '$name' => $name
-                          ]
-                      ]);
-
         if (!ctype_digit((string)$fromCommonId) || !ctype_digit((string)$refCommonId)) {
             return null;
         }
@@ -74,11 +65,6 @@ class RefModel extends BaseModel
                              self::REF_COMMON_ID_FIELD => $refCommonId,
                              self::NAME_FIELD => $name,
                          ]);
-
-        LogModel::add([
-            LogModel::CATEGORY_FIELD => 'register_test',
-            LogModel::MESSAGE_FIELD => ['$ref' => $ref]
-                      ]);
 
         if ($ref->save() ?? false) {
             $activeUserRefs = self::find()
@@ -161,11 +147,6 @@ class RefModel extends BaseModel
             }
 
             if (!$patreonAchieveModel->save()) {
-                LogModel::add([
-                                  LogModel::CATEGORY_FIELD => LogModel::CATEGORY_REFERRAL_NOTIFY,
-                                  LogModel::MESSAGE_FIELD => $patreonAchieveModel->toArray(),
-                              ]);
-
                 return false;
             }
 

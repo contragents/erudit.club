@@ -2309,19 +2309,11 @@ class Game
                 $this->gameStatus['users'][$num]['inactiveTurn'] = 1000;
                 //Сделали невозможным значение терна инактив
 
-
                 $this->gameStatus['users'][$num]['common_id'] = PlayerModel::getPlayerID($user['ID'], true);
-                if (!($this->gameStatus['users'][$num]['rating'] = CommonIdRatingModel::getRating(
+                $this->gameStatus['users'][$num]['rating'] = CommonIdRatingModel::getRating(
                     $this->gameStatus['users'][$num]['common_id'],
                     self::$gameName
-                ))) {
-                    $userRating = CommonIdRatingModel::getRating(
-                        $this->gameStatus['users'][$num]['common_id'],
-                        self::$gameName
-                    );
-                    $this->gameStatus['users'][$num]['rating'] = $userRating ?: self::NEW_PLAYER;
-                }
-                //Прописали рейтинг и common_id игрока в статусе игры - только для games_statistic.php
+                );
             }
             try {
                 $this->addToLog(

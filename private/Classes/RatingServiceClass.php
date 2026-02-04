@@ -4,11 +4,12 @@ class RatingService
 {
     protected static array $playersUnchanged = [];
 
-    public static function processGameResult(array &$Game): array {
+    public static function processGameResult(array &$Game): array
+    {
         $players = self::getRanks($Game);
 
         // сохранили предыдущие рейтинги игроков в разбивке по common_id
-        foreach($players as $player) {
+        foreach ($players as $player) {
             self::$playersUnchanged[$player['common_id']] = [
                 'prev_rating' => $player['rating'],
                 'new_rating' => $player['rating'],
@@ -19,10 +20,9 @@ class RatingService
 
         self::changeRatings($players);
 
-        // todo сделать после отключения games_statistics - в статистике отключено
         self::saveGameStats($Game, $players);
 
-        if(!self::saveRatings($players, $Game['gameNumber'])) {
+        if (!self::saveRatings($players, $Game['gameNumber'])) {
             return self::$playersUnchanged; // todo отдать рейтинги без изменений
         } else {
             foreach ($players as $player) {
@@ -31,13 +31,10 @@ class RatingService
             }
         }
 
-        // todo запустить после отключения games_statistics - в статистике отключено
         self::saveGame($Game);
 
-        self::saveRatingsPlayersTable($players);
-
         $result = [];
-        foreach($players as $player) {
+        foreach ($players as $player) {
             $result[$player['common_id']] = [
                 'prev_rating' => $player['rating'],
                 'new_rating' => $player['rating'] + $player['deltaRating'],
@@ -47,54 +44,6 @@ class RatingService
         }
 
         return $result;
-    }
-
-    // todo CLUB-384 не использовать таблицу players для хранения рейтингов - поправить код во всех местах
-    protected static function saveRatingsPlayersTable(&$players)
-    {
-        return; // todo нахуя этот метод?
-        foreach ($players as $num => $player) {
-            BaseModel::updateWhere(
-                [PlayerModel::RATING_FIELD => $player['rating'] + $player['deltaRating'],],
-                [PlayerModel::COMMON_ID_FIELD, '=', $player['common_id'], true]
-            );
-        }
-
-        return;
-
-        foreach ($players as $num => $player) {
-            $UPDATE = "UPDATE erudit.players 
-                    SET
-                        rating=" . ($player['rating'] + $player['deltaRating']) . "
-                        , win_percent = round(
-                            (select sum(1) 
-                            from games_stats 
-                            where winner_player_id = players.id)*100/(games_played+1)
-                            )
-                        , games_played = games_played+1
-                        , inactive_percent = CASE 
-                        WHEN games_played = 0 
-                        THEN inactive_percent 
-                        ELSE ((games_played/100*inactive_percent" . ($player['isActive'] ? '' : '+1') . ")/(games_played+1)*100) 
-                        END
-                        , rating_changed_date = CURRENT_TIMESTAMP()
-                        WHERE 
-                cookie = '{$player['cookie']}'"
-                . ($player['userID']
-                    ? " OR user_id = {$player['userID']} "
-                    : ''
-                ) .
-                (
-                isset($player['common_id'])
-                    ? " OR common_id = {$player['common_id']} "
-                    : ''
-                );
-
-            DB::queryInsert($UPDATE);
-
-            deleteRatingsFromCache($player);
-            addDeltaRatingsToCache($player);
-        }
     }
 
     protected static function saveGame(&$Game)
@@ -109,71 +58,82 @@ class RatingService
 
     protected static function saveGameStats(&$Game, &$results)
     {
-        GameStatsModel::add($queryParams =
-            [
-                GameStatsModel::GAME_ID_FIELD => $Game['gameNumber'] + GameController::GAME_ID_BASE_INC,
-                GameStatsModel::PLAYERS_NUM_FIELD => count($results),
-                GameStatsModel::GAME_ENDED_AT_FIELD => $Game['turnBeginTime'],
-                GameStatsModel::WINNER_ID_FIELD => $results[0]['common_id'],
-                GameStatsModel::GAME_NAME_ID => BaseModel::GAME_IDS[Game::$gameName],
-            ]
-            + [
-                $Game[$results[0]['cookie']] + 1 . '_player_id' => $results[0]['common_id'],
-                $Game[$results[0]['cookie']] + 1 . '_player_rating_delta' => $results[0]['deltaRating'],
-                $Game[$results[0]['cookie']] + 1 . '_player_old_rating' => $results[0]['rating'],
-            ]
-            +
-            [
-                $Game[$results[1]['cookie']] + 1 . '_player_id' => $results[1]['common_id'],
-                $Game[$results[1]['cookie']] + 1 . '_player_rating_delta' => $results[1]['deltaRating'],
-                $Game[$results[1]['cookie']] + 1 . '_player_old_rating' => $results[1]['rating'],
-            ]
-            + (isset($results[2])
-                ? [
-                    $Game[$results[2]['cookie']] + 1 . '_player_id' => $results[2]['common_id'],
-                    $Game[$results[2]['cookie']] + 1 . '_player_rating_delta' => $results[2]['deltaRating'],
-                    $Game[$results[2]['cookie']] + 1 . '_player_old_rating' => $results[2]['rating'],
+        GameStatsModel::add(
+            $queryParams =
+                [
+                    GameStatsModel::GAME_ID_FIELD => $Game['gameNumber'] + GameController::GAME_ID_BASE_INC,
+                    GameStatsModel::PLAYERS_NUM_FIELD => count($results),
+                    GameStatsModel::GAME_ENDED_AT_FIELD => $Game['turnBeginTime'],
+                    GameStatsModel::WINNER_ID_FIELD => $results[0]['common_id'],
+                    GameStatsModel::GAME_NAME_ID => BaseModel::GAME_IDS[Game::$gameName],
                 ]
-                : [])
-            + (isset($results[3])
-                ? [
-                    $Game[$results[3]['cookie']] + 1 . '_player_id' => $results[3]['common_id'],
-                    $Game[$results[3]['cookie']] + 1 . '_player_rating_delta' => $results[3]['deltaRating'],
-                    $Game[$results[3]['cookie']] + 1 . '_player_old_rating' => $results[3]['rating'],
+                + [
+                    $Game[$results[0]['cookie']] + 1 . '_player_id' => $results[0]['common_id'],
+                    $Game[$results[0]['cookie']] + 1 . '_player_rating_delta' => $results[0]['deltaRating'],
+                    $Game[$results[0]['cookie']] + 1 . '_player_old_rating' => $results[0]['rating'],
                 ]
-                : [])
+                +
+                [
+                    $Game[$results[1]['cookie']] + 1 . '_player_id' => $results[1]['common_id'],
+                    $Game[$results[1]['cookie']] + 1 . '_player_rating_delta' => $results[1]['deltaRating'],
+                    $Game[$results[1]['cookie']] + 1 . '_player_old_rating' => $results[1]['rating'],
+                ]
+                + (isset($results[2])
+                    ? [
+                        $Game[$results[2]['cookie']] + 1 . '_player_id' => $results[2]['common_id'],
+                        $Game[$results[2]['cookie']] + 1 . '_player_rating_delta' => $results[2]['deltaRating'],
+                        $Game[$results[2]['cookie']] + 1 . '_player_old_rating' => $results[2]['rating'],
+                    ]
+                    : [])
+                + (isset($results[3])
+                    ? [
+                        $Game[$results[3]['cookie']] + 1 . '_player_id' => $results[3]['common_id'],
+                        $Game[$results[3]['cookie']] + 1 . '_player_rating_delta' => $results[3]['deltaRating'],
+                        $Game[$results[3]['cookie']] + 1 . '_player_old_rating' => $results[3]['rating'],
+                    ]
+                    : [])
         );
     }
 
     protected static function saveRatings(&$players, int $gameId): bool
     {
-        DB::transactionStart();
+        try {
+            DB::transactionStart();
 
-        foreach ($players as $player) {
+            foreach ($players as $player) {
+                if (!RatingHistoryModel::addRatingChange(
+                    $player['common_id'],
+                    $player['rating'],
+                    $player['rating'] + $player['deltaRating'],
+                    $player['is_winner'],
+                    $gameId,
+                    Game::$gameName
+                )) {
+                    DB::transactionRollback();
 
-            if (!RatingHistoryModel::addRatingChange(
-                $player['common_id'],
-                $player['rating'],
-                $player['rating'] + $player['deltaRating'],
-                $player['is_winner'],
-                $gameId,
-                Game::$gameName
-            )) {
-                DB::transactionRollback();
+                    return false;
+                }
 
-                return false;
+                if (!CommonIdRatingModel::changeUserRating(
+                    $player['common_id'],
+                    $player['rating'] + $player['deltaRating'],
+                    Game::$gameName
+                )) {
+
+                    DB::transactionRollback();
+
+                    return false;
+                }
             }
 
-            if (!CommonIdRatingModel::changeUserRating($player['common_id'], $player['rating'] + $player['deltaRating'], Game::$gameName)) {
-                DB::transactionRollback();
+            DB::transactionCommit();
 
-                return false;
-            }
+            return true;
+        } catch (Throwable $e) {
+            DB::transactionRollback();
+
+            return false;
         }
-
-        DB::transactionCommit();
-
-        return true;
     }
 
     protected static function changeRatings(&$players)
@@ -197,7 +157,7 @@ class RatingService
         }
     }
 
-    protected static function getRanks(&$Game)
+    protected static function getRanks(&$Game): array
     {
         $winner = [];
         $winner['cookie'] = $Game['results']['winner'];
@@ -205,18 +165,9 @@ class RatingService
         $winner['isActive'] = true;
         $winner['is_winner'] = true;
 
-        // todo userID remove
-        $winner['userID'] = isset($Game['users'][$Game[$winner['cookie']]]['userID'])
-            ? Game::hash_str_2_int($Game['users'][$Game[$winner['cookie']]]['userID'])
-            : false;
-
         $winner['common_id'] = $Game['users'][$Game[$winner['cookie']]]['common_id'] ?? false;
-        // рейтинг берем из БД, потом из игры, т.к. он мог поменяться в процессе
-        $winner['rating'] = CommonIdRatingModel::getRating($winner['common_id'], Game::$gameName)
-            ?: (
-                ((int)$Game['users'][$Game[$winner['cookie']]]['rating'] ?? 0)
-                ?: CommonIdRatingModel::INITIAL_RATING
-            );
+        // рейтинг берем из БД, т.к. он мог поменяться в процессе игры
+        $winner['rating'] = CommonIdRatingModel::getRating($winner['common_id'], Game::$gameName);
 
         $lostPlayers = [];
 
@@ -225,25 +176,18 @@ class RatingService
             $lostPlayers[$num]['score'] = $Game['users'][$Game[$cookie]]['score'];
             $lostPlayers[$num]['isActive'] = isset($Game['users'][$Game[$cookie]]['lastActiveTime']);
 
-            // todo userID remove
-            $lostPlayers[$num]['userID'] = isset($Game['users'][$Game[$cookie]]['userID'])
-                ? Game::hash_str_2_int($Game['users'][$Game[$cookie]]['userID'])
-                : false;
-
             $lostPlayers[$num]['common_id'] = $Game['users'][$Game[$cookie]]['common_id'] ?? false;
-            $lostPlayers[$num]['rating'] = CommonIdRatingModel::getRating($lostPlayers[$num]['common_id'], Game::$gameName)
-                ?: (
-                    ((int)$Game['users'][$Game[$cookie]]['rating'] ?? 0)
-                    ?: CommonIdRatingModel::INITIAL_RATING
-                );
+            $lostPlayers[$num]['rating'] = CommonIdRatingModel::getRating(
+                $lostPlayers[$num]['common_id'],
+                Game::$gameName
+            );
 
             $lostPlayers[$num]['is_winner'] = false;
         }
 
         usort($lostPlayers, ['self', 'arComp']);
-        $resultsArray = array_merge([$winner], $lostPlayers);
 
-        return $resultsArray;
+        return array_merge([$winner], $lostPlayers);
     }
 
     protected static function arComp($a, $b)
@@ -273,16 +217,16 @@ class RatingService
             'game_number' => $Game['gameNumber']
         ];
 
-        Cache::setex(PlayerModel::DELTA_RATING_KEY_PREFIX . $player['common_id'], PlayerModel::RATING_CACHE_TTL, $deltaArr);
+        Cache::setex(
+            PlayerModel::DELTA_RATING_KEY_PREFIX . $player['common_id'],
+            PlayerModel::RATING_CACHE_TTL,
+            $deltaArr
+        );
     }
 
     protected static function deleteRatingsFromCache($player)
     {
         Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['cookie']);
         Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['common_id']);
-
-        if (isset($player['userID']) && $player['userID'] > 0) {
-            Cache::del(PlayerModel::RATING_CACHE_PREFIX . $player['cookie'] . $player['userID']);
-        }
     }
 }

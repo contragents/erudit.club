@@ -131,8 +131,6 @@ class BalanceModel extends BaseModel
             return false;
         }
 
-        //return true;
-
         // 2. Завести запись в историю транзакций о списании/начислении. значения брать из balance.sudoku
         if(!BalanceHistoryModel::addTransaction($commonId, $deltaBalance, $description, $typeId, $ref)) {
             DB::transactionRollback();

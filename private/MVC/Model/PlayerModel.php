@@ -128,7 +128,7 @@ class PlayerModel extends BaseModel
     {
         return DB::queryValue(
             ORM::select(['name'], self::PLAYER_NAMES_TABLE_NAME)
-            . ORM::where('some_id', '=', \Game::hash_str_2_int($someId), true)
+            . ORM::where('some_id', '=', Game::hash_str_2_int($someId), true)
             . ORM::limit(1)
         );
     }
@@ -184,65 +184,13 @@ class PlayerModel extends BaseModel
 
     public static function getRatingByCookie(string $cookie): int
     {
-        $player = self::getOneCustom(self::COOKIE_FIELD, $cookie);
+        $player = self::find()->where([self::COOKIE_FIELD => $cookie])->one();
+
         if (empty($player)) {
-            return 0;
+            return CommonIdRatingModel::INITIAL_RATING;
         }
 
-        return CommonIdRatingModel::getRating($player[self::COMMON_ID_FIELD], \Game::$gameName)
-            ?: ($player[self::RATING_FIELD] ?? CommonIdRatingModel::INITIAL_RATING);
-    }
-
-    public static function getRating($commonID = false, $cookie = false, $userID = false)
-    {
-        // todo переделать на ОРМ
-        $ratingQuery = self::getRatingBaseQuery()
-            . ($commonID
-                ? (' OR ( true'
-                    . ORM::andWhere(
-                        'user_id',
-                        'in',
-                        '('
-                        . ORM::select(['user_id'], self::TABLE_NAME)
-                        . ORM::where('common_id', '=', $commonID, true)
-                        . ORM::andWhere('user_id', '!=', new ORM('15284527576400310462'), true)
-                        . ')',
-                        true
-                    )
-                    . ')')
-                : '')
-            . ($cookie
-                ? " OR cookie = '$cookie' "
-                : '')
-            . ($userID
-                ? " OR user_id = $userID "
-                : '')
-            . ORM::groupBy(['gruping'])
-            . ORM::limit(1);
-
-        return DB::queryArray($ratingQuery);
-    }
-
-    private static function getRatingBaseQuery(): string
-    {
-        return
-            ORM::select(
-                [
-                    'max(cookie) as cookie',
-                    'max(rating) as rating',
-                    'max(games_played) as games_played',
-                    'case when max(win_percent) is null then 0 else max(win_percent) END as win_percent',
-                    'avg(inactive_percent) as inactive_percent',
-                    'case when max(rating) >= 1700 then('
-                    . ORM::select(
-                        ['case when sum(num) IS null THEN 1 else sum(num) + 1 END'],
-                        '(select 1 as num from players where rating > ps . rating group by user_id, rating) dd'
-                    )
-                    . ') else \'Не в ТОПе\' END as top'
-                ],
-                self::TABLE_NAME . ' ps'
-            )
-            . ORM::where('false', '', '', true);
+        return CommonIdRatingModel::getRating($player->_common_id, Game::$gameName);
     }
 
     public static function getTopPlayersCached(int $top, ?int $topMax = null): array
@@ -303,7 +251,7 @@ class PlayerModel extends BaseModel
             $res = DB::queryValue(
                 "SELECT name FROM player_names 
             WHERE
-            some_id=" . \Game::hash_str_2_int($idSource)
+            some_id=" . Game::hash_str_2_int($idSource)
                 . " LIMIT 1"
             )
         ) {
@@ -428,7 +376,7 @@ class PlayerModel extends BaseModel
         foreach ($idArray as $value) {
             Cache::setex(
                 'erudit.rating_cache_' . $value,
-                round((\Game::$configStatic['cacheTimeout'] ?? 3000) / 15),
+                round((Game::$configStatic['cacheTimeout'] ?? 3000) / 15),
                 $ratingInfo
             );
         }
@@ -437,20 +385,6 @@ class PlayerModel extends BaseModel
     private static function cacheDeltaRating(string $commonId, array $deltaArr)
     {
         Cache::setex(self::DELTA_RATING_KEY_PREFIX . $commonId, self::RATING_CACHE_TTL, $deltaArr);
-    }
-
-    /**
-     * Получает какойто массив изменений рейтинга их кеша или false
-     * @param $commonId
-     * @return array|false
-     */
-    public static function getDeltaRating($commonId)
-    {
-        if ($delta = Cache::get(PlayerModel::DELTA_RATING_KEY_PREFIX . $commonId)) {
-            return $delta;
-        }
-
-        return false;
     }
 
     public

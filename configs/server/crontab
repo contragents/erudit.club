@@ -24,7 +24,7 @@ MAILTO=root
 */5 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/newBotsGenV3ENG.php > /dev/null 2>&1
 
 
-*/20 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/games_statistics.php oracle > /dev/null 2>&1
+#*/20 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/games_statistics.php oracle > /dev/null 2>&1
 0 * * * * root php -f /var/www/erudit.club/yandex1.0.1.1/php/bots/topChecker.php > /dev/null 2>&1
 
 50 4 * * * root php /var/www/erudit.club/yandex1.0.1.1/php/bots/redisDailyCleaner.php > /dev/null 2>&1

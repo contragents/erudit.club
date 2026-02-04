@@ -33,12 +33,11 @@ class CommonIdRatingModel extends BaseModel
 
     public static function changeUserRating(int $commonId, int $newRating, string $gameName): bool
     {
-        $ratingModel = CommonIdRatingModel::getOneO($commonId) ?? new CommonIdRatingModel(
-            [
-                CommonIdRatingModel::COMMON_ID_FIELD => $commonId,
-                CommonIdRatingModel::RATING_FIELD_PREFIX . $gameName => 0
-            ]
-        );
+        $ratingModel = CommonIdRatingModel::getOneO($commonId)
+            ?? CommonIdRatingModel::new([
+                                            CommonIdRatingModel::COMMON_ID_FIELD => $commonId,
+                                            CommonIdRatingModel::RATING_FIELD_PREFIX . $gameName => 0
+                                        ]);
 
         $ratingAttr = '_rating_' . $gameName;
         if ($ratingModel->$ratingAttr === $newRating) {
@@ -52,10 +51,9 @@ class CommonIdRatingModel extends BaseModel
 
     public static function getRating(int $commonId, string $gameName): int
     {
-        return (int)DB::queryValue(
-            ORM::select([self::RATING_FIELD_PREFIX . $gameName], self::TABLE_NAME)
-            . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)
-        );
+        $ratingAttr = '_rating_' . $gameName;
+
+        return self::getOneO($commonId)->$ratingAttr ?? self::INITIAL_RATING;
     }
 
     public static function getTopByRating(int $rating, string $gameName): int

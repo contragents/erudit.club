@@ -148,13 +148,6 @@ class PayController extends BaseController
     {
         $error = false;
 
-        LogModel::add(
-            [
-                LogModel::CATEGORY_FIELD => LogModel::CATEGORY_PAYMENT_NOTIFY,
-                LogModel::MESSAGE_FIELD => self::$Request,
-            ]
-        );
-
         if ($transactionId = (int)(self::$Request['label'] ?? false)) {
             $transaction = PaymentModel::getOneO($transactionId);
             if ($transaction) {

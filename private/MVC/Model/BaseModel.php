@@ -162,10 +162,9 @@ class BaseModel implements Iterator
             $debugArr[$property] = ['value' => $value, 'type' => $valueType];
             if (self::isFieldName($property) && !in_array($valueType, self::SKIP_ATTR_TYPES)) {
                 $methodName = "from_$valueType";
-                //if (is_callable([$this, $methodName])) {
+
                 if (method_exists($this, $methodName)) {
                     try {
-                        // $value = call_user_func([$this, "from_$valueType"], $value);
                         $value = $this->$methodName($value);
                         $debugArr[$property]['called_func'] = $methodName;
                         $debugArr[$property]['new_value'] = $value;
@@ -181,16 +180,7 @@ class BaseModel implements Iterator
                 $fieldsVals[self::fieldName($property)] = $value;
             }
         }
-        LogModel::add(
-            [
-                LogModel::CATEGORY_FIELD => 'register_test',
-                LogModel::MESSAGE_FIELD => [
-                    '$debugArr' => $debugArr,
-                    '$fieldsVals' => $fieldsVals,
-                    '$properties' => $properties
-                ],
-            ]
-        );
+
         if (($this->_id ?? false) && static::exists($this->_id)) {
             unset($fieldsVals['id']);
             return self::update($this->_id, $fieldsVals);
@@ -828,8 +818,6 @@ class BaseModel implements Iterator
     public static function getOne(int $id): array
     {
         $query = "SELECT * FROM " . static::TABLE_NAME . " WHERE id = $id LIMIT 1";
-        // todo CLUB-471
-        LogModel::add([LogModel::CATEGORY_FIELD => '__callStatic_test', LogModel::MESSAGE_FIELD => $query]);
 
         return DB::queryArray($query)[0] ?? [];
     }
@@ -892,13 +880,6 @@ class BaseModel implements Iterator
     // 2. Обработка вызова $obj->exists()
     public function __call($name, $arguments)
     {
-        // todo CLUB-471
-        LogModel::add(
-            [
-                LogModel::CATEGORY_FIELD => '__callDinamic_test',
-                LogModel::MESSAGE_FIELD => ['$name' => $name, '$arguments' => $arguments]
-            ]
-        );
         switch ($name) {
             case 'exists':
                 return count($arguments) === 0
@@ -909,18 +890,10 @@ class BaseModel implements Iterator
         }
     }
 
-    // 3. Обработка вызова Class::exists()
     public static function __callStatic($name, $arguments)
     {
-        // todo CLUB-471
-        LogModel::add(
-            [
-                LogModel::CATEGORY_FIELD => '__callStatic_test',
-                LogModel::MESSAGE_FIELD => ['$name' => $name, '$arguments' => $arguments]
-            ]
-        );
         switch ($name) {
-            case 'exists':
+            case 'exists': // 3. Обработка вызова Class::exists()
                 if ($id = $arguments[0] ?? null) {
                     return !empty(static::getOne($id));
                 } else {
@@ -1076,7 +1049,7 @@ class BaseModel implements Iterator
                 }
             }
         } catch (Throwable $e) {
-            Cache::setex('test.__get', 600, $e->__toString());
+            return null;
         }
 
         return null;
