@@ -57,7 +57,7 @@ class PlayerModel extends BaseModel
         if ($commonId = self::getCommonID($cookie)) {
             self::$cache[$cookie]['common_id'] = $commonId;
 
-            return (int)$commonId;
+            return $commonId;
         }
 
         // Пробуем найти связанный common_id у другого плеера по user_id

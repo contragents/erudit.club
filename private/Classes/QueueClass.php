@@ -632,6 +632,7 @@ class Queue
             }
 
             if ($bid) {
+                BaseModel::$isDebug = true;
                 DB::transactionStart(); // транзакция поверх транзакций баланса
             }
 
@@ -687,6 +688,8 @@ class Queue
                 DB::transactionCommit();
                 $this->caller->addToLog(T::S('Coins written off the balance sheet') . ": $bid");
             }
+
+            BaseModel::$isDebug = false;
 
             // Сохраняем список игроков в игре
             Cache::setex(

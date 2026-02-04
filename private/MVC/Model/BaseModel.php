@@ -55,6 +55,10 @@ class BaseModel implements Iterator
         Game::SUDOKU => 3,
         Game::GOMOKU => 4,
     ];
+    /**
+     * @var BaseModel|BaseModel[]|mixed|object|string|null
+     */
+    public static bool $isDebug = false; // Признак записи логов методов add/save/setParam (вс что связано с записью)
 
 
     public ?int $_id = null;
@@ -483,12 +487,17 @@ class BaseModel implements Iterator
             if (DB::queryInsert($query)) {
                 return DB::insertID() ?: true;
             } else {
-                LogModel::logQuery($query);
+                if(self::$isDebug && static::TABLE_NAME !== LogModel::TABLE_NAME) {
+                    LogModel::logQuery($query);
+                }
 
                 return false;
             }
         } catch (Throwable $e) {
-            LogModel::logQuery($query ?? '', $e);
+            if(static::TABLE_NAME !== LogModel::TABLE_NAME) {
+                LogModel::logQuery($query ?? '', $e);
+            }
+
 
             return false;
         }
@@ -517,6 +526,10 @@ class BaseModel implements Iterator
         if (DB::queryInsert($updateQuery)) {
             return true;
         } else {
+            if(self::$isDebug && static::TABLE_NAME !== LogModel::TABLE_NAME) {
+                LogModel::logQuery($updateQuery);
+            }
+
             return false;
         }
     }
@@ -587,7 +600,9 @@ class BaseModel implements Iterator
         if (DB::queryInsert($updateQuery)) {
             return true;
         } else {
-            LogModel::logQuery($updateQuery);
+            if(self::$isDebug && static::TABLE_NAME !== LogModel::TABLE_NAME) {
+                LogModel::logQuery($updateQuery);
+            }
 
             return false;
         }
@@ -894,7 +909,8 @@ class BaseModel implements Iterator
     {
         switch ($name) {
             case 'exists': // 3. Обработка вызова Class::exists()
-                if ($id = $arguments[0] ?? null) {
+                $id = $arguments[0] ?? null;
+                if ($id || $id === 0) { // ID иногда равен 0 (SYSTEM_ID)
                     return !empty(static::getOne($id));
                 } else {
                     return null;

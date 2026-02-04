@@ -145,6 +145,8 @@ class BalanceModel extends BaseModel
 
     public static function getBalance(int $commonId): int
     {
+        return self::getOneO($commonId)->_sudoku ?? 0;
+
         return (int)DB::queryValue(
             ORM::select([self::SUDOKU_BALANCE_FIELD], self::TABLE_NAME)
             . ORM::where(self::COMMON_ID_FIELD, '=', $commonId, true)

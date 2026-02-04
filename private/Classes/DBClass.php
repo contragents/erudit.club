@@ -16,6 +16,11 @@ class DB
         self::connect();
     }
 
+    public static function isTransactionStarted(): bool
+    {
+        return self::$is_transaction_started;
+    }
+
     private static function transactionLog(string $method) {
         $logKey = 'transaction_log';
 

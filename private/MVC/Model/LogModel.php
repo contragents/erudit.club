@@ -51,12 +51,17 @@ class LogModel extends BaseModel
         );
     }
 
-    public static function logQuery(string $query, ?Throwable $e = null): bool
+    public static function logQuery(string $query, ?Throwable $e = null)
     {
-        return self::add([
-                             LogModel::CATEGORY_FIELD => LogModel::CATEGORY_QUERY_ERROR,
-                             LogModel::MESSAGE_FIELD => $query . ($e ? ("\n" . $e->__toString()) : ''),
-                         ]);
+        if (!DB::isTransactionStarted()) {
+            self::add([
+                          LogModel::CATEGORY_FIELD => LogModel::CATEGORY_QUERY_ERROR,
+                          LogModel::MESSAGE_FIELD => $query . ($e ? ("\n" . $e->__toString()) : ''),
+                      ]);
+        } else {
+            // Если транзакция начата, мы записываем лог в Cache
+            Cache::setex(self::CATEGORY_QUERY_ERROR . '|' . $query, 60 * 10, [$query, $e->__toString()]);
+        }
     }
 
 }

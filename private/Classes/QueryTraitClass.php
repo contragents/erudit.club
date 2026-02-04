@@ -184,7 +184,9 @@ trait QueryTrait
         } catch (Throwable $e) {
             $this->queryParts->fields = $tpmFields; // возврат полей
 
-            LogModel::logQuery($query, $e);
+            if(!($this instanceof LogModel)) {
+                LogModel::logQuery($query ?? '', $e);
+            }
 
             return 0;
         }
