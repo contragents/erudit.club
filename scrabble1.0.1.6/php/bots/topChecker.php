@@ -16,13 +16,6 @@ class TopChecker
      */
     public static function Run()
     {
-        print_r(
-            [
-                '::' => PlayerModel::exists(192033) ? 'true' : 'false',
-                '->' => PlayerModel::find()->where([PlayerModel::COMMON_ID_FIELD => 192033])->exists() ? 'true' : 'false'
-            ]
-        );
-        exit;
         try {
             foreach ([Game::ERUDIT, Game::SCRABBLE, BaseModel::ALL_GAMES] as $gameName) {
                 T::setLangGame(T::GAME_MODE_LANG[$gameName], $gameName);
