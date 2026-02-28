@@ -1373,7 +1373,8 @@ class Game
                     $user['common_id'],
                     MonetizationService::REWARD[AchievesModel::DAY_PERIOD],
                     BalanceHistoryModel::BONUS_100_GAMES,
-                    BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::MOTIVATION_TYPE]
+                    BalanceHistoryModel::TYPE_IDS[BalanceHistoryModel::MOTIVATION_TYPE],
+                    $numGamesPlayed // Ставим ref = числу сыгранных игр для избежания повторного начисления
                 );
             }
         }
