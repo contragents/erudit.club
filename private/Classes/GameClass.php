@@ -237,7 +237,6 @@ class Game
     {
         if ($this->currentGame) {
             if (isset($this->gameStatus['results']['winner']) && !isset($this->gameStatus['isGameEndedSaved'])) {
-                Cache::rpush(static::GAMES_ENDED_KEY, $this->gameStatus);
                 //Сохраняем результаты игры в список завершенных
                 $this->gameStatus['isGameEndedSaved'] = true;
             }
