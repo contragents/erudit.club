@@ -197,6 +197,8 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
                 $achieve['record_type_text'] = T::S('patreon_level_' . $achieve[AchievesModel::EVENT_PERIOD_FIELD]);
                 $achieve['event_type_text'] = T::S($achieve[AchievesModel::EVENT_TYPE_FIELD]);
                 $achieve['points_text'] = '';
+                $achieve[AchievesModel::REWARD_FIELD] = MonetizationService::PATREON_INCOME[$achieve[AchievesModel::EVENT_PERIOD_FIELD]]
+                    . '<br>' . T::S('per day');
                 // Переназначим период - все патроны - фиолетовые
                 $achieve[AchievesModel::EVENT_PERIOD_FIELD] = AchievesModel::PURPLE_CARD;
             } else {
@@ -207,11 +209,13 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
                     : ($achieve['word'] . ' - ' . $achieve[AchievesModel::EVENT_VALUE_FIELD]);
             }
 
-            $achieve[AchievesModel::REWARD_FIELD] = self::trimRightZeros(
-                $achieve[AchievesModel::REWARD_FIELD] ??
-                MonetizationService::REWARD[$achieve[AchievesModel::EVENT_PERIOD_FIELD]],
-                2
-            );
+            if($achieve['event_type'] !== AchievesModel::PATREON_TYPE) {
+                $achieve[AchievesModel::REWARD_FIELD] = self::trimRightZeros(
+                    $achieve[AchievesModel::REWARD_FIELD] ??
+                    MonetizationService::REWARD[$achieve[AchievesModel::EVENT_PERIOD_FIELD]],
+                    2
+                );
+            }
             $achieve[AchievesModel::INCOME_FIELD] = self::trimRightZeros(
                 $achieve[AchievesModel::INCOME_FIELD] ??
                 MonetizationService::INCOME[$achieve[AchievesModel::EVENT_PERIOD_FIELD]],

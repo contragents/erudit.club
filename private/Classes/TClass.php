@@ -123,6 +123,7 @@ class T
     }
 
     const PHRASES = [
+        'per day' => [self::RU_LANG => 'в день'],
         'Newest 10 referrals are shown' => [self::RU_LANG => 'Показаны только 10 последних рефералов'],
         'Total referrals count: [[value]]' => [self::RU_LANG => 'Всего ваших активных рефералов: [[value]]'],
         'Invite link for the Game' =>
