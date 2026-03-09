@@ -6,6 +6,7 @@ class BaseController
     public static $Request;
     public $Action;
 
+    const DEFAULT_ACTION = null;
     const COMMON_URL = 'game/';
 
     const MAIN_PARAM = 'id';
@@ -91,13 +92,15 @@ class BaseController
      * @param string $viewName = 'Index'
      * @return string
      */
-    protected function render($viewName = 'Index'): string
+    protected function render($viewName = 'Index', ?AbstractViewContent $content = null): string
     {
-        $res = self::include(static::VIEW_PATH . $viewName . 'View.php');
-        return nl2br($res);
+        $res = self::include(static::VIEW_PATH . $viewName . 'View.php', $content);
+        //return nl2br($res);
+
+        return $res;
     }
 
-    private function include($filename)
+    private function include($filename, ?AbstractViewContent $content = null): string
     {
         if (is_file($filename)) {
             ob_start();

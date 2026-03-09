@@ -17,9 +17,21 @@ if (count($pathParts) > 2) {
     if ($module == DEFAULT_MODULE) {
         $controller = ucfirst($pathParts[2]) . 'Controller';
         $action = $pathParts[3] ?? DEFAULT_ACTION;
+        /*
+         * $action = ($controller::DEFAULT_ACTION ?? $pathParts[3]) ?? DEFAULT_ACTION;
+        if($controller::DEFAULT_ACTION) {
+            $mainParam = $pathParts[3]; // Сохраняем title статьи для поиска в контроллере
+        }
+         */
     } else {
         $controller = ucfirst($pathParts[1]) . 'Controller';
         $action = $pathParts[2] ?? DEFAULT_ACTION;
+    }
+
+    // Для Блога переназначаем action = DEFAULT, $mainParam - title статьи
+    if($controller === 'BlogController') {
+        $action = $controller::DEFAULT_ACTION;
+        $mainParam = $pathParts[2] ?? null; // Сохраняем title статьи для поиска в контроллере
     }
 
     if (is_numeric($action)) {
