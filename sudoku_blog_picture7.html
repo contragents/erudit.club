@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Elite - 16:9 Video Edition</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #00ff88;
+            --bg: #05050a;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: #fff;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* НАВИГАЦИЯ */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        /* Логотип-монета из вложения */
+        .logo img { width: 45px; height: 45px; border-radius: 50%; box-shadow: 0 0 15px var(--accent); }
+        .logo span { font-family: 'Orbitron', sans-serif; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
+
+        .nav-links a { color: #fff; text-decoration: none; margin-left: 25px; font-weight: bold; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent); text-shadow: 0 0 8px var(--accent); }
+
+        /* ВИДЕО-БАННЕР 16:9 */
+        .hero {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .video-banner {
+            display: block;
+            position: relative;
+            width: 100%;
+            /* Фиксируем пропорции 16 к 9 */
+            aspect-ratio: 16 / 9; 
+            border-radius: 25px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+            text-decoration: none;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .video-banner:hover { 
+            transform: scale(1.02); 
+            border-color: var(--accent);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+        }
+
+        .video-banner video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+            transition: filter 0.4s;
+        }
+
+        .video-banner:hover video { filter: brightness(0.9); }
+
+        .banner-info {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: clamp(20px, 5%, 60px);
+            background: linear-gradient(to top, rgba(5, 5, 10, 0.95), transparent 60%);
+        }
+
+        .btn-play {
+            background: var(--accent);
+            color: #000;
+            padding: 12px 35px;
+            border-radius: 50px;
+            display: inline-block;
+            width: fit-content;
+            font-weight: 900;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px var(--accent);
+            margin-bottom: 15px;
+            font-size: clamp(0.8rem, 2vw, 1.1rem);
+        }
+
+        .banner-title {
+            font-size: clamp(1.2rem, 4vw, 2.5rem);
+            margin: 0;
+            font-weight: 900;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* КАРТОЧКИ СТАТЕЙ */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--glass);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover { transform: translateY(-10px); border-color: var(--accent); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-content { padding: 25px; }
+        .card-content h3 { color: var(--accent); margin: 0 0 10px; font-size: 1.4rem; }
+
+        /* ПАГИНАЦИЯ */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 60px 0;
+        }
+
+        .page {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .page.active, .page:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        /* МОДАЛЬНОЕ ОКНО */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-body {
+            background: #0a0a1a;
+            padding: 40px;
+            border-radius: 25px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--accent);
+            position: relative;
+        }
+
+        .close { position: absolute; top: 20px; right: 20px; cursor: pointer; color: var(--accent); font-size: 28px; }
+
+        footer { text-align: center; padding: 60px; opacity: 0.3; border-top: 1px solid rgba(255,255,255,0.05); }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo">
+            <!-- ЛОГОТИП: Замените src на название вашего файла с монетой -->
+            <img src="Иконка СУДОКУ_new.png" alt="Sudoku Logo">
+            <span>SUDOKU PRO</span>
+        </a>
+        <div class="nav-links">
+            <a href="javascript:void(0)" onclick="openModal()">ПРАВИЛА ИГРЫ</a>
+            <a href="#blog">СТАТЬИ</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <!-- БАННЕР 16:9 С ВИДЕО -->
+        <a href="#" class="video-banner">
+            <video autoplay loop muted playsinline>
+                <source src="Судоку_горизонт.mp4" type="video/mp4">
+            </video>
+            <div class="banner-info">
+                <div class="btn-play">Играть сейчас →</div>
+                <h2 class="banner-title">Мастерство Судоку</h2>
+                <p style="opacity: 0.8; margin: 5px 0 0;">Решайте сложнейшие головоломки в новом формате</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="grid" id="blog">
+        <article class="card">
+            <img src="https://images.unsplash.com" alt="Print">
+            <div class="card-content">
+                <h3>Судоку на бумаге</h3>
+                <p>Почему классический метод печати на A4 до сих пор популярен среди профи.</p>
+            </div>
+        </article>
+        <article class="card">
+            <img src="https://images.unsplash.com" alt="Brain">
+            <div class="card-content">
+                <h3>IQ и Головоломки</h3>
+                <p>Исследование: как 10 минут судоку в день влияют на когнитивные способности.</p>
+            </div>
+        </article>
+        <article class="card">
+            <img src="https://images.unsplash.com" alt="Apps">
+            <div class="card-content">
+                <h3>Топ приложений 2026</h3>
+                <p>Лучшие мобильные версии судоку для Android и iOS в этом сезоне.</p>
+            </div>
+        </article>
+    </div>
+
+    <!-- ПАГИНАЦИЯ -->
+    <div class="pagination">
+        <a href="#" class="page active">1</a>
+        <a href="#" class="page">2</a>
+        <a href="#" class="page">3</a>
+        <span style="color: var(--accent); align-self: center; margin: 0 5px;">...</span>
+        <a href="#" class="page">12</a>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ПРАВИЛ -->
+    <div id="rulesModal" class="modal">
+        <div class="modal-body">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 style="color: var(--accent); margin-top: 0; font-family: 'Orbitron';">ПРАВИЛА ИГРЫ</h2>
+            <p>1. Заполните сетку цифрами от 1 до 9.</p>
+            <p>2. Цифры не должны повторяться в одной строке.</p>
+            <p>3. Цифры не должны повторяться в одном столбце.</p>
+            <p>4. В каждом блоке 3х3 должны быть все уникальные цифры.</p>
+            <button onclick="closeModal()" style="background: var(--accent); border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold; margin-top:10px; width:100%;">ПОНЯТНО</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Sudoku Blog Universe. Заряжено на логику.</p>
+    </footer>
+
+    <script>
+        function openModal() { document.getElementById('rulesModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('rulesModal').style.display = 'none'; }
+        
+        window.onclick = function(e) {
+            if (e.target == document.getElementById('rulesModal')) closeModal();
+        }
+    </script>
+</body>
+</html>

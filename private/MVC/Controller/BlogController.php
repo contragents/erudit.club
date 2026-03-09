@@ -6,6 +6,7 @@ class BlogController extends BaseController
 {
     const DEFAULT_ACTION = 'article';
     const MAIN_PARAM = 'title';
+
     public function Run()
     {
         return parent::Run();
@@ -13,12 +14,15 @@ class BlogController extends BaseController
 
     public function articleAction(): string
     {
-        //print self::$Request[self::MAIN_PARAM]; exit;
-        $model = ArticleModel::find()->where([ArticleModel::TITLE_FIELD => urldecode(self::$Request[self::MAIN_PARAM])])
-            //->getQuery();
+        $model = ArticleModel::find()
+            ->where([ArticleModel::TITLE_FIELD => urldecode(self::$Request[self::MAIN_PARAM])])
             ->one();
 
-        //print_r($model); //exit;
+        $featuredArticles = ArticleModel::find()
+            ->where([['field_name' => ArticleModel::ID_FIELD, 'condition' => '!=', 'value' => $model->_id ?? 0, 'raw' => true]])
+            ->order('rand()')
+            ->limit(3)
+            ->all();
 
         /*todo заменить заголовок на...
          * <div class="article-header">
@@ -28,6 +32,7 @@ class BlogController extends BaseController
 
         $content = new BlogContent();
         $content->model = $model;
+        $content->featuredArticles = $featuredArticles;
 
         return self::render('Blog', $content);
     }

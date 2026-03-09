@@ -1,5 +1,6 @@
 <?php
 /** @var BlogContent $content */
+
 ?>
 
 <!DOCTYPE html>
@@ -8,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $content->model->_title ?></title>
-    <meta name="description" content="<?= $content->model->_desc ?>" />
+    <meta name="description" content="<?= $content->model->_desc ?>"/>
     <style>
         :root {
             --bg-color: #0b132b;
@@ -17,6 +18,9 @@
             --neon-cyan: #5bc0be;
             --neon-yellow: #f9d423;
             --text-color: #ffffff;
+            --accent: #00ff88;
+            --bg: #05050a;
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
         body {
@@ -135,28 +139,279 @@
             background: rgba(91, 192, 190, 0.1);
             box-shadow: 0 0 10px var(--neon-cyan);
         }
+
+        /* Сетка блога */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* Карточка статьи */
+        .post-card {
+            background: var(--card-bg);
+            border: 1px solid var(--accent-blue);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(91, 192, 190, 0.3);
+            border-color: var(--neon-cyan);
+        }
+
+        .post-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(45deg, #1c2541, #3a506b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .post-content {
+            padding: 20px;
+            flex-grow: 1;
+
+            position: relative; /* Обязательно для позиционирования потомка */
+            padding-bottom: 40px; /* Размер, превышающий высоту ссылки */
+        }
+
+        .post-tag {
+            color: var(--neon-yellow);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .post-title {
+            font-size: 1.4rem;
+            margin: 0 0 15px 0;
+            color: #fff;
+        }
+
+        .post-excerpt {
+            font-size: 0.9rem;
+            color: #bdc3c7;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .read-more {
+            display: inline-block;
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            text-align: center;
+
+            position: absolute;
+            bottom: 10px; /* Прижимает к нижней границе */
+        }
+
+        .read-more:hover {
+            background: var(--neon-cyan);
+            color: var(--bg-color);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .video-container {
+            font-family: 'Inter', sans-serif;
+            /*background: var(--bg);
+            color: #fff;
+            margin: 0;
+            overflow-x: hidden;*/
+        }
+
+        /* ВИДЕО-БАННЕР 16:9 */
+        .hero {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .video-banner {
+            display: block;
+            position: relative;
+            width: 100%;
+            /* Фиксируем пропорции 16 к 9 */
+            aspect-ratio: 16 / 9;
+            border-radius: 25px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            text-decoration: none;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .video-banner:hover {
+            transform: scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+        }
+
+        .video-banner video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+            transition: filter 0.4s;
+        }
+
+        .video-banner:hover video {
+            filter: brightness(0.9);
+        }
+
+        .banner-info {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: clamp(20px, 5%, 60px);
+            background: linear-gradient(to top, rgba(5, 5, 10, 0.95), transparent 60%);
+        }
+
+        .btn-play {
+            background: var(--accent);
+            color: #000;
+            padding: 12px 35px;
+            border-radius: 50px;
+            display: inline-block;
+            width: fit-content;
+            font-weight: 900;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px var(--accent);
+            margin-bottom: 15px;
+            font-size: clamp(0.8rem, 2vw, 1.1rem);
+        }
+
+        .banner-title {
+            font-size: clamp(1.2rem, 4vw, 2.5rem);
+            margin: 0;
+            font-weight: 900;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* МОДАЛЬНОЕ ОКНО */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-body {
+            background: #0a0a1a;
+            padding: 40px;
+            border-radius: 25px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--accent);
+            position: relative;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
+<!--<div class="container">
     <header>
         <h1>База данных: Модуль Чтения</h1>
     </header>
+</div>-->
 
+<div class="video-container">
+    <div class="hero">
+        <!-- БАННЕР 16:9 С ВИДЕО -->
+        <a href="/" class="video-banner">
+            <video autoplay loop muted playsinline>
+                <source src="/images/video_banner_hor.mp4" type="video/mp4">
+            </video>
+            <div class="banner-info">
+                <div class="btn-play">Играть сейчас →</div>
+                <h2 class="banner-title"></h2>
+                <p style="opacity: 0.8; margin: 5px 0 0;"></p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="container">
     <!-- Основная уникализированная статья -->
-    <article class="featured-article">
-        <?= $content->model->_text ?>
-    </article>
+    <?php
+    if ($content->model) { ?>
+        <article class="featured-article">
+            <?= $content->model->_text ?>
+        </article>
+    <?php
+    } ?>
+
+    <div class="blog-grid">
+        <?php
+        $postImages = ['🧩','🚀', '🧠'];
+        $articleType = ['Стратегии', 'Обновления', 'Польза'];
+        foreach ($content->featuredArticles as $num => $article) { ?>
+        <article class="post-card">
+            <div class="post-image"><?= $postImages[$num] ?? '' ?></div>
+            <div class="post-content">
+                <span class="post-tag"><?= $articleType[$num] ?? '' ?></span>
+                <h3 class="post-title"><?= $article->_title ?></h3>
+                <p class="post-excerpt"><?= $article->_desc ?></p>
+                <a href="<?= $article->_title ?>" class="read-more">Читать</a>
+            </div>
+        </article>
+        <?php } ?>
+
+        <!-- Статья 2 -->
+        <!--<article class="post-card">
+            <div class="post-image">🚀</div>
+            <div class="post-content">
+                <span class="post-tag">Обновления</span>
+                <h3 class="post-title">Новый рейтинг 1700: что изменилось?</h3>
+                <p class="post-excerpt">В последнем патче мы обновили систему начисления очков. Узнайте, как теперь
+                    рассчитывается ваш личный прогресс.</p>
+                <a href="#" class="read-more">Читать лог</a>
+            </div>
+        </article>-->
+
+        <!-- Статья 3 -->
+        <!--<article class="post-card">
+            <div class="post-image">🧠</div>
+            <div class="post-content">
+                <span class="post-tag">Польза</span>
+                <h3 class="post-title">Судоку и нейропластичность мозга</h3>
+                <p class="post-excerpt">Научное обоснование того, почему ежедневное решение головоломок замедляет
+                    старение мозга на 10 лет.</p>
+                <a href="#" class="read-more">Открыть архив</a>
+            </div>
+        </article>-->
+    </div>
+
 
     <!-- Пагинация -->
-    <div class="pagination">
+    <!--<div class="pagination">
         <a href="#" class="page-link">« Назад</a>
         <a href="#" class="page-link active">1</a>
         <a href="#" class="page-link">2</a>
         <a href="#" class="page-link">3</a>
         <a href="#" class="page-link">Вперед »</a>
-    </div>
+    </div>-->
 </div>
 
 </body>
