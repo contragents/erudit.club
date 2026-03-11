@@ -187,13 +187,21 @@ slovo = '" . urldecode($_REQUEST['word']) . "';";
         if (!is_array($row) || empty($row)) {
             $content .= T::S("Слово не найдено.");
             $result = false;
-        }
-
-        foreach ($row as $field => $value) {
-            if ($spacePos = strpos($field, ' ')) {
-                $row[substr($field, 0, $spacePos)] = $value;
+        } else {
+            foreach ($row as $field => $value) {
+                if ($spacePos = strpos($field, ' ')) {
+                    $row[substr($field, 0, $spacePos)] = $value;
+                }
             }
         }
+    }
+
+    if (!$result) {
+        header("HTTP/1.1 301 Moved Permanently");
+        header("Location: " . Config::$config['domain'] . "/blog/");
+        header("Connection: close");
+
+        exit;
     }
 
     // убираем всякую херню после парсинга
