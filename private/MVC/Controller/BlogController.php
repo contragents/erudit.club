@@ -1,7 +1,5 @@
 <?php
 
-use BaseController;
-
 class BlogController extends BaseController
 {
     const DEFAULT_ACTION = 'article';
@@ -23,12 +21,6 @@ class BlogController extends BaseController
             ->order('rand()')
             ->limit(3)
             ->all();
-
-        /*todo заменить заголовок на...
-         * <div class="article-header">
-            <h1 style="font-size: 2rem; margin: 0;">Судоку сложные распечатать бесплатно</h1>
-        </div>
-        */
 
         $content = new BlogContent();
         $content->model = $model;

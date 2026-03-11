@@ -24,11 +24,12 @@ const SCRIPTS = [
 
 const CATCH_REFERER_KEY = 'erudit.catched_referer';
 
-function test() {
+function test()
+{
     try {
         $res = (new Erudit\Game())->checkGameStatus();
         print $res;
-    } catch(Throwable $e) {
+    } catch (Throwable $e) {
         print $e->__toString();
     }
 }
@@ -47,7 +48,7 @@ function statusChecker()
     try {
         $res = (new Erudit\Game())->checkGameStatus();
         print $res;
-    } catch(Throwable $e) {
+    } catch (Throwable $e) {
         Cache::set('yandex_error', $e->getMessage());
 
         print json_encode($e);
@@ -123,7 +124,10 @@ function setPlayerName()
 
 function avatarUpload()
 {
-    print Dadata\Players::avatarUpload($_FILES, Tg::$tgUser['user']['id'] ?? (Yandex::$yandexUser ?? $_COOKIE[CookieErudit::COOKIE_NAME]));
+    print Dadata\Players::avatarUpload(
+        $_FILES,
+        Tg::$tgUser['user']['id'] ?? (Yandex::$yandexUser ?? $_COOKIE[CookieErudit::COOKIE_NAME])
+    );
 }
 
 function setAvatarUrl()
@@ -196,7 +200,7 @@ slovo = '" . urldecode($_REQUEST['word']) . "';";
         }
     }
 
-    if (!$result) {
+    if (!$result && ($_REQUEST['ingame'] ?? '') !== 'yes' && !isAndroidApp()) {
         header("HTTP/1.1 301 Moved Permanently");
         header("Location: " . Config::$config['domain'] . "/blog/");
         header("Connection: close");
@@ -222,7 +226,7 @@ slovo = '" . urldecode($_REQUEST['word']) . "';";
         str_replace('href="', 'href="' . Config::$config['domain'], $row['content'] . $row['content_perevod'])
     );
 
-    $content = preg_replace('/googletag\.cmd\.push\(.{0,400}\}\);/','', $content);
+    $content = preg_replace('/googletag\.cmd\.push\(.{0,400}\}\);/', '', $content);
 
     if (($_REQUEST['ingame'] ?? '') !== 'yes' && !isAndroidApp()) {
         $title = "Игра Эрудит.CLUB :: Словарь | " . $_REQUEST['word'];
@@ -239,13 +243,24 @@ slovo = '" . urldecode($_REQUEST['word']) . "';";
         $canonical = isset($_GET['voc'])
             ? ('<link rel="canonical" href="https://эрудит.club/dict/' . urlencode($_REQUEST['word']) . '" />')
             : '';
-        include(__DIR__ . '/../../private/MVC/View/Tpl/main_header.php');
-        print "<h1>{$_REQUEST['word']}</h1>";
-    }
+        $articleModel = ArticleModel::new(['title' => $title, 'desc' => $description, 'text' => $content]);
+        $featuredArticles = ArticleModel::find()
+            ->order('rand()')
+            ->limit(3)
+            ->all();
 
-    print ($_REQUEST['ingame'] ?? '') === 'yes'
-    ? json_encode(['result' => $content])
-    : $content;
+        $content = new BlogContent();
+        $content->model = $articleModel;
+        $content->featuredArticles = $featuredArticles;
+
+        echo BlogController::renderStatic('Blog', $content);
+
+        exit;
+    } elseif (($_REQUEST['ingame'] ?? '') === 'yes') {
+        echo json_encode(['result' => $content]);
+    } else {
+        echo $content;
+    }
 
     return $result;
 }

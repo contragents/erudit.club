@@ -100,7 +100,19 @@ class BaseController
         return $res;
     }
 
-    private function include($filename, ?AbstractViewContent $content = null): string
+    /**
+     * @param string $viewName = 'Index'
+     * @return string
+     */
+    public static function renderStatic(string $viewName = 'Index', ?AbstractViewContent $content = null): string
+    {
+        $res = self::include(static::VIEW_PATH . $viewName . 'View.php', $content);
+        //return nl2br($res);
+
+        return $res;
+    }
+
+    private static function include($filename, ?AbstractViewContent $content = null): string
     {
         if (is_file($filename)) {
             ob_start();
