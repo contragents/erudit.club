@@ -5,6 +5,9 @@ trait QueryTrait
 {
     protected ?QueryParts $queryParts = null;
 
+    /** @var static[] */
+    protected array $union = [];
+
     private ?string $model = null;
 
     /**
@@ -64,10 +67,9 @@ trait QueryTrait
                         'field_name' => $fieldName,
                         'condition' => $condition['condition'] ?? ($condition[1] ?? '='),
                         'value' => $value,
-                        'raw' => $condition['raw'] ?? ($condition[3] ?? in_array(
-                                    $this->model::getType($fieldName),
-                                    self::NUMERIC_TYPES
-                                )),
+                        'raw' => $condition['raw']
+                            ?? ($condition[3]
+                                ?? in_array($this->model::getType($fieldName), self::NUMERIC_TYPES)),
                     ];
                 }
             } else {
@@ -117,20 +119,15 @@ trait QueryTrait
     }
 
     /**
-     * Выдает SQL от объекта с подготовленным запросом
-     * @return string|null
+     * Добавляет в union запросы из массива
+     * @param static[] $queries
+     * @return QueryTrait|BaseModel
      */
-    public function getSQL(): ?string
+    public function union(array $queries): self
     {
-        try {
-            $where = $this->buildWhere();
+        $this->union = array_merge($this->union, $queries);
 
-            return ORM::select($this->queryParts->fields, static::TABLE_NAME)
-                . ' ' . $where
-                . ' ' . $this->getOrder() . $this->getLimit();
-        } catch (Throwable $e) {
-            return null;
-        }
+        return $this;
     }
 
     private function buildWhere(): string
@@ -167,7 +164,12 @@ trait QueryTrait
     {
         $where = $this->buildWhere();
 
-        return ORM::select($this->queryParts->fields, static::TABLE_NAME)
+        return ORM::select(
+                $this->queryParts->fields,
+                $this->union
+                    ? (' ( (' . implode(') UNION (', array_map(fn(self $query) => $query->getQuery(), $this->union)) . ') ) as ' . static::TABLE_NAME.'_union ')
+                    : static::TABLE_NAME
+            )
             . ' ' . $where
             . ' ' . $this->getOrder() . $this->getLimit();
     }
@@ -184,7 +186,7 @@ trait QueryTrait
         } catch (Throwable $e) {
             $this->queryParts->fields = $tpmFields; // возврат полей
 
-            if(!($this instanceof LogModel)) {
+            if (!($this instanceof LogModel)) {
                 LogModel::logQuery($query ?? '', $e);
             }
 
@@ -205,6 +207,19 @@ trait QueryTrait
                 ? ORM::where(...array_values($partWhere))
                 : ORM::andWhere(...array_values($partWhere))
             );
+        }
+
+        if($this->union) {
+            $query = $this->getQuery();
+
+            $result = [];
+            $rows = DB::queryArray($query) ?: []; // todo сделать метод :array и провести рефакторинг
+
+            foreach($rows as $row) {
+                $result[] = self::arrayToObject($row);
+            }
+
+            return $result;
         }
 
         return self::selectO(
@@ -267,6 +282,7 @@ trait QueryTrait
                 'Limit' => $this->queryParts->limit[0] ?? $this->queryParts->limit,
                 'Offset' => $this->queryParts->limit[1] ?? 0,
                 'chunkSize' => $chunkSize,
+                'union' => $this->union,
             ]
         );
     }
@@ -279,11 +295,11 @@ trait QueryTrait
     public function current(): ?self
     {
         // Делаем rewind, если current вызвали до него
-        if($this->Value === null && $this->isValid === null) {
+        if ($this->Value === null && $this->isValid === null) {
             $this->rewind();
         }
 
-        if($this->valid()) {
+        if ($this->valid()) {
             return $this->Value ?? null;
         } else {
             return null;
@@ -303,13 +319,13 @@ trait QueryTrait
         }
 
         $this->Iteration++;
-        if(isset($this->Limit) && $this->Iteration >= $this->Limit){
+        if (isset($this->Limit) && $this->Iteration >= $this->Limit) {
             $this->isValid = false;
 
             return;
         }
 
-        if($this->Iteration % $this->chunkSize !== 0) {
+        if ($this->Iteration % $this->chunkSize !== 0) {
             $this->Value = $this->currentChunk[$this->Iteration % $this->chunkSize] ?? null;
         } else {
             $this->queryParts->limit = [$this->chunkSize, $this->Offset + $this->Iteration * $this->chunkSize];
