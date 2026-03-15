@@ -1465,7 +1465,7 @@ function userScores(data) {
 
                     isUserBlockActive = true;
 
-                    noNetworkImg.setScale(youBlock.height / 232 / 4);
+                    noNetworkImg.setScale(youBlock.height / 232 / 4 / (screenOrient === HOR ? 1 : 2));
                     noNetworkImg.x = youBlock.x + youBlock.width / 2 + noNetworkImg.displayWidth / 2;
                     noNetworkImg.y = youBlock.y;
                     noNetworkImg.setDepth(10000);
@@ -1496,7 +1496,7 @@ function userScores(data) {
                 if (!isOpponentBlockActive && (+k < 2)) {
                     isOpponentBlockActive = true;
 
-                    noNetworkImgOpponent.setScale(opponentBlock.height / 232 / 4);
+                    noNetworkImgOpponent.setScale(opponentBlock.height / 232 / 4 / (screenOrient === HOR ? 1 : 2));
                     noNetworkImgOpponent.x = opponentBlock.x + opponentBlock.width / 2 + noNetworkImgOpponent.displayWidth / 2;
                     noNetworkImgOpponent.y = opponentBlock.y;
                     noNetworkImgOpponent.setDepth(10000);

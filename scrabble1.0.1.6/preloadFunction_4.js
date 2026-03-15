@@ -80,10 +80,10 @@ function () {
             'width' in players[k]
                 ? {
                     'width': players[k]['width'],
-                    'height': 'height' in players[k] ? players[k].height : buttonHeight,
+                    'height': 'height' in players[k] ? players[k].height : buttonHeight * propKoef,
                 }
                 : {
-                    'height': 'height' in players[k] ? players[k].height : buttonHeight,
+                    'height': 'height' in players[k] ? players[k].height : buttonHeight * propKoef,
                 }
         ));
     }
@@ -91,7 +91,7 @@ function () {
     playerBlockModes.forEach(mode => {
         for (let k in digits.playerDigits[mode]) {
             this.load.svg(mode + '_' + 'player_' + k, 'img/' + mode.toLowerCase() + '/' + digits.playerDigits[mode][k]['filename'] + '.svg',
-                {'height': buttonHeight * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1), 'width': buttonHeight * 0.23 * 0.5 / (buttonHeightKoef < 1 ? 0.5 : 1)}
+                {'height': buttonHeight * 0.5 / (screenOrient === VERT ? 0.7 : 1), 'width': buttonHeight * 0.23 * 0.5 / (screenOrient === VERT ? 0.7 : 1)}
             );
 
             this.load.svg(mode + '_' + 'timer_' + k, 'img/' + mode.toLowerCase() + '/' + digits.timerDigits[mode][k]['filename'] + '_' + modesColors[mode] + '.svg',

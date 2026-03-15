@@ -255,6 +255,7 @@ var players = {
         object: false,
         svgObject: false,
         numbers: true,
+        scalable: true,
     },
     player1Block: {
         filename: 'player1' + (lang === 'RU' ? '_ru' : ''),
@@ -264,6 +265,7 @@ var players = {
         object: false,
         svgObject: false,
         numbers: true,
+        scalable: true,
     },
     player2Block: {
         filename: 'player2' + (lang === 'RU' ? '_ru' : ''),
@@ -273,6 +275,7 @@ var players = {
         object: false,
         svgObject: false,
         numbers: true,
+        scalable: true,
     },
     player3Block: {
         filename: 'player3' + (lang === 'RU' ? '_ru' : ''),
@@ -282,6 +285,7 @@ var players = {
         object: false,
         svgObject: false,
         numbers: true,
+        scalable: true,
     },
     player4Block: {
         filename: 'player4' + (lang === 'RU' ? '_ru' : ''),
@@ -291,6 +295,7 @@ var players = {
         object: false,
         svgObject: false,
         numbers: true,
+        scalable: true,
     },
     goalBlock: {
         filename: 'goal',
@@ -299,6 +304,7 @@ var players = {
         width: buttonWidth,
         object: false,
         svgObject: false,
+        scalable: true,
     },
     bankBlock: {
         filename: 'bank_',
@@ -311,6 +317,7 @@ var players = {
         pointerupFunction: function () {
             console.log(gameBid);
         },
+        scalable: true,
     },
     timerBlock: {
         // todo сделать мигающие цифры таймера
