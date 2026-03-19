@@ -40,6 +40,8 @@ class BaseModel implements Iterator
 
     const FIELDS = [self::ID_FIELD => self::TYPE_INT];
 
+    const TYPE_BOOL = 'bool';
+    const TYPE_FLOAT = 'float';
     const TYPE_INT = 'int';
     const TYPE_STRING = 'string';
     const TYPE_DATE = 'timestamp';

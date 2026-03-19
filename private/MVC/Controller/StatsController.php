@@ -320,8 +320,8 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
 
             $baseUrlPage = self::getUrl('viewV2', self::$Request);
 
-            $achieves = AchievesModel::getCurrentAchievesByCommonId(self::$Request['common_id']);
-            $pastAchieves = AchievesModel::getPastAchievesByCommonId(self::$Request['common_id']);
+            $achieves = AchievesModel::getCurrentAchievesByCommonIdAsArray(self::$Request['common_id']);
+            $pastAchieves = AchievesModel::getPastAchievesByCommonIdAsArray(self::$Request['common_id']);
 
             self::addTranslationsToAchieves($achieves);
             self::addTranslationsToAchieves($pastAchieves);

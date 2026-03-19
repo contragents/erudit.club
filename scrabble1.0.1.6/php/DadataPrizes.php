@@ -40,6 +40,19 @@ class Prizes
         }
     }
 
+    public static function checkTverdNumRecord($number, ?int $commonId = null): array
+    {
+        if (!$commonId) {
+            return [];
+        }
+
+        if (Game::$gameName === Game::SCRABBLE) {
+            return [];
+        } else {
+            return PrizesErudit::checkRecord($number, $commonId, Record::TVERD_NUM);
+        }
+    }
+
     public static function checkWordPriceRecord(int $price, ?int $commonId, ?string $word)
     {
         if (!$commonId) {

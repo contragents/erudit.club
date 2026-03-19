@@ -33,14 +33,18 @@ class AchievesModel extends BaseModel
     const INCOME_FIELD = 'income';
     const GAME_NAME_ID_FIELD = 'game_name_id';
 
-    const FIELDS = [
-        self::ID_FIELD => self::TYPE_INT,
+    const FIELDS = parent::FIELDS
+    + [
         self::COMMON_ID_FIELD => self::TYPE_INT,
         self::DATE_ACHIEVED_FIELD => self::TYPE_DATE,
         self::EVENT_TYPE_FIELD => self::TYPE_STRING,
         self::EVENT_PERIOD_FIELD => self::TYPE_STRING,
         self::WORD_FIELD => self::TYPE_STRING,
         self::EVENT_VALUE_FIELD => self::TYPE_INT,
+        self::REWARD_FIELD => self::TYPE_INT,
+        self::INCOME_FIELD => self::TYPE_FLOAT,
+        self::IS_ACTIVE_FIELD => self::TYPE_BOOL,
+        self::GAME_NAME_ID_FIELD => self::TYPE_INT,
     ];
 
     const ATTRIBUTE_LABELS = [
@@ -65,14 +69,18 @@ class AchievesModel extends BaseModel
     public const TURN_PRICE = 'turn_price';
     public const WORD_PRICE = 'word_price';
     public const GAMES_PLAYED = 'games_played';
-    public const REF_COUNT = 'ref_count'; // КОличество рефералов (не используется)
+
+    /** @var string количество твердых знаков за игру */
+    public const TVERD_NUM = 'tverd_num';
+    public const REF_COUNT = 'ref_count'; // Количество рефералов (не используется)
 
     public const VALID_RECORD_TYPES = [
         self::WORD_LEN,
         self::GAME_PRICE,
         self::TURN_PRICE,
         self::WORD_PRICE,
-        self::GAMES_PLAYED
+        self::GAMES_PLAYED,
+        self::TVERD_NUM,
     ];
 
     public const DAY_PERIOD = 'day';
@@ -110,6 +118,11 @@ class AchievesModel extends BaseModel
         self::GAMES_PLAYED . '-month' => 'Сыграно ПАРТИЙ - Рекорд Месяца!',
         self::GAMES_PLAYED . '-week' => 'Сыграно ПАРТИЙ - Рекорд Недели!',
         self::GAMES_PLAYED . '-day' => 'Сыграно ПАРТИЙ - Рекорд Дня!',
+
+        self::TVERD_NUM . '-year' => 'Всего Ъ за игру - Рекорд Года!',
+        self::TVERD_NUM . '-month' => 'Всего Ъ за игру - Рекорд Месяца!',
+        self::TVERD_NUM . '-week' => 'Всего Ъ за игру - Рекорд Недели!',
+        self::TVERD_NUM . '-day' => 'Всего Ъ за игру - Рекорд Дня!',
 
         self::TOP_TYPE . '-year' => 'ТОП 1 по рейтингу!',
         self::TOP_TYPE . '-month' => 'ТОП 2 по рейтингу!',
@@ -235,8 +248,37 @@ class AchievesModel extends BaseModel
         return $res;
     }
 
+    /**
+     * @param int $commonId
+     * @return array[]
+     */
+    public static function getPastAchievesByCommonIdAsArray(int $commonId): array
+    {
+        $Models = self::getPastAchievesByCommonId($commonId);
+
+        return array_map(fn($obj) => $obj->toArray(), $Models);
+    }
+
     public static function getPastAchievesByCommonId(int $commonId)
     {
+        return
+            AchievesModel::find(
+                array_map(
+                    fn($field) => ($field === self::DATE_ACHIEVED_FIELD)
+                        ? "SUBSTRING($field, 1, 10) AS $field"
+                        : $field,
+                    array_keys(self::FIELDS)
+                )
+            )
+                ->where([
+                            self::COMMON_ID_FIELD => $commonId,
+                            self::IS_ACTIVE_FIELD => false,
+                            self::GAME_NAME_ID_FIELD => BaseModel::GAME_IDS[Game::$gameName]
+                        ])
+                ->order(self::ID_FIELD, false)
+                ->limit(30)
+                ->all();
+
         $query = ORM::select(
                 [
                     "substring(" . self::DATE_ACHIEVED_FIELD . ",1,10) as " . self::DATE_ACHIEVED_FIELD,
@@ -281,14 +323,40 @@ class AchievesModel extends BaseModel
      */
     public static function getPatreonAchievesByCommonIdAsArray(int $commonId): array
     {
-        $patreonAchievesModels = self::getPatreonAchievesByCommonId($commonId);
+        $models = self::getPatreonAchievesByCommonId($commonId);
 
-        return array_map(fn($obj) => $obj->toArray(), $patreonAchievesModels);
+        return array_map(fn($obj) => $obj->toArray(), $models);
+    }
+
+    /**
+     * @param int $commonId
+     * @return array[]
+     */
+    public static function getCurrentAchievesByCommonIdAsArray(int $commonId): array
+    {
+        $Models = self::getCurrentAchievesByCommonId($commonId);
+
+        return array_map(fn($obj) => $obj->toArray(), $Models);
     }
 
     public static function getCurrentAchievesByCommonId(int $commonId): array
     {
-        // todo CLUB-468 Переделать на ::find()->where()->order... ->toArray как в методе getPatreonAchievesByCommonIdAsArray
+        return AchievesModel::find(
+            array_map(
+                fn($field) => ($field === self::DATE_ACHIEVED_FIELD)
+                    ? "SUBSTRING($field, 1, 10) AS $field"
+                    : $field,
+                array_keys(self::FIELDS)
+            )
+        )
+            ->where([
+                        self::COMMON_ID_FIELD => $commonId,
+                        self::IS_ACTIVE_FIELD => true,
+                        self::GAME_NAME_ID_FIELD => BaseModel::GAME_IDS[Game::$gameName]
+                    ])
+            ->order(self::ID_FIELD, false)
+            ->all();
+
         $query = ORM::select(
                 [
                     "substring(" . self::DATE_ACHIEVED_FIELD . ",1,10) as " . self::DATE_ACHIEVED_FIELD,

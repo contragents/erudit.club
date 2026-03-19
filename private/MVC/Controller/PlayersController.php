@@ -173,7 +173,7 @@ class PlayersController extends BaseController
                     }
 
                     $achieves = array_merge(
-                        AchievesModel::getCurrentAchievesByCommonId($thisUser->_id),
+                        AchievesModel::getCurrentAchievesByCommonIdAsArray($thisUser->_id),
                         AchievesModel::getPatreonAchievesByCommonIdAsArray($thisUser->_id)
                     );
 

@@ -484,6 +484,7 @@ class Game
         return self::$playersInGames[$cookie] ?? null;
     }
 
+
     private static function unauthorized()
     {
         return json_encode(
@@ -1280,6 +1281,37 @@ class Game
             $addFishki = $this->giveFishki(
                 $this->chisloFishek - count($this->gameStatus['users'][$this->numUser]['fishki'])
             );
+
+            /** @var $hasReceivedTverdZnak bool Признак, что в выданных фишках есть Ъ */
+            $hasReceivedTverdZnak = in_array(Ru::TZ_CODE, $addFishki);
+
+            try {
+                $this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM] += (int)$hasReceivedTverdZnak;
+
+                if ($this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM]) {
+                    $arr = Prizes::checkTverdNumRecord(
+                        $this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM],
+                        $this->gameStatus['users'][$this->numUser]['common_id'] ?? null
+                    );
+
+                    foreach ($arr as $period => $value) {
+                        $this->addToLog(
+                            T::S(
+                                'устанавливает рекорд по числу твердых знаков, выпавших или сыгранных в одной партии за'
+                            ) . " $period - <strong>$value</strong>",
+                            $this->numUser
+                        );
+                    }
+                }
+            } catch (Throwable $e) {
+                LogModel::add(
+                    [
+                        LogModel::CATEGORY_FIELD => LogModel::CATEGORY_RECORD_ERROR,
+                        LogModel::MESSAGE_FIELD => $e->getMessage(),
+                    ]
+                );
+            }
+
             $this->gameStatus['users'][$this->numUser]['fishki'] = array_merge(
                 $this->gameStatus['users'][$this->numUser]['fishki'],
                 $addFishki
@@ -1536,6 +1568,9 @@ class Game
                 return $this->checkGameStatus();
             }
 
+            /** @var  $hasTverdZnakInFishki bool Признак наличия Ъ на руках у игрока */
+            $hasTverdZnakInFishki = in_array(Ru::TZ_CODE, $this->gameStatus['users'][$this->numUser]['fishki']);
+
             /**
              * @method Ru|Eng submit()
              */
@@ -1631,6 +1666,40 @@ class Game
                 $addFishki = $this->giveFishki(
                     $this->chisloFishek - count($this->gameStatus['users'][$this->numUser]['fishki'])
                 );
+
+                /** @var $hasReceivedTverdZnak bool Признак, что в выданных фишках есть Ъ */
+                $hasReceivedTverdZnak = in_array(Ru::TZ_CODE, $addFishki);
+
+                try {
+                    $this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM] +=
+                        (int)$hasReceivedTverdZnak
+                        + $hasTverdZnakInFishki
+                            ? 0
+                            : self::checkTZCount($new_fishki['words']);
+                    if ($this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM]) {
+                        $arr = Prizes::checkTverdNumRecord(
+                            $this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM],
+                            $this->gameStatus['users'][$this->numUser]['common_id'] ?? null
+                        );
+
+                        foreach ($arr as $period => $value) {
+                            $this->addToLog(
+                                T::S(
+                                    'устанавливает рекорд по числу твердых знаков, выпавших или сыгранных в одной партии за'
+                                ) . " $period - <strong>$value</strong>",
+                                $this->numUser
+                            );
+                        }
+                    }
+                } catch (Throwable $e) {
+                    LogModel::add(
+                        [
+                            LogModel::CATEGORY_FIELD => LogModel::CATEGORY_RECORD_ERROR,
+                            LogModel::MESSAGE_FIELD => $e->getMessage(),
+                        ]
+                    );
+                }
+
 
                 $this->gameStatus['users'][$this->numUser]['fishki'] = array_merge(
                     $this->gameStatus['users'][$this->numUser]['fishki'],
@@ -2305,6 +2374,12 @@ class Game
             foreach ($this->gameStatus['users'] as $num => $user) {
                 $this->gameStatus['users'][$num]['fishki'] = $this->giveFishki(7);
                 //Раздали фишки игрокам
+
+                /** @var $hasReceivedTverdZnak bool Признак, что в выданных фишках есть Ъ */
+                $hasReceivedTverdZnak = in_array(Ru::TZ_CODE, $this->gameStatus['users'][$num]['fishki']);
+                // Сохраняем количество полученных в игре Ъ
+                $this->gameStatus['users'][$num][AchievesModel::TVERD_NUM] = (int)$hasReceivedTverdZnak;
+
                 $this->gameStatus['users'][$num]['lostTurns'] = 0;
                 $this->gameStatus['users'][$num]['inactiveTurn'] = 1000;
                 //Сделали невозможным значение терна инактив
@@ -2647,4 +2722,11 @@ class Game
 
         return null;
     }
+
+    /** Подсчитывает количество Ъ в составленных словах */
+    private static function checkTZCount($words): int
+    {
+        return mb_substr_count(implode('', (array)$words), 'ъ');
+    }
+
 }

@@ -375,6 +375,10 @@ class T
             self::EN_LANG => 'turn points',
             self::RU_LANG => 'очки за ход'
         ],
+        AchievesModel::TVERD_NUM => [
+            self::EN_LANG => 'число Ъ за игру',
+            self::RU_LANG => 'число Ъ за игру'
+        ],
         AchievesModel::WORD_LEN => [
             self::EN_LANG => 'longest word',
             self::RU_LANG => 'самое длинное слово'

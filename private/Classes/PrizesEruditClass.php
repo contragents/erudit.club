@@ -2,10 +2,10 @@
 
 class PrizesErudit
 {
-    protected const DAY_DISCOUNT = 0.5;
-    protected const WEEK_DISCOUNT = 0.6;
-    protected const MONTH_DISCOUNT = 0.7;
-    protected const YEAR_DISCOUNT = 0.8;
+    protected const DAY_DISCOUNT = 0.49;
+    protected const WEEK_DISCOUNT = 0.59;
+    protected const MONTH_DISCOUNT = 0.69;
+    protected const YEAR_DISCOUNT = 0.79;
 
     const PERIOD_DISCOUNTS = [
         Record::DAY_PERIOD => self::DAY_DISCOUNT,
@@ -32,6 +32,11 @@ class PrizesErudit
     const DEFAULT_WEEK_GAME_PRICE_RECORD = 360;
     const DEFAULT_MONTH_GAME_PRICE_RECORD = 370;
     const DEFAULT_YEAR_GAME_PRICE_RECORD = 380;
+
+    const DEFAULT_DAY_TVERD_NUM = 0;
+    const DEFAULT_WEEK_TVERD_NUM = 1;
+    const DEFAULT_MONTH_TVERD_NUM = 2;
+    const DEFAULT_YEAR_TVERD_NUM = 3;
     const DEFAULT_WEEK_WORD = 'эра';
     const DEFAULT_WEEK_WORD_LENGTH = 3;
     const DEFAULT_MONTH_WORD = 'ершик';
@@ -66,6 +71,12 @@ class PrizesErudit
             Record::WEEK_PERIOD => self::DEFAULT_WEEK_TURN_PRICE,
             Record::MONTH_PERIOD => self::DEFAULT_MONTH_TURN_PRICE,
             Record::YEAR_PERIOD => self::DEFAULT_YEAR_TURN_PRICE,
+        ],
+        Record::TVERD_NUM => [
+            Record::DAY_PERIOD => self::DEFAULT_DAY_TVERD_NUM,
+            Record::WEEK_PERIOD => self::DEFAULT_WEEK_TVERD_NUM,
+            Record::MONTH_PERIOD => self::DEFAULT_MONTH_TVERD_NUM,
+            Record::YEAR_PERIOD => self::DEFAULT_YEAR_TVERD_NUM,
         ],
         Record::WORD_LEN => [
             Record::DAY_PERIOD => self::DEFAULT_DAY_WORD_LENGTH,

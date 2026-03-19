@@ -3,6 +3,9 @@
 
 class Ru
 {
+    /** @var int Код твердого знака */
+    const TZ_CODE = 26;
+
     public static $multi = [
         0 => [
             0 => ['slovo' => 3],
