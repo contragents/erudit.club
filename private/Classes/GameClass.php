@@ -1673,9 +1673,7 @@ class Game
                 try {
                     $this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM] +=
                         (int)$hasReceivedTverdZnak
-                        + $hasTverdZnakInFishki
-                            ? 0
-                            : self::checkTZCount($new_fishki['words']);
+                        + ($hasTverdZnakInFishki ? 0 : self::checkTZCount($new_fishki['words']));
                     if ($this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM]) {
                         $arr = Prizes::checkTverdNumRecord(
                             $this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM],
@@ -2726,7 +2724,7 @@ class Game
     /** Подсчитывает количество Ъ в составленных словах */
     private static function checkTZCount($words): int
     {
-        return mb_substr_count(implode('', (array)$words), 'ъ');
+        return mb_substr_count(implode('', array_keys((array)$words)), 'ъ');
     }
 
 }

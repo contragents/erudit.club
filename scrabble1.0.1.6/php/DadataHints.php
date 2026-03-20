@@ -14,6 +14,15 @@ use ViewHelper as VH;
 
 class Hints
 {
+    const PHRASES = [
+        AchievesModel::TVERD_NUM => '<strong>Внимание!</strong> <br>
+В Игре появилось <strong>новое достижение - количество Ъ (ТВЕРДЫХ ЗНАКОВ), выпавших игроку за игру</strong>. <br>
+Учитываются все Ъ, полученные: <ul>
+<li>При обычной раздаче букв</li>
+<li>При замене букв</li>
+<li>А также при составлении слова, в котором звездочка заменяет Ъ</li>
+</ul>',
+        ];
     public const TYPE_WORDS_QUERY = 'words';
     private static $gameState;
     private static $User;
@@ -91,7 +100,7 @@ class Hints
         ],
         1800 => [
             'donationHint',
-            '<strong>Внимание!</strong> <br>В Игре появилось новое достижение - количество Ъ (ТВЕРДЫХ ЗНАКОВ), выпавших игроку за игру. <br>Учитываются все Ъ, полученные: <ul><li>При обычной раздаче букв</li><li>При замене буквы</li><li>А также при составлении слова, в котором звездочка заменяет Ъ</li></ul>',
+            self::PHRASES[AchievesModel::TVERD_NUM],
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
             // 'newUpdateHint',
             // 'newUpdateAndroidAppHint',
@@ -107,7 +116,7 @@ class Hints
             'tgWordCheckHint',
         ],
         1900 => [
-            '<strong>Внимание!</strong> <br>В Игре появилось новое достижение - количество Ъ (ТВЕРДЫХ ЗНАКОВ), выпавших игроку за игру. <br>Учитываются все Ъ, полученные: <ul><li>При обычной раздаче букв</li><li>При замене буквы</li><li>А также при составлении слова, в котором звездочка заменяет Ъ</li></ul>',
+            self::PHRASES[AchievesModel::TVERD_NUM],
             'donationHint',
             'yandexScoreLink',
             'tgWordCheckHint',
@@ -140,7 +149,7 @@ class Hints
             'recordsHint',
         ],
         2000 => [
-            '<strong>Внимание!</strong> <br>В Игре появилось новое достижение - количество Ъ (ТВЕРДЫХ ЗНАКОВ), выпавших игроку за игру. <br>Учитываются все Ъ, полученные: <ul><li>При обычной раздаче букв</li><li>При замене буквы</li><li>А также при составлении слова, в котором звездочка заменяет Ъ</li></ul>',
+            self::PHRASES[AchievesModel::TVERD_NUM],
             'donationHint',
             'tgWordCheckHint',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
@@ -160,7 +169,7 @@ class Hints
             'recordsHint',
         ],
         2050 => [
-            '<strong>Внимание!</strong> <br>В Игре появилось новое достижение - количество Ъ (ТВЕРДЫХ ЗНАКОВ), выпавших игроку за игру. <br>Учитываются все Ъ, полученные: <ul><li>При обычной раздаче букв</li><li>При замене буквы</li><li>А также при составлении слова, в котором звездочка заменяет Ъ</li></ul>',
+            self::PHRASES[AchievesModel::TVERD_NUM],
             'donationHint',
             'tgWordCheckHint',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
