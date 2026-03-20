@@ -2097,7 +2097,57 @@ class Game
     protected function playerGameResultsRendered(bool $isWinner, array $ratingsChanged): string
     {
         return
-            VH::strong(
+            VH::h2(
+                $isWinner ? T::S('you_won') : T::S('you_lost'),
+                $isWinner
+                    ? ['style' => "color: #2ecc71; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);"]
+                    : ['style' => "color: #e74c3c; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; text-shadow: 0 0 12px rgba(231, 76, 60, 0.4);"]
+            )
+            . VH::div(
+                T::S('rating_changed') . "{$ratingsChanged['prev_rating']} "
+                . VH::span('→ ', ['style' => "color: #fff; margin: 0 10px;"])
+                . VH::span(
+                    "{$ratingsChanged['new_rating']} (" . ($isWinner ? '+' : '') . "{$ratingsChanged['delta_rating']})",
+                    $isWinner
+                        ? ['style' => "color: #2ecc71; font-weight: bold;"]
+                        : ['style' => "color: #e74c3c; font-weight: bold;"]
+                )
+            )
+            . VH::div(
+                VH::p(
+                    T::S('The bank of') . ' '
+                    . VH::strong(
+                        number_format($this->gameStatus['bid'] * count($this->gameStatus['users']), 0, '.', ','),
+                        $isWinner ? ['style' => "color: #f1c40f;"] : []
+                    ),
+                    $isWinner ? ['style' => "margin: 0; font-size: 1.2rem;"] : ['style' => "margin: 0; font-size: 1.1rem; color: #bdc3c7;"]
+                )
+                . VH::img(
+                    [
+                        'src' => "images/coin.png",
+                        'alt' => "SUDOKU coin image",
+                        'style' => $isWinner ? "height: 50px; margin: 10px 0; filter: drop-shadow(0 0 8px #f1c40f);" : "height: 50px; margin: 10px 0; filter: grayscale(1) opacity(0.5);"
+                    ]
+                )
+                . VH::p(
+                    $isWinner ? T::S('goes to you') : T::S('is taken by the opponent'),
+                    ['style' => $isWinner ? "margin: 0; color: #bdc3c7;" : "margin: 0; color: #e74c3c; font-weight: 500;"]
+                ),
+                $isWinner
+                    ? ['style' => "background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px;"]
+                    : ['style' => "background: rgba(231, 76, 60, 0.05); padding: 15px; border-radius: 10px; border: 1px dashed rgba(231, 76, 60, 0.3); margin-bottom: 20px;"]
+            )
+            . VH::div(
+                $isWinner
+                    ? VH::p(
+                    T::S('start_new_game'),
+                    ['style' => "color: #3498db; font-weight: bold; margin-bottom: 5px;"]
+                )
+                    : (VH::p('Не сдавайтесь!', ['style' => "color: #f39c12; font-weight: bold; margin-bottom: 5px;"])
+                    . VH::p('Попробуйте отыграться прямо сейчас', ['style' => "opacity: 0.7; margin-bottom: 15px;"])),
+                ['style' => "font-size: 0.95rem; line-height: 1.6;"]
+            );
+        return VH::strong(
                 $isWinner ? T::S('you_won') : T::S('you_lost'),
                 ['style' => 'color:' . ($isWinner ? '#00ff00' : 'red') . ';']
             )
@@ -2446,17 +2496,32 @@ class Game
         if (!(isset($arr['inviteStatus']) && $arr['inviteStatus'] == 'newGameStarting')) {
             $arr['comments'] = $arr['comments'] ?? '';
             if ($this->gameStatus['invite'] == $this->User) {
-                $arr['comments'] .= "<br />"
+                $arr['comments'] .= VH::div(
+                    VH::p(T::S("Asking for adversaries' approval."), ['style' => "opacity: 0.8; margin-bottom: 5px;"])
+                    . VH::p(
+                        T::S('Remaining in the game:') . VH::span(" $numActiveUsers", ['style' => "color: #fff;"]),
+                        ['style' => "font-size: 0.95rem; line-height: 1.6;"]
+                    )
+                );
+
+
+                    /*"<br />"
                     . T::S("Asking for adversaries' approval.")
                     . "<br />"
                     . T::S('Remaining in the game:')
-                    . " $numActiveUsers";
+                    . " $numActiveUsers";*/
                 $arr['inviteStatus'] = 'waiting';
             } else {
                 if ($numActiveUsers) {
-                    $arr['comments'] .= '<br />' . T::S("You got invited for a rematch! - Accept?");
+                    $arr['comments'] .= VH::div(
+                        VH::p(T::S("You got invited for a rematch! - Accept?"), ['style' => "opacity: 0.8; margin-bottom: 5px;"])
+                    );
+                        /*'<br />' . T::S("You got invited for a rematch! - Accept?");*/
                 } else {
-                    $arr['comments'] .= '<br />' . T::S('All players have left the game');
+                    $arr['comments'] .= VH::div(
+                        VH::p(T::S('All players have left the game'), ['style' => "opacity: 0.8; margin-bottom: 5px;"])
+                    );
+                        /*'<br />' . T::S('All players have left the game');*/
                 }
                 $arr['inviteStatus'] = 'deciding';
             }
