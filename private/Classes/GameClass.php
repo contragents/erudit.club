@@ -1298,7 +1298,7 @@ class Game
                         $this->addToLog(
                             T::S(
                                 'устанавливает рекорд по числу твердых знаков, выпавших или сыгранных в одной партии за'
-                            ) . " $period - <strong>$value</strong>",
+                            ) . " $period - <strong>{$this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM]}</strong>",
                             $this->numUser
                         );
                     }
@@ -1684,7 +1684,7 @@ class Game
                             $this->addToLog(
                                 T::S(
                                     'устанавливает рекорд по числу твердых знаков, выпавших или сыгранных в одной партии за'
-                                ) . " $period - <strong>$value</strong>",
+                                ) . " $period - <strong>{$this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM]}</strong>",
                                 $this->numUser
                             );
                         }
