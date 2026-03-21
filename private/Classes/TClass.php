@@ -376,8 +376,8 @@ class T
             self::RU_LANG => 'очки за ход'
         ],
         AchievesModel::TVERD_NUM => [
-            self::EN_LANG => 'число Ъ за игру',
-            self::RU_LANG => 'число Ъ за игру'
+            self::EN_LANG => 'выпало "Ъ" за игру',
+            self::RU_LANG => 'выпало "Ъ" за игру'
         ],
         AchievesModel::WORD_LEN => [
             self::EN_LANG => 'longest word',
