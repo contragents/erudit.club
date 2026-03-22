@@ -1671,6 +1671,21 @@ class Game
                 $hasReceivedTverdZnak = in_array(Ru::TZ_CODE, $addFishki);
 
                 try {
+                    // Проверяем достижение по числу слов за ход
+                    $wordCount = count($new_fishki['words']);
+                    $arr = Prizes::checkWordTurnRecord(
+                        $wordCount,
+                        $this->gameStatus['users'][$this->numUser]['common_id']
+                    );
+                    foreach ($arr as $period => $value) {
+                        $this->addToLog(
+                            T::S('устанавливает рекорд по числу составленных слов за ход за')
+                            . " $period - <strong>$wordCount</strong>",
+                            $this->numUser
+                        );
+                    }
+
+                    // Проверяем достижение по твердым знакам
                     $this->gameStatus['users'][$this->numUser][AchievesModel::TVERD_NUM] +=
                         (int)$hasReceivedTverdZnak
                         + ($hasTverdZnakInFishki ? 0 : self::checkTZCount($new_fishki['words']));

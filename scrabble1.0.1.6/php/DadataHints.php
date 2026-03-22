@@ -465,8 +465,8 @@ class Hints
                 : '')
             . "</strong> <br />"
 
-            . "
-Получен жетон <img style=\"
+            .  (!empty($recordData['link'])
+                ? "Получен жетон <img style=\"
 						cursor: pointer; 
 						margin-left: 0px; padding: 0;
 						margin-top: -10px;
@@ -475,8 +475,10 @@ class Hints
 				title=\"Кликните для увеличения изображения\" 
 				id=\"{$recordData['type']}\" 
 				onclick=\"showFullImage('{$recordData['type']}', 500, 100);\" 
-				src=\"{$recordData['link']}\" width=\"100px\" /> <br />
-Дата установления достижения: <strong>" . date("d.m.Y", $recordData['record_date']) . "</strong>";
+				src=\"{$recordData['link']}\" width=\"100px\" /> <br />"
+                : ''
+            )
+            ."Дата установления достижения: <strong>" . date("d.m.Y", $recordData['record_date']) . "</strong>";
     }
 
     private static function wordsRuHint()

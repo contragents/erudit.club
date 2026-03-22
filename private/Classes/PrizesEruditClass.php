@@ -33,6 +33,11 @@ class PrizesErudit
     const DEFAULT_MONTH_GAME_PRICE_RECORD = 370;
     const DEFAULT_YEAR_GAME_PRICE_RECORD = 380;
 
+    const DEFAULT_DAY_WORD_PER_TURN = 5;
+    const DEFAULT_WEEK_WORD_PER_TURN = 6;
+    const DEFAULT_MONTH_WORD_PER_TURN = 7;
+    const DEFAULT_YEAR_WORD_PER_TURN = 8;
+
     const DEFAULT_DAY_TVERD_NUM = 0;
     const DEFAULT_WEEK_TVERD_NUM = 1;
     const DEFAULT_MONTH_TVERD_NUM = 2;
@@ -71,6 +76,12 @@ class PrizesErudit
             Record::WEEK_PERIOD => self::DEFAULT_WEEK_TURN_PRICE,
             Record::MONTH_PERIOD => self::DEFAULT_MONTH_TURN_PRICE,
             Record::YEAR_PERIOD => self::DEFAULT_YEAR_TURN_PRICE,
+        ],
+        Record::WORD_PER_TURN => [
+            Record::DAY_PERIOD => self::DEFAULT_DAY_WORD_PER_TURN,
+            Record::WEEK_PERIOD => self::DEFAULT_WEEK_WORD_PER_TURN,
+            Record::MONTH_PERIOD => self::DEFAULT_MONTH_WORD_PER_TURN,
+            Record::YEAR_PERIOD => self::DEFAULT_YEAR_WORD_PER_TURN,
         ],
         Record::TVERD_NUM => [
             Record::DAY_PERIOD => self::DEFAULT_DAY_TVERD_NUM,

@@ -40,6 +40,19 @@ class Prizes
         }
     }
 
+    public static function checkWordTurnRecord($number, ?int $commonId = null): array
+    {
+        if (!$commonId) {
+            return [];
+        }
+
+        if (Game::$gameName === Game::SCRABBLE) {
+            return PrizesScrabble::checkRecord($number, $commonId, Record::WORD_PER_TURN);
+        } else {
+            return PrizesErudit::checkRecord($number, $commonId, Record::WORD_PER_TURN);
+        }
+    }
+
     public static function checkTverdNumRecord($number, ?int $commonId = null): array
     {
         if (!$commonId) {

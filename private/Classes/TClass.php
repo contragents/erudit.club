@@ -379,6 +379,10 @@ class T
             self::EN_LANG => 'выпало "Ъ" за игру',
             self::RU_LANG => 'выпало "Ъ" за игру'
         ],
+        AchievesModel::WORD_PER_TURN => [
+            self::EN_LANG => 'слов за ход',
+            self::RU_LANG => 'слов за ход'
+        ],
         AchievesModel::WORD_LEN => [
             self::EN_LANG => 'longest word',
             self::RU_LANG => 'самое длинное слово'

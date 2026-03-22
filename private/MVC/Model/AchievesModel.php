@@ -81,6 +81,7 @@ class AchievesModel extends BaseModel
         self::WORD_PRICE,
         self::GAMES_PLAYED,
         self::TVERD_NUM,
+        self::WORD_PER_TURN,
     ];
 
     public const DAY_PERIOD = 'day';
@@ -123,6 +124,11 @@ class AchievesModel extends BaseModel
         self::TVERD_NUM . '-month' => 'Всего Ъ за игру - Рекорд Месяца!',
         self::TVERD_NUM . '-week' => 'Всего Ъ за игру - Рекорд Недели!',
         self::TVERD_NUM . '-day' => 'Всего Ъ за игру - Рекорд Дня!',
+
+        self::WORD_PER_TURN . '-year' => 'Слов за ход - Рекорд Года!',
+        self::WORD_PER_TURN . '-month' => 'Слов за ход - Рекорд Месяца!',
+        self::WORD_PER_TURN . '-week' => 'Слов за ход - Рекорд Недели!',
+        self::WORD_PER_TURN . '-day' => 'Слов за ход - Рекорд Дня!',
 
         self::TOP_TYPE . '-year' => 'ТОП 1 по рейтингу!',
         self::TOP_TYPE . '-month' => 'ТОП 2 по рейтингу!',
@@ -201,7 +207,7 @@ class AchievesModel extends BaseModel
     ];
     const PATREON_TYPE = 'patreon';
     const PURPLE_CARD = 'purple';
-
+    const WORD_PER_TURN = 'word_turn';
     public ?int $_id = null;
     public ?int $_common_id = null;
     public ?string $_date_achieved = null;
