@@ -2118,7 +2118,7 @@ class Game
                     ? ['style' => "color: #2ecc71; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);"]
                     : ['style' => "color: #e74c3c; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; text-shadow: 0 0 12px rgba(231, 76, 60, 0.4);"]
             )
-            . VH::div(
+            /*. VH::div(
                 T::S('rating_changed') . "{$ratingsChanged['prev_rating']} "
                 . VH::span('→ ', ['style' => "color: #fff; margin: 0 10px;"])
                 . VH::span(
@@ -2126,6 +2126,20 @@ class Game
                     $isWinner
                         ? ['style' => "color: #2ecc71; font-weight: bold;"]
                         : ['style' => "color: #e74c3c; font-weight: bold;"]
+                )
+            )*/
+            . VH::div(
+                T::S('rating_changed') . ": " .
+                VH::span(
+                    "{$ratingsChanged['prev_rating']} " .
+                    VH::span('→ ', ['style' => "color: #fff; margin: 0 10px;"]) .
+                    VH::span(
+                        "{$ratingsChanged['new_rating']} (" . ($isWinner ? '+' : '') . "{$ratingsChanged['delta_rating']})",
+                        $isWinner
+                            ? ['style' => "color: #2ecc71; font-weight: bold;"]
+                            : ['style' => "color: #e74c3c; font-weight: bold;"]
+                    ),
+                    ['style' => "display: inline-flex; align-items: center; white-space: nowrap;"]
                 )
             )
             . VH::div(
