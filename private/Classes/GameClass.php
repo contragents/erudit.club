@@ -829,7 +829,11 @@ class Game
                 'placeholder' => 'https://'
             ];
 
-        $message['secret'] = $this->genKeyForCommonID($this->commonId);
+        $secret = $this->genKeyForCommonID($this->commonId);
+        $message['secret'] = VH::a(
+            $secret,
+            ['href' => Config::$envConfig['domain'] . "?secret={$secret}", 'target' => '_blank']
+        );
 
         /*
         $message['form'][] = [

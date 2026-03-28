@@ -164,8 +164,8 @@ class T
             self::RU_LANG => 'Успешно'
         ],
         'secret_prompt' => [
-            self::EN_LANG => '&#42;Save this key for further account restoration in <a href="https://t.me/scrabble_online_bot">Telegram</a>',
-            self::RU_LANG => '&#42;Сохраните ключ для восстановления аккаунта в <a href="https://t.me/erudit_club_bot">Telegram</a>'
+            self::EN_LANG => '&#42;Use this link for connecting this account and new one in another browser',
+            self::RU_LANG => '&#42;Используйте ссылку для привязки текущего аккаунта к новому аккаунту в другом браузере'
         ],
         UserModel::BALANCE_HIDDEN_FIELD => [
             self::EN_LANG => 'User hidden',
@@ -463,8 +463,8 @@ class T
             self::RU_LANG => 'Рейтинг по монетам'
         ],
         'Secret key' => [
-            self::EN_LANG => 'Secret key&#42;',
-            self::RU_LANG => 'Ключ&#42; восстановления'
+            self::EN_LANG => 'Account&#42;restore link',
+            self::RU_LANG => 'Ссылка&#42; восстановления'
         ],
         'Link' => [
             self::RU_LANG => 'Привязать'
