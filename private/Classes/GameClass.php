@@ -125,8 +125,15 @@ class Game
 
     protected $dir = __DIR__;
 
+    /** @var array Массив GET-параметров */
+    public ?GameRequest $Request = null;
+    /** @var bool Признак что игрок пытаетя восстановить аккаунт по ссылке `?secret=...` */
+    protected bool $accountRestoreMode = false;
+
     public function __construct()
     {
+        $this->Request = new GameRequest($_SERVER['HTTP_REFERER'] ?? '');
+
         $this->config = include(__DIR__ . "/../../configs/conf.php");
         self::$configStatic = $this->config;
         $this->turnTime = $this->config['turnTime'];
@@ -145,6 +152,16 @@ class Game
             ?? (Yandex::$commonId // авторизован через Яндекс или...
                 ?? PlayerModel::getPlayerID($this->User, true));
         self::$commonID = $this->commonId;
+
+        // Проверяем режим восстановления аккаунта, пытаемся связать аккаунты
+        if ($this->Request->secret && !Tg::$commonId && !Yandex::$commonId) {
+            $this->accountRestoreMode = true;
+
+            $oldCommonId = $this->restoreAccount($this->Request->secret, $this->commonId);
+            if ($oldCommonId) {
+                $this->commonId = $oldCommonId;
+            }
+        }
 
         // Если не удалось дождаться лока по текущему игроку, то посылаем ошибку и выходим
         if (!Cache::waitLock($this->User, true)) {
@@ -831,7 +848,7 @@ class Game
 
         $secret = $this->genKeyForCommonID($this->commonId);
         $message['secret'] = VH::a(
-            $secret,
+            T::S('Restore link prompt'),
             ['href' => Config::$envConfig['domain'] . "?secret={$secret}", 'target' => '_blank']
         );
 
@@ -857,6 +874,42 @@ class Game
         */
 
         return $this->makeResponse(['message' => json_encode($message, JSON_UNESCAPED_UNICODE)]);
+    }
+
+    /** Восстанавливает старый аккаунт на текущем аккаунте, вычленяя `commonId` из зашифрованной строки */
+    protected function restoreAccount(string $encryptedMessage, int $currentCommonId): ?int
+    {
+        $secretKey = Config::$envConfig['SALT'];
+        $method = 'AES-128-CBC';
+        $iv = base64_decode(Config::$envConfig['IV'] . '==');
+        $decrypted_message = openssl_decrypt($encryptedMessage, $method, $secretKey, 0, $iv);
+
+        if (!is_numeric($decrypted_message)) {
+            return null;
+        }
+
+        $oldCommonId = UserModel::find()->where([UserModel::COMMON_ID_FIELD => $decrypted_message])->one()->_id ?? null;
+
+        if (!$oldCommonId) {
+            return null;
+        }
+
+        // Перезаписываем `$currentCommonId` на `$oldCommonId`
+        if ($currentCommonId === $oldCommonId || PlayerModel::setParamMass(
+                'common_id',
+                $oldCommonId,
+                [
+                    'field_name' => 'common_id',
+                    'condition' => '=',
+                    'value' => $currentCommonId,
+                    'raw' => true
+                ]
+            )
+        ) {
+            return $oldCommonId;
+        } else {
+            return null;
+        }
     }
 
     protected function genKeyForCommonID($ID)
@@ -2546,16 +2599,11 @@ class Game
             return json_encode($arr, JSON_UNESCAPED_UNICODE);
         }
 
-        $commonId = $this->gameStatus['users'][$this->numUser]['common_id'] ?? PlayerModel::getPlayerID(
-            $this->User,
-            true
-        );
-
         $arr = array_merge(
             $arr,
             [
-                'common_id' => $commonId,
-                'common_id_hash' => PayController::getCommonIdHash($commonId),
+                'common_id' => $this->commonId,
+                'common_id_hash' => PayController::getCommonIdHash($this->commonId),
             ]
         );
 
@@ -2595,6 +2643,7 @@ class Game
                     $score .= ' ' . $this->gameStatus['users'][$nextUserNum]['username'] . ':' . $this->gameStatus['users'][$nextUserNum]['score'];
                 }
 
+                // todo убрать `array_merge()`
                 $arr = array_merge($arr, ['score' => $score]);
                 $arr = array_merge($arr, ['score_arr' => $score_arr]);
                 $arr = array_merge($arr, ['activeUser' => $this->gameStatus['activeUser']]);
@@ -2617,8 +2666,8 @@ class Game
                         'bank_string' => $bank < 1000
                             ? $bank
                             : ($bank < 1000000
-                                ? ((string)(round($bank / 1000)) . 'K')
-                                : ((string)(round($bank / 1000000)) . 'M'))
+                                ? (round($bank / 1000) . 'K')
+                                : (round($bank / 1000000) . 'M'))
                     ]
                 );
             }
@@ -2720,6 +2769,10 @@ class Game
         } elseif (isset($this->statusComments[$arr['gameState']])) {
             $arr = array_merge($arr, ['comments' => call_user_func([$this, 'statusComments_' . $arr['gameState']])]);
             //Игра еще не создана, но комменты для статуса раздаем
+        }
+
+        if ($this->accountRestoreMode && $arr['gameState'] === self::CHOOSE_GAME_STATUS) {
+            $arr['account_restore_mode'] = 1;
         }
 
         $this->destruct();

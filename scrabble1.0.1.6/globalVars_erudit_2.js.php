@@ -77,6 +77,7 @@ var activeUser = false;
 var commonId = false;
 var commonIdHash = false;
 var isPayEnabled = false;
+var restoredProfileShown = false;
 
 // vars initializing in chooseGame state
 var tWaiting = false;

@@ -164,8 +164,8 @@ class T
             self::RU_LANG => 'Успешно'
         ],
         'secret_prompt' => [
-            self::EN_LANG => '&#42;Use this link for connecting this account and new one in another browser',
-            self::RU_LANG => '&#42;Используйте ссылку для привязки текущего аккаунта к новому аккаунту в другом браузере'
+            self::EN_LANG => '&#42;Use this link for connecting this account and new one in another browser. Just click on it, then browser will be opened - save the URL in safe place',
+            self::RU_LANG => '&#42;Используйте ссылку для привязки текущего аккаунта к новому аккаунту в другом браузере. Кликните по сылке, откроется окно браузера, сохраните адрес в надежном месте'
         ],
         UserModel::BALANCE_HIDDEN_FIELD => [
             self::EN_LANG => 'User hidden',
@@ -463,8 +463,12 @@ class T
             self::RU_LANG => 'Рейтинг по монетам'
         ],
         'Secret key' => [
-            self::EN_LANG => 'Account&#42;restore link',
-            self::RU_LANG => 'Ссылка&#42; восстановления'
+            self::EN_LANG => 'Your&nbsp;',
+            self::RU_LANG => 'Ваша&nbsp;'
+        ],
+        'Restore link prompt' => [
+            self::EN_LANG => 'Account&nbsp;restoration&nbsp;link',
+            self::RU_LANG => 'ссылка&nbsp;восстановления&nbsp;Аккаунта'
         ],
         'Link' => [
             self::RU_LANG => 'Привязать'

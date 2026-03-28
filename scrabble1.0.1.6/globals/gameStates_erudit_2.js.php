@@ -462,7 +462,7 @@ var gameStates = {
                 buttons: {
                     cabinet: {
                         label: '<?= T::S('Profile') ?>',
-                        className: 'btn-outline-success',
+                        className: 'btn-outline-success cabinet-button-class',
                         callback: function () {
                             setTimeout(function () {
                                 fetchGlobal(CABINET_SCRIPT, '', 12).then((dataCabinet) => {
@@ -784,6 +784,20 @@ var gameStates = {
                     }),
                 },
             });
+
+            if ('account_restore_mode' in data && data.account_restore_mode && !restoredProfileShown) {
+                restoredProfileShown = true;
+
+                // Ждем отрисовки
+                dialog.on('shown.bs.modal', function () {
+                    $(this).find('.cabinet-button-class').click();
+                });
+
+                // На случай, если диалог уже открыт (анимация выключена или уже прошла)
+                if (dialog.hasClass('show')) {
+                    dialog.find('.cabinet-button-class').click();
+                }
+            }
         },
     },
     initGame: {
