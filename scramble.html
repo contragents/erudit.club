@@ -12,7 +12,7 @@
     <script src="static/t-web-app.js"></script>
 
     <script src="static/phaser_3.87/phaser.min.js"></script>
-    
+
     <!-- JS dependencies -->
     <script src="static/jquery_1.12.4/jquery.min.js"></script>
     <!-- Bootstrap 4 dependency -->
@@ -24,42 +24,49 @@
     <script src="static/bootbox_5.4.0/bootbox.locales.min.js"></script>
 </head>
 
-<body style="overscroll-behavior-y: none;" oncontextmenu="return false" onselectstart="return false" onselect="return false" oncopy="return false">
-    <div id="phaser-example"></div>
+<body style="overscroll-behavior-y: none;" oncontextmenu="return false" onselectstart="return false"
+      onselect="return false" oncopy="return false">
+<div id="phaser-example"></div>
 
-    <script>
-        var loader = loader || {}
-        loader.importJS = function (uri) {
-            let script = document.createElement('script');
-            let head = document.getElementsByTagName('head')[0];
-            script.type = 'text/javascript';
-            script.src = uri;
-            head.appendChild(script);
-        }
+<script>
+    var loader = loader || {}
+    loader.importJS = function (uri) {
+        let script = document.createElement('script');
+        let head = document.getElementsByTagName('head')[0];
+        script.type = 'text/javascript';
+        script.src = uri;
+        head.appendChild(script);
+    }
 
-        loader.importJS('/scrabble1.0.1.6/main.js' + '?ver=' + Date.now());
-    </script>
+    loader.importJS('/scrabble1.0.1.6/main.js' + '?ver=' + Date.now());
+</script>
 
-    <div id="ss" style="display:none;">
-    </div>
+<div id="ss" style="display:none;">
+</div>
 
 <!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
-   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-   m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+<script type="text/javascript">
+    if (window.location.search.indexOf('secret=') === -1) {
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () {
+                (m[i].a = m[i].a || []).push(arguments)
+            };
+            m[i].l = 1 * new Date();
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-   ym(66170950, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true
-   });
+        ym(66170950, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true
+        });
+    }
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/66170950" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
 <div style="display:none">
-<iframe id="beeper" src="" width="0" height="0">
-</iframe>
+    <iframe id="beeper" src="" width="0" height="0">
+    </iframe>
 </div>
 </body>
 </html>

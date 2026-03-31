@@ -20,9 +20,11 @@ class Hints
 Учитываются все Ъ, полученные: <ul>
 <li>При обычной раздаче букв</li>
 <li>При замене букв</li>
+<li>При дополнении слова с "Ъ" (СЪЕМ->СЪЕМКА)</li>
 <li>А также при составлении слова, в котором звездочка заменяет Ъ</li>
 </ul>',
-        ];
+        'account_restoration' => 'accountRestoration',
+    ];
     public const TYPE_WORDS_QUERY = 'words';
     private static $gameState;
     private static $User;
@@ -70,11 +72,13 @@ class Hints
             'yandexScoreLink' => 'isNotYandexApp',
             'donationHint' => 'isYandexApp',
             'tgWordCheckHint' => 'isYandexApp',
+            self::PHRASES['account_restoration'] => 'isYandexApp',
         ]
     ];
 
     const HINTS = [
         1 => [
+            self::PHRASES['account_restoration'],
             'donationHint',
             '<strong>Первый ход</strong> играем через <strong>центральную</strong> клетку поля',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
@@ -99,6 +103,7 @@ class Hints
             'tgWordCheckHint',
         ],
         1800 => [
+            self::PHRASES['account_restoration'],
             'donationHint',
             self::PHRASES[AchievesModel::TVERD_NUM],
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
@@ -117,6 +122,7 @@ class Hints
         ],
         1900 => [
             self::PHRASES[AchievesModel::TVERD_NUM],
+            self::PHRASES['account_restoration'],
             'donationHint',
             'yandexScoreLink',
             'tgWordCheckHint',
@@ -150,6 +156,7 @@ class Hints
         ],
         2000 => [
             self::PHRASES[AchievesModel::TVERD_NUM],
+            self::PHRASES['account_restoration'],
             'donationHint',
             'tgWordCheckHint',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
@@ -170,6 +177,7 @@ class Hints
         ],
         2050 => [
             self::PHRASES[AchievesModel::TVERD_NUM],
+            self::PHRASES['account_restoration'],
             'donationHint',
             'tgWordCheckHint',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
@@ -201,6 +209,38 @@ class Hints
     {
         return '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>';
     }
+
+    private static function accountRestoration(): string
+    {
+        $res = VH::h2('В игре обновлена функция восстановления учетной записи!') .
+        self::isMobileDevice()
+            ? VH::div(
+                'Нажмите на ссылку восстановления в Профиле - она будет скопирована в буфер мобильного устройства. Сохраните ссылку восстановления в надежном месте'
+            )
+            : VH::div(
+                'Используйте ссылку для привязки текущего аккаунта к новому аккаунту в другом браузере. Кликните по сылке, откроется окно браузера, сохраните адрес в надежном месте'
+            );
+
+        $res = VH::h2('В игре обновлена функция восстановления учетной записи!') .
+            VH::div(
+                VH::div(
+                    self::isMobileDevice()
+                        ? VH::span('📱 ', ['style' => 'font-size: 1.2em;']) . VH::b('Скопируйте ссылку в Профиле.')
+                        : VH::span('💻 ', ['style' => 'font-size: 1.2em;']) . VH::b('Привяжите аккаунт к другому браузеру.'),
+                    ['style' => 'color: #2ecc71; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px;'] //['style' => 'margin-bottom: 10px; font-size: 1.1em; color: #f1c40f;']
+                ) .
+                VH::div(
+                    self::isMobileDevice()
+                        ? 'Просто нажмите на неё — она сохранится в буфер обмена. Сохраните её в надежном месте.'
+                        : 'Кликните по ссылке восстановления в Профиле и сохраните адрес открывшейся страницы.',
+                    ['style' => 'color: rgba(255, 255, 255, 0.9); font-size: 0.95em; line-height: 1.3;'] //['style' => 'color: #ecf0f1; line-height: 1.4; opacity: 0.9;']
+                ),
+                ['style' => 'padding: 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(46, 204, 113, 0.3); border-radius: 12px; margin-top: 10px;'] //['style' => 'padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px;']
+            );
+
+        return $res;
+    }
+
 
     private static function checkCache($User, &$gameStatus, $hint): bool
     {
@@ -465,7 +505,7 @@ class Hints
                 : '')
             . "</strong> <br />"
 
-            .  (!empty($recordData['link'])
+            . (!empty($recordData['link'])
                 ? "Получен жетон <img style=\"
 						cursor: pointer; 
 						margin-left: 0px; padding: 0;
@@ -478,7 +518,7 @@ class Hints
 				src=\"{$recordData['link']}\" width=\"100px\" /> <br />"
                 : ''
             )
-            ."Дата установления достижения: <strong>" . date("d.m.Y", $recordData['record_date']) . "</strong>";
+            . "Дата установления достижения: <strong>" . date("d.m.Y", $recordData['record_date']) . "</strong>";
     }
 
     private static function wordsRuHint()
@@ -537,7 +577,7 @@ class Hints
             return true;
         }
 
-        if (strpos($_SERVER['HTTP_REFERER'] ?? '', 'app=1')) {
+        if (strpos($_SERVER['HTTP_REFERER'] ?? '', 'app=1') || strpos($_SERVER['HTTP_REFERER'] ?? '', 'app=2')) {
             return true;
         }
 

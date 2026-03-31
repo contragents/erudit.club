@@ -847,9 +847,17 @@ class Game
             ];
 
         $secret = $this->genKeyForCommonID($this->commonId);
+        $restoreLink = Config::$config['domain'] . "?secret=$secret";
         $message['secret'] = VH::a(
             T::S('Restore link prompt'),
-            ['href' => Config::$envConfig['domain'] . "?secret={$secret}", 'target' => '_blank']
+            [
+                'href' => $restoreLink
+                ,
+                'target' => '_blank'
+            ]
+            + (Hints::isAndroidApp()
+                ? ['onClick' => "copyRestoreLink('$restoreLink'); return false;"]
+                : [])
         );
 
         /*

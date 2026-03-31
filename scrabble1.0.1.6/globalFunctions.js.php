@@ -1,4 +1,21 @@
 //
+function copyRestoreLink(link) {
+    var copyLinkDialog = bootbox.alert(
+        {
+            className: 'modal-settings modal-profile text-white',
+            message: '<?= T::S('Your restoration link has been copied to clipboard') ?>',
+        }
+    );
+
+    setTimeout(
+        function () {
+            copyTextToClipboard(link);
+            copyLinkDialog.find(".bootbox-close-button").trigger("click");
+        }
+        , 2000
+    );
+}
+
 async function copyTextToClipboard(text) {
     try {
         await navigator.clipboard.writeText(text);

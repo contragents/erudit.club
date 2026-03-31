@@ -150,8 +150,12 @@ class T
             self::EN_LANG => 'https://xn--d1aiwkc2d.club/scramble.html/?friend=',
             self::RU_LANG => 'https://эрудит.club/?friend='
         ],
-        'Your invitation link has been copied to clipboard' =>
-            [self::RU_LANG => 'Ваша ссылка-приглашение скопирована в буфер'],
+        'Your invitation link has been copied to clipboard' => [
+            self::RU_LANG => 'Ваша ссылка-приглашение скопирована в буфер'
+        ],
+        'Your restoration link has been copied to clipboard' => [
+            self::RU_LANG => 'Ваша ссылка для восстановления аккаунта скопирована в буфер'
+        ],
         'System' => [self::RU_LANG => 'Система'],
         'Rating decrease' => [self::RU_LANG => 'Штраф за незаход'],
         'Agreement' => [
