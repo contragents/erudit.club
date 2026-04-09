@@ -21,7 +21,6 @@ class Game extends \Game
     const GAME_STATUS_KEY = 'erudit.private.game_status_';
     const GAME_USER_KEY = 'erudit.private.user_';
     const CURRENT_GAME_KEY = 'erudit.private.current_game_';
-    const GAMES_ENDED_KEY = 'erudit.private.games_ended';
     const STATS_FAILED = 'erudit.private.games_statistics_failed'; // статистика не используется в private
     const NUM_RATING_PLAYERS_KEY = 'erudit.private.num_rating_players';
     const GET_GAME_KEY = 'erudit.private.get_game_';

@@ -100,8 +100,6 @@ class Game
     const BAD_COMBINATIONS_HSET = 'bad_combinations';
 
     const ERROR_STATUS = 'error';
-
-    const GAMES_ENDED_KEY = 'erudit.games_ended';
     const STATS_FAILED = 'erudit.games_statistics_failed';
     const NUM_RATING_PLAYERS_KEY = 'erudit.num_rating_players';
     const NUM_COINS_PLAYERS_KEY = 'erudit.num_coins_players';
