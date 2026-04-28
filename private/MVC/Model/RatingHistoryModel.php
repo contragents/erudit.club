@@ -9,6 +9,10 @@ class RatingHistoryModel extends BaseModel
     const RATING_BEFORE_FIELD = 'rating_before';
     const RATING_AFTER_FIELD = 'rating_after';
 
+    // todo добавить все поля
+    public ?int $_game_id = null;
+    public bool $_is_winner = false;
+
     public static function addRatingChange(
         int $commonId,
         int $oldRating,

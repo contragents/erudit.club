@@ -231,4 +231,30 @@ class ORM
     {
         return ' ( ' . $expression . ' ) ';
     }
+
+    /**
+     * Подготавливает массив значений для использования в where ...in <выражение>
+     * с учетом `$raw` и `$defaultValue` для пустого массива
+     * @param array $values
+     * @param bool $raw
+     * @param $defaultValue
+     * @return string
+     */
+    public static function makeInFromArray(array $values, bool $raw = true, $defaultValue = 0): string
+    {
+        if (count($values) > 1) {
+            return ' (' . implode(',', $raw ? $values : DB::escapeStringArr($values)) . ') ';
+        }
+
+        if (count($values) === 0) {
+            $values[] = $defaultValue;
+        }
+
+        if (count($values) === 1) {
+            $value = $values[0];
+            $value = $raw ? $value : ("'" . DB::escapeString($value) . "'");
+
+            return " ($value, $value) ";
+        }
+    }
 }

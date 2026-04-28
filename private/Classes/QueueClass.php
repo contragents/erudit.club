@@ -27,6 +27,7 @@ class Queue
     const GAME_KEY = 'erudit.game_';
     const RATING_QUEUE = 'ratingQueue';
     const MAX_BOT_BID = 100; // Максимальная ставка бота
+    const BIG_RATING_VALUE = 2300;
 
     protected $User;
     protected $userTime;
@@ -38,6 +39,7 @@ class Queue
     protected Game $caller;
     protected array $POST;
     protected $lang;
+    protected array $prefs = [];
 
     const LANGS = ['RU' => '', 'EN' => 'EN', '' => ''];
 
@@ -54,12 +56,16 @@ class Queue
         $this->userTime = date('U'); // Потом перезапишется, если игрок уже в подборе
 
         if (isset($this->POST['ochki_num'])) {
+            //В начале игры сохраняем предпочтения игрока для игры по приглашению
+            $this->prefs = $this->POST;
             Cache::setex(
                 static::PREFS_KEY . $this->User,
                 static::PREFERENCES_TTL,
-                $this->POST
+                $this->prefs
             );
-            //В начале игры сохраняем предпочтения игрока для игры по приглашению
+
+        } else {
+            $this->prefs = Cache::get(static::PREFS_KEY . $this->User) ?: [];
         }
     }
 
@@ -196,55 +202,64 @@ class Queue
 
     public function doSomethingWithThisStuff(string $lang = '')
     {
-        $this->lang = self::LANGS[$lang];
+        try {
+            $this->lang = self::LANGS[$lang];
 
-        if (!$this->userInInitStatus) {
-            return $this->chooseGame();
-        }
-
-        if ($this->checkInviteQueue()) {
-            if ($this->inviteQueueFull()) {
-                if (Cache::waitLock(static::SEMAPHORE_KEY)) {
-                    return $this->makeGame(static::QUEUE_NUMS['invite'], 4);
-                }
+            if (!$this->userInInitStatus) {
+                return $this->chooseGame();
             }
 
-            return $this->initGameResponse('invite');
-        }
-
-        // Блок поиска рейтингового игрока
-        if ($this->lang == '') {
-            // Только для игры на Русском
-            if ($ratingWanted = $this->waitRatingPlayer($this->User)) // Сразу помещает в спецочередь
-            {
-                if ($ratingPlayer = $this->findRatingPlayer($ratingWanted)) {
+            if ($this->checkInviteQueue()) {
+                if ($this->inviteQueueFull()) {
                     if (Cache::waitLock(static::SEMAPHORE_KEY)) {
-                        return $this->makeRatingGame($ratingPlayer) ?: $this->stillWaitRatingPlayer();
+                        return $this->makeGame(static::QUEUE_NUMS['invite'], 4);
                     }
                 }
 
-                if ($this->timeToWaitRatingPlayerOver($this->User)) {
-                    return $this->storeToCommonQueue($this->User) ?: $this->stillWaitRatingPlayer();
-                }
-
-                return $this->stillWaitRatingPlayer();
+                return $this->initGameResponse('invite');
             }
 
-            $curPlayerRating = PlayerModel::getRatingByCookie($this->User);
-            if ($curPlayerRating > 1900 && ($ratingPlayer = $this->findWaitingRaitingPlayer($curPlayerRating))) {
+            // Блок поиска рейтингового игрока
+            if ($this->lang == '') {
+                // Только для игры на Русском
+                if ($ratingWanted = $this->waitRatingPlayer($this->User)) // Сразу помещает в спецочередь
+                {
+                    if ($ratingPlayer = $this->findRatingPlayer($ratingWanted)) {
+                        if (Cache::waitLock(static::SEMAPHORE_KEY)) {
+                            return $this->makeRatingGame($ratingPlayer) ?: $this->stillWaitRatingPlayer();
+                        }
+                    }
+
+                    if ($this->timeToWaitRatingPlayerOver($this->User)) {
+                        return $this->storeToCommonQueue($this->User) ?: $this->stillWaitRatingPlayer();
+                    }
+
+                    return $this->stillWaitRatingPlayer();
+                }
+
+                $curPlayerRating = PlayerModel::getRatingByCookie($this->User);
+                if ($curPlayerRating > 1900 && ($ratingPlayer = $this->findWaitingRaitingPlayer($curPlayerRating))) {
+                    if (Cache::waitLock(static::SEMAPHORE_KEY)) {
+                        return $this->makeReverseRatingGame($ratingPlayer) ?: $this->storeTo2Players($this->User);
+                    }
+                }
+            }
+
+            if ($this->players2Waiting($this->User)) {
                 if (Cache::waitLock(static::SEMAPHORE_KEY)) {
-                    return $this->makeReverseRatingGame($ratingPlayer) ?: $this->storeTo2Players($this->User);
+                    return $this->makeGame('2');
                 }
             }
-        }
 
-        if ($this->players2Waiting($this->User)) {
-            if (Cache::waitLock(static::SEMAPHORE_KEY)) {
-                return $this->makeGame('2');
-            }
-        }
+            return $this->storeTo2Players($this->User);
+        } catch(\Exception $e) {
+            LogModel::add([
+                              LogModel::CATEGORY_FIELD => LogModel::CATEGORY_ANTICHEAT,
+                              LogModel::MESSAGE_FIELD => $e->getMessage(),
+                          ]);
 
-        return $this->storeTo2Players($this->User);
+            return $this->storeTo2Players($this->User);
+        }
     }
 
     protected function inviteQueueFull()
@@ -331,7 +346,7 @@ class Queue
                 if ($playerRating >= $ratingWanted) {
                     return [
                         'cookie' => $player,
-                        'options' => @unserialize($data)['options'] ?? false,
+                        'options' => @unserialize($data)['options'] ?: [],
                         'queue' => 2,
                         'rating' => $playerRating
                     ];
@@ -351,7 +366,7 @@ class Queue
                     ) {
                         return [
                             'cookie' => $player,
-                            'options' => $data['options'] ?? false,
+                            'options' => $playerInfo['options'] ?: [],
                             'queue' => self::RATING_QUEUE,
                             'rating' => $playerRating
                         ];
@@ -372,7 +387,7 @@ class Queue
                     if ($curPlayerRating >= $data['from_rating']) {
                         return [
                             'cookie' => $player,
-                            'options' => $data['options'] ?? false,
+                            'options' => $data['options'] ?: [],
                             'queue' => static::RATING_QUEUE,
                             'rating' => PlayerModel::getRatingByCookie($player),
                         ];
@@ -410,7 +425,11 @@ class Queue
             self::cleanUp($ratingPlayer['cookie'])
             //Удалили ожидающего рейтинг игрока из очереди рейтинга
             &&
-            self::addToQueue("erudit.2{$this->lang}players_waiters", $ratingPlayer['cookie'], $ratingPlayer['options'])
+            self::addToQueue(
+                "erudit.2{$this->lang}players_waiters",
+                $ratingPlayer['cookie'],
+                $ratingPlayer['options'] ?? []
+            )
             //Поместили ожидающего рейтинг игрока в очередь текущего игрока
             &&
             self::cleanUp($this->User)
@@ -436,7 +455,7 @@ class Queue
                 self::addToQueue(
                     "erudit.2{$this->lang}players_waiters",
                     $ratingPlayer['cookie'],
-                    $playerData['options']
+                    $playerData['options'] ?? []
                 )
             )) {
                 return false;
@@ -449,7 +468,7 @@ class Queue
             self::addToQueue(
                 "erudit.2{$this->lang}players_waiters",
                 $this->User,
-                $waiterData['options'],
+                $waiterData['options'] ?? [],
                 ['time' => $waiterData['time']]
             )
         ) {
@@ -533,25 +552,18 @@ class Queue
             $this->caller->currentGameUsers = [];
 
             $waitingPlayers = Cache::hgetall(static::QUEUES["erudit.{$queue}{$this->lang}players_waiters"]);
-            $prefs = Cache::get(static::PREFS_KEY . $this->User);
 
-            if (!isset($waitingPlayers[$this->User])) {
-                $options = isset($this->POST['ochki_num'])
-                    ? $this->POST
-                    : ($prefs ?: false);
-            } else {
-                $waitingPlayers[$this->User] = unserialize($waitingPlayers[$this->User]);
-
-                $options = isset($waitingPlayers[$this->User]['options']['ochki_num'])
-                    ? $waitingPlayers[$this->User]['options']
-                    : ($prefs ?: false);
-
-                unset($waitingPlayers[$this->User]);
-                reset($waitingPlayers);
-            }
+            $options = $this->prefs;
+            unset($waitingPlayers[$this->User]);
+            reset($waitingPlayers);
+            $thisPlayerRating = CommonIdRatingModel::getRating($this->caller->commonId, $this->caller::$gameName);
 
             // Прописываем текущему юзеру - добавление в игру,  номер игры, удаляем из очереди ждунов
-            $game_users[] = ['userCookie' => $this->User, 'options' => $options];
+            $game_users[] = [
+                'userCookie' => $this->User,
+                'options' => $options,
+                'common_id' => $this->caller->commonId
+            ];
 
             self::cleanUp($this->User);
             Cache::setex(static::GET_GAME_KEY . $this->User, $this->caller->cacheTimeout, $this->caller->currentGame);
@@ -559,13 +571,22 @@ class Queue
             $this->caller->currentGameUsers[] = $this->User;
 
             foreach ($waitingPlayers as $player => $data) {
-                if ($wishRating && PlayerModel::getRatingByCookie($player) != $wishRating) {
+                $playerCommonId = PlayerModel::getPlayerID($player, true);
+                $playerRating = CommonIdRatingModel::getRating($playerCommonId, $this->caller::$gameName);
+
+                if ($thisPlayerRating >= self::BIG_RATING_VALUE || $playerRating >= self::BIG_RATING_VALUE) {
+                    if (!$this->isPassedAnticheat(
+                        $thisPlayerRating > $playerRating ? $this->caller->commonId : $playerCommonId,
+                        $thisPlayerRating <= $playerRating ? $this->caller->commonId : $playerCommonId
+                    )) {
+                        continue;
+                    }
+                }
+                if ($wishRating && $playerRating != $wishRating) {
                     continue;
                 }
 
                 $data = unserialize($data);
-
-                $prefs = Cache::get(static::PREFS_KEY . $player);
 
                 //Прописываем юзерам - удаление из очереди и номер игры
                 if (!self::cleanUp($player)) {
@@ -578,10 +599,8 @@ class Queue
                     $this->caller->currentGame
                 );
 
-                $options = isset($data['options']['ochki_num'])
-                    ? $data['options']
-                    : ($prefs ?: false);
-                $game_users[] = ['userCookie' => $player, 'options' => $options];
+                $options = isset($data['options']['ochki_num']) ? $data['options'] : $this->prefs;
+                $game_users[] = ['userCookie' => $player, 'options' => $options, 'common_id' => $playerCommonId];
 
                 //Заполняем массив игроков
                 $this->caller->currentGameUsers[] = $player;
@@ -608,7 +627,7 @@ class Queue
             $bid = 0;
             $noCoinGame = false;
             foreach ($game_users as $num => $user) {
-                $userBalance = BalanceModel::getBalance(PlayerModel::getPlayerID($user['userCookie'], true));
+                $userBalance = BalanceModel::getBalance($user['common_id']);
 
                 // todo иногда ставка делает баланс игрока отрицательным. Нужно не давать балансу уходить в минус
 
@@ -639,7 +658,7 @@ class Queue
             foreach ($game_users as $num => $user) {
                 $this->caller->gameStatus['users'][$num] = [
                     'ID' => $user['userCookie'],
-                    'common_id' => PlayerModel::getPlayerID($user['userCookie'], true),
+                    'common_id' => $user['common_id'],
                     'status' => Game::START_GAME_STATUS,
                     'isActive' => true,
                     'score' => 0,
@@ -670,10 +689,12 @@ class Queue
                     }
                 }
 
-                if ($user['options'] !== false) {
-                    $this->caller->gameStatus['users'][$num]['wishOchkiNum'] = $user['options']['ochki_num'];
-                    $this->caller->gameStatus['users'][$num]['wishTurnTime'] = $user['options']['turn_time'];
-                    //Заполнили пожелания игроков к времени хода и очкам для выигрыша
+                if ($user['options']) {
+                    //Заполнить пожелания игроков к времени хода и очкам для выигрыша
+                    $this->caller->gameStatus['users'][$num]['wishOchkiNum'] = $user['options']['ochki_num']
+                        ?? $this->caller::DEFAULT_OCHKI;
+                    $this->caller->gameStatus['users'][$num]['wishTurnTime'] = $user['options']['turn_time']
+                        ?? $this->caller::DEFAULT_TIME;
                 }
 
                 $this->caller->gameStatus[$user['userCookie']] = $num;
@@ -774,6 +795,50 @@ class Queue
             ),
             ['lock' => $user]
         );
+    }
+
+    private function isPassedAnticheat($maxCommonId, $minCommonId): bool
+    {
+        try {
+            $last100GamesModels = RatingHistoryModel::find()
+                ->where([
+                            RatingHistoryModel::COMMON_ID_FIELD => $maxCommonId,
+                            RatingHistoryModel::GAME_NAME_ID_FIELD => BaseModel::GAME_IDS[$this->caller::$gameName]
+                        ])
+                ->limit(100)
+                ->order(RatingHistoryModel::ID_FIELD, false)
+                ->all();
+
+            /*$lastGamesIds = array_map(
+                (fn(RatingHistoryModel $ratingHistoryModel) => $ratingHistoryModel->_game_id),
+                $last100GamesModels
+            );*/
+
+            $lastGamesIds = array_column($last100GamesModels, RatingHistoryModel::GAME_ID_FIELD);
+
+            $lastGamesOpponentModels = RatingHistoryModel::find()
+                ->where([
+                            [RatingHistoryModel::COMMON_ID_FIELD, '=', $minCommonId, true],
+                            [RatingHistoryModel::GAME_ID_FIELD, 'in', ORM::makeInFromArray($lastGamesIds, true), true]
+                        ])
+                ->limit(100)
+                ->order(RatingHistoryModel::COMMON_ID_FIELD)
+                ->all();
+
+            $looseCount = count(array_filter($lastGamesOpponentModels, fn(RatingHistoryModel $m) => !$m->_is_winner));
+
+            return !(
+                count($lastGamesOpponentModels) / count($lastGamesIds) >= 0.8 // процент игр с этим соперником
+                && $looseCount / count($lastGamesOpponentModels) >= 0.95 // процент проигрышей соперника
+            );
+        } catch (Throwable $e) {
+            LogModel::add([
+                              LogModel::CATEGORY_FIELD => LogModel::CATEGORY_ANTICHEAT,
+                              LogModel::MESSAGE_FIELD => $e->getMessage(),
+                          ]);
+
+            return true;
+        }
     }
 }
 

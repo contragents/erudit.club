@@ -38,6 +38,7 @@ class LogModel extends BaseModel
     const CATEGORY_QUERY_ERROR = 'query_error';
     const CATEGORY_BAD_COMBINATION = 'bad_combination';
     const CATEGORY_SAVE_RATINGS_TEST = 'save_ratings_test';
+    const CATEGORY_ANTICHEAT = 'anticheat';
 
     public static function add(array $processedFieldsVals)
     {

@@ -104,6 +104,8 @@ class Game
     const NUM_RATING_PLAYERS_KEY = 'erudit.num_rating_players';
     const NUM_COINS_PLAYERS_KEY = 'erudit.num_coins_players';
 
+    const DEFAULT_OCHKI = 300;
+    const DEFAULT_TIME = 90;
     const OCHKI_VARIANTS = [200 => 0, 300 => 0];
     const TIME_VARIANTS = [60 => 0, 90 => 0, 120 => 0];
     const ADD_TO_CHAT_STATE = 'addToChat';
@@ -857,27 +859,6 @@ class Game
                 ? ['onClick' => "copyRestoreLink('$restoreLink'); return false;"]
                 : [])
         );
-
-        /*
-        $message['form'][] = [
-            'prompt' => 'Ключ учетной записи',
-            'inputName' => 'keyForID',
-            'inputId' => 'key_for_id',
-            'onclick' => 'copyKeyForID',
-            'buttonCaption' => 'В буфер',
-            'value' => $this->genKeyForCommonID($message['common_id']),
-            'readonly' => 'true'
-        ];
-
-        $message['form'][] = [
-            'prompt' => 'Ключ основного аккаунта',
-            'inputName' => 'key',
-            'inputId' => 'old_account_key',
-            'onclick' => 'mergeTheIDs',
-            'buttonCaption' => 'Связать',
-            'placeholder' => 'сохраненный ключ от старого аккаунта'
-        ];
-        */
 
         return $this->makeResponse(['message' => json_encode($message, JSON_UNESCAPED_UNICODE)]);
     }
@@ -2430,7 +2411,7 @@ class Game
         }
         //Голосование проведено
 
-        return 300;
+        return self::DEFAULT_OCHKI;
     }
 
     protected function makeWishTime(): int
@@ -2461,7 +2442,7 @@ class Game
         }
         //Голосование проведено
 
-        return 90;
+        return self::DEFAULT_TIME;
     }
 
     public function gameStarted($statusUpdateNeeded = false)

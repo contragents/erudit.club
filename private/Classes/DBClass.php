@@ -1,8 +1,9 @@
 <?php
-    /** Класс DB для работы с MariaDB */
+
+/** Класс DB для работы с MariaDB */
 class DB
 {
-    private static bool $is_transaction_started =  false;
+    private static bool $is_transaction_started = false;
     private static int $transactionNestLevel = 0;
     private static bool $isLogBegin = false;
     private static int $logCounter = 0;
@@ -21,26 +22,29 @@ class DB
         return self::$is_transaction_started;
     }
 
-    private static function transactionLog(string $method) {
+    private static function transactionLog(string $method)
+    {
         $logKey = 'transaction_log';
 
-        if(!self::$isLogBegin) {
+        if (!self::$isLogBegin) {
             Cache::del($logKey);
         }
 
         self::$isLogBegin = true;
 
-        Cache::rpush($logKey,
-        [
-            'method' => $method,
-            'counter' => ++self::$logCounter,
-            'transaction_started' => self::$is_transaction_started,
-            'nest_level' => self::$transactionNestLevel
-        ]
+        Cache::rpush(
+            $logKey,
+            [
+                'method' => $method,
+                'counter' => ++self::$logCounter,
+                'transaction_started' => self::$is_transaction_started,
+                'nest_level' => self::$transactionNestLevel
+            ]
         );
     }
 
-    public static function transactionRollback() {
+    public static function transactionRollback()
+    {
         // self::transactionLog(__METHOD__);
 
         self::$transactionNestLevel = 0; // Сбросили уровень вложенности
@@ -60,7 +64,8 @@ class DB
         }
     }
 
-    public static function transactionCommit() {
+    public static function transactionCommit()
+    {
         // self::transactionLog(__METHOD__);
 
         if (!self::$is_transaction_started) {
@@ -127,10 +132,30 @@ class DB
         self::$DBConnect = $connection;
     }
 
+    /**
+     * Каждая строка результата обернута в кавычки
+     * @param array $strArr
+     * @return array
+     */
+    public static function escapeStringArr(array $strArr): array
+    {
+        if (self::$DBConnect === null) {
+            self::connect();
+        }
+
+        $res = [];
+        foreach ($strArr as $str) {
+            $res[] = "'" . mysqli_real_escape_string(self::$DBConnect, $str) . "'";
+        }
+
+        return $res;
+    }
+
     public static function escapeString($str)
     {
-        if (self::$DBConnect === null)
+        if (self::$DBConnect === null) {
             self::connect();
+        }
 
         return mysqli_real_escape_string(self::$DBConnect, $str);
     }
@@ -141,14 +166,15 @@ class DB
      */
     public static function queryInsert($mysqlQuery)
     {
-        if (self::$DBConnect === null)
+        if (self::$DBConnect === null) {
             self::connect();
+        }
 
         $res = mysqli_query(self::$DBConnect, $mysqlQuery);
         $affectedRows = mysqli_affected_rows(self::$DBConnect);
 
-        preg_match_all ('/(\S[^:]+): (\d+)/', mysqli_info(self::$DBConnect), $matches);
-        $info = array_combine ($matches[1], $matches[2]);
+        preg_match_all('/(\S[^:]+): (\d+)/', mysqli_info(self::$DBConnect), $matches);
+        $info = array_combine($matches[1], $matches[2]);
 
         return $affectedRows > 0
             ? $affectedRows
@@ -162,13 +188,15 @@ class DB
 
     public static function queryArray($mysqlQuery)
     {
-        if (self::$DBConnect === null)
+        if (self::$DBConnect === null) {
             self::connect();
+        }
 
         if ($res = mysqli_query(self::$DBConnect, $mysqlQuery)) {
             $rows = [];
-            while ($row = mysqli_fetch_assoc($res))
+            while ($row = mysqli_fetch_assoc($res)) {
                 $rows[] = $row;
+            }
 
             return $rows;
         } else {
@@ -182,11 +210,11 @@ class DB
      */
     public static function queryValue($mysqlQuery)
     {
-        if (self::$DBConnect === null)
+        if (self::$DBConnect === null) {
             self::connect();
+        }
 
         if ($res = mysqli_query(self::$DBConnect, $mysqlQuery)) {
-
             $row = mysqli_fetch_assoc($res);
             if ($row) {
                 foreach ($row as $key => $value) {
@@ -200,10 +228,11 @@ class DB
 
     public static function status()
     {
-        if (self::$DBConnect === null)
+        if (self::$DBConnect === null) {
             return 'Not connected';
-        else
+        } else {
             return mysqli_stat(self::$DBConnect);
+        }
     }
 
     public static function getInstance()

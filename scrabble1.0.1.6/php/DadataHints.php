@@ -24,6 +24,7 @@ class Hints
 <li>А также при составлении слова, в котором звездочка заменяет Ъ</li>
 </ul>',
         'account_restoration' => 'accountRestoration',
+        'anti_cheat' => 'anticheat',
     ];
     public const TYPE_WORDS_QUERY = 'words';
     private static $gameState;
@@ -176,6 +177,7 @@ class Hints
             'recordsHint',
         ],
         2050 => [
+            self::PHRASES['anti_cheat'],
             self::PHRASES[AchievesModel::TVERD_NUM],
             self::PHRASES['account_restoration'],
             'donationHint',
@@ -210,17 +212,31 @@ class Hints
         return '<strong>Внимание!</strong><br /> Вышло обновление Игры. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>';
     }
 
-    private static function accountRestoration(): string
+    private static function anticheat(): string
     {
-        $res = VH::h2('В игре обновлена функция восстановления учетной записи!') .
-        self::isMobileDevice()
-            ? VH::div(
-                'Нажмите на ссылку восстановления в Профиле - она будет скопирована в буфер мобильного устройства. Сохраните ссылку восстановления в надежном месте'
-            )
-            : VH::div(
-                'Используйте ссылку для привязки текущего аккаунта к новому аккаунту в другом браузере. Кликните по сылке, откроется окно браузера, сохраните адрес в надежном месте'
+        $res = VH::h2('Внимание! В игре действует Анти-чит') .
+            VH::div(
+                VH::div(
+                    self::isMobileDevice()
+                        ? VH::span('🛡️ ', ['style' => 'font-size: 1.2em;']) . VH::b('Соблюдайте принципы честной игры.')
+                        : VH::span('⚖️ ', ['style' => 'font-size: 1.2em;']) . VH::b('Честное соревнование в Эрудите.'),
+                    ['style' => 'color: #f1c40f; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px;']
+                ) .
+                VH::div(
+                    'В связи с накруткой рейтинга мы ввели строгий контроль за ТОПом. ' .
+                    (self::isMobileDevice()
+                        ? 'Особое внимание — лидерам. Мы за то, чтобы таблица чемпионов была реальной!'
+                        : 'Мы вынуждены строже следить за игроками с высоким рейтингом, чтобы таблица чемпионов отражала реальную картину мастерства.'),
+                    ['style' => 'color: rgba(255, 255, 255, 0.9); font-size: 0.95em; line-height: 1.3;']
+                ),
+                ['style' => 'padding: 15px; background: rgba(241, 196, 15, 0.05); border: 1px solid rgba(241, 196, 15, 0.3); border-radius: 12px; margin-top: 10px;']
             );
 
+        return $res;
+    }
+
+    private static function accountRestoration(): string
+    {
         $res = VH::h2('В игре обновлена функция восстановления учетной записи!') .
             VH::div(
                 VH::div(
