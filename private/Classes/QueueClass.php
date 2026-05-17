@@ -808,11 +808,6 @@ class Queue
                 ->order(RatingHistoryModel::ID_FIELD, false)
                 ->all();
 
-            /*$lastGamesIds = array_map(
-                (fn(RatingHistoryModel $ratingHistoryModel) => $ratingHistoryModel->_game_id),
-                $last100GamesModels
-            );*/
-
             $lastGamesIds = array_column($last100GamesModels, '_' . RatingHistoryModel::GAME_ID_FIELD);
 
             $lastGamesOpponentModels = RatingHistoryModel::find()
