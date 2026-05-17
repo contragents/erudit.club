@@ -63,7 +63,6 @@ class Queue
                 static::PREFERENCES_TTL,
                 $this->prefs
             );
-
         } else {
             $this->prefs = Cache::get(static::PREFS_KEY . $this->User) ?: [];
         }
@@ -252,7 +251,7 @@ class Queue
             }
 
             return $this->storeTo2Players($this->User);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             LogModel::add([
                               LogModel::CATEGORY_FIELD => LogModel::CATEGORY_ANTICHEAT,
                               LogModel::MESSAGE_FIELD => $e->getMessage(),
@@ -814,7 +813,7 @@ class Queue
                 $last100GamesModels
             );*/
 
-            $lastGamesIds = array_column($last100GamesModels, RatingHistoryModel::GAME_ID_FIELD);
+            $lastGamesIds = array_column($last100GamesModels, '_' . RatingHistoryModel::GAME_ID_FIELD);
 
             $lastGamesOpponentModels = RatingHistoryModel::find()
                 ->where([
