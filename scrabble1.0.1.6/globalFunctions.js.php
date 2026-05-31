@@ -1,4 +1,50 @@
 //
+function showStatsForLeaders(commonId) {
+    getStatPageGlobal(commonId).then(data => {
+        dialog = bootbox.dialog({
+            message: data.message,
+            locale: lang === 'RU' ? 'ru' : 'en',
+            className: 'modal-settings  modal-stats',
+            callback: function () {
+                console.log('stats loaded');
+            },
+            onShow: function (e) {
+                $('.modal-players.show, .modal-players.show + .modal-backdrop.show').hide();
+                tabsModule.initTabs(e.target, 'stats');
+            },
+            buttons: {
+                removeFilter: {
+                    label: '<?= T::S('Remove filter') ?>',
+                    className: 'js-remove-filter btn btn-sm btn-auto mr-0 d-none',
+                    callback: function (e) {
+                        e.preventDefault();
+
+                        return false;
+                    },
+                },
+                ok: {
+                    label: '<?= T::S('Back') ?>',
+                    className: 'btn-sm ml-auto mr-0',
+                },
+            }
+        })
+            .off('shown.bs.modal')
+            .on('shown.bs.modal', function () {
+                if (data.onLoad && typeof data.onLoad === 'function') {
+                    data.onLoad();
+                }
+            })
+            .find('.modal-content')
+            .css({
+                'background-color': 'rgba(230, 255, 230, 1)',
+            });
+
+        return false;
+    }).catch(error => {
+        console.error(error);
+    });
+}
+
 function copyRestoreLink(link) {
     var copyLinkDialog = bootbox.alert(
         {

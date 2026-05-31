@@ -105,6 +105,7 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
         $res['avatar_url'] = PlayerModel::getAvatarUrl($achieveModel->_common_id);
         $res['nickname'] = AchievesModel::getPlayerNameByCommonId($achieveModel->_common_id);
         $res['card_type'] = AchievesModel::TOP_TYPES[$achieveModel->_event_period] ?? '';
+        $res['common_id'] = $achieveModel->_common_id;
 
         return $res;
     }
@@ -131,7 +132,8 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
                             'avatar_url' => PlayerModel::getAvatarUrl($ratingModel->_id),
                             'card_type' => AchievesModel::TOP_TYPES[$top] ?? '',
                             self::RATING_PARAM => $ratingModel->{'_rating_' . Game::$gameName},
-                            'nickname' => AchievesModel::getPlayerNameByCommonId($ratingModel->_id)
+                            'nickname' => AchievesModel::getPlayerNameByCommonId($ratingModel->_id),
+                            'common_id' => $ratingModel->_id,
                         ];
                     }
                 }
@@ -144,9 +146,8 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
                 foreach ($achieves as $achieveModel) {
                     // Игнорируем ТОПов по рейтингу
                     if ($achieveModel->_event_type != AchievesModel::TOP_TYPE) {
-                        $result[self::ACHIEVE_PARAM]
-                        [strtoupper(T::S($achieveModel->_event_type))]
-                        [$achieveModel->_event_period] = self::getAchieveTranslated($achieveModel);
+                        $result[self::ACHIEVE_PARAM][strtoupper(T::S($achieveModel->_event_type))][$achieveModel->_event_period]
+                            = self::getAchieveTranslated($achieveModel);
                     }
                 }
             }
@@ -172,7 +173,10 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
                             self::COIN_PARAM => $balanceModel->_sudoku,
                             'nickname' => ($userModel->_is_balance_hidden ?? false)
                                 ? T::S(UserModel::BALANCE_HIDDEN_FIELD)
-                                : AchievesModel::getPlayerNameByCommonId($balanceModel->_id)
+                                : AchievesModel::getPlayerNameByCommonId($balanceModel->_id),
+                            'common_id' => ($userModel->_is_balance_hidden ?? false)
+                                ? 0
+                                : $balanceModel->_id,
                         ];
                     }
                 }
@@ -209,7 +213,7 @@ slovo = '" . urldecode(self::$Request['word']) . "';";
                     : ($achieve['word'] . ' - ' . $achieve[AchievesModel::EVENT_VALUE_FIELD]);
             }
 
-            if($achieve['event_type'] !== AchievesModel::PATREON_TYPE) {
+            if ($achieve['event_type'] !== AchievesModel::PATREON_TYPE) {
                 $achieve[AchievesModel::REWARD_FIELD] = self::trimRightZeros(
                     $achieve[AchievesModel::REWARD_FIELD] ??
                     MonetizationService::REWARD[$achieve[AchievesModel::EVENT_PERIOD_FIELD]],

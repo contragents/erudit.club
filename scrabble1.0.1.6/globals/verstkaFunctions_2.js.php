@@ -504,16 +504,33 @@ function StatsPage({json, BASE_URL}) {
         tabPane: '.tab-pane',
     };
 
-    const setTabContentOffset = (i = 0) => {
-        if (!document.querySelectorAll(`${selectors.tabLink}.active`).length) {
+    // Вспомогательный метод для поиска контекста, если контейнер не задан явным образом
+    const getFallbackContainer = (element) => {
+        if (element) {
+            return element.closest('.modal') || element.closest('.bootbox') || document;
+        }
+        // Ищем любое открытое модальное окно на странице, если ничего не передано
+        return document.querySelector('.modal.show, .modal.in, .bootbox') || document;
+    };
+
+    const setTabContentOffset = (ctx, i = 0) => {
+        // РЕЖИМ 1 (Старый код): Если контейнер не передан, определяем его автоматически
+        ctx = ctx || getFallbackContainer();
+
+        if (!ctx.querySelectorAll(`${selectors.tabLink}.active`).length) {
             return;
         }
-        const targetId = document
+        const targetId = ctx
             .querySelectorAll(`${selectors.tabLink}.active`)[0]
             .getAttribute('href');
-        const tabContent = document.querySelector(targetId).closest(selectors.tabContent);
+
+        const targetPane = ctx.querySelector(targetId);
+        if (!targetPane) return;
+
+        const tabContent = targetPane.closest(selectors.tabContent);
         const tabContentWrap = tabContent.closest(selectors.tabContentWrap);
-        const tabPane = document.querySelector(targetId);
+        const tabPane = targetPane;
+        const modalBody = ctx.querySelector('.modal-body') || ctx;
 
         if (!tabContent || !targetId || !tabContentWrap || !tabPane) {
             return;
@@ -530,7 +547,7 @@ function StatsPage({json, BASE_URL}) {
                 item.closest(selectors.tabContent).getBoundingClientRect().height + 'px';
         });
 
-        const maxModalBody = document.querySelector('.modal-body').getBoundingClientRect().height;
+        const maxModalBody = modalBody.getBoundingClientRect().height;
 
         // скрываем
         [...tabContent.querySelectorAll(selectors.tabPane)].forEach((item) => {
@@ -548,7 +565,9 @@ function StatsPage({json, BASE_URL}) {
 
         tabContentWrap.style.height = activeTabContentWrapHeight;
 
-        document.querySelector('.modal-body').style.minHeight = maxModalBody + 'px';
+        if (modalBody && typeof modalBody.style !== 'undefined') {
+            modalBody.style.minHeight = maxModalBody + 'px';
+        }
 
         const index = [...tabContent.querySelectorAll(selectors.tabPane)].findIndex((item) => {
             return item === tabPane;
@@ -559,7 +578,7 @@ function StatsPage({json, BASE_URL}) {
 
         tabContent.style.cssText = `transform: translate(${translateValue}px, 0);`;
 
-        document.querySelectorAll(selectors.tabPane).forEach((item) => {
+        tabContent.querySelectorAll(selectors.tabPane).forEach((item) => {
             const width =
                 item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px';
             item.style.width = width;
@@ -568,58 +587,83 @@ function StatsPage({json, BASE_URL}) {
         const diff = Math.abs(
             tabContentWrap.getBoundingClientRect().height - tabContent.scrollHeight,
         );
-        // console.log(i, diff);
 
         if (diff > 1 && i < 100) {
             i++;
-
-            setTimeout(setTabContentOffset, 100, i);
+            setTimeout(setTabContentOffset, 100, ctx, i);
         }
     };
 
-    const update = () => {
-        setTimeout(() => setTabContentOffset(), 100);
-        onImagesLoaded(document.querySelector('.modal-settings'), setTabContentOffset);
+    const update = (ctx) => {
+        // Защита на случай, если ctx не передали (для безопасности)
+        if (!ctx) ctx = getFallbackContainer();
+
+        // Передаем ctx напрямую в расчет смещений
+        setTimeout(() => setTabContentOffset(ctx), 100);
+
+        // Ищем настройки строго внутри переданного контекста
+        const settings = ctx.querySelector('.modal-settings');
+        if (settings && typeof onImagesLoaded === 'function') {
+            onImagesLoaded(settings, () => setTabContentOffset(ctx));
+        }
     };
 
     document.addEventListener('click', (event) => {
-        if (event.target && event.target.closest(selectors.tabLink)) {
+        const link = event.target && event.target.closest(selectors.tabLink);
+        if (link) {
             event.preventDefault();
-            document
-                .querySelectorAll(selectors.tabLink)
-                .forEach((item) => item.classList.remove('active'));
-            event.target.classList.add('active');
 
-            setTabContentOffset();
+            // Определяем контекст клика: текущая модалка или документ
+            const ctx = getFallbackContainer(link);
+
+            ctx.querySelectorAll(selectors.tabLink).forEach((item) => item.classList.remove('active'));
+            link.classList.add('active');
+
+            // Вызываем расчет в контексте найденного контейнера
+            setTabContentOffset(ctx === document ? null : ctx);
         }
     });
 
-    const initTabs = () => {
-        document
-            .querySelectorAll(selectors.tabPane)
-            .forEach(
-                (item) =>
-                    (item.style.width =
-                        item.closest(selectors.tabContentWrap).getBoundingClientRect().width +
-                        'px'),
-            );
+    const initTabs = (containerSelector = '', tabsMode = '') => {
+        // Разрешаем контейнер: это может быть селектор, DOM-элемент или null
+        const container = (typeof containerSelector === 'string' && containerSelector)
+            ? document.querySelector(containerSelector)
+            : containerSelector;
 
-        if (!window.tabslistenerAttached) {
-            window.addEventListener('resize', (event) => {
-                document.querySelectorAll(selectors.tabPane).forEach((item) => {
-                    const width =
-                        item.closest(selectors.tabContentWrap).getBoundingClientRect().width + 'px';
-                    item.style.width = width;
+        const ctx = container || getFallbackContainer();
+
+        ctx.querySelectorAll(selectors.tabPane).forEach((item) => {
+            const wrap = item.closest(selectors.tabContentWrap);
+            if (wrap) {
+                item.style.width = wrap.getBoundingClientRect().width + 'px';
+            }
+        });
+
+        if (!window[tabsMode + 'tabslistenerAttached']) {
+            window.addEventListener('resize', () => {
+                // Если мы в изолированном режиме, обновляем только этот контейнер,
+                // иначе — ищем все открытые окна на странице
+                const targets = container ? [container] : document.querySelectorAll('.modal, .bootbox');
+
+                targets.forEach(target => {
+                    if (target === document || target.offsetWidth > 0 || target.offsetHeight > 0) {
+                        target.querySelectorAll(selectors.tabPane).forEach((item) => {
+                            const wrap = item.closest(selectors.tabContentWrap);
+                            if (wrap) {
+                                item.style.width = wrap.getBoundingClientRect().width + 'px';
+                            }
+                        });
+                        setTabContentOffset(target === document ? null : target);
+                    }
                 });
-                setTabContentOffset();
             });
-            window.tabslistenerAttached = true;
+            window[tabsMode + 'tabslistenerAttached'] = true;
         }
 
         setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
             setTimeout(() => {
-                update();
+                update(ctx);
             }, 500);
         }, 100);
     };
@@ -1031,7 +1075,7 @@ function prizesButtonHandler() {
     const leaderboard = Leaderboard();
     window.leaderboard = leaderboard;
     leaderboard.getModal().then((html) => {
-            dialog = bootbox.alert({
+        dialog = bootbox.alert({
                 title: '',
                 message: html,
                 // locale: 'ru',
@@ -1266,6 +1310,7 @@ function Leaderboard() {
             if (!rating.apiDone) {
                 rating.apiPage++;
                 await this.fetchRating(rating.apiPage);
+
                 return this.getNextRatingChunk();
             }
 
@@ -1460,10 +1505,10 @@ function Leaderboard() {
                 );
         },
 
-        RatingItem: ({avatar_url, card_type, rating, nickname, position}) => {
+        RatingItem: ({avatar_url, card_type, rating, nickname, position, common_id}) => {
             const classMod = card_type ? ` card--${card_type}` : '';
             return /*html*/ `
-                <div class="card${classMod}">
+                <div class="card${classMod}" onClick="showStatsForLeaders(${common_id})">
                     <span class="position">${position}</span>
                     <div class="avatar"><img src="${avatar_url}" alt="${nickname}"></div>
                     <span class="nickname">${nickname}</span>
@@ -1472,14 +1517,14 @@ function Leaderboard() {
             `;
         },
 
-        CoinsItem: ({avatar_url, card_type, coins, nickname, position}) => {
+        CoinsItem: ({avatar_url, card_type, coins, nickname, position, common_id}) => {
             const classMod = card_type ? ` card--${card_type}` : '';
             const coinsFormatted = coins.toLocaleString('en-US', {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
             }).replaceAll('&nbsp;', ',');
             return /*html*/ `
-                <div class="card${classMod}">
+                <div class="card${classMod}" onClick="${common_id} ? showStatsForLeaders(${common_id}) : ''">
                     <span class="position">${position}</span>
                     <div class="avatar"><img src="${avatar_url}" alt="${nickname}"></div>
                     <span class="nickname">${nickname}</span>
@@ -1487,11 +1532,11 @@ function Leaderboard() {
                 </div>
             `;
         },
-        RecordsItem: ({record_type, record_value, nickname, card_type, avatar_url}) => {
+        RecordsItem: ({record_type, record_value, nickname, card_type, avatar_url, common_id}) => {
             const classMod = card_type ? ` card--${card_type}` : '';
 
             return /*html*/ `
-                <div class="card record-card${classMod}">
+                <div class="card record-card${classMod}" onClick="showStatsForLeaders(${common_id})">
                     <div class="desc">
                         <span>${record_type}</span>
                         <span>${record_value}</span>

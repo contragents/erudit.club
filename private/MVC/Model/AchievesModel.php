@@ -208,7 +208,7 @@ class AchievesModel extends BaseModel
     const PATREON_TYPE = 'patreon';
     const PURPLE_CARD = 'purple';
     const WORD_PER_TURN = 'word_turn';
-    public ?int $_id = null;
+
     public ?int $_common_id = null;
     public ?string $_date_achieved = null;
     public ?string $_event_type = null;

@@ -715,7 +715,6 @@ var gameStates = {
                             }).catch(error => {
                                 console.error(error);
                             });
-
                         },
                     },
                     ...(!isTgBot() && !isYandexAppGlobal() && {
