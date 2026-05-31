@@ -284,9 +284,11 @@ class Game
             if ($thisPlayerBalance < $bid) {
                 unset($coinPlayers[$bid]);
             }
+        }
 
-            // ...а также от мелких ставок
-            if ($bid < ($thisPlayerBalance / 20)) {
+        // ...а также от мелких ставок (оставить не менее 5 вариантов ставок)
+        foreach ($coinPlayers as $bid => $num) {
+            if ($bid < ($thisPlayerBalance / 20) && count($coinPlayers) > 5) {
                 unset($coinPlayers[$bid]);
             }
         }
@@ -360,26 +362,8 @@ class Game
                 2700 => 0
             ];
 
-            $coinPlayers = array_combine(MonetizationService::BIDS, array_fill(0, count(MonetizationService::BIDS), 0));
-            $thisPlayerBalance = BalanceModel::getBalance($this->commonId);
-
             foreach (self::$players as $num => $player) {
                 $rangedOnlinePlayers[0]++;
-
-                $currentPlayerBalance = BalanceModel::getBalance($player['common_id']);
-
-                // Отмечаем в массиве игроков на монеты число игроков с таким количеством монет
-                foreach ($coinPlayers as $bid => $num) {
-                    if ($thisPlayerBalance < $bid) {
-                        unset($coinPlayers[$bid]);
-
-                        continue;
-                    }
-
-                    if ($currentPlayerBalance >= $bid) {
-                        $coinPlayers[$bid]++;
-                    }
-                }
 
                 // Не выводим число рейтинговых игроков для скрабла, пока
                 if (self::$gameName === self::SCRABBLE) {
