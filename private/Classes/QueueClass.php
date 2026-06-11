@@ -27,7 +27,7 @@ class Queue
     const GAME_KEY = 'erudit.game_';
     const RATING_QUEUE = 'ratingQueue';
     const MAX_BOT_BID = 100; // Максимальная ставка бота
-    const BIG_RATING_VALUE = 2300;
+    const BIG_RATING_VALUE = 2260;
 
     protected $User;
     protected $userTime;
@@ -810,10 +810,20 @@ class Queue
 
             $lastGamesIds = array_column($last100GamesModels, '_' . RatingHistoryModel::GAME_ID_FIELD);
 
-            $lastGamesOpponentModels = RatingHistoryModel::find()
+            /*$lastGamesOpponentModels = RatingHistoryModel::find()
                 ->where([
                             [RatingHistoryModel::COMMON_ID_FIELD, '=', $minCommonId, true],
                             [RatingHistoryModel::GAME_ID_FIELD, 'in', ORM::makeInFromArray($lastGamesIds, true), true]
+                        ])
+                ->limit(100)
+                ->order(RatingHistoryModel::COMMON_ID_FIELD)
+                ->all();
+            */
+
+            $lastGamesOpponentModels = RatingHistoryModel::find()
+                ->where([
+                            RatingHistoryModel::COMMON_ID_FIELD => $minCommonId, // точное соответствие поля значению
+                            RatingHistoryModel::GAME_ID_FIELD => $lastGamesIds, // если массив, то применяем оператор `IN ()`
                         ])
                 ->limit(100)
                 ->order(RatingHistoryModel::COMMON_ID_FIELD)

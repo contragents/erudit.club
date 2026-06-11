@@ -8,7 +8,9 @@ trait QueryTrait
     /** @var static[] */
     protected array $union = [];
 
-    private ?string $model = null;
+    /** @var class-string<\BaseModel> Класс модели, из которой строим запрос */
+    private string $model = BaseModel::class;
+
 
     /**
      * @var static|null the value for the current iteration
@@ -54,7 +56,7 @@ trait QueryTrait
     public function where(array $conditions): self
     {
         foreach ($conditions as $num => $condition) {
-            if (is_array($condition)) {
+            if (is_array($condition) && is_numeric($num)) {
                 $value = $condition['value'] ?? ($condition[2] ?? null);
                 if ($value === true || $value === false) {
                     $value = (int)$value;
@@ -80,11 +82,15 @@ trait QueryTrait
 
                 $this->queryParts->where[] =
                     [
-                        'field_name' => (is_numeric($num) ? static::ID_FIELD : $num),
+                        'field_name' => (is_numeric($num) ? $this->model::ID_FIELD : $num),
                         // если ключ - число, то поле - это id - добавить проверку
-                        'condition' => '=',
-                        'value' => $value,
-                        'raw' => in_array(self::getType($num), self::NUMERIC_TYPES),
+                        'condition' => is_array($value)
+                            ? 'IN'
+                            : '=',
+                        'value' => is_array($value)
+                            ? ORM::makeInFromArray($value, in_array($this->model::getType($num), self::NUMERIC_TYPES))
+                            : $value,
+                        'raw' => is_array($value) || in_array($this->model::getType($num), self::NUMERIC_TYPES),
                     ];
             }
         }
@@ -167,7 +173,10 @@ trait QueryTrait
         return ORM::select(
                 $this->queryParts->fields,
                 $this->union
-                    ? (' ( (' . implode(') UNION (', array_map(fn(self $query) => $query->getQuery(), $this->union)) . ') ) as ' . static::TABLE_NAME.'_union ')
+                    ? (' ( (' . implode(
+                        ') UNION (',
+                        array_map(fn(self $query) => $query->getQuery(), $this->union)
+                    ) . ') ) as ' . static::TABLE_NAME . '_union ')
                     : static::TABLE_NAME
             )
             . ' ' . $where
@@ -209,13 +218,13 @@ trait QueryTrait
             );
         }
 
-        if($this->union) {
+        if ($this->union) {
             $query = $this->getQuery();
 
             $result = [];
             $rows = DB::queryArray($query) ?: []; // todo сделать метод :array и провести рефакторинг
 
-            foreach($rows as $row) {
+            foreach ($rows as $row) {
                 $result[] = self::arrayToObject($row);
             }
 
