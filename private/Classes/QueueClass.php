@@ -810,16 +810,6 @@ class Queue
 
             $lastGamesIds = array_column($last100GamesModels, '_' . RatingHistoryModel::GAME_ID_FIELD);
 
-            /*$lastGamesOpponentModels = RatingHistoryModel::find()
-                ->where([
-                            [RatingHistoryModel::COMMON_ID_FIELD, '=', $minCommonId, true],
-                            [RatingHistoryModel::GAME_ID_FIELD, 'in', ORM::makeInFromArray($lastGamesIds, true), true]
-                        ])
-                ->limit(100)
-                ->order(RatingHistoryModel::COMMON_ID_FIELD)
-                ->all();
-            */
-
             $lastGamesOpponentModels = RatingHistoryModel::find()
                 ->where([
                             RatingHistoryModel::COMMON_ID_FIELD => $minCommonId, // точное соответствие поля значению
