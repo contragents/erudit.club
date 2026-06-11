@@ -27,7 +27,7 @@ class Queue
     const GAME_KEY = 'erudit.game_';
     const RATING_QUEUE = 'ratingQueue';
     const MAX_BOT_BID = 100; // Максимальная ставка бота
-    const BIG_RATING_VALUE = 2260;
+    const BIG_RATING_VALUE = 2300;
 
     protected $User;
     protected $userTime;
