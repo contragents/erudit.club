@@ -17,7 +17,9 @@ $title = "Игра {$titleENG}Эрудит.CLUB :: Слова из " . ((isset($
 
 $descr = 'Эрудит - классическая настольная игра - теперь в онлайн-версии! Присоединяйтесь к Русскому или английскому столу с игрой. Не забудьте предварительно почитать основные словари, особенно слова из 2-х - 4-х букв';
 
-include(__DIR__ . '/private/MVC/View/Tpl/main_header.php');
+// include(__DIR__ . '/private/MVC/View/Tpl/main_header.php');
+
+$article = '';
 
 if (isset($_GET['strlen']) && $_GET['strlen'] > 2) {
     $strlen = $_GET['strlen'];
@@ -29,30 +31,44 @@ if ($_SERVER['HTTP_REFERER'] != Config::$config['domain'] . '/') {
     $play_erudit = "&nbsp;<span style=\"white-space:nowrap\"><a style=\"color:#60b442; text-decoration:none;\" href=\"/\" title=\"ИГРАТЬ!\" target=\"_blank\">ИГРАТЬ В ЭРУДИТ!</a></span>";
 }
 
-print '<H1 style="line-height:30px;">Словарь Эрудита ' . $titleENG . '- слова из ' . $strlen . ($strlen <= 4 ? '-х' : '-ти') . ' букв' . $play_erudit . '</H1>';
+$article .= '<H1 style="line-height:30px;">Словарь Эрудита ' . $titleENG . '- слова из ' . $strlen . ($strlen <= 4 ? '-х' : '-ти') . ' букв' . '</H1>';
 
 
 for ($i = 2; $i <= 6; $i++) {
     if ($strlen != $i) {
-        print "<H3><a href=\"/dict$i/$lng\">Слова из $i" . ($i <= 4 ? '-х' : '-ти') . " букв</a></h3>";
+        $article .= "<H3><a href=\"/dict$i/$lng\">Слова из $i" . ($i <= 4 ? '-х' : '-ти') . " букв</a></h3>";
     }
 }
 
 // todo refactor USE ORM+DB or ModelClass
-//require_once('private/deprecated/xcache_functions.php');
 
 
 $CONTENT_SELECT = "SELECT slovo FROM  $table where CHAR_LENGTH(slovo) = $strlen ;";
+
 $res = DB::queryArray($CONTENT_SELECT);
 $first_letter = '';
 foreach ($res as $row) {
     if ($first_letter != mb_substr($row['slovo'], 0, 1, 'UTF-8')) {
-        print "<br />";
+        $article .= "<br />";
         $first_letter = mb_substr($row['slovo'], 0, 1, 'UTF-8');
     }
-    print "<a href=\"/dict/" . urlencode(
+    $article .= "<a href=\"/dict/" . urlencode(
             $row['slovo']
-        ) . "\" target=\"_blank\" title=\"Перейти к слову\">{$row['slovo']}</a>&nbsp;";
+        ) . "\" target=\"_blank\" title=\"Перейти к слову\">{$row['slovo']}</a> &nbsp; ";
 }
+
+$articleModel = ArticleModel::new(['title' => $title, 'desc' => $descr, 'text' => $article]);
+$featuredArticles = ArticleModel::find()
+	->order('rand()')
+	->limit(3)
+	->all();
+
+$content = new BlogContent();
+$content->model = $articleModel;
+$content->featuredArticles = $featuredArticles;
+
+echo BlogController::renderStatic('Blog', $content);
+
+exit;
 
 include (__DIR__ . '/private/MVC/View/Tpl/main_footer.php');

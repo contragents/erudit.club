@@ -32,7 +32,7 @@
     <!-- Основная уникализированная статья -->
     <?php
     if ($content->model) { ?>
-        <article class="featured-article">
+        <article class="featured-article" style="overflow-wrap: normal; word-break: normal;">
             <?php
             if (!strpos($content->model->_text, 'article-date')) { ?>
                 <p class="article-date"><?= substr($content->model->_created_at, 0, 10) ?></p>
