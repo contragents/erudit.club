@@ -31,7 +31,8 @@ class Game
 
     const BOT_TPL = 'botV3#';
 
-    protected $Queue = Queue::class;
+	/** @var class-string<Queue> */
+    protected string $Queue = Queue::class;
     const GAMES_KEY = 'erudit.games_';
     public static $configStatic;
     public $serverName;
@@ -1987,13 +1988,16 @@ class Game
 
     public function initGame()
     {
-        return (new $this->Queue($this->User, $this, $_POST + ['init_game' => true]))
-            ->doSomethingWithThisStuff($_GET['lang'] ?? '');
+		return $this->getQueueInstance($_POST + ['init_game' => true])
+			->doSomethingWithThisStuff($_GET['lang'] ?? '');
     }
 
+	/**
+	 * Возвращает предпочтения текущего игрока (приславшего запрос статуса)
+	 */
     public function getPrefs(): array
     {
-        $prefs = Cache::get($this->Queue::PREFS_KEY . $this->User) ?: [];
+        $prefs = $this->Queue::getPrefs($this->User);
         $balance = BalanceModel::getBalance($this->commonId);
 
         if ($balance > 0) {
@@ -2026,11 +2030,20 @@ class Game
         return $prefs;
     }
 
+	protected function getQueueInstance(array $options = []): Queue
+	{
+		$queueClass = $this->Queue;
+
+		// Передаем параметры конструктора
+		return new $queueClass($this->User, $this, $options);
+	}
+
     public function checkGameStatus()
     {
         if (!$this->currentGame) {
             if ($this->Queue::isUserInQueue($this->User)) {
-                return (new $this->Queue($this->User, $this, $_POST))->doSomethingWithThisStuff($_GET['lang'] ?? '');
+				return $this->getQueueInstance($_POST)
+					->doSomethingWithThisStuff($_GET['lang'] ?? '');
             }
 
             if ($this->isBot()) {
@@ -2365,7 +2378,7 @@ class Game
             $this->addToLog(T::S('left game'), $this->numUser);
         }
 
-        return (new $this->Queue($this->User, $this, $_POST))->chooseGame();
+		return $this->getQueueInstance($_POST)->chooseGame();
     }
 
     protected function makeWishWinscore(): int
@@ -2514,10 +2527,8 @@ class Game
 
             $this->exitGame($this->numUser);
 
-            /** @var $Queue Queue */
-
-            (new $this->Queue($this->User, $this, ['lang' => ($this->gameStatus['lang'] == 'EN' ? 'EN' : '')]))
-                ->storePlayerToInviteQueue($this->User);
+			$this->getQueueInstance(['lang' => ($this->gameStatus['lang'] == 'EN' ? 'EN' : '')])
+				->storePlayerToInviteQueue($this->User);
 
             return;
         }

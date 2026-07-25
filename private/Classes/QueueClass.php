@@ -58,15 +58,25 @@ class Queue
         if (isset($this->POST['ochki_num'])) {
             //В начале игры сохраняем предпочтения игрока для игры по приглашению
             $this->prefs = $this->POST;
-            Cache::setex(
-                static::PREFS_KEY . $this->User,
-                static::PREFERENCES_TTL,
-                $this->prefs
-            );
+            self::savePrefs($this->User, $this->prefs);
         } else {
-            $this->prefs = Cache::get(static::PREFS_KEY . $this->User) ?: [];
+            $this->prefs = self::getPrefs($this->User);
         }
     }
+
+	public static function getPrefs(string $User): array
+	{
+		return Cache::get(static::PREFS_KEY . $User) ?: [];
+	}
+
+	public static function savePrefs(string $User, array $prefs): bool
+	{
+		return Cache::setex(
+			static::PREFS_KEY . $User,
+			static::PREFERENCES_TTL,
+			$prefs
+		);
+	}
 
     protected function checkPlayerInitStatus(): bool
     {
@@ -412,7 +422,7 @@ class Queue
             return $players2Queue['options'];
         }
 
-        return Cache::get(static::PREFS_KEY . $this->User)
+        return self::getPrefs($this->User)
             ?: ['num_players' => 2, 'ochki_num' => rand(200, 300), 'turn_time' => rand(60, 120)];
     }
 
@@ -729,11 +739,7 @@ class Queue
     public function storePlayerToInviteQueue($User)
     {
         if (!Cache::hget(static::QUEUES["erudit.invite{$this->lang}players_waiters"], $User)) {
-            if (isset($this->POST['ochki_num'])) {
-                $options = $this->POST;
-            } else {
-                $options = false;
-            }
+			$options = self::getPrefs($User);
 
             self::addToQueue("erudit.invite{$this->lang}players_waiters", $User, $options);
         }
