@@ -302,9 +302,9 @@ class Hints
             }
         }
 
-        if (is_callable("self::$value")) {
+        if (is_callable([static::class, $value])) {
             self::$EXT_ASSETS = include 'youtube_videos.php';
-            return self::$value();
+            return static::$value();
         }
 
         switch ($value) {

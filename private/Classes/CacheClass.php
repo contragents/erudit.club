@@ -147,12 +147,18 @@ class Cache
         if (empty($res) && $res !== 0)
             return FALSE;
 
-        $unserRes = is_array($res) ? false : @unserialize($res);
-        if ($unserRes === false) {
+        if (is_array($res)) {
             return $res;
-        } else {
-            return $unserRes;
         }
+
+        if (is_string($res) && preg_match('/^[aOsidb]:\d+:/', $res)) {
+            $unserRes = @unserialize($res);
+            if ($unserRes !== false) {
+                return $unserRes;
+            }
+        }
+
+        return $res;
     }
 
     public static function getInstance()

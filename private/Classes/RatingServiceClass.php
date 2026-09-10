@@ -185,7 +185,7 @@ class RatingService
             $lostPlayers[$num]['is_winner'] = false;
         }
 
-        usort($lostPlayers, ['self', 'arComp']);
+        usort($lostPlayers, [static::class, 'arComp']);
 
         return array_merge([$winner], $lostPlayers);
     }

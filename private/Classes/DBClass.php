@@ -173,12 +173,19 @@ class DB
         $res = mysqli_query(self::$DBConnect, $mysqlQuery);
         $affectedRows = mysqli_affected_rows(self::$DBConnect);
 
-        preg_match_all('/(\S[^:]+): (\d+)/', mysqli_info(self::$DBConnect), $matches);
-        $info = array_combine($matches[1], $matches[2]);
+        if ($affectedRows > 0) {
+            return $affectedRows;
+        }
 
-        return $affectedRows > 0
-            ? $affectedRows
-            : (($info['Rows matched'] ?? false) ?: false);
+        $infoString = mysqli_info(self::$DBConnect) ?? '';
+        preg_match_all('/(\S[^:]+): (\d+)/', $infoString, $matches);
+
+        // Безопасно собираем массив, только если регулярное выражение что-то нашло
+        $info = (!empty($matches[1]) && !empty($matches[2]))
+            ? array_combine($matches[1], $matches[2])
+            : [];
+
+        return ($info['Rows matched'] ?? false) ?: false;
     }
 
     public static function insertID()

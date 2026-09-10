@@ -1,7 +1,8 @@
 /*<?php
-preg_match('/((scrabble|release|yandex|dev)(\d\.\d\.\d\.\d))/', __DIR__, $matches);
-$dir = $matches[1];
-$gameMode = $matches[2];
+$requestDir = isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : __DIR__;
+preg_match('/((scrabble|release|yandex|dev)(\d\.\d\.\d\.\d))/', $requestDir, $matches);
+$dir = $matches[1] ?? 'yandex1.0.1.1';
+$gameMode = $matches[2] ?? 'yandex';
 //Определяем каталог версии разработки
 ?>*/
 //
