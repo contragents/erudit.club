@@ -139,7 +139,7 @@ class Cache
         return self::prepareRes($res);
     }
 
-    /** Checking if res is a serialized array than return unser. array. Else return the res
+    /** Checking if res is a serialized array than return unser array. Else return the res
      * @param string $res Result of Redis method
      */
     private static function prepareRes($res)

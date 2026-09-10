@@ -540,12 +540,7 @@ class Queue
     protected function makeGame($queue, $maxNumUsers = 2, $wishRating = null)
     {
         try {
-            $newGameId = Cache::incr(static::GAMES_COUNTER);
-
-            if ($newGameId == 1) {
-                $newGameId = GamesModel::getLastID() + 1;
-                Cache::set(static::GAMES_COUNTER, $newGameId);
-            }
+            $newGameId = GameCounterModel::getNewGameId();
 
             $this->caller->currentGame = $newGameId;
             Cache::setex(

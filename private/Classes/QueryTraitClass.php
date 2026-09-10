@@ -154,7 +154,7 @@ trait QueryTrait
     /**
      * @return static|null
      */
-    public function one(): ?self
+    public function one(): ?object
     {
         $limit = $this->queryParts->limit;
         $this->limit(1, $this->queryParts->limit[1] ?? 0);

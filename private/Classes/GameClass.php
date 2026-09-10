@@ -318,7 +318,7 @@ class Game
 
     protected function getPlayers()
     {
-        $lastGame = Cache::get($this->Queue::GAMES_COUNTER);
+        $lastGame = GameCounterModel::getLastGameId();
 
         for ($i = $lastGame; $i > ($lastGame - 50); $i--) {
             if ($game = Cache::get(static::GAME_STATUS_KEY . $i)) {
@@ -466,7 +466,7 @@ class Game
             return self::$playersInGames[$cookie];
         }
 
-        $lastGame = Cache::get(Queue::GAMES_COUNTER);
+        $lastGame = GameCounterModel::getLastGameId();
 
         for ($i = $lastGame; $i > ($lastGame - 100); $i--) {
             if ($game = Cache::get(static::GAME_STATUS_KEY . $i)) {

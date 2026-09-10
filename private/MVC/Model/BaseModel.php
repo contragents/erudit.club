@@ -500,7 +500,6 @@ class BaseModel implements Iterator
                 LogModel::logQuery($query ?? '', $e);
             }
 
-
             return false;
         }
     }

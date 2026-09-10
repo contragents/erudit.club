@@ -57,12 +57,7 @@ class DecreaseRatingsWorker
             print PHP_EOL . $commonIdRatingModel->_id . PHP_EOL;
 
             // занести в game_stats таблицу
-            $newGameId = Cache::incr(Queue::GAMES_COUNTER);
-
-            if ($newGameId == 1) {
-                $newGameId = GamesModel::getLastID() + 1;
-                Cache::set(Queue::GAMES_COUNTER, $newGameId);
-            }
+            $newGameId = GameCounterModel::getNewGameId();
 
             GameStatsModel::add(
                 $queryParams =

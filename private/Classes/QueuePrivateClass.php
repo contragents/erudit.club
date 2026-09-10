@@ -15,7 +15,6 @@ class QueuePrivate extends Queue
     const PREFS_KEY = 'erudit.private.user_preference_';
     const USER_STATUS_PREFIX = 'erudit.private.user_status_';
     const CURRENT_GAME_KEY = 'erudit.private.current_game_';
-    const GAMES_COUNTER = 'erudit.private.num_games';
     const GET_GAME_KEY = 'erudit.private.get_game_';
     const GAME_KEY = 'erudit.private.game_';
 
