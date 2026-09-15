@@ -36,6 +36,10 @@ if (count($pathParts) > 2) {
     }
 
     if (class_exists($controller) && method_exists($controller, $action . 'Action')) {
+        if(isset($mainParam)) {
+            $_REQUEST[$controller::MAIN_PARAM] = $mainParam;
+        }
+
         $res = (new $controller($action, $_REQUEST))->Run();
         echo is_array($res) ? json_encode($res,JSON_UNESCAPED_UNICODE) : $res;
     } else {

@@ -1,0 +1,3 @@
+/configs/server/.env
+/configs/server/mysql_oracle/replica.cnf
+/.idea/php.xml
