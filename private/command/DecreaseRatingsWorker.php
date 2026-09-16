@@ -48,8 +48,6 @@ class DecreaseRatingsWorker
             . ORM::orderBy(self::RATING_FIELD, false)
             . ORM::limit(self::LIMIT_PLAYERS);
 
-        // print $playersArrQuery; exit;
-
         $playersArr = DB::queryArray($playersArrQuery);
 
         foreach ($playersArr as $player) {
