@@ -22,7 +22,6 @@ class Queue
     const PREFERENCES_TTL = 30 * 24 * 60 * 60;
     const PREFS_KEY = 'erudit.user_preference_';
     const CURRENT_GAME_KEY = 'erudit.current_game_';
-    const GAMES_COUNTER = 'erudit.num_games';
     const GET_GAME_KEY = 'erudit.get_game_';
     const GAME_KEY = 'erudit.game_';
     const RATING_QUEUE = 'ratingQueue';

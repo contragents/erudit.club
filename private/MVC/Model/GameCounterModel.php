@@ -26,9 +26,7 @@ class GameCounterModel extends BaseModel
 
         if($lastId) return $lastId;
 
-        $lastCachedId = Cache::get(Queue::GAMES_COUNTER) ?: null;
-
-        return self::setLastGameId($lastCachedId);
+        return self::setLastGameId();
     }
 
     private static function setLastGameId(?int $lastCachedId = null): ?int
