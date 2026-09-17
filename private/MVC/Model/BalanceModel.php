@@ -62,7 +62,7 @@ class BalanceModel extends BaseModel
                         true,
                         ORM::where(CommonIdRatingModel::RATING_FIELD_PREFIX . Game::$gameName, '>', 0, true)
                         . ORM::andWhere(
-                            BalanceModel::getFieldWithTable(BalanceModel::COMMON_ID_FIELD),
+                            ORM::agg(ORM::ANY_VALUE, BalanceModel::getFieldWithTable(BalanceModel::COMMON_ID_FIELD)),
                             '=',
                             CommonIdRatingModel::COMMON_ID_FIELD,
                             true

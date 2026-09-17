@@ -479,7 +479,7 @@ class Hints
             $recordPlayerAvatarUrl = PlayerModel::getAvatarUrl($record->_common_id);
             $renderType = "{$record->_event_type}-{$record->_event_period}";
             $renderParams = [
-                'link' => AchievesModel::PRIZE_LINKS[$renderType],
+                'link' => AchievesModel::PRIZE_LINKS[$renderType] ?? '',
                 'type' => $renderType,
                 'PlayerName' => $recordPlayerName,
                 'AvatarUrl' => $recordPlayerAvatarUrl,
@@ -511,7 +511,7 @@ class Hints
 <img style=\"border-radius: 5px 5px 5px 5px; margin-left:20px;padding-top:0;\" alt=\"😰\" src=\"{$recordData['AvatarUrl']}\" height=\"75px\" max-width=\"100px\" />
 <br />
 Новое достижение - <strong>" . AchievesModel::PRIZE_TITLES[$recordData['type']] . "</strong> <br />"
-            . ($recordData['word']
+            . (($recordData['word'] ?? false)
                 ? "Составленное слово: <strong>{$recordData['word']}</strong> <br />"
                 : ''
             )

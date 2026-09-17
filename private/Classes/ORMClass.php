@@ -6,6 +6,8 @@ class ORM
     const COUNT = 'COUNT';
     const MAX = 'MAX';
     const MIN = 'MIN';
+    const ANY_VALUE = 'ANY_VALUE';
+
     public $rawExpression;
 
     public function __construct($expression)
