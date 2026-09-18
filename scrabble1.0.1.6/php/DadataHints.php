@@ -422,7 +422,21 @@ class Hints
 
         // 1. Перебор и вывод массива найденных слов
         $listItems = '';
-        foreach ($words as $word) {
+        if (count($words) === 1 && current($words) === T::S('QUERY_ERROR_MSG')) {
+            $listItems = VH::div(
+                current($words),
+                [
+                    'style' => 'padding: 15px; 
+                        background: rgba(255, 255, 255, 0.05); 
+                        border: 1px solid rgba(255, 255, 255, 0.15); 
+                        border-radius: 12px; 
+                        color: #eceff1; 
+                        font-size: 0.95em; 
+                        line-height: 1.5; 
+                        margin: 10px 0;'
+                ]
+            );
+        } else foreach ($words as $word) {
             $listItems .= VH::li(
                 VH::span('• ', ['style' => 'color: #3498db; margin-right: 8px;']) . VH::b($word),
                 ['style' => 'margin-bottom: 6px; font-size: 1.05em; color: #eceff1; list-style: none;']
@@ -434,40 +448,37 @@ class Hints
         if (count($words) == 5) {
             $message .= VH::div(
                 VH::span('💡 ', ['style' => 'font-size: 1.1em;'])
-                . VH::span("Показаны только 5 слов в случайном порядке", ['style' => 'color: #e0e0e0; font-style: italic;'])
-                , ['style' => 'margin-bottom: 10px;']
+                . VH::span(T::S('Only 5 words are shown in random order'), ['style' => 'color: #e0e0e0; font-style: italic;']),
+                ['style' => 'margin-bottom: 10px;']
             );
 
-            $message .= VH::div(
-                VH::span('🔗 ', ['style' => 'font-size: 1.1em; margin-right: 4px;'])
-                . T::S('connect_bot_text')
-                . VH::a(
-                    T::S('connect_bot_ankor'),
+            if (!self::isYandexApp()) {
+                $message .= VH::div(
+                    VH::span('🔗 ', ['style' => 'font-size: 1.1em; margin-right: 4px;'])
+                    . T::S('connect_bot_text')
+                    . VH::a(
+                        T::S('connect_bot_ankor'),
+                        [
+                            'href' => T::S('connect_bot_url'),
+                            'target' => '_blank',
+                            'style' => 'color: #ffd32a; font-weight: bold; text-decoration: underline; text-shadow: 0 1px 2px rgba(0,0,0,0.5);'
+                        ]
+                    ),
                     [
-                        'href' => T::S('connect_bot_url'),
-                        'target' => '_blank',
-                        'style' => 'color: #3498db; font-weight: bold; text-decoration: underline;'
+                        'style' => 'padding: 12px 15px; ' .
+                            'background: rgba(255, 255, 255, 0.08); ' . // Слегка светлая подложка для читаемости
+                            'border: 1px solid rgba(255, 255, 255, 0.2); ' .
+                            'border-radius: 10px; ' .
+                            'font-size: 0.95em; ' .
+                            'line-height: 1.4; ' .
+                            'color: #ffffff; ' . // Чистый белый цвет основного текста вместо серого
+                            'text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);' // Тень для отделения текста от картинки планеты
                     ]
-                ),
-                [
-                    'style' => 'padding: 12px 15px; ' .
-                        'background: rgba(52, 152, 219, 0.08); ' .
-                        'border: 1px solid rgba(52, 152, 219, 0.25); ' .
-                        'border-radius: 10px; ' .
-                        'font-size: 0.95em; ' .
-                        'line-height: 1.4; ' .
-                        'color: rgba(255, 255, 255, 0.9);'
-                ]
-            );
-
-            $words[] = T::S('Only 5 words are shown in random order')
-                . '<br>'
-                . T::S('connect_bot');
+                );
+            }
         }
 
-        $res = ['message' => $message];
-
-        return $res;
+        return ['message' => $message];
     }
 
     private static function patronCard(int $height = 150): string

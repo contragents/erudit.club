@@ -131,8 +131,38 @@ class T
 
     const PHRASES = [
         'QUERY_ERROR_MSG' => [
-            self::EN_LANG => "Wrong query\n\nOnly letters (A-Z) are accepted\nas well as the symbols \"*\" (any letters) and \"?\" (ONE any letter).\nSpaces are ignored. Capital letters are converted to lower case\nExamples: fathe?, O ut*\n" . self::PHRASES_PARTS['spaces_capitals'][self::EN_LANG],
-            self::RU_LANG => "Ошибка в запросе\n\nПринимаются только буквы (А-Я) и символы \"*\" (любые буквы) и \"?\" (ОДНА любая буква)\n" . self::PHRASES_PARTS['spaces_capitals'][self::RU_LANG]
+            self::EN_LANG => '<ul>
+    <li>Wrong query. Accepting only:
+        <ul>
+            <li>Letters (A-Z)</li>
+            <li>Symbols:
+                <ul>
+                    <li><strong>*</strong> — any letters</li>
+                    <li><strong>?</strong> — ONE any letter</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>Spaces are ignored</li>
+    <li>Capital letters are converted to lower case</li>
+    <li>Examples: fathe?, O ut*</li>
+</ul>',
+            self::RU_LANG => '<ul>
+    <li>Ошибка в запросе. Принимаются только:
+        <ul>
+            <li>Буквы (А-Я)</li>
+            <li>Символы:
+                <ul>
+                    <li><strong>*</strong> — любые буквы</li>
+                    <li><strong>?</strong> — ОДНА любая буква</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>Пробелы игнорируются.</li>
+    <li>Заглавные буквы конвертируются в нижний регистр.</li>
+    <li>Примеры: мам?, С ъе*</li>
+</ul>'
         ],
         'No words found' => [
             self::RU_LANG => 'Слова не найдены'

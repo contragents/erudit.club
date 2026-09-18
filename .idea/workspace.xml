@@ -16,22 +16,13 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="083cf621-0e75-4976-a3cb-6b5812dcdbdc" name="Default Changelist" comment="">
+    <list default="true" id="083cf621-0e75-4976-a3cb-6b5812dcdbdc" name="Default Changelist" comment="CLUB-502 in progress">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/choose_css_new_10.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/choose_css_new_10.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/private/Classes/GameClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/Classes/GameClass.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/private/Classes/TClass.php" beforeDir="false" afterPath="$PROJECT_DIR$/private/Classes/TClass.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globalFunctions.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globalFunctions.js.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonGlobalFunctions_4.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/buttonGlobalFunctions_4.js.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gameStates_erudit_2.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/globals/gameStates_erudit_2.js.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/updateFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/updateFunction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataHints.php" beforeDir="false" afterPath="$PROJECT_DIR$/scrabble1.0.1.6/php/DadataHints.php" afterDir="false" />
     </list>
     <list id="493eaa45-d165-4bb4-bddd-131381b96e0a" name="ignore" comment="">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/erudit.club.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/erudit.club.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/noop.php" beforeDir="false" afterPath="$PROJECT_DIR$/noop.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yandex_204db8b54d13840c.html" beforeDir="false" afterPath="$PROJECT_DIR$/yandex_204db8b54d13840c.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,11 +43,17 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="CLUB-427" />
+        <entry key="$PROJECT_DIR$" value="staging" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;contragents&quot;
+  }
+}</component>
   <component name="GitRewordedCommitMessages">
     <option name="commitMessagesMapping">
       <RewordedCommitMessageMapping>
@@ -67,59 +64,62 @@
     <option name="currentCommit" value="1" />
     <option name="onto" value="fcd03b25ea9050c77bcbeffd59b242765d8a0ebe" />
   </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/contragents/erudit.club.git&quot;,
+    &quot;accountId&quot;: &quot;3c0fc3f5-a3b8-4ff3-89e6-1b5df59efdce&quot;
+  }
+}</component>
   <component name="LineStatusTrackerManager">
     <file path="$PROJECT_DIR$/.idea/workspace.xml">
       <ranges>
-        <range start1="13" end1="14" start2="13" end2="14" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="19" end1="20" start2="19" end2="19" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="21" end1="57" start2="20" end2="23" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="58" end1="60" start2="24" end2="24" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="61" end1="77" start2="25" end2="27" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="104" end1="105" start2="54" end2="55" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="123" end1="250" start2="73" end2="101" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="265" end1="266" start2="116" end2="117" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="273" end1="275" start2="124" end2="127" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="276" end1="278" start2="128" end2="129" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="280" end1="285" start2="131" end2="136" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="664" end1="720" start2="515" end2="543" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1008" end1="1009" start2="831" end2="888" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1049" end1="1057" start2="928" end2="928" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1074" end1="1075" start2="945" end2="954" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1077" end1="1078" start2="956" end2="957" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1080" end1="1093" start2="959" end2="960" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1097" end1="1098" start2="964" end2="965" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1100" end1="1101" start2="967" end2="968" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1102" end1="1103" start2="969" end2="970" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1105" end1="1106" start2="972" end2="973" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1114" end1="1118" start2="981" end2="981" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1122" end1="1123" start2="985" end2="986" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1125" end1="1127" start2="988" end2="990" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1129" end1="1130" start2="992" end2="993" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1131" end1="1132" start2="994" end2="995" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1134" end1="1140" start2="997" end2="999" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
-        <range start1="1143" end1="1144" start2="1002" end2="1002" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
-        <range start1="1145" end1="1157" start2="1003" end2="1003" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
+        <range start1="18" end1="19" start2="18" end2="19" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="20" end1="22" start2="20" end2="20" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="23" end1="27" start2="21" end2="22" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="29" end1="31" start2="24" end2="24" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="32" end1="34" start2="25" end2="25" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="54" end1="55" start2="45" end2="46" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="59" end1="59" start2="50" end2="56" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="69" end1="69" start2="66" end2="72" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="72" end1="101" start2="75" end2="94" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="104" end1="104" start2="97" end2="100" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="105" end1="106" start2="101" end2="101" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="110" end1="122" start2="105" end2="122" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="309" end1="309" start2="309" end2="317" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="543" end1="543" start2="551" end2="562" changelist="083cf621-0e75-4976-a3cb-6b5812dcdbdc" />
+        <range start1="887" end1="888" start2="906" end2="907" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
+        <range start1="908" end1="921" start2="927" end2="928" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
+        <range start1="925" end1="926" start2="932" end2="932" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
+        <range start1="928" end1="937" start2="934" end2="934" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
+        <range start1="953" end1="1016" start2="950" end2="960" changelist="493eaa45-d165-4bb4-bddd-131381b96e0a" />
       </ranges>
     </file>
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2HUDnNOLmFyPgnYqujyuNJ4T097" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="DatabaseDriversLRU" value="mysql" />
-    <property name="DefaultHtmlFileTemplate" value="HTML File" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JSON&#10;TEXT&#10;JavaScript&#10;HTML" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/private/Classes" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="php.override.implement.member.chooser.php.doc" value="COPY_ALWAYS" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "CLUB-502",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/ili/PhpstormProjects/erudit.club",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "TEXT"
+    ]
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ili\PhpstormProjects\erudit.club\img\inactive" />
@@ -306,6 +306,14 @@
         <item itemvalue="HTTP Request.rest-api_5#1" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-PS-253.31033.138" />
+        <option value="bundled-php-predefined-a98d8de5180a-0e0d91225499-com.jetbrains.php.sharedIndexes-PS-253.31033.138" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -541,6 +549,17 @@
       <workItem from="1740434078983" duration="2675000" />
       <workItem from="1740516575414" duration="2817000" />
       <workItem from="1740530361481" duration="5172000" />
+      <workItem from="1788276630120" duration="670000" />
+      <workItem from="1788860957937" duration="743000" />
+      <workItem from="1788866407479" duration="5327000" />
+      <workItem from="1788944533029" duration="6998000" />
+      <workItem from="1789034653803" duration="5942000" />
+      <workItem from="1789131942998" duration="594000" />
+      <workItem from="1789471480060" duration="98000" />
+      <workItem from="1789471580413" duration="3179000" />
+      <workItem from="1789580232475" duration="1915000" />
+      <workItem from="1789636041440" duration="8121000" />
+      <workItem from="1789746642262" duration="7574000" />
     </task>
     <task id="LOCAL-00197" summary="CLUB-397 Доделать переводы&#10;         Починить бота - нужен автолоад">
       <created>1729586938294</created>
