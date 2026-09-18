@@ -122,7 +122,25 @@ class T
         return $keyPhraseArr;
     }
 
+    const PHRASES_PARTS = [
+        'spaces_capitals' => [
+            self::EN_LANG => "Spaces are ignored. Capital letters are converted to lower case\nExamples: fathe?, O ut*",
+            self::RU_LANG => "Пробелы игнорируются. Заглавные буквы конвертируются в нижний регистр\nПримеры: мам?, С ъе*"
+        ],
+    ];
+
     const PHRASES = [
+        'QUERY_ERROR_MSG' => [
+            self::EN_LANG => "Wrong query\n\nOnly letters (A-Z) are accepted\nas well as the symbols \"*\" (any letters) and \"?\" (ONE any letter).\nSpaces are ignored. Capital letters are converted to lower case\nExamples: fathe?, O ut*\n" . self::PHRASES_PARTS['spaces_capitals'][self::EN_LANG],
+            self::RU_LANG => "Ошибка в запросе\n\nПринимаются только буквы (А-Я) и символы \"*\" (любые буквы) и \"?\" (ОДНА любая буква)\n" . self::PHRASES_PARTS['spaces_capitals'][self::RU_LANG]
+        ],
+        'No words found' => [
+            self::RU_LANG => 'Слова не найдены'
+        ],
+        'ERROR_MSG' => [
+            self::EN_LANG => 'Server error',
+            self::RU_LANG => 'Ошибка сервера'
+        ],
         'per day' => [self::RU_LANG => 'в день'],
         'Newest 10 referrals are shown' => [self::RU_LANG => 'Показаны только 10 последних рефералов'],
         'Total referrals count: [[value]]' => [self::RU_LANG => 'Всего ваших активных рефералов: [[value]]'],
@@ -233,6 +251,18 @@ class T
         ],
         'Nothing to claim' => [
             self::RU_LANG => 'Забирать пока нечего'
+        ],
+        'connect_bot_text' => [
+            self::EN_LANG => 'To access the full list, connect to our ',
+            self::RU_LANG => 'Для доступа к полному списку подключитесь к нашему '
+        ],
+        'connect_bot_ankor' => [
+            self::EN_LANG => 'Telegram bot',
+            self::RU_LANG => 'Telegram-боту'
+        ],
+        'connect_bot_url' => [
+            self::EN_LANG => 'https://t.me/scrabble_online_bot',
+            self::RU_LANG => 'https://t.me/erudit_club_bot'
         ],
         'connect_bot' => [
             self::EN_LANG => '{{yandex_exclude}}{{To access the full list, connect to our <a target="_blank" href="https://t.me/scrabble_online_bot">Telegram bot</a>}}',

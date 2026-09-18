@@ -5,6 +5,7 @@ namespace Dadata;
 use \Cache;
 use AchievesModel;
 use Config;
+use DictModel;
 use Erudit\Game;
 use LogModel;
 use PlayerModel;
@@ -14,6 +15,7 @@ use ViewHelper as VH;
 
 class Hints
 {
+    const CLUB_WORDS_COUNT = 5;
     const PHRASES = [
         AchievesModel::TVERD_NUM => '<strong>Внимание!</strong> <br>
 В Игре появилось <strong>новое достижение - количество Ъ (ТВЕРДЫХ ЗНАКОВ), выпавших игроку за игру</strong>. <br>
@@ -406,25 +408,64 @@ class Hints
     public static function getWordHint(string $word): array
     {
         try {
-            $words = json_decode(
-                file_get_contents(self::getBotWordRequestURL() . $word . '&game=' . Game::$gameName),
-                true
-            );
+            $words = array_column(DictModel::findWords($word, self::CLUB_WORDS_COUNT), 'slovo');
         } catch (\Throwable $e) {
-            $words = ['Ошибка сервера'];
+            $words = [T::S('ERROR_MSG')];
+            $errors = $e->__toString();
         }
 
         if (!is_array($words)) {
             $words = [];
         }
 
+        $message = '';
+
+        // 1. Перебор и вывод массива найденных слов
+        $listItems = '';
+        foreach ($words as $word) {
+            $listItems .= VH::li(
+                VH::span('• ', ['style' => 'color: #3498db; margin-right: 8px;']) . VH::b($word),
+                ['style' => 'margin-bottom: 6px; font-size: 1.05em; color: #eceff1; list-style: none;']
+            );
+        }
+        $message .= VH::ul($listItems, ['style' => 'padding-left: 0; margin-bottom: 15px;']);
+
+        // 2. Блок с фиксированным текстом и ссылкой
         if (count($words) == 5) {
+            $message .= VH::div(
+                VH::span('💡 ', ['style' => 'font-size: 1.1em;'])
+                . VH::span("Показаны только 5 слов в случайном порядке", ['style' => 'color: #e0e0e0; font-style: italic;'])
+                , ['style' => 'margin-bottom: 10px;']
+            );
+
+            $message .= VH::div(
+                VH::span('🔗 ', ['style' => 'font-size: 1.1em; margin-right: 4px;'])
+                . T::S('connect_bot_text')
+                . VH::a(
+                    T::S('connect_bot_ankor'),
+                    [
+                        'href' => T::S('connect_bot_url'),
+                        'target' => '_blank',
+                        'style' => 'color: #3498db; font-weight: bold; text-decoration: underline;'
+                    ]
+                ),
+                [
+                    'style' => 'padding: 12px 15px; ' .
+                        'background: rgba(52, 152, 219, 0.08); ' .
+                        'border: 1px solid rgba(52, 152, 219, 0.25); ' .
+                        'border-radius: 10px; ' .
+                        'font-size: 0.95em; ' .
+                        'line-height: 1.4; ' .
+                        'color: rgba(255, 255, 255, 0.9);'
+                ]
+            );
+
             $words[] = T::S('Only 5 words are shown in random order')
                 . '<br>'
                 . T::S('connect_bot');
         }
 
-        $res = ['message' => implode('<br>', $words)];
+        $res = ['message' => $message];
 
         return $res;
     }
