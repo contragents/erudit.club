@@ -108,7 +108,20 @@ async function fetchGlobalNominal(script, param_name, param_data) {
     requestSended = false;
 
     if (response.status === BAD_REQUEST || response.status === PAGE_NOT_FOUND) {
-        return {message: response.statusText, status: "error", http_status: response.status};
+        let errorData = null;
+        try {
+            errorData = await response.json();
+        } catch (e) {
+            // Если сервер вернул не JSON (например, пустой ответ или html-страницу 404)
+            errorData = { raw_message: response.statusText };
+        }
+
+        return {
+            message: response.statusText,
+            status: "error",
+            http_status: response.status,
+            data: errorData, // Добавляем полученные данные в ответ
+        };
     }
 
     if (!response.ok) {

@@ -230,10 +230,11 @@ class Game
             }
 
             if (isset($_GET['queryNumber']) && $_GET['queryNumber'] > 5 && $_GET['queryNumber'] < ($this->gameStatus['users'][$this->numUser]['last_request_num'] ?? 0)) {
-                // todo  при возврате десинка в игре проблемы с получением фишек. обычно при перезагрузке страницы
+                // При возврате десинка в игре проблемы с получением фишек. обычно при перезагрузке страницы
                 BadRequest::sendBadRequest(
                     [
                         'message' => T::S('Server sync lost'),
+                        'queryNumber' => $this->gameStatus['users'][$this->numUser]['last_request_num'] ?? 0,
                     ],
                     $this->isBot()
                 );
@@ -243,10 +244,10 @@ class Game
                     ($_GET['queryNumber'] ?? $this->gameStatus['users'][$this->numUser]['last_request_num']);
             }
 
+            // Обновить время активности, если это не закрытие вкладки
             if (!(isset($_GET['page_hidden']) && $_GET['page_hidden'] == 'true')) {
                 $this->gameStatus['users'][$this->numUser]['lastActiveTime'] = date('U');
                 $this->gameStatus['users'][$this->numUser]['inactiveTurn'] = 1000;
-                //Обновили время активности, если это не закрытие вкладки
             }
         }
     }

@@ -13,12 +13,13 @@ class BadRequest extends Exception
     {
         ob_clean();
         http_response_code(self::HTTP_BAD_REQUEST_CODE);
-        print json_encode(
+        echo json_encode(
             [
                 'result' => 'error',
                 'message' => self::$eMessage ?: ($params['message'] ?? 'No message'),
                 'ext_data' => $params
-            ]
+            ],
+            JSON_UNESCAPED_UNICODE
         );
 
         Cache::hset(self::ERRORS_KEY, time() % self::MAX_ERRORS, ['date' => date('Y-m-d H:i:s'), 'error' => $params]);

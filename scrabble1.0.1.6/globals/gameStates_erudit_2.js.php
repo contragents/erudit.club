@@ -1113,6 +1113,16 @@ function commonCallback(data) {
 
     if ('http_status' in data && (data['http_status'] === BAD_REQUEST || data['http_status'] === PAGE_NOT_FOUND)) {
         console.log(data['message']);
+
+        // Проверка рассинхронизации запросов
+        if (data.data && typeof data.data === 'object' && 'ext_data' in data.data) {
+            const queryNumberServer = data.data?.ext_data?.queryNumber;
+
+            if(queryNumberServer) {
+                queryNumber = queryNumberServer + 1;
+            }
+        }
+
         return;
     }
 
