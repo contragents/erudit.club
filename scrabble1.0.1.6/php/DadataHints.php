@@ -555,7 +555,7 @@ class Hints
                     ['style' => 'color: #2ecc71; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px;']
                 ) .
                 VH::div(
-                    T::S('Зайдите в меню Профиль -> Кошелек, приобретите любое количество монет {{sudoku_icon_5}} и заберите свою уникальную карточку.'),
+                    T::S('Зайдите в меню Профиль&nbsp;&rarr;&nbsp;Кошелек, приобретите любое количество монет {{sudoku_icon_5}} и заберите свою уникальную карточку.'),
                     ['style' => 'color: rgba(255, 255, 255, 0.9); font-size: 0.95em; line-height: 1.4; margin-bottom: 12px;']
                 ) .
                 VH::div(self::patronCard(), ['style' => 'text-align: center; margin-top: 10px; margin-bottom: 12px;']) .
@@ -574,7 +574,7 @@ class Hints
                     ['style' => 'color: #3498db; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px;']
                 ) .
                 VH::div(
-                    'Наш игровой проект существует благодаря вашей поддержке. Приобретайте монеты в меню Профиль -> Кошелек, повышайте уровень карточки спонсора и развивайте проект вместе с нами.',
+                    'Наш игровой проект существует благодаря вашей поддержке. Приобретайте монеты в меню Профиль&nbsp;&rarr;&nbsp;Кошелек, повышайте уровень карточки спонсора и развивайте проект вместе с нами.',
                     ['style' => 'color: rgba(255, 255, 255, 0.9); font-size: 0.95em; line-height: 1.4; margin-bottom: 12px;']
                 ) .
                 VH::div(self::patronCard(), ['style' => 'text-align: center; margin-top: 10px;']),
@@ -589,7 +589,7 @@ class Hints
                     ['style' => 'color: #9b59b6; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px;']
                 ) .
                 VH::div(
-                    'Поделитесь личной ссылкой (кнопка «Добавить друга» или меню Профиль -> Рефералы). За вклад приглашенных игроков вам также выдается и растет карточка спонсора!',
+                    'Поделитесь личной ссылкой (кнопка «Добавить друга» или меню Профиль&nbsp;&rarr;&nbsp;Рефералы). За вклад приглашенных игроков вам также выдается и растет карточка спонсора!',
                     ['style' => 'color: rgba(255, 255, 255, 0.9); font-size: 0.95em; line-height: 1.4; margin-bottom: 12px;']
                 ) .
                 VH::div(self::patronCard(), ['style' => 'text-align: center; margin-top: 10px;']),
