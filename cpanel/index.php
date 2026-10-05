@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="En">
 <head>
     <meta charset="utf-8">
     <title>Контрольная панель Эрудит</title>
@@ -25,10 +25,10 @@
 // ini_set("display_errors", 1); error_reporting(E_ALL);
 
 include_once __DIR__ . '/../autoload.php';
-$lastGame = Cache::get('erudit.num_games');
+$lastGame = GameCounterModel::getLastGameId(); //Cache::get('erudit.num_games');
 $table = include('tpl/gamesTableHeader.php');
 for ($i = $lastGame; $i > ($lastGame - 200); $i--) {
-    if ($game = Cache::get("erudit.game_status_" . $i)) {
+    if ($game = Cache::get(Game::GAME_STATUS_KEY . $i)) {
         $table .= include('tpl/gamesTableRow.php');
     }
 }
