@@ -17,14 +17,7 @@ class Hints
 {
     const CLUB_WORDS_COUNT = 5;
     const PHRASES = [
-        AchievesModel::TVERD_NUM => '<strong>Внимание!</strong> <br>
-В Игре появилось <strong>новое достижение - количество Ъ (ТВЕРДЫХ ЗНАКОВ), выпавших игроку за игру</strong>. <br>
-Учитываются все Ъ, полученные: <ul>
-<li>При обычной раздаче букв</li>
-<li>При замене букв</li>
-<li>При дополнении слова с "Ъ" (СЪЕМ&nbsp;&#8209;>&nbsp;СЪЕМКА)</li>
-<li>А также при составлении слова, в котором звездочка заменяет Ъ</li>
-</ul>',
+        AchievesModel::TVERD_NUM => 'tverdAchievementHint',
         'account_restoration' => 'accountRestoration',
         'anti_cheat' => 'anticheat',
     ];
@@ -245,6 +238,34 @@ class Hints
 
         return $res;
     }
+
+    private static function tverdAchievementHint(): string
+    {
+        $res = VH::h2('🏆 Новое достижение в Игре!') .
+            VH::div(
+                VH::div(
+                    VH::span('✨ ', ['style' => 'font-size: 1.2em;']) . VH::b('Количество Твердых знаков (Ъ) за игру'),
+                    ['style' => 'color: #f1c40f; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px;']
+                ) .
+                VH::div(
+                    'Учитываются абсолютно все буквы <span style="color: #f1c40f; font-weight: bold;">Ъ</span>, полученные вами в ходе текущей партии:',
+                    ['style' => 'color: rgba(255, 255, 255, 0.9); font-size: 0.95em; line-height: 1.4; margin-bottom: 10px;']
+                ) .
+                VH::div(
+                    '<ul style="margin: 0; padding-left: 20px; color: rgba(255, 255, 255, 0.9); font-size: 0.95em; line-height: 1.5;">' .
+                    '<li style="margin-bottom: 4px;">При обычной раздаче букв</li>' .
+                    '<li style="margin-bottom: 4px;">При замене букв</li>' .
+                    '<li style="margin-bottom: 4px;">При дополнении слова с "Ъ" (<span style="white-space: nowrap;">СЪЕМ&nbsp;&rarr;&nbsp;СЪЕМКА</span>)</li>' .
+                    '<li style="margin-bottom: 4px;">А также при составлении слова, в котором звездочка заменяет Ъ</li>' .
+                    '</ul>',
+                    ['style' => 'background: rgba(0, 0, 0, 0.15); padding: 10px 12px; border-radius: 8px; margin-top: 8px;']
+                ),
+                ['style' => 'padding: 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(241, 196, 15, 0.3); border-radius: 12px; margin-top: 10px;']
+            );
+
+        return $res;
+    }
+
 
     private static function accountRestoration(): string
     {
