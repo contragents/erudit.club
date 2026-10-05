@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="En">
+<html lang="en-En">
 <head>
     <meta charset="utf-8">
     <title>Контрольная панель Эрудит</title>

@@ -183,6 +183,15 @@ class Hints
             self::PHRASES[AchievesModel::TVERD_NUM],
             self::PHRASES['account_restoration'],
             'donationHint',
+            'donationHint',
+            'donationHint',
+            'donationHint',
+            'donationHint',
+            'donationHint',
+            'donationHint',
+            'donationHint',
+            'donationHint',
+            'donationHint',
             'tgWordCheckHint',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
             'newUpdateHint',
@@ -488,6 +497,7 @@ class Hints
         );
     }
 
+    /*
     private static function donationHint(): string
     {
         $res = [];
@@ -514,6 +524,77 @@ class Hints
             . 'За вклад в проект выдается карточка спонсора. Уровень карточки растет по мере роста вклада'
             . VH::br(2)
             . self::patronCard();
+
+        return $res[array_rand($res)];
+    }
+*/
+    private static function donationHint(): string
+    {
+        $res = [];
+
+        // Вариант 1: Акцент на долговечность награды
+        $res[] = VH::h2('🌟 Карточка спонсора проекта') .
+            VH::div(
+                VH::div(
+                    VH::span('💎 ', ['style' => 'font-size: 1.2em;']) . VH::b('Остается навсегда!'),
+                    ['style' => 'color: #f1c40f; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px;']
+                ) .
+                VH::div(
+                    'Она будет отображаться в меню «Игроки», а также на вкладке «Награды» в Статистике игроков.',
+                    ['style' => 'color: rgba(255, 255, 255, 0.9); font-size: 0.95em; line-height: 1.4; margin-bottom: 12px;']
+                ) .
+                VH::div(self::patronCard(), ['style' => 'text-align: center; margin-top: 10px;']),
+                ['style' => 'padding: 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(241, 196, 15, 0.3); border-radius: 12px; margin-top: 10px;']
+            );
+
+        // Вариант 2: Подробное описание с уровнями карточек
+        $res[] = VH::h2('🚀 Поддержите наш проект') .
+            VH::div(
+                VH::div(
+                    VH::span('🪙 ', ['style' => 'font-size: 1.2em;']) . VH::b('Станьте спонсором игры!'),
+                    ['style' => 'color: #2ecc71; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px;']
+                ) .
+                VH::div(
+                    T::S('Зайдите в меню Профиль -> Кошелек, приобретите любое количество монет {{sudoku_icon_5}} и заберите свою уникальную карточку.'),
+                    ['style' => 'color: rgba(255, 255, 255, 0.9); font-size: 0.95em; line-height: 1.4; margin-bottom: 12px;']
+                ) .
+                VH::div(self::patronCard(), ['style' => 'text-align: center; margin-top: 10px; margin-bottom: 12px;']) .
+                VH::div(
+                    'Уровень карточки и ежедневный доход растут по мере вклада — от <strong>Партнера</strong> (1 монета/день) до <strong>Мецената</strong> (1000 монет каждый день)!',
+                    ['style' => 'color: rgba(255, 255, 255, 0.8); font-size: 0.9em; font-style: italic; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;']
+                ),
+                ['style' => 'padding: 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(46, 204, 113, 0.3); border-radius: 12px; margin-top: 10px;']
+            );
+
+        // Вариант 3: Лаконичная благодарность
+        $res[] = VH::h2('❤️ Спасибо, что вы с нами!') .
+            VH::div(
+                VH::div(
+                    VH::span('🤝 ', ['style' => 'font-size: 1.2em;']) . VH::b('Команда патронов проекта'),
+                    ['style' => 'color: #3498db; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px;']
+                ) .
+                VH::div(
+                    'Наш игровой проект существует благодаря вашей поддержке. Приобретайте монеты в меню Профиль -> Кошелек, повышайте уровень карточки спонсора и развивайте проект вместе с нами.',
+                    ['style' => 'color: rgba(255, 255, 255, 0.9); font-size: 0.95em; line-height: 1.4; margin-bottom: 12px;']
+                ) .
+                VH::div(self::patronCard(), ['style' => 'text-align: center; margin-top: 10px;']),
+                ['style' => 'padding: 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(52, 152, 219, 0.3); border-radius: 12px; margin-top: 10px;']
+            );
+
+        // Вариант 4: Реферальная система / Партнерство
+        $res[] = VH::h2('👥 Станьте партнером игры') .
+            VH::div(
+                VH::div(
+                    VH::span('🔗 ', ['style' => 'font-size: 1.2em;']) . VH::b('Приглашайте друзей!'),
+                    ['style' => 'color: #9b59b6; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px;']
+                ) .
+                VH::div(
+                    'Поделитесь личной ссылкой (кнопка «Добавить друга» или меню Профиль -> Рефералы). За вклад приглашенных игроков вам также выдается и растет карточка спонсора!',
+                    ['style' => 'color: rgba(255, 255, 255, 0.9); font-size: 0.95em; line-height: 1.4; margin-bottom: 12px;']
+                ) .
+                VH::div(self::patronCard(), ['style' => 'text-align: center; margin-top: 10px;']),
+                ['style' => 'padding: 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(155, 89, 182, 0.3); border-radius: 12px; margin-top: 10px;']
+            );
 
         return $res[array_rand($res)];
     }
