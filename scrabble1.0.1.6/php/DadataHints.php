@@ -17,6 +17,7 @@ class Hints
 {
     const CLUB_WORDS_COUNT = 5;
     const PHRASES = [
+        'donation_hint' => 'donation_hint',
         AchievesModel::TVERD_NUM => 'tverdAchievementHint',
         'account_restoration' => 'accountRestoration',
         'anti_cheat' => 'anticheat',
@@ -66,7 +67,7 @@ class Hints
             // 'Ссылка на наш <a target="_blank" href="https://www.youtube.com/channel/UCipptDPm5oRX_VCo5TaTHaQ">Youtube-канал</a> - откроется в новом окне' => 'isYandexApp',
             'video' => 'isYandexApp',
             'yandexScoreLink' => 'isNotYandexApp',
-            'donationHint' => 'isYandexApp',
+            self::PHRASES['donation_hint'] => 'isYandexApp',
             'tgWordCheckHint' => 'isYandexApp',
             self::PHRASES['account_restoration'] => 'isYandexApp',
         ]
@@ -75,7 +76,7 @@ class Hints
     const HINTS = [
         1 => [
             self::PHRASES['account_restoration'],
-            'donationHint',
+            self::PHRASES['donation_hint'],
             '<strong>Первый ход</strong> играем через <strong>центральную</strong> клетку поля',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
             // 'newUpdateHint',
@@ -100,7 +101,7 @@ class Hints
         ],
         1800 => [
             self::PHRASES['account_restoration'],
-            'donationHint',
+            self::PHRASES['donation_hint'],
             self::PHRASES[AchievesModel::TVERD_NUM],
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
             // 'newUpdateHint',
@@ -119,7 +120,7 @@ class Hints
         1900 => [
             self::PHRASES[AchievesModel::TVERD_NUM],
             self::PHRASES['account_restoration'],
-            'donationHint',
+            self::PHRASES['donation_hint'],
             'yandexScoreLink',
             'tgWordCheckHint',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
@@ -153,7 +154,7 @@ class Hints
         2000 => [
             self::PHRASES[AchievesModel::TVERD_NUM],
             self::PHRASES['account_restoration'],
-            'donationHint',
+            self::PHRASES['donation_hint'],
             'tgWordCheckHint',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
             'newUpdateHint',
@@ -175,7 +176,7 @@ class Hints
             self::PHRASES['anti_cheat'],
             self::PHRASES[AchievesModel::TVERD_NUM],
             self::PHRASES['account_restoration'],
-            'donationHint',
+            self::PHRASES['donation_hint'],
             'tgWordCheckHint',
             '<strong>Внимание!</strong><br /> Теперь можно в Личном Кабинете <strong>загрузить свой Аватар</strong> на наш сервер. Для применения изменений, пожалуйста, обновите кеш браузера - <strong>Shift&nbsp;F5</strong>',
             'newUpdateHint',
